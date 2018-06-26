@@ -1,0 +1,7 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Liam Fallon <liam.fallon@ericsson.com>
+Submitted-by: Liam Fallon <liam.fallon@ericsson.com>
+Submitted-at: Tue, 26 Jun 2018 15:54:10 +0000
+Reviewed-on: https://gerrit.onap.org/r/55417
+Project: policy/xacml-pdp
+Branch: refs/heads/master
