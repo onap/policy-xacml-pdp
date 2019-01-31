@@ -2,7 +2,7 @@
   ============LICENSE_START=======================================================
   ONAP Policy Engine - XACML PDP
   ================================================================================
-  Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+  Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -44,11 +44,39 @@
         <sonar.jacoco.reportPath>${project.basedir}/../target/code-coverage/jacoco-ut.exec</sonar.jacoco.reportPath>
         <sonar.jacoco.itReportPath>${project.basedir}/../target/code-coverage/jacoco-it.exec</sonar.jacoco.itReportPath>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        
+        <policy.common.version>1.4.0-SNAPSHOT</policy.common.version>
     </properties>
 
     <modules>
+        <module>main</module>
     </modules>
-
+    
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-ext</artifactId>
+            <version>1.8.0-beta2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+    </dependencies>
+    
     <distributionManagement>
         <site>
             <id>ecomp-site</id>
