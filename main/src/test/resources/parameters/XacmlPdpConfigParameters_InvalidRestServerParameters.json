@@ -1,0 +1,9 @@
+{
+    "name":"XacmlPdpGroup",
+    "restServerParameters":{
+        "host":"",
+        "port":-1,
+        "userName":"",
+        "password":""
+    }
+}
