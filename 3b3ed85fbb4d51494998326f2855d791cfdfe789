@@ -1,0 +1,327 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1e9dc37e_fc883cb3",
+        "filename": "main/pom.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "missing license",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ac5c82e8_681bd25d",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/PolicyXacmlPdpException.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "if this is a new file, and it wasn\u0027t cloned from another file, then probably remove the first copyright line.  On the other hand, if retaining this first line, then the second should be prefixed by \"Modifications\".\n\nthis comment applies to most of the files",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d02524cc_f7db93f6",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/XacmlPdpParameterHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "should store the gson object in a static (fyi: it can be used by more than one thread at a time)",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d00b5af_3121fbdf",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestServer.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "should also add PROPERTY_HTTP_SERIALIZATION_PROVIDER, if set, so that gson can be used instead of jackson",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4a63955_09f94f93",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/Main.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "is there a way to indicate a non-zero exist status?  Perhaps throw an exception?\n\nsame comment elsewhere in this file",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0459078b_6149108d",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "should this be public?",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "65ec37b2_f22746d5",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpCommandLineArguments.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "should this be private or protected?",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d8d3fc99_290cf2f4",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpCommandLineArguments.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "checking \"length \u003e 0\" twice - the logic seems off as the \"\u0026\u0026\" condition is subsumed by the second \"length \u003e 0\" condition",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e37e2167_a65330c3",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpCommandLineArguments.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "sonar: use !isEmpty() instead of \"length() \u003e 0\"",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af40bd2f_67eb66f1",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpCommandLineArguments.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "sonar: use isEmpty() instead of \"length() \u003d\u003d 0\" (or use StringUtils.isBlank() for the entire condition)",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb5964a3_214060d3",
+        "filename": "main/src/main/resources/version.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "can a license comment be added, or will that cause an issue?",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3679db1_6b26894f",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/TestXacmlPdpParameterHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "perhaps use assertj\u0027s assertThatThrownBy() mechanism instead - can reduce this to 1-2 lines\n\nsame comment through-out",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14baf126_8e226b5e",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestXacmlPdpRestServer.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "need to do any tearDown to ensure the server is stopped before another one starts (in case one of the test cases fails before \"stop\" is invoked)?\n\nsame comment applies to the other server test classes",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d2ea0c0_33a265d2",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestXacmlPdpStatistics.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "this looks like a common chunk of code that could be extracted",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dedf1524_6a3079a1",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/startstop/TestMain.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "could change this to assertNull()",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "058b02fb_26365f3a",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/startstop/TestXacmlPdpActivator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "need a tearDown to ensure the activator is terminated?",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe650e9e_8b28311a",
+        "filename": "main/src/test/resources/parameters/BadParameters.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "tabs \u003d\u003e spaces\n\nsame comment applies to all of the json files",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "61c9b7eb_57c2cc7a",
+        "filename": "pom.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "-2019",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ac017af2_e0a8514a",
+        "filename": "pom.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-05T16:04:07Z",
+      "side": 1,
+      "message": "I guess there\u0027s no variable already defined in parent or at a higher level?",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
