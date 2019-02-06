@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "3d3ce183_b36ba8e8",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/XacmlPdpParameterHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-06T21:21:14Z",
+      "side": 1,
+      "message": "Eclipse wont allow me to add static modifier... says its an illegal modifier.  If you are okay with it I would like to leave it as is since other code implementations of the same function do not use a static modifier here. (i.e. distribution, policy-api, and new pap)",
+      "parentUuid": "d02524cc_f7db93f6",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d00b5af_3121fbdf",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestServer.java",
         "patchSetId": 4
@@ -104,6 +122,24 @@
     },
     {
       "key": {
+        "uuid": "e193e46a_993bcb94",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-06T21:21:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0459078b_6149108d",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "65ec37b2_f22746d5",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpCommandLineArguments.java",
         "patchSetId": 4
@@ -121,6 +157,24 @@
     },
     {
       "key": {
+        "uuid": "7e4246a5_b0c503ed",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpCommandLineArguments.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-06T21:21:14Z",
+      "side": 1,
+      "message": "Needs to be accessible by other classes include some outside the package, specifically junits.",
+      "parentUuid": "65ec37b2_f22746d5",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d8d3fc99_290cf2f4",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpCommandLineArguments.java",
         "patchSetId": 4
@@ -132,6 +186,24 @@
       "writtenOn": "2019-02-05T16:04:07Z",
       "side": 1,
       "message": "checking \"length \u003e 0\" twice - the logic seems off as the \"\u0026\u0026\" condition is subsumed by the second \"length \u003e 0\" condition",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cc326f9c_76966525",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpCommandLineArguments.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-06T21:21:14Z",
+      "side": 1,
+      "message": "I think you may be correct here... probably only need if (remainingArgs.length \u003e 0) because with this logic if remainingArgs \u003e 0 regardless of the commandLine option it will throw the exception.\n\nBut I would like to check with rest of team in regards to the logic because this code originally comes from policy/distribution so there is a possibility we are missing something.",
+      "parentUuid": "d8d3fc99_290cf2f4",
       "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -189,6 +261,24 @@
     },
     {
       "key": {
+        "uuid": "935aab72_9e68b666",
+        "filename": "main/src/main/resources/version.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-06T21:21:14Z",
+      "side": 1,
+      "message": "I am not sure but I would rather leave it since other implementations of the same do not have a license comment.",
+      "parentUuid": "fb5964a3_214060d3",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b3679db1_6b26894f",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/TestXacmlPdpParameterHandler.java",
         "patchSetId": 4
@@ -206,6 +296,24 @@
     },
     {
       "key": {
+        "uuid": "1697f96d_fa84082f",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/TestXacmlPdpParameterHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-06T21:21:14Z",
+      "side": 1,
+      "message": "This I think would require adding another dependency and I would also like to keep some uniformity with the other implementations.  If we decide to change this for all components implementing this function (i.e. pap, policy-api) then I am all for it but for the sake of uniformity I would rather leave it as is since it is working fine.",
+      "parentUuid": "b3679db1_6b26894f",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14baf126_8e226b5e",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestXacmlPdpRestServer.java",
         "patchSetId": 4
@@ -217,6 +325,24 @@
       "writtenOn": "2019-02-05T16:04:07Z",
       "side": 1,
       "message": "need to do any tearDown to ensure the server is stopped before another one starts (in case one of the test cases fails before \"stop\" is invoked)?\n\nsame comment applies to the other server test classes",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67cab102_a8df3596",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestXacmlPdpRestServer.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-06T21:21:14Z",
+      "side": 1,
+      "message": "I don\u0027t think so Jim, there is a shutdown sequence in the code [stopXacmlPdpService()] and I have not experienced any issues when running all the tests or maven install.  Furthermore, this same code is already implemented in policy/distribution with no known issues regarding this.",
+      "parentUuid": "14baf126_8e226b5e",
       "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -257,6 +383,24 @@
     },
     {
       "key": {
+        "uuid": "b7adeff0_894ffd99",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/startstop/TestMain.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-06T21:21:14Z",
+      "side": 1,
+      "message": "Done with upcoming patch",
+      "parentUuid": "dedf1524_6a3079a1",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "01ba44ce_f08f877b",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/startstop/TestXacmlPdpActivator.java",
         "patchSetId": 4
@@ -291,6 +435,24 @@
       "writtenOn": "2019-02-05T16:04:07Z",
       "side": 1,
       "message": "need a tearDown to ensure the activator is terminated?",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "49f036b0_5c6be81a",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/startstop/TestXacmlPdpActivator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-06T21:21:14Z",
+      "side": 1,
+      "message": "Jim, the activator is terminated at the end of this method.",
+      "parentUuid": "058b02fb_26365f3a",
       "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
