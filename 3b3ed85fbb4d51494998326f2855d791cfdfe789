@@ -257,6 +257,29 @@
     },
     {
       "key": {
+        "uuid": "01ba44ce_f08f877b",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/startstop/TestXacmlPdpActivator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-02-06T18:56:34Z",
+      "side": 1,
+      "message": "new file - remove the 2018 Ericsson copyright",
+      "range": {
+        "startLine": 3,
+        "startChar": 1,
+        "endLine": 5,
+        "endChar": 1
+      },
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "058b02fb_26365f3a",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/startstop/TestXacmlPdpActivator.java",
         "patchSetId": 4
@@ -319,6 +342,24 @@
       "writtenOn": "2019-02-05T16:04:07Z",
       "side": 1,
       "message": "I guess there\u0027s no variable already defined in parent or at a higher level?",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f12cdab_e3d36d80",
+        "filename": "pom.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-02-06T18:56:34Z",
+      "side": 1,
+      "message": "Not right now - we can revisit this though and pull it into policy/parent if we think all the repos should always use the same.",
+      "parentUuid": "ac017af2_e0a8514a",
       "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
