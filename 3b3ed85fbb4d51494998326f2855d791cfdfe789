@@ -71,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "66ac97f1_eccd068e",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/XacmlPdpParameterHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-06T21:37:08Z",
+      "side": 1,
+      "message": "can make it a static field",
+      "parentUuid": "3d3ce183_b36ba8e8",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d00b5af_3121fbdf",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestServer.java",
         "patchSetId": 4
@@ -169,6 +187,24 @@
       "side": 1,
       "message": "Needs to be accessible by other classes include some outside the package, specifically junits.",
       "parentUuid": "65ec37b2_f22746d5",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "227f00eb_6f05a024",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpCommandLineArguments.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-06T21:37:08Z",
+      "side": 1,
+      "message": "if it\u0027s just needed by junits, then could make it protected; the junits should be in the same package and thus able to access it",
+      "parentUuid": "7e4246a5_b0c503ed",
       "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -314,6 +350,24 @@
     },
     {
       "key": {
+        "uuid": "85c53a99_24b3f2fb",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/TestXacmlPdpParameterHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-06T21:37:08Z",
+      "side": 1,
+      "message": "I\u0027m all for uniformity, but this is too many lines of code to keep duplicating, particularly since I often see folks forget one of the lines (such as the assertTrue in the catch block).  \n\nAnother option I\u0027d be ok with would be to use junit\u0027s:\n @Rule public ExpectedException thrown \u003d\n    ExpectedException.none();\n\nThe dependency scope should be \"test\" so that it\u0027s only imported by maven for testing.",
+      "parentUuid": "1697f96d_fa84082f",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14baf126_8e226b5e",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestXacmlPdpRestServer.java",
         "patchSetId": 4
@@ -453,6 +507,24 @@
       "side": 1,
       "message": "Jim, the activator is terminated at the end of this method.",
       "parentUuid": "058b02fb_26365f3a",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bede5810_9b8ddde6",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/startstop/TestXacmlPdpActivator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-06T21:37:08Z",
+      "side": 1,
+      "message": "Only if all of the tests pass.",
+      "parentUuid": "49f036b0_5c6be81a",
       "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
