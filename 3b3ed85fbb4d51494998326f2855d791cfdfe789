@@ -89,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "310a2b93_acac3aa2",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/XacmlPdpParameterHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-07T20:48:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66ac97f1_eccd068e",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d00b5af_3121fbdf",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestServer.java",
         "patchSetId": 4
@@ -205,6 +223,24 @@
       "side": 1,
       "message": "if it\u0027s just needed by junits, then could make it protected; the junits should be in the same package and thus able to access it",
       "parentUuid": "7e4246a5_b0c503ed",
+      "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db7c172d_2de20760",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpCommandLineArguments.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-07T20:48:27Z",
+      "side": 1,
+      "message": "protected does not seem to work here.. I tried that as well and the Junits break since Junits are not in the same package but under the test directory in separate packages.",
+      "parentUuid": "227f00eb_6f05a024",
       "revId": "3b3ed85fbb4d51494998326f2855d791cfdfe789",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
