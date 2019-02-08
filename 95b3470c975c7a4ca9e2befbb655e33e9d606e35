@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "052af086_d1d1d2a1",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpStatisticsManager.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-02-08T13:06:06Z",
+      "side": 1,
+      "message": "These statistics are not for XACML but for Distribution. XACML is a decision engine with loaded policies and the stats should reflect that.\n\n# policies\n# permits\n# denies\n# indeterminant\n# not applicable",
+      "revId": "95b3470c975c7a4ca9e2befbb655e33e9d606e35",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eacfce99_444ad9b1",
         "filename": "pom.xml",
         "patchSetId": 7
