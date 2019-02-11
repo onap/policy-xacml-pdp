@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0df79c4a_86634ad7",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/StatisticsProvider.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-11T20:05:09Z",
+      "side": 1,
+      "message": "\"policies\" should probably be \"Policies\" in both the setXxx and getXxx method names.",
+      "revId": "c5b55ac018cf9395057df9582c78b052748d70c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6ae43227_52f264b3",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/StatisticsReport.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-11T20:05:09Z",
+      "side": 1,
+      "message": "\"policies\" should probably be \"Policies\" - also appears in lots of comments below",
+      "revId": "c5b55ac018cf9395057df9582c78b052748d70c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "316a85e5_2146da7c",
+        "filename": "pom.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-11T20:05:09Z",
+      "side": 1,
+      "message": "fyi: the version can be removed, as assertj is now included in the parent pom dependency list",
+      "revId": "c5b55ac018cf9395057df9582c78b052748d70c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
