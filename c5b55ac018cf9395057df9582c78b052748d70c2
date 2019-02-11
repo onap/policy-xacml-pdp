@@ -50,6 +50,24 @@
       "revId": "c5b55ac018cf9395057df9582c78b052748d70c2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a1125e45_eb82f70b",
+        "filename": "pom.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-11T21:53:05Z",
+      "side": 1,
+      "message": "I am keeping the version in as I cannot get it to build without it. Are you sure the dependency is included in the parent pom?",
+      "parentUuid": "316a85e5_2146da7c",
+      "revId": "c5b55ac018cf9395057df9582c78b052748d70c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
