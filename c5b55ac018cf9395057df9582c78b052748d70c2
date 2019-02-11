@@ -68,6 +68,24 @@
       "revId": "c5b55ac018cf9395057df9582c78b052748d70c2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d67d07d_59aa99ec",
+        "filename": "pom.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-02-11T21:56:00Z",
+      "side": 1,
+      "message": "you may need a more up to date policy/parent/integration jar (change was merged today).  I just pulled the latest policy/parent and built it via mvn",
+      "parentUuid": "a1125e45_eb82f70b",
+      "revId": "c5b55ac018cf9395057df9582c78b052748d70c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
