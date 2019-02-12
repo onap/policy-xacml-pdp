@@ -150,6 +150,30 @@
     },
     {
       "key": {
+        "uuid": "868f0b33_7f80aab1",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/startstop/TestMain.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-12T19:21:55Z",
+      "side": 1,
+      "message": "There is no return in main.. the argumentMessage variable get set to a value based on the args, in this case -h, and is printed out in the log if not null.  I can add a getter/setter for the argumentMessage to use in an assert here if that is okay with you.",
+      "parentUuid": "a7e237f3_b0e9c8f0",
+      "range": {
+        "startLine": 61,
+        "startChar": 3,
+        "endLine": 64,
+        "endChar": 5
+      },
+      "revId": "f239a66e5dd52f4f0149a307789909c5ffc2b704",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "41bf9713_35705805",
         "filename": "pom.xml",
         "patchSetId": 9
