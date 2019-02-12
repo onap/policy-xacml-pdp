@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f05e1d9c_b223c094",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/startstop/TestMain.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-02-12T12:47:08Z",
+      "side": 1,
+      "message": "Only this test case has shutdown?",
+      "range": {
+        "startLine": 43,
+        "startChar": 8,
+        "endLine": 43,
+        "endChar": 24
+      },
+      "revId": "f239a66e5dd52f4f0149a307789909c5ffc2b704",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7e237f3_b0e9c8f0",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/startstop/TestMain.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-02-12T12:47:08Z",
+      "side": 1,
+      "message": "There\u0027s no assert in this test, I\u0027m sure coverage happens but we should at least have an assert to ensure the -h returns something expected.",
+      "range": {
+        "startLine": 61,
+        "startChar": 3,
+        "endLine": 64,
+        "endChar": 5
+      },
+      "revId": "f239a66e5dd52f4f0149a307789909c5ffc2b704",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41bf9713_35705805",
+        "filename": "pom.xml",
+        "patchSetId": 9
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-02-12T12:47:08Z",
+      "side": 1,
+      "message": "This is now in policy/parent - duplicate version",
+      "range": {
+        "startLine": 64,
+        "startChar": 1,
+        "endLine": 65,
+        "endChar": 1
+      },
+      "revId": "f239a66e5dd52f4f0149a307789909c5ffc2b704",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
