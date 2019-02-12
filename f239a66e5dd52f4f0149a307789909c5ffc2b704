@@ -2,6 +2,108 @@
   "comments": [
     {
       "key": {
+        "uuid": "b0561727_63614d73",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-12T16:14:32Z",
+      "side": 1,
+      "message": "@Produces below is unnecessary",
+      "revId": "f239a66e5dd52f4f0149a307789909c5ffc2b704",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dff0e016_726f90cf",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-12T16:14:32Z",
+      "side": 1,
+      "message": "@Produces below is unnecessary",
+      "revId": "f239a66e5dd52f4f0149a307789909c5ffc2b704",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ff4af36_02ed676a",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestServer.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-12T16:14:32Z",
+      "side": 1,
+      "message": "HttpServer has a shutdown api that may be better to invoke in this case",
+      "revId": "f239a66e5dd52f4f0149a307789909c5ffc2b704",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ff15a62_659be5d2",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestServer.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-12T16:14:32Z",
+      "side": 1,
+      "message": "As a note, after doing the start() and regardless a stop() or shutdown() is issued.   This is always going to return true.   If this is copy code, it may be an issue across other components.",
+      "revId": "f239a66e5dd52f4f0149a307789909c5ffc2b704",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ddc96cf5_5d93f160",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestXacmlPdpRestServer.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-12T16:14:32Z",
+      "side": 1,
+      "message": "Use NetworkUtil.isTcpPortOpen(..), check latest from policy-distribution or policy-api repos, should do same here",
+      "revId": "f239a66e5dd52f4f0149a307789909c5ffc2b704",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a06efd4_f4474a30",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestXacmlPdpStatistics.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-12T16:14:32Z",
+      "side": 1,
+      "message": "same comment as before",
+      "revId": "f239a66e5dd52f4f0149a307789909c5ffc2b704",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f05e1d9c_b223c094",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/startstop/TestMain.java",
         "patchSetId": 9
