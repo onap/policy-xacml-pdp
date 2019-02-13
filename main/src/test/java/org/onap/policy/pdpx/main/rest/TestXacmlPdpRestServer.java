@@ -23,7 +23,9 @@ package org.onap.policy.pdpx.main.rest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
@@ -33,6 +35,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.Test;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
+import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
 import org.onap.policy.pdpx.main.parameters.RestServerParameters;
@@ -56,10 +59,16 @@ public class TestXacmlPdpRestServer {
     @Test
     public void testHealthCheckSuccess() throws PolicyXacmlPdpException, InterruptedException {
         final String reportString = "Report [name=Policy Xacml PDP, url=self, healthy=true, code=200, message=alive]";
-        final Main main = startXacmlPdpService();
-        final HealthCheckReport report = performHealthCheck();
-        validateReport(NAME, SELF, true, 200, ALIVE, reportString, report);
-        stopXacmlPdpService(main);
+        try {
+            final Main main = startXacmlPdpService();
+            final HealthCheckReport report = performHealthCheck();
+            validateReport(NAME, SELF, true, 200, ALIVE, reportString, report);
+            stopXacmlPdpService(main);
+        } catch (final Exception e) {
+            LOGGER.error("testHealthCheckSuccess failed", e);
+            fail("Test should not throw an exception");
+        }
+
     }
 
     @Test
@@ -69,12 +78,18 @@ public class TestXacmlPdpRestServer {
         final RestServerParameters restServerParams = new CommonTestData().getRestServerParameters(false);
         restServerParams.setName(CommonTestData.PDPX_GROUP_NAME);
         final XacmlPdpRestServer restServer = new XacmlPdpRestServer(restServerParams);
-        restServer.start();
-        final HealthCheckReport report = performHealthCheck();
-        validateReport(NAME, SELF, false, 500, NOT_ALIVE, reportString, report);
-        assertTrue(restServer.isAlive());
-        assertTrue(restServer.toString().startsWith("XacmlPdpRestServer [servers="));
-        restServer.shutdown();
+
+        try {
+            restServer.start();
+            final HealthCheckReport report = performHealthCheck();
+            validateReport(NAME, SELF, false, 500, NOT_ALIVE, reportString, report);
+            assertTrue(restServer.isAlive());
+            assertTrue(restServer.toString().startsWith("XacmlPdpRestServer [servers="));
+            restServer.shutdown();
+        } catch (final Exception e) {
+            LOGGER.error("testHealthCheckSuccess failed", e);
+            fail("Test should not throw an exception");
+        }
     }
 
     private Main startXacmlPdpService() {
@@ -86,8 +101,8 @@ public class TestXacmlPdpRestServer {
         main.shutdown();
     }
 
-    private HealthCheckReport performHealthCheck() throws InterruptedException {
-        HealthCheckReport response = null;
+    private HealthCheckReport performHealthCheck() throws InterruptedException, IOException {
+
         final ClientConfig clientConfig = new ClientConfig();
 
         final HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("healthcheck", "zb!XztG34");
@@ -98,15 +113,11 @@ public class TestXacmlPdpRestServer {
 
         final Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 
-        final long startTime = System.currentTimeMillis();
-        while (response == null && (System.currentTimeMillis() - startTime) < 120000) {
-            try {
-                response = invocationBuilder.get(HealthCheckReport.class);
-            } catch (final Exception exp) {
-                LOGGER.info("the server is not started yet. We will retry again");
-            }
+        if (!NetworkUtil.isTcpPortOpen("localhost", 6969, 6, 10000L)) {
+            throw new IllegalStateException("Cannot connect to port 6969");
         }
-        return response;
+
+        return invocationBuilder.get(HealthCheckReport.class);
     }
 
     private void validateReport(final String name, final String url, final boolean healthy, final int code,

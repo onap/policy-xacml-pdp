@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
@@ -44,10 +45,11 @@ public class TestMain {
     }
 
     @Test
-    public void testMain_NoArguments() {
+    public void testMain_NoArguments() throws PolicyXacmlPdpException {
         final String[] xacmlPdpConfigParameters = {};
         final Main main = new Main(xacmlPdpConfigParameters);
         assertNull(main.getParameters());
+        main.shutdown();
     }
 
     @Test
@@ -60,7 +62,10 @@ public class TestMain {
     @Test
     public void testMain_Help() {
         final String[] xacmlPdpConfigParameters = {"-h"};
-        Main.main(xacmlPdpConfigParameters);
+        final Main main = new Main(xacmlPdpConfigParameters);
+        final String message = "-h,--help                     outputs the usage of this command";
+        Assert.assertTrue(main.getArgumentMessage().contains(message));
+
     }
 
     @Test

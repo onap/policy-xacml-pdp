@@ -99,7 +99,7 @@ public class XacmlPdpRestServer implements Startable {
     public boolean stop() {
         for (final HttpServletServer server : servers) {
             try {
-                server.stop();
+                server.shutdown();
             } catch (final Exception exp) {
                 LOGGER.error("Failed to stop xacml pdp http server", exp);
             }

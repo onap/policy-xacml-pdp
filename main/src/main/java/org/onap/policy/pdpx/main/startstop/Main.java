@@ -41,6 +41,9 @@ public class Main {
     // The parameters read in from JSON
     private XacmlPdpParameterGroup parameterGroup;
 
+    // The argument message for some args that return a message
+    private String argumentMessage = null;
+
     /**
      * Instantiates the policy xacml pdp service.
      *
@@ -54,7 +57,7 @@ public class Main {
         final XacmlPdpCommandLineArguments arguments = new XacmlPdpCommandLineArguments();
         try {
             // The arguments return a string if there is a message to print and we should exit
-            final String argumentMessage = arguments.parse(args);
+            argumentMessage = arguments.parse(args);
             if (argumentMessage != null) {
                 LOGGER.info(argumentMessage);
                 return;
@@ -98,6 +101,15 @@ public class Main {
      */
     public XacmlPdpParameterGroup getParameters() {
         return parameterGroup;
+    }
+
+    /**
+     * Get the argumentMessage string.
+     *
+     * @return the argumentMessage
+     */
+    public String getArgumentMessage() {
+        return argumentMessage;
     }
 
     /**
