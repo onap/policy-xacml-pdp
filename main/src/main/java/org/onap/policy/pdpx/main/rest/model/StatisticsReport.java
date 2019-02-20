@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.pdpx.main.rest;
+package org.onap.policy.pdpx.main.rest.model;
 
 /**
  * Class to represent statistics report of xacmlPdp service.

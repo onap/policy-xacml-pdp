@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.pdpx.main.rest;
+package org.onap.policy.pdpx.main.rest.provider;
 
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
