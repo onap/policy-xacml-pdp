@@ -23,12 +23,14 @@ package org.onap.policy.pdpx.main.rest;
 import com.openpojo.reflection.filters.FilterClassName;
 import com.openpojo.validation.Validator;
 import com.openpojo.validation.ValidatorBuilder;
+import com.openpojo.validation.rule.impl.GetterMustExistRule;
 import com.openpojo.validation.rule.impl.SetterMustExistRule;
 import com.openpojo.validation.test.impl.GetterTester;
 import com.openpojo.validation.test.impl.SetterTester;
 
 import org.junit.Test;
 import org.onap.policy.common.utils.validation.ToStringTester;
+import org.onap.policy.pdpx.main.rest.model.StatisticsReport;
 
 /**
  * Class to perform unit testing of {@link StatisticsReport}.
@@ -39,7 +41,7 @@ public class TestStatisticsReport {
     @Test
     public void testStatisticsReport() {
         final Validator validator = ValidatorBuilder.create().with(new ToStringTester()).with(new SetterMustExistRule())
-                .with(new SetterTester()).with(new GetterTester()).build();
+                .with(new GetterMustExistRule()).with(new SetterTester()).with(new GetterTester()).build();
         validator.validate(StatisticsReport.class.getPackage().getName(),
                 new FilterClassName(StatisticsReport.class.getName()));
     }

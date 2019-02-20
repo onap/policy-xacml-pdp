@@ -38,6 +38,7 @@ import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
 import org.onap.policy.pdpx.main.parameters.RestServerParameters;
 import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
+import org.onap.policy.pdpx.main.rest.model.StatisticsReport;
 import org.onap.policy.pdpx.main.startstop.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,7 +104,7 @@ public class TestXacmlPdpStatistics {
         clientConfig.register(feature);
 
         final Client client = ClientBuilder.newClient(clientConfig);
-        final WebTarget webTarget = client.target("http://localhost:6969/statistics");
+        final WebTarget webTarget = client.target("http://localhost:6969/policy/pdpx/v1/statistics");
 
         final Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 

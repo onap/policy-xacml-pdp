@@ -109,7 +109,7 @@ public class TestXacmlPdpRestServer {
         clientConfig.register(feature);
 
         final Client client = ClientBuilder.newClient(clientConfig);
-        final WebTarget webTarget = client.target("http://localhost:6969/healthcheck");
+        final WebTarget webTarget = client.target("http://localhost:6969/policy/pdpx/v1/healthcheck");
 
         final Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 
