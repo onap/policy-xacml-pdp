@@ -38,6 +38,7 @@ import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
 import org.onap.policy.pdpx.main.parameters.RestServerParameters;
 import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
+import org.onap.policy.pdpx.main.rest.model.StatisticsReport;
 import org.onap.policy.pdpx.main.startstop.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

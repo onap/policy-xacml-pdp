@@ -18,9 +18,10 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.pdpx.main.rest;
+package org.onap.policy.pdpx.main.rest.provider;
 
 import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
+import org.onap.policy.pdpx.main.rest.model.StatisticsReport;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
 
 /**
