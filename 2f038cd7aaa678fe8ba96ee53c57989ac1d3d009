@@ -114,6 +114,30 @@
       "revId": "2f038cd7aaa678fe8ba96ee53c57989ac1d3d009",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "181038d2_0888d384",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/model/Decision.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-02-21T12:20:29Z",
+      "side": 1,
+      "message": "Good point. The Decision API is only supported by PDP-X today bout could be supported by others in the future.",
+      "parentUuid": "5857f186_1327a1f2",
+      "range": {
+        "startLine": 21,
+        "startChar": 8,
+        "endLine": 21,
+        "endChar": 45
+      },
+      "revId": "2f038cd7aaa678fe8ba96ee53c57989ac1d3d009",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
