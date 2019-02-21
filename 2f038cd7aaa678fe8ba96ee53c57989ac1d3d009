@@ -48,6 +48,29 @@
     },
     {
       "key": {
+        "uuid": "0ab6011c_8cee1b2d",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-21T13:52:14Z",
+      "side": 1,
+      "message": "We also need the authorization attribute here.\nauthorizations \u003d @Authorization(value \u003d \"basicAuth\")\n\nSame for all API\u0027s.",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 17
+      },
+      "revId": "2f038cd7aaa678fe8ba96ee53c57989ac1d3d009",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45ffb15f_fc2e88bf",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
         "patchSetId": 1
@@ -82,6 +105,30 @@
       "writtenOn": "2019-02-21T01:35:53Z",
       "side": 1,
       "message": "I am not sure if we should use 201 - created for POST call. Or 200 is also ok?",
+      "range": {
+        "startLine": 83,
+        "startChar": 47,
+        "endLine": 83,
+        "endChar": 50
+      },
+      "revId": "2f038cd7aaa678fe8ba96ee53c57989ac1d3d009",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a32949b3_9191d49a",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-21T13:52:14Z",
+      "side": 1,
+      "message": "For 200, we don\u0027t need to mention anything as it is automatically added by Swagger.",
+      "parentUuid": "2abb4927_c5dafedb",
       "range": {
         "startLine": 83,
         "startChar": 47,
