@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c298c8ba_7db1eb7f",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-21T01:35:53Z",
+      "side": 1,
+      "message": "@Consumes is also needed since for /policy/pdpx/v1/decision, it is a POST call, so it will consume a body provided by client",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 10
+      },
+      "revId": "2f038cd7aaa678fe8ba96ee53c57989ac1d3d009",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "65ad48f0_eea47a7b",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-21T01:35:53Z",
+      "side": 1,
+      "message": "@SecurityDefinition is also needed to define basicAuth. Please refer to PAP rest controller. Ram put annotations for basic auth there",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 18
+      },
+      "revId": "2f038cd7aaa678fe8ba96ee53c57989ac1d3d009",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45ffb15f_fc2e88bf",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-21T01:35:53Z",
+      "side": 1,
+      "message": "As Jorge suggests, since we will use AAF, we might also need to add 401 -authentication failure and 403 - authorization failure",
+      "range": {
+        "startLine": 61,
+        "startChar": 25,
+        "endLine": 61,
+        "endChar": 29
+      },
+      "revId": "2f038cd7aaa678fe8ba96ee53c57989ac1d3d009",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2abb4927_c5dafedb",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-21T01:35:53Z",
+      "side": 1,
+      "message": "I am not sure if we should use 201 - created for POST call. Or 200 is also ok?",
+      "range": {
+        "startLine": 83,
+        "startChar": 47,
+        "endLine": 83,
+        "endChar": 50
+      },
+      "revId": "2f038cd7aaa678fe8ba96ee53c57989ac1d3d009",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5857f186_1327a1f2",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/model/Decision.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-21T01:35:53Z",
+      "side": 1,
+      "message": "we might need to move those rest POJO models to /models/platform repo. I am creating some POJOs for policy-api right now. Perhaps this decision model should be there as well.",
+      "range": {
+        "startLine": 21,
+        "startChar": 8,
+        "endLine": 21,
+        "endChar": 45
+      },
+      "revId": "2f038cd7aaa678fe8ba96ee53c57989ac1d3d009",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
