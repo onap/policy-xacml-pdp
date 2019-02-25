@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b21c3b3e_354bcfa4",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-25T18:48:57Z",
+      "side": 1,
+      "message": "why we need 400 here? It is a GET and no body is provided by client.",
+      "range": {
+        "startLine": 67,
+        "startChar": 40,
+        "endLine": 67,
+        "endChar": 74
+      },
+      "revId": "d46c7c12fa66fb2934e69056118d0036cff2afb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d14108aa_fe3d4505",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-25T18:48:57Z",
+      "side": 1,
+      "message": "I think 401 is for authentication error, and 403 is for authorization error since we use AAF. We need both. Is it correct, Jorge/Ram?",
+      "range": {
+        "startLine": 68,
+        "startChar": 25,
+        "endLine": 68,
+        "endChar": 35
+      },
+      "revId": "d46c7c12fa66fb2934e69056118d0036cff2afb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "13e37389_c0a1bf90",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-25T18:48:57Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 79,
+        "startChar": 47,
+        "endLine": 79,
+        "endChar": 50
+      },
+      "revId": "d46c7c12fa66fb2934e69056118d0036cff2afb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72a0091d_410efc80",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-25T18:48:57Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 80,
+        "startChar": 32,
+        "endLine": 80,
+        "endChar": 35
+      },
+      "revId": "d46c7c12fa66fb2934e69056118d0036cff2afb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2ca5a27_50f2ae2a",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-25T18:48:57Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 93,
+        "startChar": 32,
+        "endLine": 93,
+        "endChar": 35
+      },
+      "revId": "d46c7c12fa66fb2934e69056118d0036cff2afb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
