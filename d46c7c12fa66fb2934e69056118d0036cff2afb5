@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "43794c38_b07fa846",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-25T19:55:28Z",
+      "side": 1,
+      "message": "agreed with Chenfei, not needed.",
+      "parentUuid": "b21c3b3e_354bcfa4",
+      "range": {
+        "startLine": 67,
+        "startChar": 40,
+        "endLine": 67,
+        "endChar": 74
+      },
+      "revId": "d46c7c12fa66fb2934e69056118d0036cff2afb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d14108aa_fe3d4505",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
         "patchSetId": 2
@@ -112,6 +136,23 @@
         "endLine": 80,
         "endChar": 35
       },
+      "revId": "d46c7c12fa66fb2934e69056118d0036cff2afb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f1f60faf_dc15d46f",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-25T19:55:28Z",
+      "side": 1,
+      "message": "A suggestion for your consideration, can separate the decision API into its own JAX-RS file, to keep a better structure.\n\nWhen generating the swagger spec at runtime it will include spec for all regardless they are in the same file or not.   FYI.",
       "revId": "d46c7c12fa66fb2934e69056118d0036cff2afb5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
