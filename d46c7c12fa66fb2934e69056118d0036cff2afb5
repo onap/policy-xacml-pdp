@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "9ea1d042_d240ff20",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-25T19:41:53Z",
+      "side": 1,
+      "message": "Yes, its good to have both here.",
+      "parentUuid": "d14108aa_fe3d4505",
+      "range": {
+        "startLine": 68,
+        "startChar": 25,
+        "endLine": 68,
+        "endChar": 35
+      },
+      "revId": "d46c7c12fa66fb2934e69056118d0036cff2afb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "13e37389_c0a1bf90",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
         "patchSetId": 2
