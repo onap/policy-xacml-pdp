@@ -257,6 +257,30 @@
       "revId": "2f038cd7aaa678fe8ba96ee53c57989ac1d3d009",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "509eec00_692898cd",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/model/Decision.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-02-25T16:12:02Z",
+      "side": 1,
+      "message": "I still have to discuss the decision api with Pam, I am not ready to fill this with anything yet.  Do you mind if I leave this here for now and move it to policy/models later?  Only because opening a review for a blank class seems silly.",
+      "parentUuid": "181038d2_0888d384",
+      "range": {
+        "startLine": 21,
+        "startChar": 8,
+        "endLine": 21,
+        "endChar": 45
+      },
+      "revId": "2f038cd7aaa678fe8ba96ee53c57989ac1d3d009",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
