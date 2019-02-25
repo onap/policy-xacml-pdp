@@ -177,6 +177,24 @@
     },
     {
       "key": {
+        "uuid": "967e7190_661fbc2f",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-25T20:45:09Z",
+      "side": 1,
+      "message": "If you prefer to structure it that way, I am fine if you want to keep it all in the same file.",
+      "parentUuid": "1500b3eb_be9a742e",
+      "revId": "d46c7c12fa66fb2934e69056118d0036cff2afb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a2ca5a27_50f2ae2a",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
         "patchSetId": 2
