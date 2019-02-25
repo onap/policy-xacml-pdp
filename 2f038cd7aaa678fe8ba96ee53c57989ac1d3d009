@@ -189,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "b9975222_8fb9d9b5",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-02-25T12:34:21Z",
+      "side": 1,
+      "message": "IMHO use POST because GET is for retrieving a resource. This is actually doing a calculation which is why POST is more appropriate. GET is more for the API CRUD.",
+      "parentUuid": "bbb4a030_052439bc",
+      "range": {
+        "startLine": 83,
+        "startChar": 47,
+        "endLine": 83,
+        "endChar": 50
+      },
+      "revId": "2f038cd7aaa678fe8ba96ee53c57989ac1d3d009",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5857f186_1327a1f2",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/model/Decision.java",
         "patchSetId": 1
