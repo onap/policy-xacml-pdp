@@ -51,7 +51,7 @@ public class Main {
      */
     public Main(final String[] args) {
         final String argumentString = Arrays.toString(args);
-        LOGGER.info("Starting policy xacml pdp service with arguments - " + argumentString);
+        LOGGER.info("Starting policy xacml pdp service with arguments - {}" + argumentString);
 
         // Check the arguments
         final XacmlPdpCommandLineArguments arguments = new XacmlPdpCommandLineArguments();

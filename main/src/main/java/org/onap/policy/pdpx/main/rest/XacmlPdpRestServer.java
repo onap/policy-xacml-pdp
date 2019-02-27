@@ -60,6 +60,9 @@ public class XacmlPdpRestServer implements Startable {
         try {
             servers = HttpServletServer.factory.build(getServerProperties());
             for (final HttpServletServer server : servers) {
+                if (server.isAaf()) {
+                    server.addFilterClass(null, XacmlPdpAafFilter.class.getCanonicalName());
+                }
                 server.start();
             }
         } catch (final Exception exp) {
@@ -89,6 +92,10 @@ public class XacmlPdpRestServer implements Startable {
                 restServerParameters.getUserName());
         props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".password",
                 restServerParameters.getPassword());
+        props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".https",
+                String.valueOf(restServerParameters.isHttps()));
+        props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".aaf",
+                String.valueOf(restServerParameters.isAaf()));
         return props;
     }
 
