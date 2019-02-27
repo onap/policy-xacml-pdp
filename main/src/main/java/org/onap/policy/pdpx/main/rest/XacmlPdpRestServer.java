@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Properties;
 import org.onap.policy.common.capabilities.Startable;
 import org.onap.policy.common.endpoints.http.server.HttpServletServer;
+import org.onap.policy.common.gson.JacksonHandler;
 import org.onap.policy.pdpx.main.parameters.RestServerParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +61,9 @@ public class XacmlPdpRestServer implements Startable {
         try {
             servers = HttpServletServer.factory.build(getServerProperties());
             for (final HttpServletServer server : servers) {
+                if (server.isAaf()) {
+                    server.addFilterClass(null, XacmlPdpAafFilter.class.getCanonicalName());
+                }
                 server.start();
             }
         } catch (final Exception exp) {
@@ -89,6 +93,12 @@ public class XacmlPdpRestServer implements Startable {
                 restServerParameters.getUserName());
         props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".password",
                 restServerParameters.getPassword());
+        props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".https",
+                String.valueOf(restServerParameters.isHttps()));
+        props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".aaf",
+                String.valueOf(restServerParameters.isAaf()));
+        props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".serialization.provider",
+                JacksonHandler.class.getName());
         return props;
     }
 
