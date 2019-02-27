@@ -47,6 +47,8 @@ public class TestXacmlPdpParameterGroup {
         assertEquals(restServerParameters.getUserName(), pdpxParameters.getRestServerParameters().getUserName());
         assertEquals(restServerParameters.getPassword(), pdpxParameters.getRestServerParameters().getPassword());
         assertEquals(CommonTestData.PDPX_GROUP_NAME, pdpxParameters.getName());
+        assertFalse(pdpxParameters.getRestServerParameters().isHttps());
+        assertFalse(pdpxParameters.getRestServerParameters().isAaf());
     }
 
     @Test
