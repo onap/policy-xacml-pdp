@@ -30,6 +30,8 @@ public class CommonTestData {
     private static final String REST_SERVER_USER = "healthcheck";
     private static final int REST_SERVER_PORT = 6969;
     private static final String REST_SERVER_HOST = "0.0.0.0";
+    private static final boolean REST_SERVER_HTTPS = false;
+    private static final boolean REST_SERVER_AAF = false;
     public static final String PDPX_GROUP_NAME = "XacmlPdpGroup";
 
     /**
@@ -42,9 +44,9 @@ public class CommonTestData {
         final RestServerParameters restServerParameters;
         if (!isEmpty) {
             restServerParameters = new RestServerParameters(REST_SERVER_HOST, REST_SERVER_PORT, REST_SERVER_USER,
-                    REST_SERVER_PASSWORD);
+                    REST_SERVER_PASSWORD, REST_SERVER_HTTPS, REST_SERVER_AAF);
         } else {
-            restServerParameters = new RestServerParameters(null, 0, null, null);
+            restServerParameters = new RestServerParameters(null, 0, null, null, REST_SERVER_HTTPS, REST_SERVER_AAF);
         }
         return restServerParameters;
     }
