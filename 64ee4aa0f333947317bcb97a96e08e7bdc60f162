@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c3f24789_390520a3",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestXacmlPdpStatistics.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-27T10:54:34Z",
+      "side": 1,
+      "message": "Not needed in this review.\nBut I will suggest to merge this class with TestXacmlPdpRestServer.java \u0026 have a single test class for healthcheck \u0026 statistics endpoint over http \u0026 https. You can refer to PAP for the same.",
+      "range": {
+        "startLine": 50,
+        "startChar": 13,
+        "endLine": 50,
+        "endChar": 36
+      },
+      "revId": "64ee4aa0f333947317bcb97a96e08e7bdc60f162",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
