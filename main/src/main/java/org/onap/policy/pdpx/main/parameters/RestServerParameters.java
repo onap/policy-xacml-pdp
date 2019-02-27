@@ -35,21 +35,22 @@ public class RestServerParameters implements ParameterGroup {
     private int port;
     private String userName;
     private String password;
+    private boolean https;
+    private boolean aaf;
 
     /**
      * Constructor for instantiating RestServerParameters.
      *
-     * @param host the host name
-     * @param port the port
-     * @param userName the user name
-     * @param password the password
+     * @param builder the RestServer builder
      */
-    public RestServerParameters(final String host, final int port, final String userName, final String password) {
+    public RestServerParameters(final RestServerBuilder builder) {
         super();
-        this.host = host;
-        this.port = port;
-        this.userName = userName;
-        this.password = password;
+        this.host = builder.getHost();
+        this.port = builder.getPort();
+        this.userName = builder.getUserName();
+        this.password = builder.getPassword();
+        this.https = builder.isHttps();
+        this.aaf = builder.isAaf();
     }
 
     /**
@@ -96,6 +97,24 @@ public class RestServerParameters implements ParameterGroup {
      */
     public String getPassword() {
         return password;
+    }
+
+    /**
+     * Return the https flag of this RestServerParameters instance.
+     *
+     * @return the https flag
+     */
+    public boolean isHttps() {
+        return https;
+    }
+
+    /**
+     * Return the aaf flag of this RestServerParameters instance.
+     *
+     * @return the aaf flag
+     */
+    public boolean isAaf() {
+        return aaf;
     }
 
     /**
