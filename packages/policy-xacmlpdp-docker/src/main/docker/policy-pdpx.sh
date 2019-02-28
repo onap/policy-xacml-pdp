@@ -20,7 +20,7 @@
 #
 
 JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
-POLICY_PDPX_HOME=/opt/app/policy/pdpx
+POLICY_PDPX_HOME=/opt/app/policy/xacml-pdp
 KEYSTORE="${POLICY_HOME}/etc/ssl/policy-keystore"
 KEYSTORE_PASSWD="Pol1cy_0nap"
 TRUSTSTORE="${POLICY_HOME}/etc/ssl/policy-truststore"

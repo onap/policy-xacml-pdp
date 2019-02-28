@@ -3,7 +3,7 @@ FROM ubuntu:16.04
 ARG HTTP_PROXY=${HTTP_PROXY}
 ARG HTTPS_PROXY=${HTTPS_PROXY}
 ARG BUILD_VERSION=${BUILD_VERSION}
-ARG POLICY_LOGS=/var/log/onap/policy/pdpx
+ARG POLICY_LOGS=/var/log/onap/policy/xacml-pdp
 
 ENV http_proxy $HTTP_PROXY
 ENV https_proxy $HTTPS_PROXY
@@ -11,7 +11,7 @@ ENV BUILD_VERSION ${BUILD_VERSION}
 ENV POLICY_LOGS ${POLICY_LOGS}
 
 ENV POLICY_HOME=/opt/app/policy
-ENV POLICY_PDPX_HOME=${POLICY_HOME}/pdpx
+ENV POLICY_PDPX_HOME=${POLICY_HOME}/xacml-pdp
 
 RUN \
         apt-get clean && \
