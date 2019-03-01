@@ -40,4 +40,4 @@ fi
 
 echo "Policy Xacml PDP config file: $CONFIG_FILE"
 
-$JAVA_HOME/bin/java -cp "$POLICY_PDPX_HOME/etc:$POLICY_PDPX_HOME/lib/*" -Djavax.net.ssl.keyStore="$KEYSTORE" -Djavax.net.ssl.keyStorePassword="$KEYSTORE_PASSWD" -Djavax.net.ssl.trustStore="$TRUSTSTORE" -Djavax.net.ssl.trustStorePassword="$TRUSTSTORE_PASSWD" org.onap.policy.xacmlpdp.main.startstop.Main -c $CONFIG_FILE
+$JAVA_HOME/bin/java -cp "$POLICY_PDPX_HOME/etc:$POLICY_PDPX_HOME/lib/*" -Djavax.net.ssl.keyStore="$KEYSTORE" -Djavax.net.ssl.keyStorePassword="$KEYSTORE_PASSWD" -Djavax.net.ssl.trustStore="$TRUSTSTORE" -Djavax.net.ssl.trustStorePassword="$TRUSTSTORE_PASSWD" org.onap.policy.pdpx.main.startstop.Main -c $CONFIG_FILE
