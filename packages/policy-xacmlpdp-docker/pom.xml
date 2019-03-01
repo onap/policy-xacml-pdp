@@ -107,7 +107,7 @@
                                         <dependencySets>
                                             <dependencySet>
                                                 <includes>
-                                                    <include>org.onap.policy.xacmlpdp:policy-xacmlpdp-tarball</include>
+                                                    <include>org.onap.policy.xacml-pdp:policy-xacmlpdp-tarball</include>
                                                 </includes>
                                                 <outputDirectory>/lib</outputDirectory>
                                                 <outputFileNameMapping>policy-xacmlpdp.tar.gz</outputFileNameMapping>
@@ -148,7 +148,7 @@
                             <goal>push</goal>
                         </goals>
                         <configuration>
-                            <image>onap/policy-xacmp-pdp</image>
+                            <image>onap/policy-xacml-pdp</image>
                         </configuration>
                     </execution>
                 </executions>

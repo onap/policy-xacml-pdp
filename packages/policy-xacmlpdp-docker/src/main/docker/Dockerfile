@@ -33,8 +33,8 @@ RUN mkdir -p ${POLICY_PDPX_HOME} ${POLICY_LOGS} ${POLICY_HOME}/etc/ssl ${POLICY_
 
 RUN mkdir /packages
 COPY /maven/* /packages
-RUN tar xvfz /packages/policy-xacml-pdp.tar.gz --directory ${POLICY_PDPX_HOME}
-RUN rm /packages/policy-xacml-pdp.tar.gz
+RUN tar xvfz /packages/policy-xacmlpdp.tar.gz --directory ${POLICY_PDPX_HOME}
+RUN rm /packages/policy-xacmlpdp.tar.gz
 
 WORKDIR ${POLICY_PDPX_HOME}
 COPY policy-pdpx.sh  bin/.

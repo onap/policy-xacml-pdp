@@ -37,14 +37,6 @@
     </dependencySets>
     <fileSets>
         <fileSet>
-            <directory>${project.basedir}/src/main/resources</directory>
-            <includes>
-                <include>policyLogger.properties</include>
-            </includes>
-            <outputDirectory>/bin/config</outputDirectory>
-            <lineEnding>unix</lineEnding>
-        </fileSet>
-        <fileSet>
             <directory>${project.basedir}/src/main/resources/etc
             </directory>
             <includes>
