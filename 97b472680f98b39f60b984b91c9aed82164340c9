@@ -1,0 +1,141 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43ce81bf_c1f08bf7",
+        "filename": "applications/monitoring/checkstyle-suppressions.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-04T19:31:30Z",
+      "side": 1,
+      "message": "2019?",
+      "range": {
+        "startLine": 4,
+        "startChar": 2,
+        "endLine": 4,
+        "endChar": 21
+      },
+      "revId": "97b472680f98b39f60b984b91c9aed82164340c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eec1b377_d0c3be5f",
+        "filename": "applications/monitoring/src/main/resources/RootMonitoringPolicy.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-04T19:31:30Z",
+      "side": 1,
+      "message": "license?",
+      "revId": "97b472680f98b39f60b984b91c9aed82164340c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb6ec059_cfeb48b1",
+        "filename": "applications/monitoring/src/main/resources/RootMonitoringPolicy.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-04T19:31:30Z",
+      "side": 1,
+      "message": "The rest of the match conditions seem reasonable to me, but why match on \"John\"?",
+      "range": {
+        "startLine": 28,
+        "startChar": 91,
+        "endLine": 28,
+        "endChar": 95
+      },
+      "revId": "97b472680f98b39f60b984b91c9aed82164340c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f24503a8_88f5de23",
+        "filename": "applications/monitoring/src/main/resources/onap.Monitoring.1.0.0.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-04T19:31:30Z",
+      "side": 1,
+      "message": "license?",
+      "revId": "97b472680f98b39f60b984b91c9aed82164340c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d3dfca96_e8ee04b9",
+        "filename": "applications/monitoring/src/main/resources/onap.policy.monitoring.cdap.tca.hi.lo.app.1.0.0.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-04T19:31:30Z",
+      "side": 1,
+      "message": "license?",
+      "revId": "97b472680f98b39f60b984b91c9aed82164340c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3858d24_3476fb47",
+        "filename": "applications/monitoring/src/test/java/cucumber/Stepdefs.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-04T19:31:30Z",
+      "side": 1,
+      "message": "camelCase?",
+      "range": {
+        "startLine": 32,
+        "startChar": 16,
+        "endLine": 32,
+        "endChar": 36
+      },
+      "revId": "97b472680f98b39f60b984b91c9aed82164340c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9de2432e_d4743cdb",
+        "filename": "applications/monitoring/src/test/resources/vDNS.policy.input.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-04T19:31:30Z",
+      "side": 1,
+      "message": "license?",
+      "revId": "97b472680f98b39f60b984b91c9aed82164340c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
