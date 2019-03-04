@@ -65,6 +65,30 @@
     },
     {
       "key": {
+        "uuid": "a6d351c5_7d6bdd07",
+        "filename": "applications/monitoring/src/main/resources/RootMonitoringPolicy.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-04T22:57:34Z",
+      "side": 1,
+      "message": "THis is just a placeholder policy- my next review is going to work on the policy. There\u0027s a lot to that. I added it so the directories can be in place.",
+      "parentUuid": "cb6ec059_cfeb48b1",
+      "range": {
+        "startLine": 28,
+        "startChar": 91,
+        "endLine": 28,
+        "endChar": 95
+      },
+      "revId": "97b472680f98b39f60b984b91c9aed82164340c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f24503a8_88f5de23",
         "filename": "applications/monitoring/src/main/resources/onap.Monitoring.1.0.0.yaml",
         "patchSetId": 3
@@ -82,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "c586907a_621bd245",
+        "filename": "applications/monitoring/src/main/resources/onap.Monitoring.1.0.0.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-04T22:57:34Z",
+      "side": 1,
+      "message": "Same comment - no license here.",
+      "parentUuid": "f24503a8_88f5de23",
+      "revId": "97b472680f98b39f60b984b91c9aed82164340c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d3dfca96_e8ee04b9",
         "filename": "applications/monitoring/src/main/resources/onap.policy.monitoring.cdap.tca.hi.lo.app.1.0.0.yaml",
         "patchSetId": 3
@@ -93,6 +135,24 @@
       "writtenOn": "2019-03-04T19:31:30Z",
       "side": 1,
       "message": "license?",
+      "revId": "97b472680f98b39f60b984b91c9aed82164340c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0dbd2cd6_5bf9340a",
+        "filename": "applications/monitoring/src/main/resources/onap.policy.monitoring.cdap.tca.hi.lo.app.1.0.0.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-04T22:57:34Z",
+      "side": 1,
+      "message": "No - this is test input and must match what we expect in the API call. The LICENSE.TXT at the root of the repo covers it.",
+      "parentUuid": "d3dfca96_e8ee04b9",
       "revId": "97b472680f98b39f60b984b91c9aed82164340c9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -122,6 +182,30 @@
     },
     {
       "key": {
+        "uuid": "55e92569_058656ca",
+        "filename": "applications/monitoring/src/test/java/cucumber/Stepdefs.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-04T22:57:34Z",
+      "side": 1,
+      "message": "No - cucumber doesn\u0027t work like that it generates these based on the features.. This is why I added the checkstyle suppressions xml.",
+      "parentUuid": "a3858d24_3476fb47",
+      "range": {
+        "startLine": 32,
+        "startChar": 16,
+        "endLine": 32,
+        "endChar": 36
+      },
+      "revId": "97b472680f98b39f60b984b91c9aed82164340c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9de2432e_d4743cdb",
         "filename": "applications/monitoring/src/test/resources/vDNS.policy.input.yaml",
         "patchSetId": 3
@@ -133,6 +217,24 @@
       "writtenOn": "2019-03-04T19:31:30Z",
       "side": 1,
       "message": "license?",
+      "revId": "97b472680f98b39f60b984b91c9aed82164340c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc67a48c_740c09ed",
+        "filename": "applications/monitoring/src/test/resources/vDNS.policy.input.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-04T22:57:34Z",
+      "side": 1,
+      "message": "No license - this is input we would expect as a test.",
+      "parentUuid": "9de2432e_d4743cdb",
       "revId": "97b472680f98b39f60b984b91c9aed82164340c9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
