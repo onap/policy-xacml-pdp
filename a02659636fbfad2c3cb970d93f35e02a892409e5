@@ -1,0 +1,12 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Ram Krishna Verma <ram.krishna.verma@est.tech>
+Code-Review+1: Liam Fallon <liam.fallon@est.tech>
+Code-Review+1: Chenfei Gao <cgao@research.att.com>
+Code-Review+1: Michael Mokry <michael.mokry@att.com>
+Code-Review+1: Joshua Reich <jreich@research.att.com>
+Code-Review+2: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Submitted-by: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Submitted-at: Tue, 05 Mar 2019 19:04:03 +0000
+Reviewed-on: https://gerrit.onap.org/r/79577
+Project: policy/xacml-pdp
+Branch: refs/heads/master
