@@ -140,7 +140,7 @@
         <appender-ref ref="asyncDebugOut" />
     </logger>
 
-    <logger name="network" level=info" additivity="false">
+    <logger name="network" level="info" additivity="false">
         <appender-ref ref="asyncNetworkOut" />
     </logger>
     

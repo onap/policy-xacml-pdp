@@ -19,7 +19,7 @@
 # ============LICENSE_END=========================================================
 #
 
-JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
+JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk/
 POLICY_PDPX_HOME=/opt/app/policy/pdpx
 KEYSTORE="${POLICY_HOME}/etc/ssl/policy-keystore"
 KEYSTORE_PASSWD="Pol1cy_0nap"
