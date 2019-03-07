@@ -52,6 +52,7 @@
         <module>main</module>
         <module>applications</module>
         <module>packages</module>
+        <module>testsuites</module>
     </modules>
     
     <dependencies>
