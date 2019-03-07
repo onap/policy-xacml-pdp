@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "a99aabb6_03ef00f2",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/RestServerBuilder.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-07T22:05:30Z",
+      "side": 1,
+      "message": "this should be setHttps(boolean https)\n\nif other builder objects are using \"isXxx\", then they are probably incorrect.  Use \"set\" methods to set values and \"is\" methods to check boolean return values.",
+      "parentUuid": "1e149687_7ded6c63",
+      "range": {
+        "startLine": 75,
+        "startChar": 29,
+        "endLine": 75,
+        "endChar": 36
+      },
+      "revId": "4010210a5e198595d2b5317092d69b64f0929fa7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3097e75_86545ca7",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/RestServerBuilder.java",
         "patchSetId": 3
@@ -107,6 +131,30 @@
       "writtenOn": "2019-03-07T20:14:50Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 80,
+        "startChar": 29,
+        "endLine": 80,
+        "endChar": 34
+      },
+      "revId": "4010210a5e198595d2b5317092d69b64f0929fa7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d038335e_676b4b23",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/RestServerBuilder.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-07T22:05:30Z",
+      "side": 1,
+      "message": "setAaf",
+      "parentUuid": "e3097e75_86545ca7",
       "range": {
         "startLine": 80,
         "startChar": 29,
