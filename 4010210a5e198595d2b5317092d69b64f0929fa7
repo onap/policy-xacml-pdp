@@ -68,6 +68,23 @@
       "revId": "4010210a5e198595d2b5317092d69b64f0929fa7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2feb9bd_15a389af",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestXacmlPdpRestServer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-07T20:29:39Z",
+      "side": 1,
+      "message": "either add a fail(\"...\") here, or remove the try/catch block and use @Rule/expectedException (or assertj) to match the message",
+      "revId": "4010210a5e198595d2b5317092d69b64f0929fa7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
