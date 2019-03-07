@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31f93894_361842e2",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/RestServerBuilder.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-03-07T20:14:50Z",
+      "side": 1,
+      "message": "do we need this constructor? It still has the same number of params as previous RestServerParameters constructor (too many params too).",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 28
+      },
+      "revId": "4010210a5e198595d2b5317092d69b64f0929fa7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b54a394_81b5b03f",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/RestServerBuilder.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-03-07T20:14:50Z",
+      "side": 1,
+      "message": "isHttps should return boolean. It\u0027s more like a setter. Maybe change to setHttps",
+      "range": {
+        "startLine": 75,
+        "startChar": 29,
+        "endLine": 75,
+        "endChar": 36
+      },
+      "revId": "4010210a5e198595d2b5317092d69b64f0929fa7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3097e75_86545ca7",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/RestServerBuilder.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-03-07T20:14:50Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 80,
+        "startChar": 29,
+        "endLine": 80,
+        "endChar": 34
+      },
+      "revId": "4010210a5e198595d2b5317092d69b64f0929fa7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
