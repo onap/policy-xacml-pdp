@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "1e149687_7ded6c63",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/RestServerBuilder.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-03-07T22:00:16Z",
+      "side": 1,
+      "message": "This is returning a boolean.. this.https is a boolean.. all the documentation that I saw for builder objects do it this way.",
+      "parentUuid": "2b54a394_81b5b03f",
+      "range": {
+        "startLine": 75,
+        "startChar": 29,
+        "endLine": 75,
+        "endChar": 36
+      },
+      "revId": "4010210a5e198595d2b5317092d69b64f0929fa7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3097e75_86545ca7",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/RestServerBuilder.java",
         "patchSetId": 3
