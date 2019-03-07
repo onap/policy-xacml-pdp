@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0cb941a1_7db31f77",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/RestServerBuilder.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-03-07T22:01:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31f93894_361842e2",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 28
+      },
+      "revId": "4010210a5e198595d2b5317092d69b64f0929fa7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2b54a394_81b5b03f",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/RestServerBuilder.java",
         "patchSetId": 3
@@ -106,6 +130,24 @@
       "writtenOn": "2019-03-07T20:29:39Z",
       "side": 1,
       "message": "either add a fail(\"...\") here, or remove the try/catch block and use @Rule/expectedException (or assertj) to match the message",
+      "revId": "4010210a5e198595d2b5317092d69b64f0929fa7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da1f93b5_5f28913e",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestXacmlPdpRestServer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-03-07T22:01:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c2feb9bd_15a389af",
       "revId": "4010210a5e198595d2b5317092d69b64f0929fa7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
