@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ca8bb8a_9f807a8c",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/RestServerParameters.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-03-08T10:16:24Z",
+      "side": 1,
+      "message": "I think this should be replaced with single parameter (RestServerBuilder builder). And builder should have getter for all the fields that can be used to construct RestServerParameters.\nHave a look at DistributionStatusMessageBuilder in policy/distribution repo.",
+      "range": {
+        "startLine": 51,
+        "startChar": 32,
+        "endLine": 52,
+        "endChar": 50
+      },
+      "revId": "985c094eabc6eddf23c7769535d12a7a5aa95e80",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97cd565b_ecc9b1d1",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/RestServerParameters.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-03-08T10:16:24Z",
+      "side": 1,
+      "message": "Will suggest to use Lombok for getters \u0026 setters.",
+      "range": {
+        "startLine": 62,
+        "startChar": 4,
+        "endLine": 134,
+        "endChar": 5
+      },
+      "revId": "985c094eabc6eddf23c7769535d12a7a5aa95e80",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "58d1d316_a5e450fd",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestServer.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-03-08T10:16:24Z",
+      "side": 1,
+      "message": "I think we need this as well.\nprops.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + \".serialization.provider\",\n                JacksonHandler.class.getName());",
+      "range": {
+        "startLine": 99,
+        "startChar": 15,
+        "endLine": 99,
+        "endChar": 21
+      },
+      "revId": "985c094eabc6eddf23c7769535d12a7a5aa95e80",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
