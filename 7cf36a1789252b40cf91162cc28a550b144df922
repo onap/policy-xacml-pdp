@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9891bffa_1833b05f",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestServer.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-08T21:54:43Z",
+      "side": 1,
+      "message": "I should have mentioned this before: in this case, you should leave this property out, as thehe default is to use the jackson provider.  JacksonHandler, however, is a *GSON* provider that provides limited jackson behavior - I believe xacml is still dependent on the real jackson provider.\n\nthe alternative would be to specify \"com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider\".",
+      "revId": "7cf36a1789252b40cf91162cc28a550b144df922",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
