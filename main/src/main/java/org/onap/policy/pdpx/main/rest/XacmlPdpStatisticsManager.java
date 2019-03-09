@@ -26,6 +26,7 @@ package org.onap.policy.pdpx.main.rest;
  */
 public class XacmlPdpStatisticsManager {
 
+    private static long totalPolicyTypesCount;
     private static long totalPoliciesCount;
     private static long permitDecisionsCount;
     private static long denyDecisionsCount;
@@ -34,6 +35,18 @@ public class XacmlPdpStatisticsManager {
 
     private XacmlPdpStatisticsManager() {
         throw new IllegalStateException("Instantiation of the class is not allowed");
+    }
+
+    /**
+     * Method to set the xacml pdp total policy types count. This
+     * doesn't really increment, it depends on the applications
+     * that are loaded. Which can be dynamic.
+     *
+     * @return the total
+     */
+    public static long setTotalPolicyTypesCount(long newCount) {
+        totalPolicyTypesCount = newCount;
+        return totalPolicyTypesCount;
     }
 
     /**
@@ -79,6 +92,15 @@ public class XacmlPdpStatisticsManager {
      */
     public static long updateNotApplicableDecisionsCount() {
         return ++notApplicableDecisionsCount;
+    }
+
+    /**
+     * Returns the current value of totalPolicyTypesCount.
+
+     * @return the totalPolicyTypesCount
+     */
+    public static long getTotalPolicyTypesCount() {
+        return totalPolicyTypesCount;
     }
 
     /**
