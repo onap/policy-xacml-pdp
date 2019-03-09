@@ -33,6 +33,7 @@
 
   <modules>
     <module>monitoring</module>
+    <module>common</module>
   </modules>
 
 
