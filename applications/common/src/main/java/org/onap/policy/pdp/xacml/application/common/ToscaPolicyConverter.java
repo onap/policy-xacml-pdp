@@ -20,12 +20,13 @@
  * ============LICENSE_END=========================================================
  */
 
-package cucumber;
+package org.onap.policy.pdp.xacml.application.common;
 
-//import cucumber.api.java.en.Given;
-//import cucumber.api.java.en.Then;
-//import cucumber.api.java.en.When;
+import java.io.InputStream;
+import java.util.List;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
-public class Stepdefs {
+public interface ToscaPolicyConverter {
 
+    public List<PolicyType> convertPolicies(InputStream isToscaPolicy) throws ToscaPolicyConversionException;
 }

@@ -20,12 +20,31 @@
  * ============LICENSE_END=========================================================
  */
 
-package cucumber;
+package org.onap.policy.pdp.xacml.application.common;
 
-//import cucumber.api.java.en.Given;
-//import cucumber.api.java.en.Then;
-//import cucumber.api.java.en.When;
+public class ToscaPolicyConversionException extends Exception {
 
-public class Stepdefs {
+    private static final long serialVersionUID = 1L;
+
+    public ToscaPolicyConversionException() {
+        super();
+    }
+
+    public ToscaPolicyConversionException(String message) {
+        super(message);
+    }
+
+    public ToscaPolicyConversionException(Throwable cause) {
+        super(cause);
+    }
+
+    public ToscaPolicyConversionException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ToscaPolicyConversionException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 
 }
