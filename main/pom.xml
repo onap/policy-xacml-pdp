@@ -56,6 +56,16 @@
             <artifactId>common-parameters</artifactId>
             <version>${policy.common.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.onap.policy.xacml-pdp.applications</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.onap.policy.xacml-pdp.applications</groupId>
+            <artifactId>monitoring</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
