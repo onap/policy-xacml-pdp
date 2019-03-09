@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="onap.scaleout.tca" Version="1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-unless-permit">
+    <Description>The root policy for supporting in-memory onap.Monitoring policy-type policies.</Description>
+    <Target>
+        <AnyOf>
+            <AllOf>
+                <!-- Exact policy-id value -->
+                <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">onap.scaleout.tca</AttributeValue>
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                </Match>
+            </AllOf>
+            <AllOf>
+                <!-- Regular expression match on policy id -->
+                <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">onap.scaleout.tca</AttributeValue>
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                </Match>
+            </AllOf>
+            <AllOf>
+                <!-- Exact policy-type value -->
+                <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">onap.policies.monitoring.cdap.tca.hi.lo.app</AttributeValue>
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                </Match>
+            </AllOf>
+            <AllOf>
+                <!-- Regular expression match on policy-type -->
+                <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">onap.policies.monitoring.cdap.tca.hi.lo.app</AttributeValue>
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                </Match>
+            </AllOf>
+        </AnyOf>
+    </Target>
+    <Rule RuleId="urn:org:onap:xacml:rule:id:74caee98-bd05-4bb5-917c-a26ef80bb0f4" Effect="Permit">
+        <Description>Default is Permit</Description>
+        <!-- 
+        
+        Add JSON as Obligation
+        
+         -->
+    </Rule>
+</Policy>
