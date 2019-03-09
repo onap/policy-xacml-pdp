@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="urn:org:onap:monitoring:policy:id" Version="1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<PolicySet xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" PolicyCombiningAlgId="urn:com:att:xacml:3.0:policy-combining-algorithm:combined-deny-overrides" PolicySetId="urn:org:onap:monitoring:policy:id" Version="1.0" xsi:schemaLocation="urn:oasis:names:tc:xacml:3.0:policy:schema:os access_control-xacml-2.0-policy-schema-os.xsd">
     <Description>The root policy for supporting in-memory onap.Monitoring policy-type policies.</Description>
     <Target>
         <AnyOf>
@@ -19,24 +19,18 @@
             </AllOf>
         </AnyOf>
     </Target>
-    <Rule RuleId="urn:org:onap:xacml:rule:id:da3338f3-8a9d-4bc7-8266-35b886516354" Effect="Permit">
-        <Description>PERMIT - TO BE FILLED IN</Description>
-        <Target>
-            <AnyOf>
-                <AllOf>
-                    <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">John</AttributeValue>
-                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
-                    </Match>
-                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
-                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ACCESS</AttributeValue>
-                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
-                    </Match>
-                </AllOf>
-            </AnyOf>
-        </Target>
-    </Rule>
-    <Rule RuleId="urn:org:onap:xacml:rule:id:74caee98-bd05-4bb5-917c-a26ef80bb0f4" Effect="Deny">
-        <Description>Default is DENY</Description>
-    </Rule>
-</Policy>
+    <!--
+
+    New Policies created from TOSCA policies can be stored like this.
+    
+    <PolicyIdReference>onap.scaleout.tca</PolicyIdReference>
+    <PolicySetIdReference>urn:oasis:names:tc:xacml:2.0:conformance-test:IIE001:policyset1</PolicySetIdReference>
+    -->
+    <Policy PolicyId="default" Version="1.0" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-unless-deny" >
+        <Description>Default is to allow a permit - returning 0 obligations</Description>
+        <Target/>
+        <Rule RuleId="default" Effect="Permit">
+            <Target/>
+        </Rule>
+    </Policy>
+</PolicySet>

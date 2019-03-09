@@ -27,6 +27,7 @@ package org.onap.policy.pdpx.main.rest.model;
 public class StatisticsReport {
 
     private int code;
+    private long totalPolicyTypesCount;
     private long totalPoliciesCount;
     private long permitDecisionsCount;
     private long denyDecisionsCount;
@@ -50,6 +51,24 @@ public class StatisticsReport {
      */
     public void setCode(final int code) {
         this.code = code;
+    }
+
+    /**
+     * Returns the totalPolicyTypesCount of this {@link StatisticsReport} instance.
+     *
+     * @return the totalPolicyTypesCount
+     */
+    public long getTotalPolicyTypesCount() {
+        return totalPolicyTypesCount;
+    }
+
+    /**
+     * Set totalPolicyTypesCount in this {@link StatisticsReport} instance.
+     *
+     * @param totalPolicyTypesCount the totalPolicyTypesCount to set
+     */
+    public void setTotalPolicyTypesCount(long totalPolicyTypesCount) {
+        this.totalPolicyTypesCount = totalPolicyTypesCount;
     }
 
     /**
@@ -150,6 +169,8 @@ public class StatisticsReport {
         final StringBuilder builder = new StringBuilder();
         builder.append("StatisticsReport [code=");
         builder.append(getCode());
+        builder.append(", totalPolicyTypesCount=");
+        builder.append(getTotalPolicyTypesCount());
         builder.append(", totalPoliciesCount=");
         builder.append(getTotalPoliciesCount());
         builder.append(", permitDecisionsCount=");

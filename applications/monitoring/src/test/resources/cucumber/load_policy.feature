@@ -18,10 +18,18 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # ============LICENSE_END=========================================================
-#Feature: Return a decision
-#  Return a decision for a request
-#  
-#  Scenario: Return policy as a JSON
-#    Given TCA Policy is loaded
-#    When A Decision Request is received
-#    Then I should return TCA Policy as JSON
+
+Feature: Loading TOSCA Policies
+  When a TOSCA Policy is received, convert it
+  to a XACML policy and then load it into the XACML PDP engine.
+  
+  Scenario: No Policies Loaded
+    Given Initialization
+    When Decision Requested
+    Then Decision Permit 0 Obligations
+  
+  Scenario: Load New Policy
+    Given Initialization
+    When The application gets new Tosca Policy
+    Then Load Policy
+    And Save Configuration
