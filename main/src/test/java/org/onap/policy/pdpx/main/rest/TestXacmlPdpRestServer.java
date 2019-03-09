@@ -41,6 +41,7 @@ import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.After;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.utils.network.NetworkUtil;
@@ -68,6 +69,16 @@ public class TestXacmlPdpRestServer {
     private static String KEYSTORE = System.getProperty("user.dir") + "/src/test/resources/ssl/policy-keystore";
     private Main main;
     private XacmlPdpRestServer restServer;
+
+    /**
+     * setup.
+     */
+    @BeforeClass
+    public static void setUp() {
+        System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StdErrLog");
+        System.setProperty("org.eclipse.jetty.LEVEL", "OFF");
+
+    }
 
     /**
      * Method for cleanup after each test.

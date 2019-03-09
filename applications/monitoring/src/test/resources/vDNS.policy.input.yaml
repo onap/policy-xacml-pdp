@@ -6,6 +6,7 @@ policies:
         version: 1.0.0
         metadata:
           policy-id: onap.scaleout.tca
+          policy-version: 1
         properties:
           domain: measurementsForVfScaling
           metricsPerEventName:
