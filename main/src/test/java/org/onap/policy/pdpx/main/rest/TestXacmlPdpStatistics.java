@@ -21,6 +21,7 @@
 
 package org.onap.policy.pdpx.main.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -32,6 +33,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
@@ -51,12 +53,19 @@ public class TestXacmlPdpStatistics {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestXacmlPdpStatistics.class);
 
+    @BeforeClass
+    public static void beforeClass() {
+        System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StdErrLog");
+        System.setProperty("org.eclipse.jetty.LEVEL", "OFF");
+    }
+
     @Test
     public void testXacmlPdpStatistics_200() throws PolicyXacmlPdpException, InterruptedException {
         try {
             final Main main = startXacmlPdpService();
             StatisticsReport report = getXacmlPdpStatistics();
             validateReport(report, 0, 200);
+            assertThat(report.getTotalPolicyTypesCount()).isGreaterThan(0);
             updateXacmlPdpStatistics();
             report = getXacmlPdpStatistics();
             validateReport(report, 1, 200);

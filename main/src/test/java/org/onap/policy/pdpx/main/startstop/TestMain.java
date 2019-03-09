@@ -25,6 +25,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
@@ -34,6 +35,16 @@ import org.onap.policy.pdpx.main.parameters.CommonTestData;
  *
  */
 public class TestMain {
+
+    /**
+     * setup.
+     */
+    @BeforeClass
+    public static void setUp() {
+        System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StdErrLog");
+        System.setProperty("org.eclipse.jetty.LEVEL", "OFF");
+
+    }
 
     @Test
     public void testMain() throws PolicyXacmlPdpException {

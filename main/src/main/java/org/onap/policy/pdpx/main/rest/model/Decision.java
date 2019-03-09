@@ -20,8 +20,16 @@
 
 package org.onap.policy.pdpx.main.rest.model;
 
+import java.util.List;
+import java.util.Map;
+
 public class Decision {
 
-    //TODO
+    String  onapName;
 
+    String  onapInstance;
+
+    String  action;
+
+    List<Map<String, Object>> resource;
 }

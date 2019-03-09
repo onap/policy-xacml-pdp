@@ -18,10 +18,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # ============LICENSE_END=========================================================
-Feature: Return a decision
-  Return a decision for a request
-  
-  Scenario: Return policy as a JSON
-    Given TCA Policy is loaded
-    When A Decision Request is received
-    Then I should return TCA Policy as JSON
+#Feature: Return a decision
+#  Return a decision for a request
+#  
+#  Scenario: Return policy as a JSON
+#    Given TCA Policy is loaded
+#    When A Decision Request is received
+#    Then I should return TCA Policy as JSON
