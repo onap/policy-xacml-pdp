@@ -30,6 +30,7 @@ import io.swagger.annotations.Info;
 import io.swagger.annotations.SecurityDefinition;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -37,6 +38,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.pdpx.main.rest.model.Decision;
 import org.onap.policy.pdpx.main.rest.model.StatisticsReport;

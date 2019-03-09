@@ -32,7 +32,9 @@
   <artifactId>applications</artifactId>
 
   <modules>
+    <module>common</module>
     <module>monitoring</module>
+    <module>guard</module>
   </modules>
 
 
