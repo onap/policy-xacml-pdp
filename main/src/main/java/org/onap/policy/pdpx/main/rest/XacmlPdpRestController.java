@@ -30,6 +30,10 @@ import io.swagger.annotations.Info;
 import io.swagger.annotations.SecurityDefinition;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
+
+import java.util.Iterator;
+import java.util.ServiceLoader;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -38,11 +42,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
+import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdpx.main.rest.model.Decision;
 import org.onap.policy.pdpx.main.rest.model.StatisticsReport;
 import org.onap.policy.pdpx.main.rest.provider.DecisionProvider;
 import org.onap.policy.pdpx.main.rest.provider.HealthCheckProvider;
 import org.onap.policy.pdpx.main.rest.provider.StatisticsProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to provide xacml pdp REST services.
@@ -58,6 +65,38 @@ import org.onap.policy.pdpx.main.rest.provider.StatisticsProvider;
         tags = {@Tag(name = "policy-pdpx", description = "Policy Xacml PDP Service Operations")},
         securityDefinition = @SecurityDefinition(basicAuthDefinitions = {@BasicAuthDefinition(key = "basicAuth")}))
 public class XacmlPdpRestController {
+
+    private final Logger logger =  LoggerFactory.getLogger(this.getClass());
+    private final ServiceLoader<XacmlApplicationServiceProvider> applicationLoader;
+
+    /**
+     * Constructor.
+     */
+    public XacmlPdpRestController() {
+        //
+        // Load service
+        //
+        applicationLoader = ServiceLoader.load(XacmlApplicationServiceProvider.class);
+        //
+        // Iterate through them
+        //
+        StringBuilder strDump = new StringBuilder("Loaded applications:" + System.lineSeparator());
+        Iterator<XacmlApplicationServiceProvider> iterator = applicationLoader.iterator();
+        long types = 0;
+        while (iterator.hasNext()) {
+            XacmlApplicationServiceProvider application = iterator.next();
+            strDump.append(application.applicationName());
+            strDump.append(" supports ");
+            strDump.append(application.supportedPolicyTypes());
+            types += application.supportedPolicyTypes().size();
+            strDump.append(System.lineSeparator());
+        }
+        logger.debug("{}", strDump);
+        //
+        // Update statistics manager
+        //
+        XacmlPdpStatisticsManager.setTotalPolicyTypesCount(types);
+    }
 
     @GET
     @Path("/healthcheck")

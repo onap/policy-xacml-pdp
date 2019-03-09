@@ -33,6 +33,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.utils.network.NetworkUtil;
@@ -55,6 +56,16 @@ public class TestXacmlPdpRestServer {
     private static final String ALIVE = "alive";
     private static final String SELF = "self";
     private static final String NAME = "Policy Xacml PDP";
+
+    /**
+     * setup.
+     */
+    @BeforeClass
+    public static void setUp() {
+        System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StdErrLog");
+        System.setProperty("org.eclipse.jetty.LEVEL", "OFF");
+
+    }
 
     @Test
     public void testHealthCheckSuccess() throws PolicyXacmlPdpException, InterruptedException {

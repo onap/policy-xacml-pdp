@@ -1,0 +1,10 @@
+tosca_definitions_version: tosca_simple_yaml_1_0_0
+policies:
+  -
+    test.monitoring.policy.badmetadata.1:
+        type: onap.policies.monitoring.cdap.tca.hi.lo.app
+        version: 1.0.0
+        metadata:
+          policy-id: test.monitoring.policy.badmetadata.1
+        properties:
+          domain: measurementsForVfScaling
