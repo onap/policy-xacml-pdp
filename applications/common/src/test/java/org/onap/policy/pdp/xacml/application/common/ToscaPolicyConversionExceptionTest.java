@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
@@ -15,27 +15,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- * SPDX-License-Identifier: Apache-2.0
  * ============LICENSE_END=========================================================
  */
 
-package cucumber;
+package org.onap.policy.pdp.xacml.application.common;
 
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
+import static org.junit.Assert.assertEquals;
 
-//import cucumber.api.java.en.Given;
-//import cucumber.api.java.en.Then;
-//import cucumber.api.java.en.When;
+import org.junit.Test;
+import org.onap.policy.common.utils.test.ExceptionsTester;
 
-public class Stepdefs {
+public class ToscaPolicyConversionExceptionTest {
 
-    /**
-     * Temporary folder where we will store newly created policies.
-     */
-    @Rule
-    public TemporaryFolder policyFolder = new TemporaryFolder();
-
+    @Test
+    public void test() {
+        assertEquals(5, new ExceptionsTester().test(ToscaPolicyConversionException.class));
+    }
 
 }

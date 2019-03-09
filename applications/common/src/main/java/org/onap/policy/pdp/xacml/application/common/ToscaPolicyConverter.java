@@ -20,22 +20,13 @@
  * ============LICENSE_END=========================================================
  */
 
-package cucumber;
+package org.onap.policy.pdp.xacml.application.common;
 
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
+import java.io.InputStream;
+import java.util.List;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
-//import cucumber.api.java.en.Given;
-//import cucumber.api.java.en.Then;
-//import cucumber.api.java.en.When;
+public interface ToscaPolicyConverter {
 
-public class Stepdefs {
-
-    /**
-     * Temporary folder where we will store newly created policies.
-     */
-    @Rule
-    public TemporaryFolder policyFolder = new TemporaryFolder();
-
-
+    public List<PolicyType> convertPolicies(InputStream isToscaPolicy) throws ToscaPolicyConversionException;
 }

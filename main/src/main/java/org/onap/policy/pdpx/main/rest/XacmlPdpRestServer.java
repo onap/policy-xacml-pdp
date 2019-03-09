@@ -58,7 +58,17 @@ public class XacmlPdpRestServer implements Startable {
     @Override
     public boolean start() {
         try {
+            //
+            // Look for existing policy types loaded into the system
+            //
+            locateExistingPolicyTypes();
+            //
+            // Get the server properties
+            //
             servers = HttpServletServer.factory.build(getServerProperties());
+            //
+            // Start all the servers
+            //
             for (final HttpServletServer server : servers) {
                 server.start();
             }
@@ -90,6 +100,10 @@ public class XacmlPdpRestServer implements Startable {
         props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".password",
                 restServerParameters.getPassword());
         return props;
+    }
+
+    private void locateExistingPolicyTypes() {
+
     }
 
     /**

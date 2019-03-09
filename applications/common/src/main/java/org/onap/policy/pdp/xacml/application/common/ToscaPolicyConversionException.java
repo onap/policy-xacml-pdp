@@ -20,22 +20,31 @@
  * ============LICENSE_END=========================================================
  */
 
-package cucumber;
+package org.onap.policy.pdp.xacml.application.common;
 
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
+public class ToscaPolicyConversionException extends Exception {
 
-//import cucumber.api.java.en.Given;
-//import cucumber.api.java.en.Then;
-//import cucumber.api.java.en.When;
+    private static final long serialVersionUID = 1L;
 
-public class Stepdefs {
+    public ToscaPolicyConversionException() {
+        super();
+    }
 
-    /**
-     * Temporary folder where we will store newly created policies.
-     */
-    @Rule
-    public TemporaryFolder policyFolder = new TemporaryFolder();
+    public ToscaPolicyConversionException(String message) {
+        super(message);
+    }
 
+    public ToscaPolicyConversionException(Throwable cause) {
+        super(cause);
+    }
+
+    public ToscaPolicyConversionException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ToscaPolicyConversionException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 
 }
