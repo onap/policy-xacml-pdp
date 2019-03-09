@@ -142,7 +142,7 @@ public class TestXacmlPdpParameterHandler {
         final XacmlPdpCommandLineArguments arguments = new XacmlPdpCommandLineArguments();
         arguments.parse(xacmlPdpConfigParameters);
 
-        final String expectedResult = new String(Files.readAllBytes(
+        new String(Files.readAllBytes(
                 Paths.get("src/test/resources/expectedValidationResults/InvalidRestServerParameters.txt")));
 
         assertThatThrownBy(() -> new XacmlPdpParameterHandler().getParameters(arguments))

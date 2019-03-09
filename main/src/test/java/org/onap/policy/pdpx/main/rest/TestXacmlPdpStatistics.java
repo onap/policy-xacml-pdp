@@ -21,6 +21,7 @@
 
 package org.onap.policy.pdpx.main.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -54,9 +55,12 @@ public class TestXacmlPdpStatistics {
     @Test
     public void testXacmlPdpStatistics_200() throws PolicyXacmlPdpException, InterruptedException {
         try {
+            System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StdErrLog");
+            System.setProperty("org.eclipse.jetty.LEVEL", "OFF");
             final Main main = startXacmlPdpService();
             StatisticsReport report = getXacmlPdpStatistics();
             validateReport(report, 0, 200);
+            assertThat(report.getTotalPolicyTypesCount()).isGreaterThan(0);
             updateXacmlPdpStatistics();
             report = getXacmlPdpStatistics();
             validateReport(report, 1, 200);
