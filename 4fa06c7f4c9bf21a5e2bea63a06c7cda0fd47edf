@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4749c1f_669d4f22",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/ToscaPolicyConverter.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-11T22:19:02Z",
+      "side": 1,
+      "message": "public is unnecessary in the 2 methods signatures below",
+      "revId": "4fa06c7f4c9bf21a5e2bea63a06c7cda0fd47edf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ea8527d_c5af3e73",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/XacmlApplicationServiceProvider.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-11T22:19:02Z",
+      "side": 1,
+      "message": "public is unnecessary in method signature below",
+      "revId": "4fa06c7f4c9bf21a5e2bea63a06c7cda0fd47edf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a79e231a_d5dfcd6f",
+        "filename": "applications/monitoring/src/test/resources/log4j.properties",
+        "patchSetId": 13
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-11T22:19:02Z",
+      "side": 1,
+      "message": "is there a reason to use log4j instead of logback.xml, perhaps constraints from xacml libraries?",
+      "revId": "4fa06c7f4c9bf21a5e2bea63a06c7cda0fd47edf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9da4069_6858e155",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestXacmlPdpStatistics.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-11T22:19:02Z",
+      "side": 1,
+      "message": "Should the logging lines below be placed in a @BeforeClass setup method? (in case there\u0027s other tests that start to execute early?)",
+      "revId": "4fa06c7f4c9bf21a5e2bea63a06c7cda0fd47edf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
