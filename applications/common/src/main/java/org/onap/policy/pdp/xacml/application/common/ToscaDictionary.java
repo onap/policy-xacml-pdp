@@ -28,10 +28,6 @@ import com.att.research.xacml.std.IdentifierImpl;
 
 public final class ToscaDictionary {
 
-    private ToscaDictionary() {
-        super();
-    }
-
     /*
      * These are the ID's for various TOSCA Policy Types we are supporting in the Applications.
      */
@@ -65,5 +61,8 @@ public final class ToscaDictionary {
     public static final Identifier ID_OBLIGATION_ISSUER =
             new IdentifierImpl(URN_ONAP, "issuer:monitoring");
 
+    private ToscaDictionary() {
+        super();
+    }
 
 }

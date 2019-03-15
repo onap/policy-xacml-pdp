@@ -20,23 +20,15 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.xacml.pdp.engine;
+package org.onap.policy.xacml.pdp.application.monitoring;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.Assert.assertEquals;
 
-import com.att.research.xacml.api.Decision;
-import com.att.research.xacml.api.Response;
-import com.att.research.xacml.api.Result;
-import com.att.research.xacml.std.annotations.RequestParser;
-import com.att.research.xacml.std.annotations.XACMLAction;
-import com.att.research.xacml.std.annotations.XACMLRequest;
-import com.att.research.xacml.std.annotations.XACMLResource;
-import com.att.research.xacml.std.annotations.XACMLSubject;
 import com.att.research.xacml.util.XACMLProperties;
 import com.google.common.io.Files;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -56,38 +48,30 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.onap.policy.common.utils.resources.TextFileUtils;
+import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.decisions.serialization.DecisionRequestMessageBodyHandler;
+import org.onap.policy.models.decisions.serialization.DecisionResponseMessageBodyHandler;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
-public class OnapXacmlPdpEngineTest {
+public class MonitoringPdpApplicationTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OnapXacmlPdpEngineTest.class);
-    private static OnapXacmlPdpEngine onapPdpEngine;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringPdpApplicationTest.class);
     private static Properties properties = new Properties();
     private static File propertiesFile;
+    private static XacmlApplicationServiceProvider service;
+    private static DecisionRequest requestSinglePolicy;
+
+    private static Gson gsonDecisionRequest;
+    private static Gson gsonDecisionResponse;
 
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
-
-    /**
-     * This is a simple annotation class to simulate
-     * requests coming in.
-     */
-    @XACMLRequest(ReturnPolicyIdList = true)
-    public class MyXacmlRequest {
-
-        @XACMLSubject(includeInResults = true)
-        String onapName = "DCAE";
-
-        @XACMLResource(includeInResults = true)
-        String resource = "onap.policies.Monitoring";
-
-        @XACMLAction()
-        String action = "configure";
-    }
 
     /**
      * Load a test engine.
@@ -95,6 +79,18 @@ public class OnapXacmlPdpEngineTest {
     @BeforeClass
     public static void setup() {
         assertThatCode(() -> {
+            //
+            // Create our Gson builder
+            //
+            gsonDecisionRequest = new DecisionRequestMessageBodyHandler().getGson();
+            gsonDecisionResponse = new DecisionResponseMessageBodyHandler().getGson();
+            //
+            // Load Single Decision Request
+            //
+            requestSinglePolicy = gsonDecisionRequest.fromJson(
+                    TextFileUtils
+                        .getTextFileAsString("../../main/src/test/resources/decisions/decision.single.input.json"),
+                        DecisionRequest.class);
             //
             // Copy all the properties and root policies to the temporary folder
             //
@@ -147,6 +143,16 @@ public class OnapXacmlPdpEngineTest {
             Iterator<XacmlApplicationServiceProvider> iterator = applicationLoader.iterator();
             while (iterator.hasNext()) {
                 XacmlApplicationServiceProvider application = iterator.next();
+                //
+                // Is it our service?
+                //
+                if (application instanceof MonitoringPdpApplication) {
+                    //
+                    // Should be the first and only one
+                    //
+                    assertThat(service).isNull();
+                    service = application;
+                }
                 strDump.append(application.applicationName());
                 strDump.append(" supports ");
                 strDump.append(application.supportedPolicyTypes());
@@ -156,29 +162,29 @@ public class OnapXacmlPdpEngineTest {
             //
             // Create the engine instance
             //
-            onapPdpEngine = new OnapXacmlPdpEngine();
+            //onapPdpEngine = new MonitoringPdpApplication();
             //
             // Tell it to initialize based on the properties file
             // we just built for it.
             //
-            onapPdpEngine.initialize(propertiesFile.toPath().getParent());
+            service.initialize(propertiesFile.toPath().getParent());
             //
             // Make sure there's an application name
             //
-            assertThat(onapPdpEngine.applicationName()).isNotEmpty();
+            assertThat(service.applicationName()).isNotEmpty();
             //
             // Ensure it has the supported policy types and
             // can support the correct policy types.
             //
-            assertThat(onapPdpEngine.canSupportPolicyType("onap.Monitoring", "1.0.0")).isTrue();
-            assertThat(onapPdpEngine.canSupportPolicyType("onap.Monitoring", "1.5.0")).isTrue();
-            assertThat(onapPdpEngine.canSupportPolicyType("onap.policies.monitoring.foobar", "1.0.1")).isTrue();
-            assertThat(onapPdpEngine.canSupportPolicyType("onap.foobar", "1.0.0")).isFalse();
-            assertThat(onapPdpEngine.supportedPolicyTypes()).contains("onap.Monitoring");
+            assertThat(service.canSupportPolicyType("onap.Monitoring", "1.0.0")).isTrue();
+            assertThat(service.canSupportPolicyType("onap.Monitoring", "1.5.0")).isTrue();
+            assertThat(service.canSupportPolicyType("onap.policies.monitoring.foobar", "1.0.1")).isTrue();
+            assertThat(service.canSupportPolicyType("onap.foobar", "1.0.0")).isFalse();
+            assertThat(service.supportedPolicyTypes()).contains("onap.Monitoring");
             //
             // Ensure it supports decisions
             //
-            assertThat(onapPdpEngine.actionDecisionsSupported()).contains("configure");
+            assertThat(service.actionDecisionsSupported()).contains("configure");
         }).doesNotThrowAnyException();
     }
 
@@ -188,11 +194,16 @@ public class OnapXacmlPdpEngineTest {
         // Make a simple decision - NO policies are loaded
         //
         assertThatCode(() -> {
-            Response response = onapPdpEngine.decision(RequestParser.parseRequest(new MyXacmlRequest()));
-            for (Result result : response.getResults()) {
-                LOGGER.info("Decision {}", result.getDecision());
-                assertEquals(Decision.PERMIT, result.getDecision());
-            }
+            //
+            // Ask for a decision
+            //
+            DecisionResponse response = service.makeDecision(requestSinglePolicy);
+            LOGGER.info("Decision {}", response);
+
+            assertThat(response).isNotNull();
+            assertThat(response.getErrorMessage()).isNullOrEmpty();
+            assertThat(response.getPolicies().size()).isEqualTo(0);
+
         }).doesNotThrowAnyException();
     }
 
@@ -227,7 +238,7 @@ public class OnapXacmlPdpEngineTest {
                         // Find the type and make sure the engine supports it
                         //
                         assertThat(policyDefinition.containsKey("type")).isTrue();
-                        assertThat(onapPdpEngine.canSupportPolicyType(
+                        assertThat(service.canSupportPolicyType(
                                 policyDefinition.get("type").toString(),
                                 policyDefinition.get("version").toString()))
                             .isTrue();
@@ -238,18 +249,31 @@ public class OnapXacmlPdpEngineTest {
                 //
                 // Assuming all are supported etc.
                 //
-                onapPdpEngine.loadPolicies(toscaObject);
-
-                //List<PolicyType> policies = onapPdpEngine.convertPolicies(is);
+                service.loadPolicies(toscaObject);
                 //
-                // Should have a policy
-                ////                assertThat(policies.isEmpty()).isFalse();
+                // Ask for a decision
+                //
+                DecisionResponse response = service.makeDecision(requestSinglePolicy);
+                LOGGER.info("Decision {}", response);
+
+                assertThat(response).isNotNull();
+                assertThat(response.getPolicies().size()).isEqualTo(1);
+                //
+                // Dump it out as Json
+                //
+                LOGGER.info(gsonDecisionResponse.toJson(response));
             }
         }).doesNotThrowAnyException();
     }
 
     @Test
     public void testBadPolicies() {
+        //
+        // No need for service, just test some of the methods
+        // for bad policies
+        //
+        MonitoringPdpApplication onapPdpEngine = new MonitoringPdpApplication();
+
         assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() -> {
             try (InputStream is =
                     new FileInputStream("src/test/resources/test.monitoring.policy.missingmetadata.yaml")) {
@@ -284,13 +308,6 @@ public class OnapXacmlPdpEngineTest {
                 onapPdpEngine.convertPolicies(is);
             }
         }).withMessageContaining("missing metadata policy-id");
-
-        assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() -> {
-            try (InputStream is =
-                    new FileInputStream("src/test/resources/test.monitoring.policy.missingproperties.yaml")) {
-                onapPdpEngine.convertPolicies(is);
-            }
-        }).withMessageContaining("missing properties section");
     }
 
 }

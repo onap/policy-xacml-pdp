@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
+import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,7 +102,7 @@ public class GuardPdpApplication implements XacmlApplicationServiceProvider {
     }
 
     @Override
-    public JSONObject makeDecision(JSONObject jsonSchema) {
+    public DecisionResponse makeDecision(DecisionRequest request) {
         return null;
     }
 
