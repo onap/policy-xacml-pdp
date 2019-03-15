@@ -25,37 +25,46 @@ package org.onap.policy.xacml.pdp.application.guard;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import com.att.research.xacml.std.annotations.XACMLAction;
-import com.att.research.xacml.std.annotations.XACMLRequest;
-import com.att.research.xacml.std.annotations.XACMLResource;
-import com.att.research.xacml.std.annotations.XACMLSubject;
+import com.att.research.xacml.util.XACMLProperties;
+import com.google.common.io.Files;
+import com.google.gson.Gson;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.ServiceLoader;
 
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.onap.policy.common.utils.resources.TextFileUtils;
+import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.models.decisions.serialization.DecisionRequestMessageBodyHandler;
+import org.onap.policy.models.decisions.serialization.DecisionResponseMessageBodyHandler;
+import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GuardPdpApplicationTest {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(GuardPdpApplicationTest.class);
+    private static Properties properties = new Properties();
+    private static File propertiesFile;
+    private static XacmlApplicationServiceProvider service;
+    private static DecisionRequest requestSinglePolicy;
+
+    private static Gson gsonDecisionRequest;
+    private static Gson gsonDecisionResponse;
+
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
-
-    /**
-     * This is a simple annotation class to simulate
-     * requests coming in.
-     */
-    @XACMLRequest(ReturnPolicyIdList = true)
-    public class MyXacmlRequest {
-
-        @XACMLSubject(includeInResults = true)
-        String onapName = "Drools";
-
-        @XACMLResource(includeInResults = true)
-        String resource = "onap.policies.Guard";
-
-        @XACMLAction()
-        String action = "guard";
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -65,32 +74,117 @@ public class GuardPdpApplicationTest {
     @Test
     public void testBasics() {
         assertThatCode(() -> {
-            GuardPdpApplication guard = new GuardPdpApplication();
             //
-            // Set the path
+            // Create our Gson builder
             //
-            guard.initialize(policyFolder.getRoot().toPath());
+            gsonDecisionRequest = new DecisionRequestMessageBodyHandler().getGson();
+            gsonDecisionResponse = new DecisionResponseMessageBodyHandler().getGson();
             //
-            // Application name
+            // Load Single Decision Request
             //
-            assertThat(guard.applicationName()).isNotEmpty();
+            requestSinglePolicy = gsonDecisionRequest.fromJson(
+                    TextFileUtils
+                        .getTextFileAsString("../../main/src/test/resources/decisions/decision.single.input.json"),
+                        DecisionRequest.class);
+            //
+            // Copy all the properties and root policies to the temporary folder
+            //
+            try (InputStream is = new FileInputStream("src/test/resources/xacml.properties")) {
+                //
+                // Load it in
+                //
+                properties.load(is);
+                propertiesFile = policyFolder.newFile("xacml.properties");
+                //
+                // Copy the root policies
+                //
+                for (String root : XACMLProperties.getRootPolicyIDs(properties)) {
+                    //
+                    // Get a file
+                    //
+                    Path rootPath = Paths.get(properties.getProperty(root + ".file"));
+                    LOGGER.debug("Root file {} {}", rootPath, rootPath.getFileName());
+                    //
+                    // Construct new file name
+                    //
+                    File newRootPath = policyFolder.newFile(rootPath.getFileName().toString());
+                    //
+                    // Copy it
+                    //
+                    Files.copy(rootPath.toFile(), newRootPath);
+                    assertThat(newRootPath).exists();
+                    //
+                    // Point to where the new policy is in the temp dir
+                    //
+                    properties.setProperty(root + ".file", newRootPath.getAbsolutePath());
+                }
+                try (OutputStream os = new FileOutputStream(propertiesFile.getAbsolutePath())) {
+                    properties.store(os, "");
+                    assertThat(propertiesFile).exists();
+                }
+            }
+            //
+            // Load service
+            //
+            ServiceLoader<XacmlApplicationServiceProvider> applicationLoader =
+                    ServiceLoader.load(XacmlApplicationServiceProvider.class);
+            //
+            // Iterate through them - I could store the object as
+            // XacmlApplicationServiceProvider pointer.
+            //
+            // Try this later.
+            //
+            StringBuilder strDump = new StringBuilder("Loaded applications:" + System.lineSeparator());
+            Iterator<XacmlApplicationServiceProvider> iterator = applicationLoader.iterator();
+            while (iterator.hasNext()) {
+                XacmlApplicationServiceProvider application = iterator.next();
+                //
+                // Is it our service?
+                //
+                if (application instanceof GuardPdpApplication) {
+                    //
+                    // Should be the first and only one
+                    //
+                    assertThat(service).isNull();
+                    service = application;
+                }
+                strDump.append(application.applicationName());
+                strDump.append(" supports ");
+                strDump.append(application.supportedPolicyTypes());
+                strDump.append(System.lineSeparator());
+            }
+            LOGGER.debug("{}", strDump);
+            //
+            // Tell it to initialize based on the properties file
+            // we just built for it.
+            //
+            service.initialize(propertiesFile.toPath().getParent());
+            //
+            // Make sure there's an application name
+            //
+            assertThat(service.applicationName()).isNotEmpty();
             //
             // Decisions
             //
-            assertThat(guard.actionDecisionsSupported().size()).isEqualTo(1);
-            assertThat(guard.actionDecisionsSupported()).contains("guard");
+            assertThat(service.actionDecisionsSupported().size()).isEqualTo(1);
+            assertThat(service.actionDecisionsSupported()).contains("guard");
             //
-            // Supported policy types
+            // Ensure it has the supported policy types and
+            // can support the correct policy types.
             //
-            assertThat(guard.supportedPolicyTypes()).isNotEmpty();
-            assertThat(guard.supportedPolicyTypes().size()).isEqualTo(2);
-            assertThat(guard.canSupportPolicyType("onap.policies.controlloop.guard.FrequencyLimiter", "1.0.0"))
+            assertThat(service.supportedPolicyTypes()).isNotEmpty();
+            assertThat(service.supportedPolicyTypes().size()).isEqualTo(2);
+            assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.FrequencyLimiter", "1.0.0"))
                 .isTrue();
-            assertThat(guard.canSupportPolicyType("onap.policies.controlloop.guard.FrequencyLimiter", "1.0.1"))
+            assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.FrequencyLimiter", "1.0.1"))
                 .isFalse();
-            assertThat(guard.canSupportPolicyType("onap.policies.controlloop.guard.MinMax", "1.0.0")).isTrue();
-            assertThat(guard.canSupportPolicyType("onap.policies.controlloop.guard.MinMax", "1.0.1")).isFalse();
-            assertThat(guard.canSupportPolicyType("onap.foo", "1.0.1")).isFalse();
+            assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.MinMax", "1.0.0")).isTrue();
+            assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.MinMax", "1.0.1")).isFalse();
+            assertThat(service.canSupportPolicyType("onap.foo", "1.0.1")).isFalse();
+            //
+            // Ensure it supports decisions
+            //
+            assertThat(service.actionDecisionsSupported()).contains("guard");
         }).doesNotThrowAnyException();
     }
 }

@@ -20,24 +20,29 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.xacml.pdp.engine;
+package org.onap.policy.xacml.pdp.application.monitoring;
 
+import com.att.research.xacml.api.AttributeAssignment;
+import com.att.research.xacml.api.DataTypeException;
+import com.att.research.xacml.api.Decision;
+import com.att.research.xacml.api.Obligation;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
+import com.att.research.xacml.api.Result;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.api.pdp.PDPEngine;
-import com.att.research.xacml.api.pdp.PDPEngineFactory;
 import com.att.research.xacml.api.pdp.PDPException;
-import com.att.research.xacml.util.FactoryException;
+import com.att.research.xacml.std.annotations.RequestParser;
 import com.att.research.xacml.util.XACMLPolicyScanner;
+import com.att.research.xacml.util.XACMLPolicyWriter;
 import com.att.research.xacml.util.XACMLProperties;
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -63,12 +68,14 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 import org.json.JSONObject;
+import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConverter;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConverterUtils;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
-import org.onap.policy.pdp.xacml.application.common.XacmlUpdatePolicyUtils;
+import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -82,12 +89,11 @@ import org.yaml.snakeyaml.Yaml;
  * @author pameladragosh
  *
  */
-public class OnapXacmlPdpEngine implements ToscaPolicyConverter, XacmlApplicationServiceProvider {
+public class MonitoringPdpApplication implements ToscaPolicyConverter, XacmlApplicationServiceProvider {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OnapXacmlPdpEngine.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringPdpApplication.class);
     private static final String ONAP_MONITORING_BASE_POLICY_TYPE = "onap.Monitoring";
     private static final String ONAP_MONITORING_DERIVED_POLICY_TYPE = "onap.policies.monitoring";
-
 
     private Path pathForData = null;
     private Properties pdpProperties = null;
@@ -97,65 +103,11 @@ public class OnapXacmlPdpEngine implements ToscaPolicyConverter, XacmlApplicatio
     /**
      * Constructor.
      */
-    public OnapXacmlPdpEngine() {
+    public MonitoringPdpApplication() {
         //
         // By default this supports just Monitoring policy types
         //
         supportedPolicyTypes.put(ONAP_MONITORING_BASE_POLICY_TYPE, "1.0.0");
-    }
-
-    /**
-     * Load properties from given file.
-     *
-     * @param location Path and filename
-     * @throws IOException If unable to read file
-     */
-    public synchronized void loadXacmlProperties(String location) throws IOException {
-        try (InputStream is = new FileInputStream(location)) {
-            pdpProperties.load(is);
-        }
-    }
-
-    /**
-     * Stores the XACML Properties to the given file location.
-     *
-     * @param location File location including name
-     * @throws IOException If unable to store the file.
-     */
-    public synchronized void storeXacmlProperties(String location) throws IOException {
-        try (OutputStream os = new FileOutputStream(location)) {
-            String strComments = "#";
-            pdpProperties.store(os, strComments);
-        }
-    }
-
-    /**
-     * Make a decision call.
-     *
-     * @param request Incoming request object
-     * @return Response object
-     */
-    public synchronized Response decision(Request request) {
-        //
-        // This is what we need to return
-        //
-        Response response = null;
-        //
-        // Track some timing
-        //
-        long timeStart = System.currentTimeMillis();
-        try {
-            response = this.pdpEngine.decide(request);
-        } catch (PDPException e) {
-            LOGGER.error("{}", e);
-        } finally {
-            //
-            // Track the end of timing
-            //
-            long timeEnd = System.currentTimeMillis();
-            LOGGER.info("Elapsed Time: {}ms", (timeEnd - timeStart));
-        }
-        return response;
     }
 
     @Override
@@ -178,29 +130,18 @@ public class OnapXacmlPdpEngine implements ToscaPolicyConverter, XacmlApplicatio
         //
         // Look for and load the properties object
         //
-        Path propertyPath = Paths.get(this.pathForData.toAbsolutePath().toString(), "xacml.properties");
-        LOGGER.debug("Looking for {}", propertyPath.toAbsolutePath());
-        try (InputStream is = new FileInputStream(propertyPath.toAbsolutePath().toString()) ) {
-            //
-            // Create a new properties object
-            //
-            pdpProperties = new Properties();
-            //
-            // Load it with our values
-            //
-            pdpProperties.load(is);
+        try {
+            pdpProperties = XacmlPolicyUtils.loadXacmlProperties(XacmlPolicyUtils.getPropertiesPath(pathForData));
             LOGGER.debug("{}", pdpProperties);
         } catch (IOException e) {
             LOGGER.error("{}", e);
         }
         //
-        // Now initialize the XACML PDP Engine
+        // Create an engine
         //
-        try {
-            PDPEngineFactory factory = PDPEngineFactory.newInstance();
-            this.pdpEngine = factory.newEngine(pdpProperties);
-        } catch (FactoryException e) {
-            LOGGER.error("{}", e);
+        PDPEngine newEngine = XacmlPolicyUtils.createEngine(pdpProperties);
+        if (newEngine != null) {
+            pdpEngine = newEngine;
         }
     }
 
@@ -222,9 +163,6 @@ public class OnapXacmlPdpEngine implements ToscaPolicyConverter, XacmlApplicatio
 
     @Override
     public synchronized void loadPolicies(Map<String, Object> toscaPolicies) {
-        //
-        //
-        //
         try {
             //
             // Convert the policies first
@@ -245,45 +183,84 @@ public class OnapXacmlPdpEngine implements ToscaPolicyConverter, XacmlApplicatio
             //
             String rootFile = pdpProperties.getProperty(roots.iterator().next() + ".file");
             try (InputStream is = new FileInputStream(rootFile)) {
+                //
+                // Read the Root Policy into memory
+                //
                 Object policyData = XACMLPolicyScanner.readPolicy(is);
                 //
                 // Should be a PolicySet
                 //
                 if (policyData instanceof PolicySetType) {
+                    //
+                    // Add the referenced policies into a new Root Policy
+                    //
                     PolicyType[] newPolicies = listPolicies.toArray(new PolicyType[listPolicies.size()]);
-                    PolicySetType newRootPolicy =
-                            XacmlUpdatePolicyUtils.updateXacmlRootPolicy((PolicySetType) policyData, newPolicies);
+                    PolicySetType newRootPolicy = XacmlPolicyUtils.addPoliciesToXacmlRootPolicy(
+                            (PolicySetType) policyData, newPolicies);
+                    LOGGER.debug("New ROOT Policy");
+                    try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+                        XACMLPolicyWriter.writePolicyFile(os, newRootPolicy);
+                        LOGGER.debug("{}", os);
+                    } catch (IOException e) {
+                        LOGGER.error("Failed to convert {}", e);
+                    }
                     //
                     // Save the new Policies to disk
                     //
-
+                    for (PolicyType policy : newPolicies) {
+                        //
+                        // Construct the filename
+                        //
+                        Path refPath = XacmlPolicyUtils.constructUniquePolicyFilename(policy, pathForData);
+                        //
+                        // Write the policy to disk
+                        // Maybe check for an error
+                        //
+                        XACMLPolicyWriter.writePolicyFile(refPath, policy);
+                        //
+                        // Save it off
+                        //
+                        XacmlPolicyUtils.addReferencedPolicy(pdpProperties, refPath);
+                    }
                     //
                     // Save the root policy to disk
                     //
-
-                    //
-                    // Update properties to declare the referenced policies
-                    //
-
+                    XACMLPolicyWriter.writePolicyFile(Paths.get(rootFile), newRootPolicy);
                     //
                     // Write the policies to disk
                     //
-
+                    XacmlPolicyUtils.storeXacmlProperties(pdpProperties,
+                            XacmlPolicyUtils.getPropertiesPath(pathForData));
+                    //
+                    // Reload the engine
+                    //
+                    PDPEngine newEngine = XacmlPolicyUtils.createEngine(pdpProperties);
+                    if (newEngine != null) {
+                        pdpEngine = newEngine;
+                    }
                 } else {
                     throw new ToscaPolicyConversionException("Root policy isn't a PolicySet");
                 }
             }
-            //
-            // Add to the root policy
-            //
         } catch (IOException | ToscaPolicyConversionException e) {
             LOGGER.error("Failed to loadPolicies {}", e);
         }
     }
 
     @Override
-    public synchronized JSONObject makeDecision(JSONObject jsonSchema) {
-        return null;
+    public synchronized DecisionResponse makeDecision(DecisionRequest request) {
+        //
+        // Convert to a XacmlRequest
+        //
+        Request xacmlRequest = this.convertRequest(request);
+        //
+        // Now get a decision
+        //
+        Response xacmlResponse = this.xacmlDecision(xacmlRequest);
+        //
+        // Convert to a DecisionResponse
+        //
+        return this.convertResponse(xacmlResponse);
     }
 
     @Override
@@ -325,11 +302,17 @@ public class OnapXacmlPdpEngine implements ToscaPolicyConverter, XacmlApplicatio
             LOGGER.debug("Found policy {}", policyObject.getClass());
             Map<String, Object> policyContents = (Map<String, Object>) policyObject;
             for (Entry<String, Object> entrySet : policyContents.entrySet()) {
-                LOGGER.info("Entry set {}", entrySet);
+                LOGGER.debug("Entry set {}", entrySet);
                 //
                 // Convert this policy
                 //
                 PolicyType policy = this.convertPolicy(entrySet);
+                try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+                    XACMLPolicyWriter.writePolicyFile(os, policy);
+                    LOGGER.debug("{}", os);
+                } catch (IOException e) {
+                    LOGGER.error("Failed to convert {}", e);
+                }
                 //
                 // Convert and add in the new policy
                 //
@@ -397,14 +380,11 @@ public class OnapXacmlPdpEngine implements ToscaPolicyConverter, XacmlApplicatio
         rule.setEffect(EffectType.PERMIT);
         rule.setTarget(new TargetType());
         //
-        // There should be properties section - this data ends up as a
-        // JSON BLOB that is returned back to calling application.
+        // Now represent the policy as Json
         //
-        if (! policyDefinition.containsKey("properties")) {
-            throw new ToscaPolicyConversionException(policyName + " missing properties section");
-        }
-        addObligation(rule,
-                (Map<String, Object>) policyDefinition.get("properties"));
+        JSONObject jsonObligation = new JSONObject();
+        jsonObligation.put(policyName, policyDefinition);
+        addObligation(rule, jsonObligation);
         //
         // Add the rule to the policy
         //
@@ -498,20 +478,19 @@ public class OnapXacmlPdpEngine implements ToscaPolicyConverter, XacmlApplicatio
         return target;
     }
 
-    private RuleType addObligation(RuleType rule, Map<String, Object> properties) {
+    private RuleType addObligation(RuleType rule, JSONObject jsonPolicy) {
         //
         // Convert the YAML Policy to JSON Object
         //
-        JSONObject jsonObject = new JSONObject(properties);
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("JSON conversion {}{}", System.lineSeparator(), jsonObject);
+            LOGGER.debug("JSON DCAE Policy {}{}", System.lineSeparator(), jsonPolicy);
         }
         //
         // Create an AttributeValue for it
         //
         AttributeValueType value = new AttributeValueType();
         value.setDataType(ToscaDictionary.ID_OBLIGATION_POLICY_MONITORING_DATATYPE.stringValue());
-        value.getContent().add(jsonObject.toString());
+        value.getContent().add(jsonPolicy.toString());
         //
         // Create our AttributeAssignmentExpression where we will
         // store the contents of the policy in JSON format.
@@ -536,4 +515,99 @@ public class OnapXacmlPdpEngine implements ToscaPolicyConverter, XacmlApplicatio
         return rule;
     }
 
+    @Override
+    public Request convertRequest(DecisionRequest request) {
+        LOGGER.debug("Converting Request {}", request);
+        try {
+            return RequestParser.parseRequest(MonitoringRequest.createInstance(request));
+        } catch (IllegalArgumentException | IllegalAccessException | DataTypeException e) {
+            LOGGER.error("Failed to convert DecisionRequest: {}", e);
+        }
+        //
+        // TODO throw exception
+        //
+        return null;
+    }
+
+    @Override
+    public DecisionResponse convertResponse(Response xacmlResponse) {
+        LOGGER.debug("Converting Response {}", xacmlResponse);
+        DecisionResponse decisionResponse = new DecisionResponse();
+        //
+        // Iterate through all the results
+        //
+        for (Result xacmlResult : xacmlResponse.getResults()) {
+            //
+            // Check the result
+            //
+            if (xacmlResult.getDecision() == Decision.PERMIT) {
+                //
+                // Setup policies
+                //
+                decisionResponse.setPolicies(new ArrayList<>());
+                //
+                // Go through obligations
+                //
+                for (Obligation obligation : xacmlResult.getObligations()) {
+                    LOGGER.debug("Obligation: {}", obligation);
+                    for (AttributeAssignment assignment : obligation.getAttributeAssignments()) {
+                        LOGGER.debug("Attribute Assignment: {}", assignment);
+                        //
+                        // We care about the content attribute
+                        //
+                        if (ToscaDictionary.ID_OBLIGATION_POLICY_MONITORING_CONTENTS
+                                .equals(assignment.getAttributeId())) {
+                            //
+                            // The contents are in Json form
+                            //
+                            Object stringContents = assignment.getAttributeValue().getValue();
+                            if (LOGGER.isDebugEnabled()) {
+                                LOGGER.debug("DCAE contents: {}{}", System.lineSeparator(), stringContents);
+                            }
+                            //
+                            // Let's parse it into a map using Gson
+                            //
+                            Gson gson = new Gson();
+                            @SuppressWarnings("unchecked")
+                            Map<String, Object> result = gson.fromJson(stringContents.toString() ,Map.class);
+                            decisionResponse.getPolicies().add(result);
+                        }
+                    }
+                }
+            } else {
+                decisionResponse.setErrorMessage("A better error message");
+            }
+        }
+
+        return decisionResponse;
+    }
+
+    /**
+     * Make a decision call.
+     *
+     * @param request Incoming request object
+     * @return Response object
+     */
+    private synchronized Response xacmlDecision(Request request) {
+        //
+        // This is what we need to return
+        //
+        Response response = null;
+        //
+        // Track some timing
+        //
+        long timeStart = System.currentTimeMillis();
+        try {
+            response = this.pdpEngine.decide(request);
+        } catch (PDPException e) {
+            LOGGER.error("Xacml PDP Engine failed {}", e);
+        } finally {
+            //
+            // Track the end of timing
+            //
+            long timeEnd = System.currentTimeMillis();
+            LOGGER.info("Elapsed Time: {}ms", (timeEnd - timeStart));
+        }
+        return response;
+    }
 }

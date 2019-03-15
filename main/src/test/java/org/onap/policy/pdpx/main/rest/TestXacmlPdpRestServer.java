@@ -230,7 +230,7 @@ public class TestXacmlPdpRestServer {
 
             @Override
             public void checkServerTrusted(final java.security.cert.X509Certificate[] certs, final String authType) {}
-        }};
+        } };
 
         final SSLContext sc = SSLContext.getInstance("TLSv1.2");
         sc.init(null, noopTrustManager, new SecureRandom());
