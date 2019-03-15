@@ -22,6 +22,13 @@
 
 package org.onap.policy.pdp.xacml.application.common;
 
+import com.att.research.xacml.util.XACMLProperties;
+
+import java.nio.file.Path;
+import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.IdReferenceType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
@@ -51,7 +58,7 @@ public class XacmlUpdatePolicyUtils {
             //
             // Add it in
             //
-            rootPolicy.getPolicySetOrPolicyOrPolicySetIdReference().add(factory.createPolicySetIdReference(reference));
+            rootPolicy.getPolicySetOrPolicyOrPolicySetIdReference().add(factory.createPolicyIdReference(reference));
         }
         //
         // Return the updated object
@@ -83,6 +90,40 @@ public class XacmlUpdatePolicyUtils {
         // Return the updated object
         //
         return rootPolicy;
+    }
+
+    /**
+     * Adds in the referenced policy to the PDP properties object.
+     *
+     * @param properties Input properties
+     * @param refPolicyPath Path to the referenced policy file
+     * @return Properties object
+     */
+    public static Properties addReferencedPolicy(Properties properties, Path refPolicyPath) {
+        //
+        // Get the current set of referenced policy ids
+        //
+        Set<String> referencedPolicies = XACMLProperties.getReferencedPolicyIDs(properties);
+        //
+        // Construct a unique id
+        //
+        int id = 1;
+        while (true) {
+            String refId = "ref" + id;
+            if (referencedPolicies.contains(refId)) {
+                id++;
+            } else {
+                referencedPolicies.add(refId);
+                properties.put(refId + ".file", refPolicyPath.toAbsolutePath().toString());
+                break;
+            }
+        }
+        //
+        // Set the new comma separated list
+        //
+        properties.setProperty(XACMLProperties.PROP_REFERENCEDPOLICIES,
+                referencedPolicies.stream().collect(Collectors.joining(",")));
+        return properties;
     }
 
 }

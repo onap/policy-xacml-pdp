@@ -172,7 +172,7 @@ public class XacmlUpdatePolicyUtilsTest {
     }
 
     @Test
-    public void test() {
+    public void testUpdatingPolicies() {
         assertThatCode(() -> {
             //
             // Just update root and policies
@@ -222,5 +222,12 @@ public class XacmlUpdatePolicyUtilsTest {
             //
 
         }).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testProperties() {
+        Properties properties = new Properties();
+
+
     }
 }

@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
@@ -15,32 +15,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- * SPDX-License-Identifier: Apache-2.0
  * ============LICENSE_END=========================================================
  */
 
 package org.onap.policy.pdp.xacml.application.common;
 
-import com.att.research.xacml.api.Request;
-import com.att.research.xacml.api.Response;
+import static org.junit.Assert.assertEquals;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
+import org.junit.Test;
+import org.onap.policy.common.utils.test.ExceptionsTester;
 
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+public class OnapPolicyFinderFactoryExceptionTest {
 
-import org.onap.policy.models.decisions.concepts.DecisionRequest;
-import org.onap.policy.models.decisions.concepts.DecisionResponse;
+    @Test
+    public void test() {
+        assertEquals(5, new ExceptionsTester().test(OnapPolicyFinderFactoryException.class));
+    }
 
-public interface ToscaPolicyConverter {
-
-    List<PolicyType> convertPolicies(InputStream isToscaPolicy) throws ToscaPolicyConversionException;
-
-    List<PolicyType> convertPolicies(Map<String, Object> toscaObject) throws ToscaPolicyConversionException;
-
-    Request convertRequest(DecisionRequest request);
-
-    DecisionResponse convertResponse(Response response);
 }

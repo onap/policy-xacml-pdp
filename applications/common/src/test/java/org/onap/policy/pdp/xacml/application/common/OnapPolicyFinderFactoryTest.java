@@ -22,25 +22,17 @@
 
 package org.onap.policy.pdp.xacml.application.common;
 
-import com.att.research.xacml.api.Request;
-import com.att.research.xacml.api.Response;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
+import org.junit.Test;
 
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+public class OnapPolicyFinderFactoryTest {
 
-import org.onap.policy.models.decisions.concepts.DecisionRequest;
-import org.onap.policy.models.decisions.concepts.DecisionResponse;
+    @Test
+    public void test() throws NoSuchMethodException, SecurityException {
+        assertThatExceptionOfType(OnapPolicyFinderFactoryException.class).isThrownBy(() -> {
+            new OnapPolicyFinderFactory();
+        }).withMessageContaining("Please use the constructor with Properties object.");
+    }
 
-public interface ToscaPolicyConverter {
-
-    List<PolicyType> convertPolicies(InputStream isToscaPolicy) throws ToscaPolicyConversionException;
-
-    List<PolicyType> convertPolicies(Map<String, Object> toscaObject) throws ToscaPolicyConversionException;
-
-    Request convertRequest(DecisionRequest request);
-
-    DecisionResponse convertResponse(Response response);
 }

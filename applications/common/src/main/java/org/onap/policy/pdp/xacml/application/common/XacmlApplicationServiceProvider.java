@@ -25,7 +25,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONObject;
+import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.models.decisions.concepts.DecisionResponse;
 
 /**
  * This interface is how the XACML REST controller can communicate
@@ -87,12 +88,9 @@ public interface XacmlApplicationServiceProvider {
     /**
      * Makes a decision given the incoming request and returns a response.
      *
-     * <P>NOTE: I may want to change this to an object that represents the
-     * schema.
-     *
-     * @param jsonSchema Incoming Json
-     * @return response
+     * @param request Incoming DecisionRequest object
+     * @return response Responding DecisionResponse object
      */
-    JSONObject       makeDecision(JSONObject jsonSchema);
+    DecisionResponse       makeDecision(DecisionRequest request);
 
 }
