@@ -27,6 +27,8 @@ public class Decision {
 
     String  onapName;
 
+    String  onapComponent;
+
     String  onapInstance;
 
     String  action;
