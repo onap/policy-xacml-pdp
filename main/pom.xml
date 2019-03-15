@@ -66,6 +66,11 @@
             <artifactId>monitoring</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.onap.policy.xacml-pdp.applications</groupId>
+            <artifactId>guard</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

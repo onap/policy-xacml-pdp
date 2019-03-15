@@ -1,7 +1,5 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP
- * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,25 +20,29 @@
 
 package org.onap.policy.pdp.xacml.application.common;
 
-import com.att.research.xacml.api.Request;
-import com.att.research.xacml.api.Response;
+public class OnapPolicyFinderFactoryException extends Exception {
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
+    private static final long serialVersionUID = -1643639780835366726L;
 
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+    public OnapPolicyFinderFactoryException() {
+        super();
+    }
 
-import org.onap.policy.models.decisions.concepts.DecisionRequest;
-import org.onap.policy.models.decisions.concepts.DecisionResponse;
+    public OnapPolicyFinderFactoryException(String message) {
+        super(message);
+    }
 
-public interface ToscaPolicyConverter {
+    public OnapPolicyFinderFactoryException(Throwable cause) {
+        super(cause);
+    }
 
-    List<PolicyType> convertPolicies(InputStream isToscaPolicy) throws ToscaPolicyConversionException;
+    public OnapPolicyFinderFactoryException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-    List<PolicyType> convertPolicies(Map<String, Object> toscaObject) throws ToscaPolicyConversionException;
+    public OnapPolicyFinderFactoryException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 
-    Request convertRequest(DecisionRequest request);
-
-    DecisionResponse convertResponse(Response response);
 }

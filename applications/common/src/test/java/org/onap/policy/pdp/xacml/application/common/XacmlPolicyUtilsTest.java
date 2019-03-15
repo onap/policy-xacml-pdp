@@ -22,11 +22,11 @@
 
 package org.onap.policy.pdp.xacml.application.common;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.util.XACMLPolicyWriter;
-import com.att.research.xacml.util.XACMLProperties;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -36,8 +36,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map.Entry;
+import java.nio.file.Paths;
 import java.util.Properties;
+
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
@@ -46,6 +47,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -60,22 +62,27 @@ import org.slf4j.LoggerFactory;
  * @author pameladragosh
  *
  */
-public class XacmlUpdatePolicyUtilsTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(XacmlUpdatePolicyUtilsTest.class);
+public class XacmlPolicyUtilsTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPolicyUtilsTest.class);
 
     static Properties properties;
 
-    static PolicySetType rootPolicy = new PolicySetType();
+    static PolicySetType rootPolicy = XacmlPolicyUtils.createEmptyPolicySet("root", XACML3.ID_POLICY_FIRST_APPLICABLE);
 
     static Path rootPath;
 
-    static PolicyType policy1 = new PolicyType();
-    static PolicyType policy2 = new PolicyType();
+    static PolicyType policy1 = XacmlPolicyUtils.createEmptyPolicy("policy1", XACML3.ID_RULE_DENY_UNLESS_PERMIT);
+    static PolicyType policy2 = XacmlPolicyUtils.createEmptyPolicy("policy2", XACML3.ID_RULE_DENY_UNLESS_PERMIT);
+    static PolicyType policy3 = XacmlPolicyUtils.createEmptyPolicy("policy3", XACML3.ID_RULE_DENY_UNLESS_PERMIT);
+    static PolicyType policy4 = XacmlPolicyUtils.createEmptyPolicy("policy4", XACML3.ID_RULE_DENY_UNLESS_PERMIT);
 
-    static PolicySetType policySet3 = new PolicySetType();
+    static PolicySetType policySet5 = XacmlPolicyUtils.createEmptyPolicySet(
+            "policyset1", XACML3.ID_POLICY_FIRST_APPLICABLE);
 
     static Path path1;
     static Path path2;
+    static Path path3;
+    static Path path4;
 
     static Path policySetPath;
 
@@ -86,7 +93,8 @@ public class XacmlUpdatePolicyUtilsTest {
     public static TemporaryFolder policyFolder = new TemporaryFolder();
 
     /**
-     * Setup the JUnit tests.
+     * Setup the JUnit tests by finishing creating the policies and
+     * writing them out to the temporary folder.
      *
      * @throws Exception thrown
      */
@@ -101,43 +109,59 @@ public class XacmlUpdatePolicyUtilsTest {
                 properties.load(is);
             }
             //
-            // Create a very basic Root policy
+            // Save root policy
             //
-            rootPolicy.setPolicySetId("root");
-            rootPolicy.setTarget(new TargetType());
-            rootPolicy.setPolicyCombiningAlgId(XACML3.ID_POLICY_FIRST_APPLICABLE.stringValue());
             File rootFile = policyFolder.newFile("root.xml");
             LOGGER.info("Creating Root Policy {}", rootFile.getAbsolutePath());
             rootPath = XACMLPolicyWriter.writePolicyFile(rootFile.toPath(), rootPolicy);
             //
-            // Create policies
+            // Create policies - Policies 1 and 2 will become references in the
+            // root policy. While Policies 3 and 4 will become references in the
+            // soon to be created PolicySet 5 below.
             //
-            path1 = createPolicy(policy1, "policy1", "resource1");
+            path1 = createPolicyContents(policy1, "resource1");
             LOGGER.info(new String(Files.readAllBytes(path1)));
-            path2 = createPolicy(policy2, "policy2", "resource2");
+            path2 = createPolicyContents(policy2, "resource2");
             LOGGER.info(new String(Files.readAllBytes(path2)));
+            path3 = createPolicyContents(policy3, "resourc31");
+            LOGGER.info(new String(Files.readAllBytes(path3)));
+            path4 = createPolicyContents(policy4, "resource4");
+            LOGGER.info(new String(Files.readAllBytes(path4)));
             //
-            // Create another PolicySet
+            // Create our PolicySet
             //
-            policySet3.setPolicySetId("policyset1");
-            policySet3.setTarget(new TargetType());
-            policySet3.setPolicyCombiningAlgId(XACML3.ID_POLICY_FIRST_APPLICABLE.stringValue());
+            policySet5.setPolicySetId("policyset5");
+            policySet5.setTarget(new TargetType());
+            policySet5.setPolicyCombiningAlgId(XACML3.ID_POLICY_FIRST_APPLICABLE.stringValue());
             ObjectFactory factory = new ObjectFactory();
-
-            policySet3.getPolicySetOrPolicyOrPolicySetIdReference().add(factory.createPolicy(policy1));
-            policySet3.getPolicySetOrPolicyOrPolicySetIdReference().add(factory.createPolicy(policy2));
-            File policySetFile = policyFolder.newFile("policySet1.xml");
+            //
+            // Add Policies 3 and 4 to the PolicySet
+            //
+            policySet5.getPolicySetOrPolicyOrPolicySetIdReference().add(factory.createPolicy(policy1));
+            policySet5.getPolicySetOrPolicyOrPolicySetIdReference().add(factory.createPolicy(policy2));
+            assertThat(policySet5.getPolicySetOrPolicyOrPolicySetIdReference()).hasSize(2);
+            //
+            // Save that to disk
+            //
+            File policySetFile = policyFolder.newFile("policySet5.xml");
             LOGGER.info("Creating PolicySet {}", policySetFile.getAbsolutePath());
-            policySetPath = XACMLPolicyWriter.writePolicyFile(policySetFile.toPath(), policySet3);
+            policySetPath = XACMLPolicyWriter.writePolicyFile(policySetFile.toPath(), policySet5);
 
         }).doesNotThrowAnyException();
     }
 
-    private static Path createPolicy(PolicyType policy, String id, String resource) throws IOException {
+    /**
+     * Helper method that creates a very simple Policy and Rule and saves it to disk.
+     *
+     * @param policy Policy to store contents in
+     * @param resource A simple resource id for the Target
+     * @return Path object of the policy
+     * @throws IOException If unable to write to disk
+     */
+    private static Path createPolicyContents(PolicyType policy, String resource) throws IOException {
         //
-        // Create Policy 1
+        // Create The Match
         //
-        policy.setPolicyId(id);
         MatchType matchPolicyId = ToscaPolicyConverterUtils.buildMatchTypeDesignator(
                 XACML3.ID_FUNCTION_STRING_EQUAL,
                 resource,
@@ -164,7 +188,7 @@ public class XacmlUpdatePolicyUtilsTest {
         //
         policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
         //
-        // Create a file
+        // Save it to disk
         //
         File file = policyFolder.newFile(policy.getPolicyId() + ".xml");
         LOGGER.info("Creating Policy {}", file.getAbsolutePath());
@@ -172,55 +196,69 @@ public class XacmlUpdatePolicyUtilsTest {
     }
 
     @Test
-    public void test() {
+    public void testUpdatingPolicies() {
         assertThatCode(() -> {
             //
             // Just update root and policies
             //
-            XacmlUpdatePolicyUtils.updateXacmlRootPolicy(rootPolicy, policy1, policy2);
+            XacmlPolicyUtils.addPoliciesToXacmlRootPolicy(rootPolicy, policy1, policy2);
+            //
+            // Make sure it is correct
+            //
+            assertThat(rootPolicy.getPolicySetOrPolicyOrPolicySetIdReference()).hasSize(2);
+            //
+            // Save to disk
+            //
             try (OutputStream os = new ByteArrayOutputStream()) {
                 XACMLPolicyWriter.writePolicyFile(os, rootPolicy);
                 LOGGER.debug("New Root Policy:{}{}", System.lineSeparator(), os.toString());
             }
-            //
-            // Test updating the properties
-            //
-            XACMLProperties.setXacmlRootProperties(properties, rootPath);
-            XACMLProperties.setXacmlReferencedProperties(properties, path1, path2);
-            //
-            // Dump this out so I can see what I'm doing
-            //
-            for (Entry<Object, Object> entry : properties.entrySet()) {
-                LOGGER.info("{}={}", entry.getKey(), entry.getValue());
-            }
-            LOGGER.info("Properties {}", properties.toString());
-            //
-            // Somehow I have to figure out how to test this in assertj
-            //
             //
             // Just update root and PolicySet
             //
-            XacmlUpdatePolicyUtils.updateXacmlRootPolicy(rootPolicy, policySet3);
+            XacmlPolicyUtils.addPolicySetsToXacmlRootPolicy(rootPolicy, policySet5);
             try (OutputStream os = new ByteArrayOutputStream()) {
                 XACMLPolicyWriter.writePolicyFile(os, rootPolicy);
                 LOGGER.debug("New Root Policy:{}{}", System.lineSeparator(), os.toString());
             }
-            //
-            // Test updating the properties
-            //
-            XACMLProperties.setXacmlRootProperties(properties, rootPath);
-            XACMLProperties.setXacmlReferencedProperties(properties, policySetPath);
-            //
-            // Dump this out so I can see what I'm doing
-            //
-            for (Entry<Object, Object> entry : properties.entrySet()) {
-                LOGGER.info("{}={}", entry.getKey(), entry.getValue());
-            }
-            LOGGER.info("Properties {}", properties.toString());
-            //
-            // Somehow I have to figure out how to test this in assertj
-            //
-
         }).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testRemovingProperties() {
+        //
+        // Dump what we are starting with
+        //
+        XacmlPolicyUtils.debugDumpPolicyProperties(properties, LOGGER);
+        //
+        // Remove referenced policies
+        //
+        Path ref = Paths.get("src/test/resources/ref1.xml");
+        XacmlPolicyUtils.removeReferencedPolicy(properties, ref);
+        XacmlPolicyUtils.debugDumpPolicyProperties(properties, LOGGER);
+        assertThat(properties.getProperty("refstart1.file")).isNullOrEmpty();
+
+        ref = Paths.get("src/test/resources/ref2.xml");
+        XacmlPolicyUtils.removeReferencedPolicy(properties, ref);
+        XacmlPolicyUtils.debugDumpPolicyProperties(properties, LOGGER);
+        assertThat(properties.getProperty("refstart2.file")).isNullOrEmpty();
+
+        //
+        // Test one that isn't in there
+        //
+        ref = Paths.get("src/test/resources/NotThere.xml");
+        XacmlPolicyUtils.removeReferencedPolicy(properties, ref);
+        XacmlPolicyUtils.debugDumpPolicyProperties(properties, LOGGER);
+        assertThat(properties.getProperty("refstart3.file")).isNotBlank();
+
+        ref = Paths.get("src/test/resources/ref3.xml");
+        XacmlPolicyUtils.removeReferencedPolicy(properties, ref);
+        XacmlPolicyUtils.debugDumpPolicyProperties(properties, LOGGER);
+        assertThat(properties.getProperty("refstart3.file")).isNullOrEmpty();
+
+        ref = Paths.get("src/test/resources/ref4.xml");
+        XacmlPolicyUtils.removeReferencedPolicy(properties, ref);
+        XacmlPolicyUtils.debugDumpPolicyProperties(properties, LOGGER);
+        assertThat(properties.getProperty("refstart4.file")).isNullOrEmpty();
     }
 }
