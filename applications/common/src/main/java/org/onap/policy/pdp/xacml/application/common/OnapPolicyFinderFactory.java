@@ -18,7 +18,6 @@
  * ============LICENSE_END=========================================================
  */
 
-
 package org.onap.policy.pdp.xacml.application.common;
 
 import com.att.research.xacml.std.StdStatusCode;
@@ -64,18 +63,16 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
     private List<PolicyDef> referencedPolicies;
     private boolean needsInit                   = true;
 
-    private Properties properties = null;
+    private Properties properties;
 
     /**
-     * Empty constructor.
+     * Empty private constructor. We do not want to create
+     * an instance of this without giving Properties object.
+     *
+     * @throws OnapPolicyFinderFactoryException Exception will be thrown
      */
-    public OnapPolicyFinderFactory() {
-        logger.debug("Constructed without properties");
-        //
-        // Here we differ from the StdPolicyFinderFactory in that we initialize right away.
-        // We do not wait for a policy request to happen to look for and load policies.
-        //
-        this.init();
+    public OnapPolicyFinderFactory() throws OnapPolicyFinderFactoryException {
+        throw new OnapPolicyFinderFactoryException("Please use the constructor with Properties object.");
     }
 
     /**
@@ -106,12 +103,7 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
      * @return a <code>PolicyDef</code> loaded from the given identifier
      */
     protected PolicyDef loadPolicyDef(String policyId) {
-        String propLocation = null;
-        if (this.properties == null) {
-            propLocation    = XACMLProperties.getProperty(policyId + PROP_FILE);
-        } else {
-            propLocation    = this.properties.getProperty(policyId + PROP_FILE);
-        }
+        String propLocation = this.properties.getProperty(policyId + PROP_FILE);
         if (propLocation != null) {
             //
             // Try to load it from the file
@@ -121,11 +113,8 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
                 return policy;
             }
         }
-        if (this.properties == null) {
-            propLocation = XACMLProperties.getProperty(policyId + PROP_URL);
-        } else {
-            propLocation = this.properties.getProperty(policyId + PROP_URL);
-        }
+
+        propLocation = this.properties.getProperty(policyId + PROP_URL);
         if (propLocation != null) {
             PolicyDef policy = this.loadPolicyUrlDef(propLocation);
             if (policy != null) {
@@ -200,12 +189,7 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
      * @return a <code>List</code> of <code>PolicyDef</code>s loaded from the given property name
      */
     protected List<PolicyDef> getPolicyDefs(String propertyName) {
-        String policyIds;
-        if (this.properties != null) {
-            policyIds = this.properties.getProperty(propertyName);
-        } else {
-            policyIds    = XACMLProperties.getProperty(propertyName);
-        }
+        String policyIds = this.properties.getProperty(propertyName);
         if (Strings.isNullOrEmpty(policyIds)) {
             return Collections.emptyList();
         }

@@ -20,14 +20,20 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.xacml.pdp.engine;
+package org.onap.policy.xacml.pdp.application.monitoring;
 
+import com.att.research.xacml.api.AttributeAssignment;
+import com.att.research.xacml.api.DataTypeException;
+import com.att.research.xacml.api.Decision;
+import com.att.research.xacml.api.Obligation;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
+import com.att.research.xacml.api.Result;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.api.pdp.PDPEngine;
 import com.att.research.xacml.api.pdp.PDPEngineFactory;
 import com.att.research.xacml.api.pdp.PDPException;
+import com.att.research.xacml.std.annotations.RequestParser;
 import com.att.research.xacml.util.FactoryException;
 import com.att.research.xacml.util.XACMLPolicyScanner;
 import com.att.research.xacml.util.XACMLProperties;
@@ -63,6 +69,8 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 import org.json.JSONObject;
+import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConverter;
@@ -82,9 +90,9 @@ import org.yaml.snakeyaml.Yaml;
  * @author pameladragosh
  *
  */
-public class OnapXacmlPdpEngine implements ToscaPolicyConverter, XacmlApplicationServiceProvider {
+public class MonitoringPdpApplication implements ToscaPolicyConverter, XacmlApplicationServiceProvider {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OnapXacmlPdpEngine.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringPdpApplication.class);
     private static final String ONAP_MONITORING_BASE_POLICY_TYPE = "onap.Monitoring";
     private static final String ONAP_MONITORING_DERIVED_POLICY_TYPE = "onap.policies.monitoring";
 
@@ -97,7 +105,7 @@ public class OnapXacmlPdpEngine implements ToscaPolicyConverter, XacmlApplicatio
     /**
      * Constructor.
      */
-    public OnapXacmlPdpEngine() {
+    public MonitoringPdpApplication() {
         //
         // By default this supports just Monitoring policy types
         //
@@ -135,7 +143,7 @@ public class OnapXacmlPdpEngine implements ToscaPolicyConverter, XacmlApplicatio
      * @param request Incoming request object
      * @return Response object
      */
-    public synchronized Response decision(Request request) {
+    private synchronized Response xacmlDecision(Request request) {
         //
         // This is what we need to return
         //
@@ -282,8 +290,19 @@ public class OnapXacmlPdpEngine implements ToscaPolicyConverter, XacmlApplicatio
     }
 
     @Override
-    public synchronized JSONObject makeDecision(JSONObject jsonSchema) {
-        return null;
+    public synchronized DecisionResponse makeDecision(DecisionRequest request) {
+        //
+        // Convert to a XacmlRequest
+        //
+        Request xacmlRequest = this.convertRequest(request);
+        //
+        // Now get a decision
+        //
+        Response xacmlResponse = this.xacmlDecision(xacmlRequest);
+        //
+        // Convert to a DecisionResponse
+        //
+        return this.convertResponse(xacmlResponse);
     }
 
     @Override
@@ -534,6 +553,51 @@ public class OnapXacmlPdpEngine implements ToscaPolicyConverter, XacmlApplicatio
         obligations.getObligationExpression().add(obligation);
         rule.setObligationExpressions(obligations);
         return rule;
+    }
+
+    @Override
+    public Request convertRequest(DecisionRequest request) {
+        LOGGER.debug("Converting Request {}", request);
+        try {
+            return RequestParser.parseRequest(MonitoringRequest.createInstance(request));
+        } catch (IllegalArgumentException | IllegalAccessException | DataTypeException e) {
+            LOGGER.error("Failed to convert DecisionRequest: {}", e);
+        }
+        //
+        // TODO throw exception
+        //
+        return null;
+    }
+
+    @Override
+    public DecisionResponse convertResponse(Response xacmlResponse) {
+        LOGGER.debug("Converting Response {}", xacmlResponse);
+        DecisionResponse decisionResponse = new DecisionResponse();
+        //
+        // Iterate through all the results
+        //
+        for (Result xacmlResult : xacmlResponse.getResults()) {
+            //
+            // Check the result
+            //
+            if (xacmlResult.getDecision() == Decision.PERMIT) {
+                //
+                // Go through obligations
+                //
+                for (Obligation obligation : xacmlResult.getObligations()) {
+                    for (AttributeAssignment assignments : obligation.getAttributeAssignments()) {
+                        //
+                        // TODO
+                        //
+                    }
+                }
+            } else {
+                decisionResponse.setErrorMessage("A better error message");
+                decisionResponse.setPolicies(new ArrayList<>());
+            }
+        }
+
+        return decisionResponse;
     }
 
 }
