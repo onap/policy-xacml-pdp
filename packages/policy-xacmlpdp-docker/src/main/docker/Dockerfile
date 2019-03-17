@@ -14,8 +14,8 @@ ENV POLICY_HOME=/opt/app/policy
 ENV POLICY_PDPX_HOME=${POLICY_HOME}/pdpx
 
 RUN \
-    apk add --no-cache --update busybox-extras bash zip unzip curl wget \
-                                openssh maven openjdk8 jq httpie py-pip
+    apk add --no-cache --update busybox-extras bash nss procps coreutils findutils grep \
+                                zip unzip curl wget openssh maven openjdk8 jq httpie py-pip
 
 
 RUN addgroup policy && \
