@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b4676d4f_ddfb5ef0",
+        "filename": "applications/common/src/test/java/org/onap/policy/pdp/xacml/application/common/OnapPolicyFinderFactoryTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-18T22:02:38Z",
+      "side": 1,
+      "message": "Not sure this is applicable, since a test. But just in case, Jim had commented earlier that onar doesn\u0027t like it when public methods throw more than one exception type https://gerrit.onap.org/r/#/c/78789/2/controlloop/templates/template.demo.clc/src/test/java/org/onap/policy/template/demo/clc/ControlLoopCoordinationTest.java@98",
+      "range": {
+        "startLine": 32,
+        "startChar": 23,
+        "endLine": 32,
+        "endChar": 70
+      },
+      "revId": "59c38b6b3dfbd43c876f85ffb1e4b484951ced44",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "463ff2e0_96d566b0",
+        "filename": "applications/guard/src/main/resources/RootGuardPolicy.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-18T22:02:38Z",
+      "side": 1,
+      "message": "Is this rule meant to be just an example, or also to modify the root policy\u0027s combining algorithm result?\n\nFor example, if a single other policy was added to the root set and that policy evaluated to NotApplicable, then the output of the root policy as currently written would be Permit as per the combining algorithm true table for deny-overrides at https://www.axiomatics.com/blog/understanding-xacml-combining-algorithms/. However, w/o this default Permit rule, the output would have been NotApplicable.\n\nSame question for RootMonitoringPolicy.xml",
+      "range": {
+        "startLine": 21,
+        "startChar": 1,
+        "endLine": 27,
+        "endChar": 13
+      },
+      "revId": "59c38b6b3dfbd43c876f85ffb1e4b484951ced44",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
