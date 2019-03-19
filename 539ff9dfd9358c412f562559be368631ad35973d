@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c2b5e5eb_0d8b364b",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/ToscaPolicyTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-19T22:39:32Z",
+      "side": 1,
+      "message": "It seems odd to me that the code for creating PDP engine would be located in a class whose named purpose is to translate Tosca policies. Likewise for functions to retrieve / manipulate / configure that PDP. Perhaps refactor into two separate classes, or fold PDP-related functions into XacmlApplicationServiceProvider, while leaving TOSCA translation related code (e.g., convertPolicies, convertResponse) here",
+      "range": {
+        "startLine": 212,
+        "startChar": 1,
+        "endLine": 215,
+        "endChar": 69
+      },
+      "revId": "539ff9dfd9358c412f562559be368631ad35973d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
