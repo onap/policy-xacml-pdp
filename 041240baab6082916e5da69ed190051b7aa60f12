@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11933b97_5526c7e3",
+        "filename": "applications/monitoring/src/main/java/org/onap/policy/xacml/pdp/application/monitoring/MonitoringRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-19T20:03:05Z",
+      "side": 1,
+      "message": "curious, why use contentEquals here? It looks like the entry keys are all String.",
+      "range": {
+        "startLine": 59,
+        "startChar": 28,
+        "endLine": 59,
+        "endChar": 42
+      },
+      "revId": "041240baab6082916e5da69ed190051b7aa60f12",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
