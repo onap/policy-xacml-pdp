@@ -35,9 +35,9 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
  * @author pameladragosh
  *
  */
-public final class ToscaPolicyConverterUtils {
+public final class ToscaPolicyTranslatorUtils {
 
-    private ToscaPolicyConverterUtils() {
+    private ToscaPolicyTranslatorUtils() {
         super();
     }
 

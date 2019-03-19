@@ -1,6 +1,6 @@
-/*
+/*-
  * ============LICENSE_START=======================================================
- * ONAP Policy Decision Models
+ * ONAP
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -15,10 +15,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.xacml.pdp.application.monitoring;
+package org.onap.policy.pdp.xacml.application.common.std;
 
 import com.att.research.xacml.std.annotations.XACMLAction;
 import com.att.research.xacml.std.annotations.XACMLRequest;
@@ -31,7 +33,11 @@ import java.util.Map.Entry;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 
 @XACMLRequest(ReturnPolicyIdList = true)
-public class MonitoringRequest {
+public class StdCombinedPolicyRequest {
+
+    public StdCombinedPolicyRequest() {
+        super();
+    }
 
     @XACMLSubject(includeInResults = true)
     String onapName = "DCAE";
@@ -49,8 +55,8 @@ public class MonitoringRequest {
      * @param decisionRequest Input DecisionRequest
      * @return MonitoringRequest
      */
-    public static MonitoringRequest createInstance(DecisionRequest decisionRequest) {
-        MonitoringRequest request = new MonitoringRequest();
+    public static StdCombinedPolicyRequest createInstance(DecisionRequest decisionRequest) {
+        StdCombinedPolicyRequest request = new StdCombinedPolicyRequest();
         request.onapName = decisionRequest.getOnapName();
         request.action = decisionRequest.getAction();
 

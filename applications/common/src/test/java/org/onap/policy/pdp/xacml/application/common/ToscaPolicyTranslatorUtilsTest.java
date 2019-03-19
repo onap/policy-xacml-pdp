@@ -22,25 +22,21 @@
 
 package org.onap.policy.pdp.xacml.application.common;
 
-import com.att.research.xacml.api.Request;
-import com.att.research.xacml.api.Response;
+import static org.junit.Assert.assertTrue;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+import org.junit.Test;
 
-import org.onap.policy.models.decisions.concepts.DecisionRequest;
-import org.onap.policy.models.decisions.concepts.DecisionResponse;
+public class ToscaPolicyTranslatorUtilsTest {
 
-public interface ToscaPolicyConverter {
+    @Test
+    public void test() throws NoSuchMethodException, SecurityException {
+        final Constructor<ToscaPolicyTranslatorUtils> constructor
+            = ToscaPolicyTranslatorUtils.class.getDeclaredConstructor();
+        assertTrue(Modifier.isPrivate(constructor.getModifiers()));
 
-    List<PolicyType> convertPolicies(InputStream isToscaPolicy) throws ToscaPolicyConversionException;
+    }
 
-    List<PolicyType> convertPolicies(Map<String, Object> toscaObject) throws ToscaPolicyConversionException;
-
-    Request convertRequest(DecisionRequest request);
-
-    DecisionResponse convertResponse(Response response);
 }

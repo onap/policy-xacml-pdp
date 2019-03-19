@@ -162,7 +162,7 @@ public class XacmlPolicyUtilsTest {
         //
         // Create The Match
         //
-        MatchType matchPolicyId = ToscaPolicyConverterUtils.buildMatchTypeDesignator(
+        MatchType matchPolicyId = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
                 XACML3.ID_FUNCTION_STRING_EQUAL,
                 resource,
                 XACML3.ID_DATATYPE_STRING,
@@ -175,7 +175,7 @@ public class XacmlPolicyUtilsTest {
         //
         // Create AllOf (AND) of just Policy Id
         //
-        anyOf.getAllOf().add(ToscaPolicyConverterUtils.buildAllOf(matchPolicyId));
+        anyOf.getAllOf().add(ToscaPolicyTranslatorUtils.buildAllOf(matchPolicyId));
         TargetType target = new TargetType();
         target.getAnyOf().add(anyOf);
         policy.setTarget(target);
