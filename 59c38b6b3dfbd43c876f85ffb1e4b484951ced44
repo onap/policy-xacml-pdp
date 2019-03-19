@@ -45,6 +45,30 @@
       "revId": "59c38b6b3dfbd43c876f85ffb1e4b484951ced44",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "986d5102_b0bf7469",
+        "filename": "applications/guard/src/main/resources/RootGuardPolicy.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-19T11:26:05Z",
+      "side": 1,
+      "message": "I want to avoid Not Applicable in either of these policies. I think the root monitoring one is set for now. But the guard I only just started on. Again, we could skin this cat many ways. Let\u0027s just nail down the most likely one this week - probably what was done in Casablanca.",
+      "parentUuid": "463ff2e0_96d566b0",
+      "range": {
+        "startLine": 21,
+        "startChar": 1,
+        "endLine": 27,
+        "endChar": 13
+      },
+      "revId": "59c38b6b3dfbd43c876f85ffb1e4b484951ced44",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
