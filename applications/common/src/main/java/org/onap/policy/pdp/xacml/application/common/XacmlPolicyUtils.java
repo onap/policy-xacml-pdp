@@ -51,6 +51,8 @@ import org.slf4j.LoggerFactory;
 public class XacmlPolicyUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPolicyUtils.class);
+    private static final String DOT_FILE_SUFFIX = ".file";
+    private static final String NOT_FOUND_MESSAGE = "NOT FOUND";
 
     private XacmlPolicyUtils() {
         super();
@@ -165,7 +167,7 @@ public class XacmlPolicyUtils {
                 id++;
             } else {
                 referencedPolicies.add(refId);
-                properties.put(refId + ".file", refPolicyPath.toAbsolutePath().toString());
+                properties.put(refId + DOT_FILE_SUFFIX, refPolicyPath.toAbsolutePath().toString());
                 break;
             }
         }
@@ -193,7 +195,7 @@ public class XacmlPolicyUtils {
         boolean found = false;
         Set<String> referencedPolicies = XACMLProperties.getReferencedPolicyIDs(properties);
         for (String refPolicy : referencedPolicies) {
-            String refPolicyFile = refPolicy + ".file";
+            String refPolicyFile = refPolicy + DOT_FILE_SUFFIX;
             //
             // If the key and value match, then it will return true
             //
@@ -240,7 +242,7 @@ public class XacmlPolicyUtils {
             Set<String> rootPolicies = XACMLProperties.getRootPolicyIDs(properties);
             logger.debug("Root Policies: {}", properties.getProperty(XACMLProperties.PROP_ROOTPOLICIES));
             for (String root : rootPolicies) {
-                logger.debug("{}", properties.getProperty(root + ".file", "NOT FOUND"));
+                logger.debug("{}", properties.getProperty(root + DOT_FILE_SUFFIX, NOT_FOUND_MESSAGE));
             }
             //
             // Get the current set of referenced policy ids
@@ -248,7 +250,7 @@ public class XacmlPolicyUtils {
             Set<String> referencedPolicies = XACMLProperties.getReferencedPolicyIDs(properties);
             logger.debug("Referenced Policies: {}", properties.getProperty(XACMLProperties.PROP_REFERENCEDPOLICIES));
             for (String ref : referencedPolicies) {
-                logger.debug("{}", properties.getProperty(ref + ".file", "NOT FOUND"));
+                logger.debug("{}", properties.getProperty(ref + DOT_FILE_SUFFIX, NOT_FOUND_MESSAGE));
             }
         }
     }

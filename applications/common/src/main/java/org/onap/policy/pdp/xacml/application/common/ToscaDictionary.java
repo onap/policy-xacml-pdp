@@ -58,7 +58,7 @@ public final class ToscaDictionary {
     public static final Identifier ID_OBLIGATION_POLICY_MONITORING_DATATYPE =
             XACML3.ID_DATATYPE_STRING;
 
-    public static final Identifier ID_OBLIGATION_ISSUER =
+    public static final Identifier ID_OBLIGATION_MONITORING_ISSUER =
             new IdentifierImpl(URN_ONAP, "issuer:monitoring");
 
     private ToscaDictionary() {
