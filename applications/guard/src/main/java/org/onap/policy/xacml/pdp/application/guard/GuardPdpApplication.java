@@ -24,34 +24,26 @@ package org.onap.policy.xacml.pdp.application.guard;
 
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
-import com.att.research.xacml.api.pdp.PDPEngine;
-import com.att.research.xacml.api.pdp.PDPException;
 import com.att.research.xacml.util.XACMLPolicyWriter;
 import com.google.common.collect.Lists;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
-import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConverter;
-import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
-import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
+import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
 
 /**
  * This class implements the onap.policies.controlloop.Guard policy implementations.
@@ -59,14 +51,11 @@ import org.yaml.snakeyaml.Yaml;
  * @author pameladragosh
  *
  */
-public class GuardPdpApplication implements ToscaPolicyConverter, XacmlApplicationServiceProvider {
+public class GuardPdpApplication extends ToscaPolicyTranslator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GuardPdpApplication.class);
     private static final String STRING_VERSION100 = "1.0.0";
     private Map<String, String> supportedPolicyTypes = new HashMap<>();
-    private Path pathForData;
-    private Properties pdpProperties = null;
-    private PDPEngine pdpEngine = null;
 
     /** Constructor.
      *
@@ -84,31 +73,6 @@ public class GuardPdpApplication implements ToscaPolicyConverter, XacmlApplicati
     @Override
     public List<String> actionDecisionsSupported() {
         return Arrays.asList("guard");
-    }
-
-    @Override
-    public void initialize(Path pathForData) {
-        //
-        // Save our path
-        //
-        this.pathForData = pathForData;
-        LOGGER.debug("New Path is {}", this.pathForData.toAbsolutePath());
-        //
-        // Look for and load the properties object
-        //
-        try {
-            pdpProperties = XacmlPolicyUtils.loadXacmlProperties(XacmlPolicyUtils.getPropertiesPath(pathForData));
-            LOGGER.debug("{}", pdpProperties);
-        } catch (IOException e) {
-            LOGGER.error("{}", e);
-        }
-        //
-        // Create an engine
-        //
-        PDPEngine newEngine = XacmlPolicyUtils.createEngine(pdpProperties);
-        if (newEngine != null) {
-            pdpEngine = newEngine;
-        }
     }
 
     @Override
@@ -141,6 +105,9 @@ public class GuardPdpApplication implements ToscaPolicyConverter, XacmlApplicati
             if (listPolicies.isEmpty()) {
                 throw new ToscaPolicyConversionException("Converted 0 policies");
             }
+            //
+            // TODO update properties, save to disk, etc.
+            //
         } catch (ToscaPolicyConversionException e) {
             LOGGER.error("Failed to loadPolicies {}", e);
         }
@@ -163,27 +130,6 @@ public class GuardPdpApplication implements ToscaPolicyConverter, XacmlApplicati
     }
 
     @Override
-    public List<PolicyType> convertPolicies(InputStream isToscaPolicy) throws ToscaPolicyConversionException {
-        //
-        // Have snakeyaml parse the object
-        //
-        Yaml yaml = new Yaml();
-        Map<String, Object> toscaObject = yaml.load(isToscaPolicy);
-        //
-        // Return the policies
-        //
-        return scanAndConvertPolicies(toscaObject);
-    }
-
-    @Override
-    public List<PolicyType> convertPolicies(Map<String, Object> toscaObject) throws ToscaPolicyConversionException {
-        //
-        // Return the policies
-        //
-        return scanAndConvertPolicies(toscaObject);
-    }
-
-    @Override
     public Request convertRequest(DecisionRequest request) {
         // TODO Auto-generated method stub
         return null;
@@ -195,8 +141,9 @@ public class GuardPdpApplication implements ToscaPolicyConverter, XacmlApplicati
         return null;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
-    private List<PolicyType> scanAndConvertPolicies(Map<String, Object> toscaObject)
+    protected List<PolicyType> scanAndConvertPolicies(Map<String, Object> toscaObject)
             throws ToscaPolicyConversionException {
         //
         // Our return object
@@ -237,35 +184,6 @@ public class GuardPdpApplication implements ToscaPolicyConverter, XacmlApplicati
     private PolicyType convertPolicy(Entry<String, Object> entrySet) throws ToscaPolicyConversionException {
 
         return null;
-    }
-
-    /**
-     * Make a decision call.
-     *
-     * @param request Incoming request object
-     * @return Response object
-     */
-    private synchronized Response xacmlDecision(Request request) {
-        //
-        // This is what we need to return
-        //
-        Response response = null;
-        //
-        // Track some timing
-        //
-        long timeStart = System.currentTimeMillis();
-        try {
-            response = this.pdpEngine.decide(request);
-        } catch (PDPException e) {
-            LOGGER.error("Xacml PDP Engine failed {}", e);
-        } finally {
-            //
-            // Track the end of timing
-            //
-            long timeEnd = System.currentTimeMillis();
-            LOGGER.info("Elapsed Time: {}ms", (timeEnd - timeStart));
-        }
-        return response;
     }
 
 }

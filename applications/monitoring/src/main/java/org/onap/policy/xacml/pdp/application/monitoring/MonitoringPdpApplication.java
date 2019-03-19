@@ -30,8 +30,6 @@ import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
 import com.att.research.xacml.api.XACML3;
-import com.att.research.xacml.api.pdp.PDPEngine;
-import com.att.research.xacml.api.pdp.PDPException;
 import com.att.research.xacml.std.annotations.RequestParser;
 import com.att.research.xacml.util.XACMLPolicyScanner;
 import com.att.research.xacml.util.XACMLPolicyWriter;
@@ -72,13 +70,11 @@ import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
-import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConverter;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConverterUtils;
-import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
+import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
 
 /**
  * This is the engine class that manages the instance of the XACML PDP engine.
@@ -89,15 +85,12 @@ import org.yaml.snakeyaml.Yaml;
  * @author pameladragosh
  *
  */
-public class MonitoringPdpApplication implements ToscaPolicyConverter, XacmlApplicationServiceProvider {
+public class MonitoringPdpApplication extends ToscaPolicyTranslator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringPdpApplication.class);
     private static final String ONAP_MONITORING_BASE_POLICY_TYPE = "onap.Monitoring";
     private static final String ONAP_MONITORING_DERIVED_POLICY_TYPE = "onap.policies.monitoring";
 
-    private Path pathForData = null;
-    private Properties pdpProperties = null;
-    private PDPEngine pdpEngine = null;
     private Map<String, String> supportedPolicyTypes = new HashMap<>();
 
     /**
@@ -118,31 +111,6 @@ public class MonitoringPdpApplication implements ToscaPolicyConverter, XacmlAppl
     @Override
     public List<String> actionDecisionsSupported() {
         return Arrays.asList("configure");
-    }
-
-    @Override
-    public synchronized void initialize(Path pathForData) {
-        //
-        // Save our path
-        //
-        this.pathForData = pathForData;
-        LOGGER.debug("New Path is {}", this.pathForData.toAbsolutePath());
-        //
-        // Look for and load the properties object
-        //
-        try {
-            pdpProperties = XacmlPolicyUtils.loadXacmlProperties(XacmlPolicyUtils.getPropertiesPath(pathForData));
-            LOGGER.debug("{}", pdpProperties);
-        } catch (IOException e) {
-            LOGGER.error("{}", e);
-        }
-        //
-        // Create an engine
-        //
-        PDPEngine newEngine = XacmlPolicyUtils.createEngine(pdpProperties);
-        if (newEngine != null) {
-            pdpEngine = newEngine;
-        }
     }
 
     @Override
@@ -172,16 +140,20 @@ public class MonitoringPdpApplication implements ToscaPolicyConverter, XacmlAppl
                 throw new ToscaPolicyConversionException("Converted 0 policies");
             }
             //
+            // Get our properties because we are going to update
+            //
+            Properties currentProperties = this.getProperties();
+            //
             // Read in our Root Policy
             //
-            Set<String> roots = XACMLProperties.getRootPolicyIDs(pdpProperties);
+            Set<String> roots = XACMLProperties.getRootPolicyIDs(currentProperties);
             if (roots.isEmpty()) {
                 throw new ToscaPolicyConversionException("There are NO root policies defined");
             }
             //
             // Really only should be one
             //
-            String rootFile = pdpProperties.getProperty(roots.iterator().next() + ".file");
+            String rootFile = currentProperties.getProperty(roots.iterator().next() + ".file");
             try (InputStream is = new FileInputStream(rootFile)) {
                 //
                 // Read the Root Policy into memory
@@ -211,7 +183,7 @@ public class MonitoringPdpApplication implements ToscaPolicyConverter, XacmlAppl
                         //
                         // Construct the filename
                         //
-                        Path refPath = XacmlPolicyUtils.constructUniquePolicyFilename(policy, pathForData);
+                        Path refPath = XacmlPolicyUtils.constructUniquePolicyFilename(policy, this.getDataPath());
                         //
                         // Write the policy to disk
                         // Maybe check for an error
@@ -220,7 +192,7 @@ public class MonitoringPdpApplication implements ToscaPolicyConverter, XacmlAppl
                         //
                         // Save it off
                         //
-                        XacmlPolicyUtils.addReferencedPolicy(pdpProperties, refPath);
+                        XacmlPolicyUtils.addReferencedPolicy(currentProperties, refPath);
                     }
                     //
                     // Save the root policy to disk
@@ -229,15 +201,12 @@ public class MonitoringPdpApplication implements ToscaPolicyConverter, XacmlAppl
                     //
                     // Write the policies to disk
                     //
-                    XacmlPolicyUtils.storeXacmlProperties(pdpProperties,
-                            XacmlPolicyUtils.getPropertiesPath(pathForData));
+                    XacmlPolicyUtils.storeXacmlProperties(currentProperties,
+                            XacmlPolicyUtils.getPropertiesPath(this.getDataPath()));
                     //
                     // Reload the engine
                     //
-                    PDPEngine newEngine = XacmlPolicyUtils.createEngine(pdpProperties);
-                    if (newEngine != null) {
-                        pdpEngine = newEngine;
-                    }
+                    this.createEngine(currentProperties);
                 } else {
                     throw new ToscaPolicyConversionException("Root policy isn't a PolicySet");
                 }
@@ -264,28 +233,8 @@ public class MonitoringPdpApplication implements ToscaPolicyConverter, XacmlAppl
     }
 
     @Override
-    public List<PolicyType> convertPolicies(Map<String, Object> toscaObject) throws ToscaPolicyConversionException {
-        //
-        // Return the policies
-        //
-        return scanAndConvertPolicies(toscaObject);
-    }
-
-    @Override
-    public List<PolicyType> convertPolicies(InputStream isToscaPolicy) throws ToscaPolicyConversionException {
-        //
-        // Have snakeyaml parse the object
-        //
-        Yaml yaml = new Yaml();
-        Map<String, Object> toscaObject = yaml.load(isToscaPolicy);
-        //
-        // Return the policies
-        //
-        return scanAndConvertPolicies(toscaObject);
-    }
-
     @SuppressWarnings("unchecked")
-    private List<PolicyType> scanAndConvertPolicies(Map<String, Object> toscaObject)
+    protected List<PolicyType> scanAndConvertPolicies(Map<String, Object> toscaObject)
             throws ToscaPolicyConversionException {
         //
         // Our return object
@@ -580,34 +529,5 @@ public class MonitoringPdpApplication implements ToscaPolicyConverter, XacmlAppl
         }
 
         return decisionResponse;
-    }
-
-    /**
-     * Make a decision call.
-     *
-     * @param request Incoming request object
-     * @return Response object
-     */
-    private synchronized Response xacmlDecision(Request request) {
-        //
-        // This is what we need to return
-        //
-        Response response = null;
-        //
-        // Track some timing
-        //
-        long timeStart = System.currentTimeMillis();
-        try {
-            response = this.pdpEngine.decide(request);
-        } catch (PDPException e) {
-            LOGGER.error("Xacml PDP Engine failed {}", e);
-        } finally {
-            //
-            // Track the end of timing
-            //
-            long timeEnd = System.currentTimeMillis();
-            LOGGER.info("Elapsed Time: {}ms", (timeEnd - timeStart));
-        }
-        return response;
     }
 }
