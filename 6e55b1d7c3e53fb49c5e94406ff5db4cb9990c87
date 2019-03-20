@@ -329,6 +329,30 @@
       "revId": "6e55b1d7c3e53fb49c5e94406ff5db4cb9990c87",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39568e7b_75197ec9",
+        "filename": "applications/guard/src/main/resources/RootGuardPolicy.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-20T21:47:26Z",
+      "side": 1,
+      "message": "The spec defines the combining algorithms more clearly. But yes, so if there are NO guards defined in the system, we want a permit to happen. We start adding guards one by one per control loop. I only have this as a placeholder, I have not finished the guard work yet.\n\nRight now the goal is to get the code interfaces, abstracts organized so we can re-use code. As well as change implementations more easily down the road. Perhaps we have several ways of doing guard or monitoring policies. \n\nI will be filling in the details on guard probably not until Friday.",
+      "parentUuid": "f753d04e_5ceb4648",
+      "range": {
+        "startLine": 2,
+        "startChar": 196,
+        "endLine": 2,
+        "endChar": 214
+      },
+      "revId": "6e55b1d7c3e53fb49c5e94406ff5db4cb9990c87",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
