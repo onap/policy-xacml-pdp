@@ -305,6 +305,30 @@
       "revId": "6e55b1d7c3e53fb49c5e94406ff5db4cb9990c87",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df52f05a_2730b976",
+        "filename": "applications/guard/src/main/resources/RootGuardPolicy.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-20T20:10:54Z",
+      "side": 1,
+      "message": "Mike, you\u0027ve grasped the essentials. For more, here\u0027s a nice article that includes truth-tables for standard combining algorithms https://www.axiomatics.com/blog/understanding-xacml-combining-algorithms/. And here is the official definitions for the combining algorithms http://docs.oasis-open.org/xacml/3.0/xacml-3.0-core-spec-os-en.html\\#_Toc325047268 (go to appendix c)",
+      "parentUuid": "f753d04e_5ceb4648",
+      "range": {
+        "startLine": 2,
+        "startChar": 196,
+        "endLine": 2,
+        "endChar": 214
+      },
+      "revId": "6e55b1d7c3e53fb49c5e94406ff5db4cb9990c87",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
