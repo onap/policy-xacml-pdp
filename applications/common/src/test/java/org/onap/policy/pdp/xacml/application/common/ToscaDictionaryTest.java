@@ -50,7 +50,7 @@ public class ToscaDictionaryTest {
         //
         // Probably don't need these as these ID's are used by other components
         //
-        assertNotNull(ToscaDictionary.ID_OBLIGATION_ISSUER);
+        assertNotNull(ToscaDictionary.ID_OBLIGATION_MONITORING_ISSUER);
     }
 
 }

@@ -56,14 +56,14 @@ public class MonitoringRequest {
 
         Map<String, Object> resources = decisionRequest.getResource();
         for (Entry<String, Object> entry : resources.entrySet()) {
-            if (entry.getKey().equals("policy-id")) {
+            if ("policy-id".contentEquals(entry.getKey())) {
                 //
                 // TODO handle lists of policies
                 //
                 request.resource = entry.getValue().toString();
                 continue;
             }
-            if (entry.getKey().equals("policy-type")) {
+            if ("policy-type".contentEquals(entry.getKey())) {
                 //
                 // TODO handle lists of policies
                 //
