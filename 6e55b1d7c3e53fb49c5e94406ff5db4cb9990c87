@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "c756f626_338afbc0",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdCombinedPolicyResultsTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-20T17:34:32Z",
+      "side": 1,
+      "message": "No they won\u0027t be. They will be very different which is why we have separate translators.",
+      "parentUuid": "66d2d5c3_855cac42",
+      "range": {
+        "startLine": 76,
+        "startChar": 28,
+        "endLine": 76,
+        "endChar": 50
+      },
+      "revId": "6e55b1d7c3e53fb49c5e94406ff5db4cb9990c87",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2967eda2_846e0a9f",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdCombinedPolicyResultsTranslator.java",
         "patchSetId": 3
@@ -59,6 +83,30 @@
       "writtenOn": "2019-03-20T17:31:20Z",
       "side": 1,
       "message": "variable should be named \u0027entry\u0027 not \u0027entrySet\u0027",
+      "range": {
+        "startLine": 92,
+        "startChar": 39,
+        "endLine": 92,
+        "endChar": 47
+      },
+      "revId": "6e55b1d7c3e53fb49c5e94406ff5db4cb9990c87",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7811e618_39e8ad32",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdCombinedPolicyResultsTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-20T17:34:32Z",
+      "side": 1,
+      "message": "No",
+      "parentUuid": "2967eda2_846e0a9f",
       "range": {
         "startLine": 92,
         "startChar": 39,
@@ -105,6 +153,30 @@
       "writtenOn": "2019-03-20T17:31:20Z",
       "side": 1,
       "message": "as currently defined lower in the file, this call will return null",
+      "range": {
+        "startLine": 76,
+        "startChar": 36,
+        "endLine": 76,
+        "endChar": 64
+      },
+      "revId": "6e55b1d7c3e53fb49c5e94406ff5db4cb9990c87",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa993650_f53162dc",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMetadataTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-20T17:34:32Z",
+      "side": 1,
+      "message": "That\u0027s because TODO is there. Not everything is done Joshua.",
+      "parentUuid": "a5b98b4c_28b975c4",
       "range": {
         "startLine": 76,
         "startChar": 36,
