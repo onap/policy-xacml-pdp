@@ -282,6 +282,29 @@
       "revId": "6e55b1d7c3e53fb49c5e94406ff5db4cb9990c87",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f753d04e_5ceb4648",
+        "filename": "applications/guard/src/main/resources/RootGuardPolicy.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-03-20T19:40:17Z",
+      "side": 1,
+      "message": "Pam.. just so I can be sure I am understanding how this works.. Does this mean the decision will be a permit unless there is at least one deny?  Meaning a response of \"indeterminate\" would still return a permit? What exactly is the difference between this and deny-overrides? just for my own understanding...",
+      "range": {
+        "startLine": 2,
+        "startChar": 196,
+        "endLine": 2,
+        "endChar": 214
+      },
+      "revId": "6e55b1d7c3e53fb49c5e94406ff5db4cb9990c87",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
