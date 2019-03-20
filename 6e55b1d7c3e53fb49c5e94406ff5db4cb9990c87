@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "56601aa5_7f29eb9f",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdCombinedPolicyResultsTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-20T17:57:20Z",
+      "side": 1,
+      "message": "Its returning a Set. I can name it what I want.",
+      "parentUuid": "817c41ae_6f394be9",
+      "range": {
+        "startLine": 92,
+        "startChar": 39,
+        "endLine": 92,
+        "endChar": 47
+      },
+      "revId": "6e55b1d7c3e53fb49c5e94406ff5db4cb9990c87",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e2f72c5b_68cf9963",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdCombinedPolicyResultsTranslator.java",
         "patchSetId": 3
