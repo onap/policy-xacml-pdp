@@ -108,6 +108,12 @@
             <groupId>com.att.research.xacml</groupId>
             <artifactId>xacml-pdp</artifactId>
             <version>2.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.onap.policy.models</groupId>
