@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "85eb0755_40d48725",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdCombinedPolicyResultsTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-20T17:48:31Z",
+      "side": 1,
+      "message": "makes sense then. I hadn\u0027t realized the current function body implementations were, at least in part, placeholder code (I\u0027m guessing so tests pass?)",
+      "parentUuid": "c756f626_338afbc0",
+      "range": {
+        "startLine": 76,
+        "startChar": 28,
+        "endLine": 76,
+        "endChar": 50
+      },
+      "revId": "6e55b1d7c3e53fb49c5e94406ff5db4cb9990c87",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2967eda2_846e0a9f",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdCombinedPolicyResultsTranslator.java",
         "patchSetId": 3
@@ -107,6 +131,30 @@
       "side": 1,
       "message": "No",
       "parentUuid": "2967eda2_846e0a9f",
+      "range": {
+        "startLine": 92,
+        "startChar": 39,
+        "endLine": 92,
+        "endChar": 47
+      },
+      "revId": "6e55b1d7c3e53fb49c5e94406ff5db4cb9990c87",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "817c41ae_6f394be9",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdCombinedPolicyResultsTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-20T17:48:31Z",
+      "side": 1,
+      "message": "I\u0027m confused, why would you name an instance of type Entry \"entrySet\"?",
+      "parentUuid": "7811e618_39e8ad32",
       "range": {
         "startLine": 92,
         "startChar": 39,
@@ -177,6 +225,30 @@
       "side": 1,
       "message": "That\u0027s because TODO is there. Not everything is done Joshua.",
       "parentUuid": "a5b98b4c_28b975c4",
+      "range": {
+        "startLine": 76,
+        "startChar": 36,
+        "endLine": 76,
+        "endChar": 64
+      },
+      "revId": "6e55b1d7c3e53fb49c5e94406ff5db4cb9990c87",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "abb53c20_1029e293",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMetadataTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-20T17:48:31Z",
+      "side": 1,
+      "message": "The previous two methods had been marked with //TODO. This one hadn\u0027t, so I thought it might have been accidentally overlooked.",
+      "parentUuid": "fa993650_f53162dc",
       "range": {
         "startLine": 76,
         "startChar": 36,
