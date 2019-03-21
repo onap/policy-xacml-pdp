@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<PolicySet xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" PolicyCombiningAlgId="urn:oasis:names:tc:xacml:3.0:policy-combining-algorithm:deny-overrides" PolicySetId="urn:org:onap:guard:policy:id" Version="1.0" xsi:schemaLocation="urn:oasis:names:tc:xacml:3.0:policy:schema:os access_control-xacml-2.0-policy-schema-os.xsd">
+<PolicySet xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" PolicyCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-unless-deny" PolicySetId="urn:org:onap:guard:policy:id" Version="1.0" xsi:schemaLocation="urn:oasis:names:tc:xacml:3.0:policy:schema:os access_control-xacml-2.0-policy-schema-os.xsd">
     <Description>The root policy for supporting onap.Guard policies.</Description>
     <Target>
         <AnyOf>
@@ -18,11 +18,4 @@
     <PolicyIdReference>onap.scaleout.tca</PolicyIdReference>
     <PolicySetIdReference>urn:oasis:names:tc:xacml:2.0:conformance-test:IIE001:policyset1</PolicySetIdReference>
     -->
-    <Policy PolicyId="default" Version="1.0" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-unless-deny" >
-        <Description>Default is to allow a permit - returning 0 obligations</Description>
-        <Target/>
-        <Rule RuleId="default" Effect="Permit">
-            <Target/>
-        </Rule>
-    </Policy>
 </PolicySet>
