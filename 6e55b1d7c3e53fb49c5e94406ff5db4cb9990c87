@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Pamela Dragosh <pdragosh@research.att.com>
+Code-Review+2: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Submitted-by: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Submitted-at: Thu, 21 Mar 2019 13:03:49 +0000
+Reviewed-on: https://gerrit.onap.org/r/82716
+Project: policy/xacml-pdp
+Branch: refs/heads/master
