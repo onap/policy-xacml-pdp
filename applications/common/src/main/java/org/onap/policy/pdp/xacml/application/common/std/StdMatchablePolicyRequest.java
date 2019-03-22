@@ -42,7 +42,7 @@ import org.onap.policy.models.decisions.concepts.DecisionRequest;
 @Setter
 @ToString
 @XACMLRequest(ReturnPolicyIdList = true)
-public class StdCombinedPolicyRequest {
+public class StdMatchablePolicyRequest {
 
     @XACMLSubject(includeInResults = true)
     private String onapName;
@@ -56,10 +56,18 @@ public class StdCombinedPolicyRequest {
     @XACMLAction()
     private String action;
 
-    @XACMLResource(includeInResults = true)
-    private Collection<String> resource = new ArrayList<>();
+    //
+    // Unfortunately the annotations won't take an object.toString()
+    // So I could not use the ToscaDictionary class to put these id's
+    // into the annotations.
+    //
+    @XACMLResource(attributeId = "urn:org:onap:policy-scope-property", includeInResults = true)
+    Collection<String> policyScopes = new ArrayList<>();
 
-    public StdCombinedPolicyRequest() {
+    @XACMLResource(attributeId = "urn:org:onap:policy-type-property", includeInResults = true)
+    Collection<String> policyTypes = new ArrayList<>();
+
+    public StdMatchablePolicyRequest() {
         super();
     }
 
@@ -69,12 +77,12 @@ public class StdCombinedPolicyRequest {
      * @param decisionRequest Input DecisionRequest
      * @return MonitoringRequest
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public static StdCombinedPolicyRequest createInstance(DecisionRequest decisionRequest) {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static StdMatchablePolicyRequest createInstance(DecisionRequest decisionRequest) {
         //
         // Create our request object
         //
-        StdCombinedPolicyRequest request = new StdCombinedPolicyRequest();
+        StdMatchablePolicyRequest request = new StdMatchablePolicyRequest();
         //
         // Add the subject attributes
         //
@@ -90,35 +98,43 @@ public class StdCombinedPolicyRequest {
         //
         Map<String, Object> resources = decisionRequest.getResource();
         for (Entry<String, Object> entrySet : resources.entrySet()) {
-            if ("policy-id".equals(entrySet.getKey())) {
+            //
+            // Making an assumption that these two fields are matchable.
+            // Its possible we may have to load the policy type model
+            // and use that to find the fields that are matchable.
+            //
+            if ("policyScope".equals(entrySet.getKey())) {
                 if (entrySet.getValue() instanceof Collection) {
-                    addPolicyIds(request, (Collection) entrySet.getValue());
+                    addPolicyScopes(request, (Collection) entrySet.getValue());
                 } else if (entrySet.getValue() instanceof String) {
-                    request.resource.add(entrySet.getValue().toString());
+                    request.policyScopes.add(entrySet.getValue().toString());
                 }
                 continue;
             }
-            if ("policy-type".equals(entrySet.getKey())) {
+            if ("policyType".equals(entrySet.getKey())) {
                 if (entrySet.getValue() instanceof Collection) {
                     addPolicyTypes(request, (Collection) entrySet.getValue());
-                } else if (entrySet.getValue() instanceof String) {
-                    request.resource.add(entrySet.getValue().toString());
+                }
+                if (entrySet.getValue() instanceof String) {
+                    request.policyTypes.add(entrySet.getValue().toString());
                 }
             }
         }
         return request;
     }
 
-    private static StdCombinedPolicyRequest addPolicyIds(StdCombinedPolicyRequest request, Collection<Object> ids) {
-        for (Object id : ids) {
-            request.resource.add(id.toString());
+    private static StdMatchablePolicyRequest addPolicyScopes(StdMatchablePolicyRequest request,
+            Collection<Object> scopes) {
+        for (Object scope : scopes) {
+            request.policyScopes.add(scope.toString());
         }
         return request;
     }
 
-    private static StdCombinedPolicyRequest addPolicyTypes(StdCombinedPolicyRequest request, Collection<Object> types) {
+    private static StdMatchablePolicyRequest addPolicyTypes(StdMatchablePolicyRequest request,
+            Collection<Object> types) {
         for (Object type : types) {
-            request.resource.add(type.toString());
+            request.policyTypes.add(type.toString());
         }
         return request;
     }

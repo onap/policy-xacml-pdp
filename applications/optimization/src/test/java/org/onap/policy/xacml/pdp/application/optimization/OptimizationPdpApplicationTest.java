@@ -20,12 +20,13 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.xacml.pdp.application.monitoring;
+package org.onap.policy.xacml.pdp.application.optimization;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
@@ -53,15 +54,14 @@ import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class MonitoringPdpApplicationTest {
+public class OptimizationPdpApplicationTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringPdpApplicationTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OptimizationPdpApplicationTest.class);
     private static Properties properties = new Properties();
     private static File propertiesFile;
     private static XacmlApplicationServiceProvider service;
-    private static DecisionRequest requestSinglePolicy;
-
     private static StandardCoder gson = new StandardCoder();
+    private static DecisionRequest requestAffinity;
 
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
@@ -72,13 +72,14 @@ public class MonitoringPdpApplicationTest {
      * instance of provider off for other tests to use.
      */
     @BeforeClass
-    public static void setup() throws Exception {
+    public static void setUp() throws Exception {
         //
         // Load Single Decision Request
         //
-        requestSinglePolicy = gson.decode(
+        requestAffinity = gson.decode(
                 TextFileUtils
-                    .getTextFileAsString("../../main/src/test/resources/decisions/decision.single.input.json"),
+                    .getTextFileAsString(
+                            "../../main/src/test/resources/decisions/decision.optimization.affinity.input.json"),
                     DecisionRequest.class);
         //
         // Setup our temporary folder
@@ -87,12 +88,14 @@ public class MonitoringPdpApplicationTest {
         propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties",
                 properties, myCreator);
         //
-        // Load XacmlApplicationServiceProvider service
+        // Load service
         //
         ServiceLoader<XacmlApplicationServiceProvider> applicationLoader =
                 ServiceLoader.load(XacmlApplicationServiceProvider.class);
         //
-        // Look for our class instance and save it
+        // Iterate through Xacml application services and find
+        // the optimization service. Save it for use throughout
+        // all the Junit tests.
         //
         StringBuilder strDump = new StringBuilder("Loaded applications:" + System.lineSeparator());
         Iterator<XacmlApplicationServiceProvider> iterator = applicationLoader.iterator();
@@ -101,7 +104,7 @@ public class MonitoringPdpApplicationTest {
             //
             // Is it our service?
             //
-            if (application instanceof MonitoringPdpApplication) {
+            if (application instanceof OptimizationPdpApplication) {
                 //
                 // Should be the first and only one
                 //
@@ -128,18 +131,16 @@ public class MonitoringPdpApplicationTest {
         //
         assertThat(service.applicationName()).isNotEmpty();
         //
+        // Decisions
+        //
+        assertThat(service.actionDecisionsSupported().size()).isEqualTo(1);
+        assertThat(service.actionDecisionsSupported()).contains("optimize");
+        //
         // Ensure it has the supported policy types and
         // can support the correct policy types.
         //
-        assertThat(service.canSupportPolicyType("onap.Monitoring", "1.0.0")).isTrue();
-        assertThat(service.canSupportPolicyType("onap.Monitoring", "1.5.0")).isTrue();
-        assertThat(service.canSupportPolicyType("onap.policies.monitoring.foobar", "1.0.1")).isTrue();
+        assertThat(service.canSupportPolicyType("onap.policies.optimization.AffinityPolicy", "1.0.0")).isTrue();
         assertThat(service.canSupportPolicyType("onap.foobar", "1.0.0")).isFalse();
-        assertThat(service.supportedPolicyTypes()).contains("onap.Monitoring");
-        //
-        // Ensure it supports decisions
-        //
-        assertThat(service.actionDecisionsSupported()).contains("configure");
     }
 
     @Test
@@ -147,7 +148,7 @@ public class MonitoringPdpApplicationTest {
         //
         // Ask for a decision
         //
-        DecisionResponse response = service.makeDecision(requestSinglePolicy);
+        DecisionResponse response = service.makeDecision(requestAffinity);
         LOGGER.info("Decision {}", response);
 
         assertThat(response).isNotNull();
@@ -156,13 +157,11 @@ public class MonitoringPdpApplicationTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void test3AddvDnsPolicy() throws IOException, CoderException {
+    public void test3AddOptimizationPolicies() throws CoderException, FileNotFoundException, IOException {
         //
-        // Now load the vDNS Policy - make sure
-        // the pdp can support it and have it load
-        // into the PDP.
+        // Now load the optimization policies
         //
-        try (InputStream is = new FileInputStream("src/test/resources/vDNS.policy.input.yaml")) {
+        try (InputStream is = new FileInputStream("src/test/resources/vCPE.policies.optimization.input.tosca.yaml")) {
             //
             // Have yaml parse it
             //
@@ -197,7 +196,7 @@ public class MonitoringPdpApplicationTest {
             //
             // Ask for a decision
             //
-            DecisionResponse response = service.makeDecision(requestSinglePolicy);
+            DecisionResponse response = service.makeDecision(requestAffinity);
             LOGGER.info("Decision {}", response);
 
             assertThat(response).isNotNull();
@@ -207,56 +206,6 @@ public class MonitoringPdpApplicationTest {
             //
             LOGGER.info(gson.encode(response));
         }
-    }
-
-    @Test
-    public void test4BadPolicies() {
-        /*
-         *
-         * THESE TEST SHOULD BE MOVED INTO THE API PROJECT
-         *
-        //
-        // No need for service, just test some of the methods
-        // for bad policies
-        //
-        MonitoringPdpApplication onapPdpEngine = new MonitoringPdpApplication();
-
-        assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() -> {
-            try (InputStream is =
-                    new FileInputStream("src/test/resources/test.monitoring.policy.missingmetadata.yaml")) {
-                onapPdpEngine.convertPolicies(is);
-            }
-        }).withMessageContaining("missing metadata section");
-
-        assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() -> {
-            try (InputStream is =
-                    new FileInputStream("src/test/resources/test.monitoring.policy.missingtype.yaml")) {
-                onapPdpEngine.convertPolicies(is);
-            }
-        }).withMessageContaining("missing type value");
-
-        assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() -> {
-            try (InputStream is =
-                    new FileInputStream("src/test/resources/test.monitoring.policy.missingversion.yaml")) {
-                onapPdpEngine.convertPolicies(is);
-            }
-        }).withMessageContaining("missing version value");
-
-        assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() -> {
-            try (InputStream is =
-                    new FileInputStream("src/test/resources/test.monitoring.policy.badmetadata.1.yaml")) {
-                onapPdpEngine.convertPolicies(is);
-            }
-        }).withMessageContaining("missing metadata policy-version");
-
-        assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() -> {
-            try (InputStream is =
-                    new FileInputStream("src/test/resources/test.monitoring.policy.badmetadata.2.yaml")) {
-                onapPdpEngine.convertPolicies(is);
-            }
-        }).withMessageContaining("missing metadata policy-id");
-
-        */
     }
 
 }

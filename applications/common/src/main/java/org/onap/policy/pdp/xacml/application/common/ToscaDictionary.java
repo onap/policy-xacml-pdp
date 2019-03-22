@@ -43,6 +43,49 @@ public final class ToscaDictionary {
     public static final Identifier ID_RESOURCE_POLICY_TYPE_VERSION =
             new IdentifierImpl(URN_ONAP, "policy-type-version");
 
+    /*
+     * These ID's are for identifying Subjects
+     */
+
+    public static final Identifier ID_SUBJECT_ONAP_NAME =
+            XACML3.ID_SUBJECT_SUBJECT_ID;
+
+    public static final Identifier ID_SUBJECT_ONAP_COMPONENT =
+            new IdentifierImpl(URN_ONAP, "onap-component");
+
+    public static final Identifier ID_SUBJECT_ONAP_INSTANCE =
+            new IdentifierImpl(URN_ONAP, "onap-instance");
+
+    /*
+     * These 2 ID's are for Optimization policies
+     */
+
+    public static final Identifier ID_RESOURCE_POLICY_SCOPE_PROPERTY =
+            new IdentifierImpl(URN_ONAP, "policy-scope-property");
+
+    public static final Identifier ID_RESOURCE_POLICY_TYPE_PROPERTY =
+            new IdentifierImpl(URN_ONAP, "policy-type-property");
+
+    /*
+     * These ID's are for Legacy Guard Policies
+     */
+    public static final Identifier ID_RESOURCE_GUARD_ACTOR =
+            new IdentifierImpl(URN_ONAP, "guard:actor:actor-id");
+    public static final Identifier ID_RESOURCE_GUARD_RECIPE =
+            new IdentifierImpl(URN_ONAP, "guard:operation:operation-id");
+    public static final Identifier ID_RESOURCE_GUARD_CLNAME =
+            new IdentifierImpl(URN_ONAP, "guard:clname:clname-id");
+    public static final Identifier ID_RESOURCE_GUARD_TARGETID =
+            new IdentifierImpl(URN_ONAP, "guard:target:target-id");
+    public static final Identifier ID_RESOURCE_GUARD_REQUESTID =
+            new IdentifierImpl(URN_ONAP, "guard:request:request-id");
+    public static final Identifier ID_RESOURCE_GUARD_VFCOUNT =
+            new IdentifierImpl(URN_ONAP, "guard:target:vf-count");
+
+    /*
+     * Obligation specific ID's
+     */
+
     public static final Identifier ID_OBLIGATION_REST_BODY =
             new IdentifierImpl(URN_ONAP, "rest:body");
 
@@ -60,6 +103,8 @@ public final class ToscaDictionary {
 
     public static final Identifier ID_OBLIGATION_MONITORING_ISSUER =
             new IdentifierImpl(URN_ONAP, "issuer:monitoring");
+
+
 
     private ToscaDictionary() {
         super();
