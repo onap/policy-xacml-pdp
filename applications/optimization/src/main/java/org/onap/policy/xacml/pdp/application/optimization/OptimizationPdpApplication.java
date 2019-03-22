@@ -20,7 +20,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.xacml.pdp.application.guard;
+package org.onap.policy.xacml.pdp.application.optimization;
 
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
@@ -41,43 +41,46 @@ import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
+import org.onap.policy.pdp.xacml.application.common.std.StdMatchableTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * This class implements the onap.policies.controlloop.Guard policy implementations.
- *
- * @author pameladragosh
- *
- */
-public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
+public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvider {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GuardPdpApplication.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OptimizationPdpApplication.class);
     private static final String STRING_VERSION100 = "1.0.0";
-    private Map<String, String> supportedPolicyTypes = new HashMap<>();
-    private LegacyGuardTranslator translator = new LegacyGuardTranslator();
 
-    /** Constructor.
-     *
+    private StdMatchableTranslator translator = new StdMatchableTranslator();
+    private Map<String, String> supportedPolicyTypes = new HashMap<>();
+
+    /**
+     * Constructor.
      */
-    public GuardPdpApplication() {
-        this.supportedPolicyTypes.put("onap.policies.controlloop.guard.FrequencyLimiter", STRING_VERSION100);
-        this.supportedPolicyTypes.put("onap.policies.controlloop.guard.MinMax", STRING_VERSION100);
+    public OptimizationPdpApplication() {
+        this.supportedPolicyTypes.put("onap.policies.optimization.AffinityPolicy", STRING_VERSION100);
+        this.supportedPolicyTypes.put("onap.policies.optimization.DistancePolicy", STRING_VERSION100);
+        this.supportedPolicyTypes.put("onap.policies.optimization.HpaPolicy", STRING_VERSION100);
+        this.supportedPolicyTypes.put("onap.policies.optimization.OptimizationPolicy", STRING_VERSION100);
+        this.supportedPolicyTypes.put("onap.policies.optimization.PciPolicy", STRING_VERSION100);
+        this.supportedPolicyTypes.put("onap.policies.optimization.QueryPolicy", STRING_VERSION100);
+        this.supportedPolicyTypes.put("onap.policies.optimization.SubscriberPolicy", STRING_VERSION100);
+        this.supportedPolicyTypes.put("onap.policies.optimization.Vim_fit", STRING_VERSION100);
+        this.supportedPolicyTypes.put("onap.policies.optimization.VnfPolicy", STRING_VERSION100);
     }
 
     @Override
     public String applicationName() {
-        return "Guard Application";
+        return "Optimization Application";
     }
 
     @Override
     public List<String> actionDecisionsSupported() {
-        return Arrays.asList("guard");
+        return Arrays.asList("optimize");
     }
 
     @Override
-    public List<String> supportedPolicyTypes() {
+    public synchronized List<String> supportedPolicyTypes() {
         return Lists.newArrayList(supportedPolicyTypes.keySet());
     }
 
@@ -97,7 +100,7 @@ public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
     }
 
     @Override
-    public void loadPolicies(Map<String, Object> toscaPolicies) {
+    public synchronized void loadPolicies(Map<String, Object> toscaPolicies) {
         try {
             //
             // Convert the policies first
@@ -143,7 +146,7 @@ public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
     }
 
     @Override
-    public DecisionResponse makeDecision(DecisionRequest request) {
+    public synchronized DecisionResponse makeDecision(DecisionRequest request) {
         //
         // Convert to a XacmlRequest
         //

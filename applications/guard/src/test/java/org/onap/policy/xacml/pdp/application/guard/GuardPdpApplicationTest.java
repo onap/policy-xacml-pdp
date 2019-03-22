@@ -23,168 +23,300 @@
 package org.onap.policy.xacml.pdp.application.guard;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-
-import com.att.research.xacml.util.XACMLProperties;
-import com.google.common.io.Files;
-import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
+import java.util.UUID;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runners.MethodSorters;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
-import org.onap.policy.models.decisions.serialization.DecisionRequestMessageBodyHandler;
-import org.onap.policy.models.decisions.serialization.DecisionResponseMessageBodyHandler;
+import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
+import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class GuardPdpApplicationTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GuardPdpApplicationTest.class);
     private static Properties properties = new Properties();
     private static File propertiesFile;
     private static XacmlApplicationServiceProvider service;
-    private static DecisionRequest requestSinglePolicy;
-
-    private static Gson gsonDecisionRequest;
-    private static Gson gsonDecisionResponse;
+    private static DecisionRequest requestGuardPermit;
+    private static DecisionRequest requestGuardDeny;
+    private static DecisionRequest requestGuardDeny2;
+    private static StandardCoder gson = new StandardCoder();
 
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
 
-    @Before
-    public void setUp() throws Exception {
-
+    /**
+     * Copies the xacml.properties and policies files into
+     * temporary folder and loads the service provider saving
+     * instance of provider off for other tests to use.
+     */
+    @BeforeClass
+    public static void setUp() throws Exception {
+        //
+        // Setup our temporary folder
+        //
+        XacmlPolicyUtils.FileCreator myCreator = (String filename) -> policyFolder.newFile(filename);
+        propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties",
+                properties, myCreator);
+        //
+        // Load service
+        //
+        ServiceLoader<XacmlApplicationServiceProvider> applicationLoader =
+                ServiceLoader.load(XacmlApplicationServiceProvider.class);
+        //
+        // Find the guard service application and save for use in all the tests
+        //
+        StringBuilder strDump = new StringBuilder("Loaded applications:" + System.lineSeparator());
+        Iterator<XacmlApplicationServiceProvider> iterator = applicationLoader.iterator();
+        while (iterator.hasNext()) {
+            XacmlApplicationServiceProvider application = iterator.next();
+            //
+            // Is it our service?
+            //
+            if (application instanceof GuardPdpApplication) {
+                //
+                // Should be the first and only one
+                //
+                assertThat(service).isNull();
+                service = application;
+            }
+            strDump.append(application.applicationName());
+            strDump.append(" supports ");
+            strDump.append(application.supportedPolicyTypes());
+            strDump.append(System.lineSeparator());
+        }
+        LOGGER.debug("{}", strDump);
+        //
+        // Tell it to initialize based on the properties file
+        // we just built for it.
+        //
+        service.initialize(propertiesFile.toPath().getParent());
     }
 
     @Test
-    public void testBasics() {
-        assertThatCode(() -> {
+    public void test1Basics() throws CoderException, IOException {
+        //
+        // Load Single Decision Request
+        //
+        requestGuardPermit = gson.decode(
+                TextFileUtils.getTextFileAsString(
+                    "../../main/src/test/resources/decisions/decision.guard.shouldpermit.input.json"),
+                    DecisionRequest.class);
+        //
+        // Load Single Decision Request
+        //
+        requestGuardDeny = gson.decode(TextFileUtils.getTextFileAsString(
+                "../../main/src/test/resources/decisions/decision.guard.shoulddeny.input.json"),
+                DecisionRequest.class);
+        //
+        // Load Single Decision Request
+        //
+        requestGuardDeny2 = gson.decode(TextFileUtils.getTextFileAsString(
+                "../../main/src/test/resources/decisions/decision.guard.shoulddeny.input2.json"),
+                DecisionRequest.class);
+        //
+        // Make sure there's an application name
+        //
+        assertThat(service.applicationName()).isNotEmpty();
+        //
+        // Decisions
+        //
+        assertThat(service.actionDecisionsSupported().size()).isEqualTo(1);
+        assertThat(service.actionDecisionsSupported()).contains("guard");
+        //
+        // Ensure it has the supported policy types and
+        // can support the correct policy types.
+        //
+        assertThat(service.supportedPolicyTypes()).isNotEmpty();
+        assertThat(service.supportedPolicyTypes().size()).isEqualTo(2);
+        assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.FrequencyLimiter", "1.0.0"))
+            .isTrue();
+        assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.FrequencyLimiter", "1.0.1"))
+            .isFalse();
+        assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.MinMax", "1.0.0")).isTrue();
+        assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.MinMax", "1.0.1")).isFalse();
+        assertThat(service.canSupportPolicyType("onap.foo", "1.0.1")).isFalse();
+    }
+
+    @Test
+    public void test2NoPolicies() {
+        //
+        // Ask for a decision
+        //
+        DecisionResponse response = service.makeDecision(requestGuardPermit);
+        LOGGER.info("Decision {}", response);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isEqualTo("Permit");
+    }
+
+    @Test
+    public void test3FrequencyLimiter() throws CoderException, FileNotFoundException, IOException {
+        //
+        // Now load the vDNS frequency limiter Policy - make sure
+        // the pdp can support it and have it load
+        // into the PDP.
+        //
+        try (InputStream is = new FileInputStream("src/test/resources/vDNS.policy.guard.frequency.output.tosca.yaml")) {
             //
-            // Create our Gson builder
+            // Have yaml parse it
             //
-            gsonDecisionRequest = new DecisionRequestMessageBodyHandler().getGson();
-            gsonDecisionResponse = new DecisionResponseMessageBodyHandler().getGson();
+            Yaml yaml = new Yaml();
+            Map<String, Object> toscaObject = yaml.load(is);
             //
-            // Load Single Decision Request
+            // Load the policies
             //
-            requestSinglePolicy = gsonDecisionRequest.fromJson(
-                    TextFileUtils
-                        .getTextFileAsString("../../main/src/test/resources/decisions/decision.single.input.json"),
-                        DecisionRequest.class);
+            service.loadPolicies(toscaObject);
             //
-            // Copy all the properties and root policies to the temporary folder
+            // Ask for a decision - should get permit
             //
-            try (InputStream is = new FileInputStream("src/test/resources/xacml.properties")) {
-                //
-                // Load it in
-                //
-                properties.load(is);
-                propertiesFile = policyFolder.newFile("xacml.properties");
-                //
-                // Copy the root policies
-                //
-                for (String root : XACMLProperties.getRootPolicyIDs(properties)) {
-                    //
-                    // Get a file
-                    //
-                    Path rootPath = Paths.get(properties.getProperty(root + ".file"));
-                    LOGGER.debug("Root file {} {}", rootPath, rootPath.getFileName());
-                    //
-                    // Construct new file name
-                    //
-                    File newRootPath = policyFolder.newFile(rootPath.getFileName().toString());
-                    //
-                    // Copy it
-                    //
-                    Files.copy(rootPath.toFile(), newRootPath);
-                    assertThat(newRootPath).exists();
-                    //
-                    // Point to where the new policy is in the temp dir
-                    //
-                    properties.setProperty(root + ".file", newRootPath.getAbsolutePath());
-                }
-                try (OutputStream os = new FileOutputStream(propertiesFile.getAbsolutePath())) {
-                    properties.store(os, "");
-                    assertThat(propertiesFile).exists();
-                }
-            }
+            DecisionResponse response = service.makeDecision(requestGuardPermit);
+            LOGGER.info("Looking for Permit Decision {}", response);
+
+            assertThat(response).isNotNull();
+            assertThat(response.getStatus()).isNotNull();
+            assertThat(response.getStatus()).isEqualTo("Permit");
             //
-            // Load service
+            // Dump it out as Json
             //
-            ServiceLoader<XacmlApplicationServiceProvider> applicationLoader =
-                    ServiceLoader.load(XacmlApplicationServiceProvider.class);
+            LOGGER.info(gson.encode(response));
             //
-            // Iterate through them - I could store the object as
-            // XacmlApplicationServiceProvider pointer.
+            // Ask for a decision - should get deny
             //
-            // Try this later.
+            response = service.makeDecision(requestGuardDeny2);
+            LOGGER.info("Looking for Deny Decision {}", response);
+            assertThat(response).isNotNull();
+            assertThat(response.getStatus()).isNotNull();
+            assertThat(response.getStatus()).isEqualTo("Deny");
             //
-            StringBuilder strDump = new StringBuilder("Loaded applications:" + System.lineSeparator());
-            Iterator<XacmlApplicationServiceProvider> iterator = applicationLoader.iterator();
-            while (iterator.hasNext()) {
-                XacmlApplicationServiceProvider application = iterator.next();
-                //
-                // Is it our service?
-                //
-                if (application instanceof GuardPdpApplication) {
-                    //
-                    // Should be the first and only one
-                    //
-                    assertThat(service).isNull();
-                    service = application;
-                }
-                strDump.append(application.applicationName());
-                strDump.append(" supports ");
-                strDump.append(application.supportedPolicyTypes());
-                strDump.append(System.lineSeparator());
-            }
-            LOGGER.debug("{}", strDump);
+            // Dump it out as Json
             //
-            // Tell it to initialize based on the properties file
-            // we just built for it.
+            LOGGER.info(gson.encode(response));
+        }
+    }
+
+    @Test
+    public void test4MinMax() throws CoderException, FileNotFoundException, IOException {
+        //
+        // Now load the vDNS min max Policy - make sure
+        // the pdp can support it and have it load
+        // into the PDP.
+        //
+        try (InputStream is = new FileInputStream("src/test/resources/vDNS.policy.guard.minmax.output.tosca.yaml")) {
             //
-            service.initialize(propertiesFile.toPath().getParent());
+            // Have yaml parse it
             //
-            // Make sure there's an application name
+            Yaml yaml = new Yaml();
+            Map<String, Object> toscaObject = yaml.load(is);
             //
-            assertThat(service.applicationName()).isNotEmpty();
+            // Load the policies
             //
-            // Decisions
+            service.loadPolicies(toscaObject);
             //
-            assertThat(service.actionDecisionsSupported().size()).isEqualTo(1);
-            assertThat(service.actionDecisionsSupported()).contains("guard");
+            // Ask for a decision - should get permit
             //
-            // Ensure it has the supported policy types and
-            // can support the correct policy types.
+            DecisionResponse response = service.makeDecision(requestGuardPermit);
+            LOGGER.info("Looking for Permit Decision {}", response);
+
+            assertThat(response).isNotNull();
+            assertThat(response.getStatus()).isNotNull();
+            assertThat(response.getStatus()).isEqualTo("Permit");
             //
-            assertThat(service.supportedPolicyTypes()).isNotEmpty();
-            assertThat(service.supportedPolicyTypes().size()).isEqualTo(2);
-            assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.FrequencyLimiter", "1.0.0"))
-                .isTrue();
-            assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.FrequencyLimiter", "1.0.1"))
-                .isFalse();
-            assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.MinMax", "1.0.0")).isTrue();
-            assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.MinMax", "1.0.1")).isFalse();
-            assertThat(service.canSupportPolicyType("onap.foo", "1.0.1")).isFalse();
+            // Dump it out as Json
             //
-            // Ensure it supports decisions
+            LOGGER.info(gson.encode(response));
             //
-            assertThat(service.actionDecisionsSupported()).contains("guard");
-        }).doesNotThrowAnyException();
+            // Ask for a decision - should get deny
+            //
+            response = service.makeDecision(requestGuardDeny);
+            LOGGER.info("Looking for Deny Decision {}", response);
+            assertThat(response).isNotNull();
+            assertThat(response.getStatus()).isNotNull();
+            assertThat(response.getStatus()).isEqualTo("Deny");
+            //
+            // Dump it out as Json
+            //
+            LOGGER.info(gson.encode(response));
+        }
+    }
+
+    @Test
+    public void test5MissingFields() throws FileNotFoundException, IOException {
+        LOGGER.debug("Running test5");
+        //
+        // Most likely we would not get a policy with missing fields passed to
+        // us from the API. But in case that happens, or we decide that some fields
+        // will be optional due to re-working of how the XACML policies are built,
+        // let's add support in for that.
+        //
+        try (InputStream is = new FileInputStream("src/test/resources/guard.policy-minmax-missing-fields1.yaml")) {
+            //
+            // Have yaml parse it
+            //
+            Yaml yaml = new Yaml();
+            Map<String, Object> toscaObject = yaml.load(is);
+            //
+            // Load the policies
+            //
+            service.loadPolicies(toscaObject);
+            //
+            // We can create a DecisionRequest on the fly - no need
+            // to have it in the .json files
+            //
+            DecisionRequest request = new DecisionRequest();
+            request.setOnapName("JUnit");
+            request.setOnapComponent("test5MissingFields");
+            request.setRequestId(UUID.randomUUID().toString());
+            request.setAction("guard");
+            Map<String, Object> guard = new HashMap<>();
+            guard.put("actor", "FOO");
+            guard.put("recipe", "bar");
+            guard.put("vfCount", "4");
+            Map<String, Object> resource = new HashMap<>();
+            resource.put("guard", guard);
+            request.setResource(resource);
+            //
+            // Ask for a decision - should get permit
+            //
+            DecisionResponse response = service.makeDecision(request);
+            LOGGER.info("Looking for Permit Decision {}", response);
+            assertThat(response).isNotNull();
+            assertThat(response.getStatus()).isNotNull();
+            assertThat(response.getStatus()).isEqualTo("Permit");
+            //
+            // Try a deny
+            //
+            guard.put("vfCount", "10");
+            resource.put("guard", guard);
+            request.setResource(resource);
+            response = service.makeDecision(request);
+            LOGGER.info("Looking for Deny Decision {}", response);
+            assertThat(response).isNotNull();
+            assertThat(response.getStatus()).isNotNull();
+            assertThat(response.getStatus()).isEqualTo("Deny");
+        }
     }
 }
