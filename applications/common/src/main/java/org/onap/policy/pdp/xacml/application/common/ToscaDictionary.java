@@ -43,6 +43,20 @@ public final class ToscaDictionary {
     public static final Identifier ID_RESOURCE_POLICY_TYPE_VERSION =
             new IdentifierImpl(URN_ONAP, "policy-type-version");
 
+    /*
+     * These 2 ID's are for Optimization policies
+     */
+
+    public static final Identifier ID_RESOURCE_POLICY_SCOPE_PROPERTY =
+            new IdentifierImpl(URN_ONAP, "policy-scope-property");
+
+    public static final Identifier ID_RESOURCE_POLICY_TYPE_PROPERTY =
+            new IdentifierImpl(URN_ONAP, "policy-type-property");
+
+    /*
+     * Obligation specific ID's
+     */
+
     public static final Identifier ID_OBLIGATION_REST_BODY =
             new IdentifierImpl(URN_ONAP, "rest:body");
 

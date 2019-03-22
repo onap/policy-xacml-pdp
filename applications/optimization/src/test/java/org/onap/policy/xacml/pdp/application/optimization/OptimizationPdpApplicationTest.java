@@ -20,17 +20,19 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.xacml.pdp.application.guard;
+package org.onap.policy.xacml.pdp.application.optimization;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.ServiceLoader;
 
@@ -44,22 +46,22 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
-import org.onap.policy.models.decisions.serialization.DecisionRequestMessageBodyHandler;
-import org.onap.policy.models.decisions.serialization.DecisionResponseMessageBodyHandler;
+import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class GuardPdpApplicationTest {
+public class OptimizationPdpApplicationTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GuardPdpApplicationTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OptimizationPdpApplicationTest.class);
     private static Properties properties = new Properties();
     private static File propertiesFile;
     private static XacmlApplicationServiceProvider service;
-    private static DecisionRequest requestSinglePolicy;
     private static StandardCoder gson = new StandardCoder();
+    private static DecisionRequest requestAffinity;
 
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
@@ -71,6 +73,14 @@ public class GuardPdpApplicationTest {
      */
     @BeforeClass
     public static void setUp() throws Exception {
+        //
+        // Load Single Decision Request
+        //
+        requestAffinity = gson.decode(
+                TextFileUtils
+                    .getTextFileAsString(
+                            "../../main/src/test/resources/decisions/decision.optimization.affinity.input.json"),
+                    DecisionRequest.class);
         //
         // Setup our temporary folder
         //
@@ -95,7 +105,7 @@ public class GuardPdpApplicationTest {
             //
             // Is it our service?
             //
-            if (application instanceof GuardPdpApplication) {
+            if (application instanceof OptimizationPdpApplication) {
                 //
                 // Should be the first and only one
                 //
@@ -116,14 +126,7 @@ public class GuardPdpApplicationTest {
     }
 
     @Test
-    public void test1Basics() throws CoderException, IOException {
-        //
-        // Load Single Decision Request
-        //
-        requestSinglePolicy = gson.decode(
-                TextFileUtils
-                    .getTextFileAsString("../../main/src/test/resources/decisions/decision.single.input.json"),
-                    DecisionRequest.class);
+    public void test1Basics() {
         //
         // Make sure there's an application name
         //
@@ -132,19 +135,79 @@ public class GuardPdpApplicationTest {
         // Decisions
         //
         assertThat(service.actionDecisionsSupported().size()).isEqualTo(1);
-        assertThat(service.actionDecisionsSupported()).contains("guard");
+        assertThat(service.actionDecisionsSupported()).contains("optimize");
         //
         // Ensure it has the supported policy types and
         // can support the correct policy types.
         //
-        assertThat(service.supportedPolicyTypes()).isNotEmpty();
-        assertThat(service.supportedPolicyTypes().size()).isEqualTo(2);
-        assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.FrequencyLimiter", "1.0.0"))
-            .isTrue();
-        assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.FrequencyLimiter", "1.0.1"))
-            .isFalse();
-        assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.MinMax", "1.0.0")).isTrue();
-        assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.MinMax", "1.0.1")).isFalse();
-        assertThat(service.canSupportPolicyType("onap.foo", "1.0.1")).isFalse();
+        assertThat(service.canSupportPolicyType("onap.policies.optimization.AffinityPolicy", "1.0.0")).isTrue();
+        assertThat(service.canSupportPolicyType("onap.foobar", "1.0.0")).isFalse();
     }
+
+    @Test
+    public void test2NoPolicies() {
+        //
+        // Ask for a decision
+        //
+        DecisionResponse response = service.makeDecision(requestAffinity);
+        LOGGER.info("Decision {}", response);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getErrorMessage()).isNullOrEmpty();
+        assertThat(response.getPolicies().size()).isEqualTo(0);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void test3AddOptimizationPolicies() throws CoderException, FileNotFoundException, IOException {
+        //
+        // Now load the optimization policies
+        //
+        try (InputStream is = new FileInputStream("src/test/resources/vCPE.policies.optimization.input.tosca.yaml")) {
+            //
+            // Have yaml parse it
+            //
+            Yaml yaml = new Yaml();
+            Map<String, Object> toscaObject = yaml.load(is);
+            List<Object> policies = (List<Object>) toscaObject.get("policies");
+            //
+            // Sanity check to ensure the policy type and version are supported
+            //
+            for (Object policyObject : policies) {
+                //
+                // Get the contents
+                //
+                Map<String, Object> policyContents = (Map<String, Object>) policyObject;
+                for (Entry<String, Object> entrySet : policyContents.entrySet()) {
+                    LOGGER.info("Entry set {}", entrySet.getKey());
+                    Map<String, Object> policyDefinition = (Map<String, Object>) entrySet.getValue();
+                    //
+                    // Find the type and make sure the engine supports it
+                    //
+                    assertThat(policyDefinition.containsKey("type")).isTrue();
+                    assertThat(service.canSupportPolicyType(
+                            policyDefinition.get("type").toString(),
+                            policyDefinition.get("version").toString()))
+                        .isTrue();
+                }
+            }
+            //
+            // Load the policies
+            //
+            service.loadPolicies(toscaObject);
+            //
+            // Ask for a decision
+            //
+            DecisionResponse response = service.makeDecision(requestAffinity);
+            LOGGER.info("Decision {}", response);
+
+            assertThat(response).isNotNull();
+            assertThat(response.getPolicies().size()).isEqualTo(1);
+            //
+            // Dump it out as Json
+            //
+            LOGGER.info(gson.encode(response));
+        }
+    }
+
 }

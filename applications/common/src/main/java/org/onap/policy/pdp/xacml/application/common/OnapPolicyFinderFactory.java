@@ -20,16 +20,24 @@
 
 package org.onap.policy.pdp.xacml.application.common;
 
+import com.att.research.xacml.std.IdentifierImpl;
 import com.att.research.xacml.std.StdStatusCode;
+import com.att.research.xacml.std.StdVersion;
 import com.att.research.xacml.std.dom.DOMStructureException;
 import com.att.research.xacml.util.FactoryException;
 import com.att.research.xacml.util.XACMLProperties;
+import com.att.research.xacmlatt.pdp.policy.CombiningAlgorithm;
+import com.att.research.xacmlatt.pdp.policy.CombiningAlgorithmFactory;
 import com.att.research.xacmlatt.pdp.policy.Policy;
 import com.att.research.xacmlatt.pdp.policy.PolicyDef;
 import com.att.research.xacmlatt.pdp.policy.PolicyFinder;
 import com.att.research.xacmlatt.pdp.policy.PolicyFinderFactory;
+import com.att.research.xacmlatt.pdp.policy.PolicySet;
+import com.att.research.xacmlatt.pdp.policy.PolicySetChild;
+import com.att.research.xacmlatt.pdp.policy.Target;
 import com.att.research.xacmlatt.pdp.policy.dom.DOMPolicyDef;
 import com.att.research.xacmlatt.pdp.std.StdPolicyFinder;
+import com.att.research.xacmlatt.pdp.util.ATTPDPProperties;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 
@@ -43,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -212,7 +221,49 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
     protected synchronized void init() {
         if (this.needsInit) {
             logger.debug("Initializing OnapPolicyFinderFactory Properties ");
-            this.rootPolicies       = this.getPolicyDefs(XACMLProperties.PROP_ROOTPOLICIES);
+
+            //
+            // Check for property that combines root policies into one policyset
+            //
+            String combiningAlgorithm = properties.getProperty(
+                    ATTPDPProperties.PROP_POLICYFINDERFACTORY_COMBINEROOTPOLICIES);
+            if (combiningAlgorithm != null) {
+                try {
+                    logger.info("Combining root policies with {}", combiningAlgorithm);
+                    //
+                    // Find the combining algorithm
+                    //
+                    CombiningAlgorithm<PolicySetChild> algorithm = CombiningAlgorithmFactory.newInstance()
+                            .getPolicyCombiningAlgorithm(new IdentifierImpl(combiningAlgorithm));
+                    //
+                    // Create our root policy
+                    //
+                    PolicySet root = new PolicySet();
+                    root.setIdentifier(new IdentifierImpl(UUID.randomUUID().toString()));
+                    root.setVersion(StdVersion.newInstance("1.0"));
+                    root.setTarget(new Target());
+                    //
+                    // Set the algorithm
+                    //
+                    root.setPolicyCombiningAlgorithm(algorithm);
+                    //
+                    // Load all our root policies
+                    //
+                    for (PolicyDef policy : this.getPolicyDefs(XACMLProperties.PROP_ROOTPOLICIES)) {
+                        root.addChild(policy);
+                    }
+                    //
+                    // Set this policy as the root
+                    //
+                    this.rootPolicies = new ArrayList<>();
+                    this.rootPolicies.add(root);
+                } catch (Exception e) {
+                    logger.error("Failed to load Combining Algorithm Factory: {}", e.getLocalizedMessage());
+                }
+            } else {
+                logger.info("Loading root policies");
+                this.rootPolicies       = this.getPolicyDefs(XACMLProperties.PROP_ROOTPOLICIES);
+            }
             this.referencedPolicies = this.getPolicyDefs(XACMLProperties.PROP_REFERENCEDPOLICIES);
             logger.debug("Root Policies: {}", this.rootPolicies.size());
             logger.debug("Referenced Policies: {}", this.referencedPolicies.size());

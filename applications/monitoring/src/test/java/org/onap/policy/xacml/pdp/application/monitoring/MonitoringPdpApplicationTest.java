@@ -24,19 +24,11 @@ package org.onap.policy.xacml.pdp.application.monitoring;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-
-import com.att.research.xacml.util.XACMLProperties;
-import com.google.common.io.Files;
-import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -46,19 +38,22 @@ import java.util.ServiceLoader;
 
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runners.MethodSorters;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
-import org.onap.policy.models.decisions.serialization.DecisionRequestMessageBodyHandler;
-import org.onap.policy.models.decisions.serialization.DecisionResponseMessageBodyHandler;
-import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
+import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MonitoringPdpApplicationTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringPdpApplicationTest.class);
@@ -67,129 +62,140 @@ public class MonitoringPdpApplicationTest {
     private static XacmlApplicationServiceProvider service;
     private static DecisionRequest requestSinglePolicy;
 
-    private static Gson gsonDecisionRequest;
-    private static Gson gsonDecisionResponse;
+    private static StandardCoder gson = new StandardCoder();
 
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
 
     /**
-     * Load a test engine.
+     * Copies the xacml.properties and policies files into
+     * temporary folder and loads the service provider saving
+     * instance of provider off for other tests to use.
      */
     @BeforeClass
-    public static void setup() {
-        assertThatCode(() -> {
+    public static void setup() throws Exception {
+        //
+        // Load Single Decision Request
+        //
+        requestSinglePolicy = gson.decode(
+                TextFileUtils
+                    .getTextFileAsString("../../main/src/test/resources/decisions/decision.single.input.json"),
+                    DecisionRequest.class);
+        //
+        // Setup our temporary folder
+        //
+        XacmlPolicyUtils.FileCreator myCreator = (String filename) -> policyFolder.newFile(filename);
+        propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties",
+                properties, myCreator);
+        //
+        // Load XacmlApplicationServiceProvider service
+        //
+        ServiceLoader<XacmlApplicationServiceProvider> applicationLoader =
+                ServiceLoader.load(XacmlApplicationServiceProvider.class);
+        //
+        // Look for our class instance and save it
+        //
+        StringBuilder strDump = new StringBuilder("Loaded applications:" + System.lineSeparator());
+        Iterator<XacmlApplicationServiceProvider> iterator = applicationLoader.iterator();
+        while (iterator.hasNext()) {
+            XacmlApplicationServiceProvider application = iterator.next();
             //
-            // Create our Gson builder
+            // Is it our service?
             //
-            gsonDecisionRequest = new DecisionRequestMessageBodyHandler().getGson();
-            gsonDecisionResponse = new DecisionResponseMessageBodyHandler().getGson();
-            //
-            // Load Single Decision Request
-            //
-            requestSinglePolicy = gsonDecisionRequest.fromJson(
-                    TextFileUtils
-                        .getTextFileAsString("../../main/src/test/resources/decisions/decision.single.input.json"),
-                        DecisionRequest.class);
-            //
-            // Copy all the properties and root policies to the temporary folder
-            //
-            try (InputStream is = new FileInputStream("src/test/resources/xacml.properties")) {
+            if (application instanceof MonitoringPdpApplication) {
                 //
-                // Load it in
+                // Should be the first and only one
                 //
-                properties.load(is);
-                propertiesFile = policyFolder.newFile("xacml.properties");
-                //
-                // Copy the root policies
-                //
-                for (String root : XACMLProperties.getRootPolicyIDs(properties)) {
-                    //
-                    // Get a file
-                    //
-                    Path rootPath = Paths.get(properties.getProperty(root + ".file"));
-                    LOGGER.debug("Root file {} {}", rootPath, rootPath.getFileName());
-                    //
-                    // Construct new file name
-                    //
-                    File newRootPath = policyFolder.newFile(rootPath.getFileName().toString());
-                    //
-                    // Copy it
-                    //
-                    Files.copy(rootPath.toFile(), newRootPath);
-                    assertThat(newRootPath).exists();
-                    //
-                    // Point to where the new policy is in the temp dir
-                    //
-                    properties.setProperty(root + ".file", newRootPath.getAbsolutePath());
-                }
-                try (OutputStream os = new FileOutputStream(propertiesFile.getAbsolutePath())) {
-                    properties.store(os, "");
-                    assertThat(propertiesFile).exists();
-                }
+                assertThat(service).isNull();
+                service = application;
             }
-            //
-            // Load service
-            //
-            ServiceLoader<XacmlApplicationServiceProvider> applicationLoader =
-                    ServiceLoader.load(XacmlApplicationServiceProvider.class);
-            //
-            // Iterate through them - I could store the object as
-            // XacmlApplicationServiceProvider pointer.
-            //
-            // Try this later.
-            //
-            StringBuilder strDump = new StringBuilder("Loaded applications:" + System.lineSeparator());
-            Iterator<XacmlApplicationServiceProvider> iterator = applicationLoader.iterator();
-            while (iterator.hasNext()) {
-                XacmlApplicationServiceProvider application = iterator.next();
-                //
-                // Is it our service?
-                //
-                if (application instanceof MonitoringPdpApplication) {
-                    //
-                    // Should be the first and only one
-                    //
-                    assertThat(service).isNull();
-                    service = application;
-                }
-                strDump.append(application.applicationName());
-                strDump.append(" supports ");
-                strDump.append(application.supportedPolicyTypes());
-                strDump.append(System.lineSeparator());
-            }
-            LOGGER.debug("{}", strDump);
-            //
-            // Tell it to initialize based on the properties file
-            // we just built for it.
-            //
-            service.initialize(propertiesFile.toPath().getParent());
-            //
-            // Make sure there's an application name
-            //
-            assertThat(service.applicationName()).isNotEmpty();
-            //
-            // Ensure it has the supported policy types and
-            // can support the correct policy types.
-            //
-            assertThat(service.canSupportPolicyType("onap.Monitoring", "1.0.0")).isTrue();
-            assertThat(service.canSupportPolicyType("onap.Monitoring", "1.5.0")).isTrue();
-            assertThat(service.canSupportPolicyType("onap.policies.monitoring.foobar", "1.0.1")).isTrue();
-            assertThat(service.canSupportPolicyType("onap.foobar", "1.0.0")).isFalse();
-            assertThat(service.supportedPolicyTypes()).contains("onap.Monitoring");
-            //
-            // Ensure it supports decisions
-            //
-            assertThat(service.actionDecisionsSupported()).contains("configure");
-        }).doesNotThrowAnyException();
+            strDump.append(application.applicationName());
+            strDump.append(" supports ");
+            strDump.append(application.supportedPolicyTypes());
+            strDump.append(System.lineSeparator());
+        }
+        LOGGER.debug("{}", strDump);
+        //
+        // Tell it to initialize based on the properties file
+        // we just built for it.
+        //
+        service.initialize(propertiesFile.toPath().getParent());
     }
 
     @Test
-    public void testNoPolicies() {
+    public void test1Basics() {
         //
-        // Make a simple decision - NO policies are loaded
+        // Make sure there's an application name
         //
-        assertThatCode(() -> {
+        assertThat(service.applicationName()).isNotEmpty();
+        //
+        // Ensure it has the supported policy types and
+        // can support the correct policy types.
+        //
+        assertThat(service.canSupportPolicyType("onap.Monitoring", "1.0.0")).isTrue();
+        assertThat(service.canSupportPolicyType("onap.Monitoring", "1.5.0")).isTrue();
+        assertThat(service.canSupportPolicyType("onap.policies.monitoring.foobar", "1.0.1")).isTrue();
+        assertThat(service.canSupportPolicyType("onap.foobar", "1.0.0")).isFalse();
+        assertThat(service.supportedPolicyTypes()).contains("onap.Monitoring");
+        //
+        // Ensure it supports decisions
+        //
+        assertThat(service.actionDecisionsSupported()).contains("configure");
+    }
+
+    @Test
+    public void test2NoPolicies() {
+        //
+        // Ask for a decision
+        //
+        DecisionResponse response = service.makeDecision(requestSinglePolicy);
+        LOGGER.info("Decision {}", response);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getErrorMessage()).isNullOrEmpty();
+        assertThat(response.getPolicies().size()).isEqualTo(0);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void test3AddvDnsPolicy() throws IOException, CoderException {
+        //
+        // Now load the vDNS Policy - make sure
+        // the pdp can support it and have it load
+        // into the PDP.
+        //
+        try (InputStream is = new FileInputStream("src/test/resources/vDNS.policy.input.yaml")) {
+            //
+            // Have yaml parse it
+            //
+            Yaml yaml = new Yaml();
+            Map<String, Object> toscaObject = yaml.load(is);
+            List<Object> policies = (List<Object>) toscaObject.get("policies");
+            //
+            // Sanity check to ensure the policy type and version are supported
+            //
+            for (Object policyObject : policies) {
+                //
+                // Get the contents
+                //
+                Map<String, Object> policyContents = (Map<String, Object>) policyObject;
+                for (Entry<String, Object> entrySet : policyContents.entrySet()) {
+                    LOGGER.info("Entry set {}", entrySet.getKey());
+                    Map<String, Object> policyDefinition = (Map<String, Object>) entrySet.getValue();
+                    //
+                    // Find the type and make sure the engine supports it
+                    //
+                    assertThat(policyDefinition.containsKey("type")).isTrue();
+                    assertThat(service.canSupportPolicyType(
+                            policyDefinition.get("type").toString(),
+                            policyDefinition.get("version").toString()))
+                        .isTrue();
+                }
+            }
+            //
+            // Load the policies
+            //
+            service.loadPolicies(toscaObject);
             //
             // Ask for a decision
             //
@@ -197,73 +203,16 @@ public class MonitoringPdpApplicationTest {
             LOGGER.info("Decision {}", response);
 
             assertThat(response).isNotNull();
-            assertThat(response.getErrorMessage()).isNullOrEmpty();
-            assertThat(response.getPolicies().size()).isEqualTo(0);
-
-        }).doesNotThrowAnyException();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testvDnsPolicy() {
-        //
-        // Now load the vDNS Policy - make sure
-        // the pdp can support it and have it load
-        // into the PDP.
-        //
-        assertThatCode(() -> {
-            try (InputStream is = new FileInputStream("src/test/resources/vDNS.policy.input.yaml")) {
-                Yaml yaml = new Yaml();
-                Map<String, Object> toscaObject = yaml.load(is);
-                List<Object> policies = (List<Object>) toscaObject.get("policies");
-                //
-                // What we should really do is split the policies out from the ones that
-                // are not supported to ones that are. And then load these.
-                //
-                // In another future review....
-                //
-                for (Object policyObject : policies) {
-                    //
-                    // Get the contents
-                    //
-                    Map<String, Object> policyContents = (Map<String, Object>) policyObject;
-                    for (Entry<String, Object> entrySet : policyContents.entrySet()) {
-                        LOGGER.info("Entry set {}", entrySet.getKey());
-                        Map<String, Object> policyDefinition = (Map<String, Object>) entrySet.getValue();
-                        //
-                        // Find the type and make sure the engine supports it
-                        //
-                        assertThat(policyDefinition.containsKey("type")).isTrue();
-                        assertThat(service.canSupportPolicyType(
-                                policyDefinition.get("type").toString(),
-                                policyDefinition.get("version").toString()))
-                            .isTrue();
-                    }
-                }
-                //
-                // Just go ahead and load them all for now
-                //
-                // Assuming all are supported etc.
-                //
-                service.loadPolicies(toscaObject);
-                //
-                // Ask for a decision
-                //
-                DecisionResponse response = service.makeDecision(requestSinglePolicy);
-                LOGGER.info("Decision {}", response);
-
-                assertThat(response).isNotNull();
-                assertThat(response.getPolicies().size()).isEqualTo(1);
-                //
-                // Dump it out as Json
-                //
-                LOGGER.info(gsonDecisionResponse.toJson(response));
-            }
-        }).doesNotThrowAnyException();
+            assertThat(response.getPolicies().size()).isEqualTo(1);
+            //
+            // Dump it out as Json
+            //
+            LOGGER.info(gson.encode(response));
+        }
     }
 
     @Test
-    public void testBadPolicies() {
+    public void test4BadPolicies() {
         //
         // No need for service, just test some of the methods
         // for bad policies
