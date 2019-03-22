@@ -24,6 +24,7 @@ package org.onap.policy.xacml.pdp.application.guard;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.junit.Assert.assertEquals;
 
 import com.att.research.xacml.util.XACMLProperties;
 import com.google.common.io.Files;
@@ -37,8 +38,13 @@ import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.ServiceLoader;
+
+
 
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -51,6 +57,7 @@ import org.onap.policy.models.decisions.serialization.DecisionResponseMessageBod
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
 
 public class GuardPdpApplicationTest {
 
@@ -185,6 +192,72 @@ public class GuardPdpApplicationTest {
             // Ensure it supports decisions
             //
             assertThat(service.actionDecisionsSupported()).contains("guard");
+        }).doesNotThrowAnyException();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testvDnsPolicy() {
+        //
+        // Now load the vDNS Policy - make sure
+        // the pdp can support it and have it load
+        // into the PDP.
+        //
+        assertThatCode(() -> {
+            try (InputStream is =
+                 new FileInputStream("src/test/resources/vDNS.policy.guard.frequency.input.tosca.yaml")) {
+                Yaml yaml = new Yaml();
+                Map<String, Object> tosca = yaml.load(is);
+                LOGGER.debug("tosca {}", tosca);
+                //
+                // TODO: refactor this as separate utility method to extract the list of policies
+                //
+                Map<String, Object> topologyTemplate = (Map<String, Object>) tosca.get("topology_template");
+                LOGGER.debug("topology_template {}", tosca);
+                List<Map<String, Object>> policies = (List<Map<String, Object>>) topologyTemplate.get("policies");
+                LOGGER.debug("policies {}", policies);
+                //
+                // Extract information on each guard policy (there's only one in the file specified)
+                //
+                for (Map<String, Object> policy : policies) {
+                    LOGGER.debug("policy {}", policy);
+                    LOGGER.debug("policy.size {}", policy.size());
+                    assertEquals(1, policy.size());
+                    //
+                    // TODO: refactor this as separate utility method to extract the policy name
+                    //
+                    String policyName = null;
+                    for (String name : policy.keySet()) {
+                        policyName = name;
+                    }
+                    LOGGER.info("policyName {}", policyName);
+                    //
+                    // Get the policy info
+                    //
+                    Map<String, Object> policyInfo = (Map<String, Object>) policy.get(policyName);
+                    String type = (String) policyInfo.get("type");
+                    LOGGER.info("type {}", type);
+                    String version = (String) policyInfo.get("version");
+                    LOGGER.info("version {}", version);
+                    Map<String, String> metadata = (Map<String, String>) policyInfo.get("metadata");
+                    for ( Entry<String, String> entry : metadata.entrySet() ) {
+                        LOGGER.info("metadata {}", entry);
+                    }
+                    Map<String, String> properties = (Map<String, String>) policyInfo.get("properties");
+                    for ( Entry<String, String> entry : properties.entrySet() ) {
+                        LOGGER.info("property {}", entry);
+                    }
+                    assertEquals(policyName, metadata.get("policy-id"));
+                    //
+                    // TODO
+                    // Now that we've correctly extracted our guard policy from tosca, we must
+                    // check that the type and version are valid
+                    // check that we have an implementation of that valid guard type and version
+                    // generate and load the XACML file implementing that guard type with the specified properties
+                    // test requests against the policy
+                    //
+                }
+            }
         }).doesNotThrowAnyException();
     }
 }
