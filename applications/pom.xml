@@ -35,6 +35,7 @@
     <module>common</module>
     <module>monitoring</module>
     <module>guard</module>
+    <module>optimization</module>
   </modules>
 
 
