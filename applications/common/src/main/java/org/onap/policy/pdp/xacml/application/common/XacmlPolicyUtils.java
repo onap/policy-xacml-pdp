@@ -23,11 +23,11 @@
 package org.onap.policy.pdp.xacml.application.common;
 
 import com.att.research.xacml.api.Identifier;
-import com.att.research.xacml.api.pdp.PDPEngine;
-import com.att.research.xacml.api.pdp.PDPEngineFactory;
-import com.att.research.xacml.util.FactoryException;
 import com.att.research.xacml.util.XACMLProperties;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -143,6 +143,40 @@ public class XacmlPolicyUtils {
         // Return the updated object
         //
         return rootPolicy;
+    }
+
+    /**
+     * Adds in the root policy to the PDP properties object.
+     *
+     * @param properties Input properties
+     * @param rootPolicyPath Path to the root policy file
+     * @return Properties object
+     */
+    public static Properties addRootPolicy(Properties properties, Path rootPolicyPath) {
+        //
+        // Get the current set of referenced policy ids
+        //
+        Set<String> rootPolicies = XACMLProperties.getRootPolicyIDs(properties);
+        //
+        // Construct a unique id
+        //
+        int id = 1;
+        while (true) {
+            String refId = "ref" + id;
+            if (rootPolicies.contains(refId)) {
+                id++;
+            } else {
+                rootPolicies.add(refId);
+                properties.put(refId + DOT_FILE_SUFFIX, rootPolicyPath.toAbsolutePath().toString());
+                break;
+            }
+        }
+        //
+        // Set the new comma separated list
+        //
+        properties.setProperty(XACMLProperties.PROP_ROOTPOLICIES,
+                rootPolicies.stream().collect(Collectors.joining(",")));
+        return properties;
     }
 
     /**
@@ -318,23 +352,90 @@ public class XacmlPolicyUtils {
         return Paths.get(rootPath.toAbsolutePath().toString(), "xacml.properties");
     }
 
+    public interface FileCreator {
+        public File createAFile(String filename) throws IOException;
+
+    }
 
     /**
-     * Creates an instance of PDP engine given the Properties object.
+     * Copies a xacml.properties file to another location and all the policies defined within it.
      *
-     * @param properties Incoming Properties object
-     * @return PDPEngine instance or null if failed
+     * @param propertiesPath Path to an existing properties file
+     * @param properties Properties object
+     * @param creator A callback that can create files. Allows JUnit test to pass Temporary folder
+     * @return File object that points to new Properties file
+     * @throws IOException Could not read/write files
      */
-    public static PDPEngine createEngine(Properties properties) {
+    public static File copyXacmlPropertiesContents(String propertiesPath, Properties properties,
+            FileCreator creator) throws IOException {
         //
-        // Now initialize the XACML PDP Engine
+        // Open the properties file
         //
-        try {
-            PDPEngineFactory factory = PDPEngineFactory.newInstance();
-            return factory.newEngine(properties);
-        } catch (FactoryException e) {
-            LOGGER.error("Failed to create XACML PDP Engine {}", e);
+        try (InputStream is = new FileInputStream(propertiesPath)) {
+            //
+            // Load in the properties
+            //
+            properties.load(is);
+            //
+            // Now we create a new xacml.properties in the temporary folder location
+            //
+            File propertiesFile = creator.createAFile("xacml.properties");
+            //
+            // Iterate through any root policies defined
+            //
+            for (String root : XACMLProperties.getRootPolicyIDs(properties)) {
+                //
+                // Get a file
+                //
+                Path rootPath = Paths.get(properties.getProperty(root + DOT_FILE_SUFFIX));
+                LOGGER.debug("Root file {} {}", rootPath, rootPath.getFileName());
+                //
+                // Construct new path for the root policy
+                //
+                File newRootPath = creator.createAFile(rootPath.getFileName().toString());
+                //
+                // Copy the policy file to the temporary folder
+                //
+                com.google.common.io.Files.copy(rootPath.toFile(), newRootPath);
+                //
+                // Change the properties object to point to where the new policy is
+                // in the temporary folder
+                //
+                properties.setProperty(root + DOT_FILE_SUFFIX, newRootPath.getAbsolutePath());
+            }
+            //
+            // Iterate through any referenced policies defined
+            //
+            for (String referenced : XACMLProperties.getReferencedPolicyIDs(properties)) {
+                //
+                // Get a file
+                //
+                Path refPath = Paths.get(properties.getProperty(referenced + DOT_FILE_SUFFIX));
+                LOGGER.debug("Referenced file {} {}", refPath, refPath.getFileName());
+                //
+                // Construct new path for the root policy
+                //
+                File newReferencedPath = creator.createAFile(refPath.getFileName().toString());
+                //
+                // Copy the policy file to the temporary folder
+                //
+                com.google.common.io.Files.copy(refPath.toFile(), newReferencedPath);
+                //
+                // Change the properties object to point to where the new policy is
+                // in the temporary folder
+                //
+                properties.setProperty(referenced + DOT_FILE_SUFFIX, newReferencedPath.getAbsolutePath());
+            }
+            //
+            // Save the new properties file to the temporary folder
+            //
+            try (OutputStream os = new FileOutputStream(propertiesFile.getAbsolutePath())) {
+                properties.store(os, "");
+            }
+            //
+            // Return the new path to the properties folder
+            //
+            return propertiesFile;
         }
-        return null;
     }
 }

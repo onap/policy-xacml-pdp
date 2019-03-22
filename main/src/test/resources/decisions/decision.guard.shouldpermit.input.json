@@ -1,14 +1,16 @@
 {
   "ONAPName": "Policy",
-  "ONAPComponent": "DCAE",
-  "ONAPInstance": "optional-tbd",
+  "ONAPComponent": "drools-pdp",
+  "ONAPInstance": "usecase-template",
+  "requestId": "unique-request-id-1",
   "action": "guard",
   "resource": {
       "guard": {
           "actor": "SO",
           "recipe": "scaleOut",
           "clname": "ControlLoop-vDNS-6f37f56d-a87d-4b85-b6a9-cc953cf779b3",
-          "vfcount" : "1"
+          "operationCount": "0",
+          "vfCount": "1"
       }
   }
 }

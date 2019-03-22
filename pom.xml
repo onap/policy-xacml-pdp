@@ -100,13 +100,17 @@
             <version>1.24</version>
         </dependency>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20180813</version>
         </dependency>
         <dependency>
             <groupId>org.onap.policy.models</groupId>
-            <artifactId>models-decisions</artifactId>
+            <artifactId>policy-models-decisions</artifactId>
             <version>${policy.models.version}</version>
         </dependency>        
         <dependency>

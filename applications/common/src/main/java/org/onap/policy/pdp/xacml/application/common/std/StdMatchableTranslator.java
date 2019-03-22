@@ -25,6 +25,7 @@ package org.onap.policy.pdp.xacml.application.common.std;
 import com.att.research.xacml.api.AttributeAssignment;
 import com.att.research.xacml.api.DataTypeException;
 import com.att.research.xacml.api.Decision;
+import com.att.research.xacml.api.Identifier;
 import com.att.research.xacml.api.Obligation;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
@@ -37,6 +38,7 @@ import com.google.gson.Gson;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -64,11 +66,11 @@ import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class StdCombinedPolicyResultsTranslator implements ToscaPolicyTranslator {
+public class StdMatchableTranslator implements ToscaPolicyTranslator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StdCombinedPolicyResultsTranslator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StdMatchableTranslator.class);
 
-    public StdCombinedPolicyResultsTranslator() {
+    public StdMatchableTranslator() {
         super();
     }
 
@@ -116,7 +118,7 @@ public class StdCombinedPolicyResultsTranslator implements ToscaPolicyTranslator
     public Request convertRequest(DecisionRequest request) {
         LOGGER.debug("Converting Request {}", request);
         try {
-            return RequestParser.parseRequest(StdCombinedPolicyRequest.createInstance(request));
+            return RequestParser.parseRequest(StdMatchablePolicyRequest.createInstance(request));
         } catch (IllegalArgumentException | IllegalAccessException | DataTypeException e) {
             LOGGER.error("Failed to convert DecisionRequest: {}", e);
         }
@@ -192,6 +194,7 @@ public class StdCombinedPolicyResultsTranslator implements ToscaPolicyTranslator
                 }
             }
         }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -227,16 +230,11 @@ public class StdCombinedPolicyResultsTranslator implements ToscaPolicyTranslator
         //
         // Generate the TargetType
         //
-        if (! policyDefinition.containsKey("type")) {
-            throw new ToscaPolicyConversionException(policyName + " missing type value");
+        if (! policyDefinition.containsKey("properties")) {
+            throw new ToscaPolicyConversionException(policyName + " missing properties section");
         }
-        if (! policyDefinition.containsKey("version")) {
-            throw new ToscaPolicyConversionException(policyName + " missing version value");
-        }
-        TargetType target = this.generateTargetType(policyName,
-                policyDefinition.get("type").toString(),
-                policyDefinition.get("version").toString());
-        newPolicyType.setTarget(target);
+        policyDefinition.get("properties");
+        newPolicyType.setTarget(generateTargetType((Map<String, Object>) policyDefinition.get("properties")));
         //
         // Now create the Permit Rule
         // No target since the policy has a target
@@ -291,59 +289,75 @@ public class StdCombinedPolicyResultsTranslator implements ToscaPolicyTranslator
         return policy;
     }
 
-    protected TargetType generateTargetType(String policyId, String policyType, String policyTypeVersion) {
+    /**
+     * For generating target type, we are making an assumption that the
+     * policyScope and policyType are the fields that OOF wants to match on.
+     *
+     * <P>In the future, we would need to receive the Policy Type specification
+     * from the PAP so we can dynamically see which fields are matchable.
+     *
+     * <P>Note: I am making an assumption that the matchable fields are what
+     * the OOF wants to query a policy on.
+     *
+     * @param properties Properties section of policy
+     * @return TargetType object
+     */
+    @SuppressWarnings("unchecked")
+    protected TargetType generateTargetType(Map<String, Object> properties) {
+        TargetType targetType = new TargetType();
         //
-        // Create all the match's that are possible
+        // Iterate the properties
         //
-        // This is for the Policy Id
-        //
-        MatchType matchPolicyId = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
-                XACML3.ID_FUNCTION_STRING_EQUAL,
-                policyId,
-                XACML3.ID_DATATYPE_STRING,
-                ToscaDictionary.ID_RESOURCE_POLICY_ID,
-                XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
-        //
-        // This is for the Policy Type
-        //
-        MatchType matchPolicyType = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
-                XACML3.ID_FUNCTION_STRING_EQUAL,
-                policyType,
-                XACML3.ID_DATATYPE_STRING,
-                ToscaDictionary.ID_RESOURCE_POLICY_TYPE,
-                XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
-        //
-        // This is for the Policy Type version
-        //
-        MatchType matchPolicyTypeVersion = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
-                XACML3.ID_FUNCTION_STRING_EQUAL,
-                policyTypeVersion,
-                XACML3.ID_DATATYPE_STRING,
-                ToscaDictionary.ID_RESOURCE_POLICY_TYPE_VERSION,
-                XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
+        for (Entry<String, Object> entrySet : properties.entrySet()) {
+            //
+            // Find policyScope and policyType
+            //
+            if (entrySet.getKey().equals("policyScope")) {
+                LOGGER.debug("Found policyScope: {}", entrySet.getValue());
+                if (entrySet.getValue() instanceof Collection) {
+                    targetType.getAnyOf().add(generateMatches((Collection<Object>) entrySet.getValue(),
+                            ToscaDictionary.ID_RESOURCE_POLICY_SCOPE_PROPERTY));
+                } else if (entrySet.getValue() instanceof String) {
+                    targetType.getAnyOf().add(generateMatches(Arrays.asList(entrySet.getValue()),
+                            ToscaDictionary.ID_RESOURCE_POLICY_SCOPE_PROPERTY));
+                }
+            }
+            if (entrySet.getKey().equals("policyType")) {
+                LOGGER.debug("Found policyType: {}", entrySet.getValue());
+                if (entrySet.getValue() instanceof Collection) {
+                    targetType.getAnyOf().add(generateMatches((Collection<Object>) entrySet.getValue(),
+                            ToscaDictionary.ID_RESOURCE_POLICY_TYPE_PROPERTY));
+                } else if (entrySet.getValue() instanceof String) {
+                    targetType.getAnyOf().add(generateMatches(Arrays.asList(entrySet.getValue()),
+                            ToscaDictionary.ID_RESOURCE_POLICY_TYPE_PROPERTY));
+                }
+            }
+        }
+
+        return targetType;
+    }
+
+    protected AnyOfType generateMatches(Collection<Object> matchables, Identifier attributeId) {
         //
         // This is our outer AnyOf - which is an OR
         //
         AnyOfType anyOf = new AnyOfType();
-        //
-        // Create AllOf (AND) of just Policy Id
-        //
-        anyOf.getAllOf().add(ToscaPolicyTranslatorUtils.buildAllOf(matchPolicyId));
-        //
-        // Create AllOf (AND) of just Policy Type
-        //
-        anyOf.getAllOf().add(ToscaPolicyTranslatorUtils.buildAllOf(matchPolicyType));
-        //
-        // Create AllOf (AND) of Policy Type and Policy Type Version
-        //
-        anyOf.getAllOf().add(ToscaPolicyTranslatorUtils.buildAllOf(matchPolicyType, matchPolicyTypeVersion));
-        //
-        // Now we can create the TargetType, add the top-level anyOf (OR),
-        // and return the value.
-        //
-        TargetType target = new TargetType();
-        target.getAnyOf().add(anyOf);
-        return target;
+        for (Object matchable : matchables) {
+            //
+            // Create a match for this
+            //
+            MatchType match = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
+                    XACML3.ID_FUNCTION_STRING_EQUAL,
+                    matchable.toString(),
+                    XACML3.ID_DATATYPE_STRING,
+                    attributeId,
+                    XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
+            //
+            // Now create an anyOf (OR)
+            //
+            anyOf.getAllOf().add(ToscaPolicyTranslatorUtils.buildAllOf(match));
+        }
+        return anyOf;
     }
 
     protected RuleType addObligation(RuleType rule, JSONObject jsonPolicy) {
@@ -351,7 +365,7 @@ public class StdCombinedPolicyResultsTranslator implements ToscaPolicyTranslator
         // Convert the YAML Policy to JSON Object
         //
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("JSON DCAE Policy {}{}", System.lineSeparator(), jsonPolicy);
+            LOGGER.debug("JSON Optimization Policy {}{}", System.lineSeparator(), jsonPolicy);
         }
         //
         // Create an AttributeValue for it
