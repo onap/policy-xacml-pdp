@@ -22,6 +22,29 @@
       "revId": "2c847e0855b316c162c9fd31456fdf8e338a5dba",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9c55164_714cc31a",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-25T23:36:35Z",
+      "side": 1,
+      "message": "Perhaps \"Monitoring\"or some other more general term instead?",
+      "range": {
+        "startLine": 185,
+        "startChar": 38,
+        "endLine": 185,
+        "endChar": 42
+      },
+      "revId": "2c847e0855b316c162c9fd31456fdf8e338a5dba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
