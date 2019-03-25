@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70f385ee_de22cdb7",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdCombinedPolicyRequest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-03-25T22:00:19Z",
+      "side": 1,
+      "message": "You might be borderline on Sonar here but we can fix after.",
+      "range": {
+        "startLine": 94,
+        "startChar": 16,
+        "endLine": 98,
+        "endChar": 17
+      },
+      "revId": "2c847e0855b316c162c9fd31456fdf8e338a5dba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
