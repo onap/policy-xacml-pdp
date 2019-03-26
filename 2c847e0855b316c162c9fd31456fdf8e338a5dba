@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "09483034_5e1ad5b9",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdCombinedPolicyRequest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-26T11:53:33Z",
+      "side": 1,
+      "message": "Hmm ok - I didn\u0027t see anything in sonar. Let me know what you think I need to pay attention to.",
+      "parentUuid": "70f385ee_de22cdb7",
+      "range": {
+        "startLine": 94,
+        "startChar": 16,
+        "endLine": 98,
+        "endChar": 17
+      },
+      "revId": "2c847e0855b316c162c9fd31456fdf8e338a5dba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9c55164_714cc31a",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2019-03-25T23:36:35Z",
       "side": 1,
       "message": "Perhaps \"Monitoring\"or some other more general term instead?",
+      "range": {
+        "startLine": 185,
+        "startChar": 38,
+        "endLine": 185,
+        "endChar": 42
+      },
+      "revId": "2c847e0855b316c162c9fd31456fdf8e338a5dba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b2c53da_f6ab4354",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-26T11:53:33Z",
+      "side": 1,
+      "message": "Yes I\u0027ll change that",
+      "parentUuid": "d9c55164_714cc31a",
       "range": {
         "startLine": 185,
         "startChar": 38,
