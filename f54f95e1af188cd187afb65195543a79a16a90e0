@@ -22,6 +22,30 @@
       "revId": "f54f95e1af188cd187afb65195543a79a16a90e0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "69c3640b_8811c329",
+        "filename": "applications/optimization/src/main/java/org/onap/policy/xacml/pdp/application/optimization/OptimizationPdpApplication.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-26T11:53:33Z",
+      "side": 1,
+      "message": "Optimization - I think I changed it.",
+      "parentUuid": "b7c37624_3c8e3739",
+      "range": {
+        "startLine": 49,
+        "startChar": 41,
+        "endLine": 49,
+        "endChar": 51
+      },
+      "revId": "f54f95e1af188cd187afb65195543a79a16a90e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
