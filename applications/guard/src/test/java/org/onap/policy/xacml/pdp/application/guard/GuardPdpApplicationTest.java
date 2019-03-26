@@ -75,6 +75,7 @@ public class GuardPdpApplicationTest {
      */
     @BeforeClass
     public static void setUp() throws Exception {
+        LOGGER.info("Setting up class");
         //
         // Setup our temporary folder
         //
@@ -108,7 +109,7 @@ public class GuardPdpApplicationTest {
             strDump.append(application.supportedPolicyTypes());
             strDump.append(System.lineSeparator());
         }
-        LOGGER.debug("{}", strDump);
+        LOGGER.info("{}", strDump);
         //
         // Tell it to initialize based on the properties file
         // we just built for it.
@@ -118,6 +119,7 @@ public class GuardPdpApplicationTest {
 
     @Test
     public void test1Basics() throws CoderException, IOException {
+        LOGGER.info("**************** Running test1 ****************");
         //
         // Load Single Decision Request
         //
@@ -163,6 +165,7 @@ public class GuardPdpApplicationTest {
 
     @Test
     public void test2NoPolicies() {
+        LOGGER.info("**************** Running test2 ****************");
         //
         // Ask for a decision
         //
@@ -175,6 +178,7 @@ public class GuardPdpApplicationTest {
 
     @Test
     public void test3FrequencyLimiter() throws CoderException, FileNotFoundException, IOException {
+        LOGGER.info("**************** Running test3 ****************");
         //
         // Now load the vDNS frequency limiter Policy - make sure
         // the pdp can support it and have it load
@@ -190,36 +194,37 @@ public class GuardPdpApplicationTest {
             // Load the policies
             //
             service.loadPolicies(toscaObject);
-            //
-            // Ask for a decision - should get permit
-            //
-            DecisionResponse response = service.makeDecision(requestGuardPermit);
-            LOGGER.info("Looking for Permit Decision {}", response);
-
-            assertThat(response).isNotNull();
-            assertThat(response.getStatus()).isNotNull();
-            assertThat(response.getStatus()).isEqualTo("Permit");
-            //
-            // Dump it out as Json
-            //
-            LOGGER.info(gson.encode(response));
-            //
-            // Ask for a decision - should get deny
-            //
-            response = service.makeDecision(requestGuardDeny2);
-            LOGGER.info("Looking for Deny Decision {}", response);
-            assertThat(response).isNotNull();
-            assertThat(response.getStatus()).isNotNull();
-            assertThat(response.getStatus()).isEqualTo("Deny");
-            //
-            // Dump it out as Json
-            //
-            LOGGER.info(gson.encode(response));
         }
+        //
+        // Ask for a decision - should get permit
+        //
+        DecisionResponse response = service.makeDecision(requestGuardPermit);
+        LOGGER.info("Looking for Permit Decision {}", response);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isNotNull();
+        assertThat(response.getStatus()).isEqualTo("Permit");
+        //
+        // Dump it out as Json
+        //
+        LOGGER.info(gson.encode(response));
+        //
+        // Ask for a decision - should get deny
+        //
+        response = service.makeDecision(requestGuardDeny);
+        LOGGER.info("Looking for Deny Decision {}", response);
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isNotNull();
+        assertThat(response.getStatus()).isEqualTo("Deny");
+        //
+        // Dump it out as Json
+        //
+        LOGGER.info(gson.encode(response));
     }
 
     @Test
     public void test4MinMax() throws CoderException, FileNotFoundException, IOException {
+        LOGGER.info("**************** Running test4 ****************");
         //
         // Now load the vDNS min max Policy - make sure
         // the pdp can support it and have it load
@@ -238,34 +243,34 @@ public class GuardPdpApplicationTest {
             //
             // Ask for a decision - should get permit
             //
-            DecisionResponse response = service.makeDecision(requestGuardPermit);
-            LOGGER.info("Looking for Permit Decision {}", response);
-
-            assertThat(response).isNotNull();
-            assertThat(response.getStatus()).isNotNull();
-            assertThat(response.getStatus()).isEqualTo("Permit");
-            //
-            // Dump it out as Json
-            //
-            LOGGER.info(gson.encode(response));
-            //
-            // Ask for a decision - should get deny
-            //
-            response = service.makeDecision(requestGuardDeny);
-            LOGGER.info("Looking for Deny Decision {}", response);
-            assertThat(response).isNotNull();
-            assertThat(response.getStatus()).isNotNull();
-            assertThat(response.getStatus()).isEqualTo("Deny");
-            //
-            // Dump it out as Json
-            //
-            LOGGER.info(gson.encode(response));
         }
+        DecisionResponse response = service.makeDecision(requestGuardPermit);
+        LOGGER.info("Looking for Permit Decision {}", response);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isNotNull();
+        assertThat(response.getStatus()).isEqualTo("Permit");
+        //
+        // Dump it out as Json
+        //
+        LOGGER.info(gson.encode(response));
+        //
+        // Ask for a decision - should get deny
+        //
+        response = service.makeDecision(requestGuardDeny);
+        LOGGER.info("Looking for Deny Decision {}", response);
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isNotNull();
+        assertThat(response.getStatus()).isEqualTo("Deny");
+        //
+        // Dump it out as Json
+        //
+        LOGGER.info(gson.encode(response));
     }
 
     @Test
     public void test5MissingFields() throws FileNotFoundException, IOException {
-        LOGGER.debug("Running test5");
+        LOGGER.info("**************** Running test5 ****************");
         //
         // Most likely we would not get a policy with missing fields passed to
         // us from the API. But in case that happens, or we decide that some fields

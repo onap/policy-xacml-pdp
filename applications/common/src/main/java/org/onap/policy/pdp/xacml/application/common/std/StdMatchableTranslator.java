@@ -182,7 +182,7 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
                     //
                     Object stringContents = assignment.getAttributeValue().getValue();
                     if (LOGGER.isDebugEnabled()) {
-                        LOGGER.debug("DCAE contents: {}{}", System.lineSeparator(), stringContents);
+                        LOGGER.debug("Policy contents: {}{}", System.lineSeparator(), stringContents);
                     }
                     //
                     // Let's parse it into a map using Gson
