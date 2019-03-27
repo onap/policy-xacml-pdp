@@ -29,12 +29,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Date;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.UUID;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
 
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -47,6 +52,7 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.pdp.xacml.application.common.OnapOperationsHistoryDbao;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
@@ -62,7 +68,6 @@ public class GuardPdpApplicationTest {
     private static XacmlApplicationServiceProvider service;
     private static DecisionRequest requestGuardPermit;
     private static DecisionRequest requestGuardDeny;
-    private static DecisionRequest requestGuardDeny2;
     private static StandardCoder gson = new StandardCoder();
 
     @ClassRule
@@ -134,12 +139,6 @@ public class GuardPdpApplicationTest {
                 "../../main/src/test/resources/decisions/decision.guard.shoulddeny.input.json"),
                 DecisionRequest.class);
         //
-        // Load Single Decision Request
-        //
-        requestGuardDeny2 = gson.decode(TextFileUtils.getTextFileAsString(
-                "../../main/src/test/resources/decisions/decision.guard.shoulddeny.input2.json"),
-                DecisionRequest.class);
-        //
         // Make sure there's an application name
         //
         assertThat(service.applicationName()).isNotEmpty();
@@ -208,6 +207,10 @@ public class GuardPdpApplicationTest {
         // Dump it out as Json
         //
         LOGGER.info(gson.encode(response));
+        //
+        // Add entry into operations history DB
+        //
+        insertOperationEvent(requestGuardPermit);
         //
         // Ask for a decision - should get deny
         //
@@ -324,4 +327,35 @@ public class GuardPdpApplicationTest {
             assertThat(response.getStatus()).isEqualTo("Deny");
         }
     }
+
+    @SuppressWarnings("unchecked")
+    private void insertOperationEvent(DecisionRequest request) {
+        //
+        // Get the properties
+        //
+        Map<String, Object> properties = (Map<String, Object>) request.getResource().get("guard");
+        assertThat(properties).isNotNull();
+
+        // Add an entry
+        OnapOperationsHistoryDbao newEntry = new OnapOperationsHistoryDbao();
+        newEntry.setActor(properties.get("actor").toString());
+        newEntry.setOperation(properties.get("recipe").toString());
+        newEntry.setClName(properties.get("clname").toString());
+        newEntry.setOutcome("SUCCESS");
+        newEntry.setStarttime(Date.from(Instant.now().minusMillis(20000)));
+        newEntry.setEndtime(Date.from(Instant.now()));
+        newEntry.setRequestId(UUID.randomUUID().toString());
+        newEntry.setTarget(properties.get("target").toString());
+        //
+        //
+        //
+        EntityManager em = Persistence.createEntityManagerFactory(
+                GuardPdpApplicationTest.properties.getProperty("historydb.persistenceunit"), properties)
+                .createEntityManager();
+        em.getTransaction().begin();
+        em.persist(newEntry);
+        em.getTransaction().commit();
+        em.close();
+    }
+
 }

@@ -9,7 +9,8 @@
           "actor": "SO",
           "recipe": "VF Module Create",
           "clname": "ControlLoop-vDNS-6f37f56d-a87d-4b85-b6a9-cc953cf779b3",
-          "operationCount" : "1"
+          "target": "vLoadBalancer-00",
+          "vfCount" : "6"
       }
   }
 }
