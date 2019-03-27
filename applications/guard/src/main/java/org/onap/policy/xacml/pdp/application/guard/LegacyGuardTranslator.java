@@ -617,8 +617,8 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         //
         // Right now I am faking the count value by re-using the request-id field
         //
-        //String issuer = "org:onap:xacml:guard:historydb:tw:" + timeWindow + ":" + timeUnits;
-        //designator.setIssuer(issuer);
+        String issuer = ToscaDictionary.GUARD_ISSUER + ":tw:" + timeWindow + ":" + timeUnits;
+        designator.setIssuer(issuer);
 
         AttributeValueType valueLimit = new AttributeValueType();
         valueLimit.setDataType(XACML3.ID_DATATYPE_INTEGER.stringValue());

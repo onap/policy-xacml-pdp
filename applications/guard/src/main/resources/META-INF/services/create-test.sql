@@ -1,0 +1,1 @@
+CREATE TABLE `operationshistory10` (`CLNAME` varchar(255), `requestID` varchar(100), `actor` varchar(50), `operation` varchar(50), `target` varchar(50), `starttime` timestamp, `outcome` varchar(50), `message` varchar(255), `subrequestId` varchar(100), `endtime` timestamp)
