@@ -93,6 +93,8 @@ public final class ToscaDictionary {
     public static final Identifier ID_RESOURCE_GUARD_OPERATIONCOUNT =
             new IdentifierImpl(URN_ONAP, "guard:operation:operation-count");
 
+    public static final String GUARD_ISSUER = URN_ONAP.stringValue() + "xacml:guard:historydb";
+
     /*
      * This id is specifically for advice returned from guard
      */
