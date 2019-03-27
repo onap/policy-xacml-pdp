@@ -29,6 +29,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Date;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -36,6 +38,11 @@ import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.UUID;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
+
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
@@ -47,6 +54,7 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.pdp.xacml.application.common.OnapOperationsHistoryDbao;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
@@ -60,10 +68,13 @@ public class GuardPdpApplicationTest {
     private static Properties properties = new Properties();
     private static File propertiesFile;
     private static XacmlApplicationServiceProvider service;
-    private static DecisionRequest requestGuardPermit;
-    private static DecisionRequest requestGuardDeny;
-    private static DecisionRequest requestGuardDeny2;
+    private static DecisionRequest requestVfCount1;
+    private static DecisionRequest requestVfCount3;
+    private static DecisionRequest requestVfCount6;
     private static StandardCoder gson = new StandardCoder();
+    private static EntityManager em;
+    private static final String DENY = "Deny";
+    private static final String PERMIT = "Permit";
 
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
@@ -115,30 +126,79 @@ public class GuardPdpApplicationTest {
         // we just built for it.
         //
         service.initialize(propertiesFile.toPath().getParent());
+        //
+        // Load Decision Requests
+        //
+        requestVfCount1 = gson.decode(
+                TextFileUtils.getTextFileAsString(
+                    "../../main/src/test/resources/decisions/decision.guard.vfCount.1.input.json"),
+                    DecisionRequest.class);
+        requestVfCount3 = gson.decode(
+                TextFileUtils.getTextFileAsString(
+                    "../../main/src/test/resources/decisions/decision.guard.vfCount.3.input.json"),
+                    DecisionRequest.class);
+        requestVfCount6 = gson.decode(
+                TextFileUtils.getTextFileAsString(
+                    "../../main/src/test/resources/decisions/decision.guard.vfCount.6.input.json"),
+                    DecisionRequest.class);
+        //
+        // Create EntityManager for manipulating DB
+        //
+        em = Persistence.createEntityManagerFactory(
+                GuardPdpApplicationTest.properties.getProperty("historydb.persistenceunit"), properties)
+                .createEntityManager();
+    }
+
+    /**
+     * Clears the database before each test.
+     *
+     */
+    @Before
+    public void startClean() throws Exception {
+        em.getTransaction().begin();
+        em.createQuery("DELETE FROM OnapOperationsHistoryDbao").executeUpdate();
+        em.getTransaction().commit();
+    }
+
+    /**
+     * Check that decision matches expectation.
+     *
+     * @param expected from the response
+     * @param response received
+     *
+     **/
+    public void checkDecision(String expected, DecisionResponse response) throws CoderException {
+        LOGGER.info("Looking for {} Decision", expected);
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isNotNull();
+        assertThat(response.getStatus()).isEqualTo(expected);
+        //
+        // Dump it out as Json
+        //
+        LOGGER.info(gson.encode(response));
+    }
+
+    /**
+     * Request a decision and check that it matches expectation.
+     *
+     * @param request to send to Xacml PDP
+     * @param expected from the response
+     *
+     **/
+    public void requestAndCheckDecision(DecisionRequest request, String expected) throws CoderException {
+        //
+        // Ask for a decision
+        //
+        DecisionResponse response = service.makeDecision(request);
+        //
+        // Check decision
+        //
+        checkDecision(expected, response);
     }
 
     @Test
     public void test1Basics() throws CoderException, IOException {
         LOGGER.info("**************** Running test1 ****************");
-        //
-        // Load Single Decision Request
-        //
-        requestGuardPermit = gson.decode(
-                TextFileUtils.getTextFileAsString(
-                    "../../main/src/test/resources/decisions/decision.guard.shouldpermit.input.json"),
-                    DecisionRequest.class);
-        //
-        // Load Single Decision Request
-        //
-        requestGuardDeny = gson.decode(TextFileUtils.getTextFileAsString(
-                "../../main/src/test/resources/decisions/decision.guard.shoulddeny.input.json"),
-                DecisionRequest.class);
-        //
-        // Load Single Decision Request
-        //
-        requestGuardDeny2 = gson.decode(TextFileUtils.getTextFileAsString(
-                "../../main/src/test/resources/decisions/decision.guard.shoulddeny.input2.json"),
-                DecisionRequest.class);
         //
         // Make sure there's an application name
         //
@@ -164,16 +224,9 @@ public class GuardPdpApplicationTest {
     }
 
     @Test
-    public void test2NoPolicies() {
+    public void test2NoPolicies() throws CoderException {
         LOGGER.info("**************** Running test2 ****************");
-        //
-        // Ask for a decision
-        //
-        DecisionResponse response = service.makeDecision(requestGuardPermit);
-        LOGGER.info("Decision {}", response);
-
-        assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isEqualTo("Permit");
+        requestAndCheckDecision(requestVfCount1,PERMIT);
     }
 
     @Test
@@ -196,30 +249,25 @@ public class GuardPdpApplicationTest {
             service.loadPolicies(toscaObject);
         }
         //
-        // Ask for a decision - should get permit
+        // Zero recent actions: should get permit
         //
-        DecisionResponse response = service.makeDecision(requestGuardPermit);
-        LOGGER.info("Looking for Permit Decision {}", response);
-
-        assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isNotNull();
-        assertThat(response.getStatus()).isEqualTo("Permit");
+        requestAndCheckDecision(requestVfCount1,PERMIT);
         //
-        // Dump it out as Json
+        // Add entry into operations history DB
         //
-        LOGGER.info(gson.encode(response));
+        insertOperationEvent(requestVfCount1);
         //
-        // Ask for a decision - should get deny
+        // Only one recent actions: should get permit
         //
-        response = service.makeDecision(requestGuardDeny);
-        LOGGER.info("Looking for Deny Decision {}", response);
-        assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isNotNull();
-        assertThat(response.getStatus()).isEqualTo("Deny");
+        requestAndCheckDecision(requestVfCount1,PERMIT);
         //
-        // Dump it out as Json
+        // Add entry into operations history DB
         //
-        LOGGER.info(gson.encode(response));
+        insertOperationEvent(requestVfCount1);
+        //
+        // Two recent actions, more than specified limit of 2: should get deny
+        //
+        requestAndCheckDecision(requestVfCount1,DENY);
     }
 
     @Test
@@ -240,32 +288,32 @@ public class GuardPdpApplicationTest {
             // Load the policies
             //
             service.loadPolicies(toscaObject);
-            //
-            // Ask for a decision - should get permit
-            //
         }
-        DecisionResponse response = service.makeDecision(requestGuardPermit);
-        LOGGER.info("Looking for Permit Decision {}", response);
-
-        assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isNotNull();
-        assertThat(response.getStatus()).isEqualTo("Permit");
         //
-        // Dump it out as Json
+        // vfcount=1 below min of 2: should get a Deny
         //
-        LOGGER.info(gson.encode(response));
+        requestAndCheckDecision(requestVfCount1, DENY);
         //
-        // Ask for a decision - should get deny
+        // vfcount=3 between min of 2 and max of 5: should get a Permit
         //
-        response = service.makeDecision(requestGuardDeny);
-        LOGGER.info("Looking for Deny Decision {}", response);
-        assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isNotNull();
-        assertThat(response.getStatus()).isEqualTo("Deny");
+        requestAndCheckDecision(requestVfCount3, PERMIT);
         //
-        // Dump it out as Json
+        // vfcount=6 above max of 5: should get a Deny
         //
-        LOGGER.info(gson.encode(response));
+        requestAndCheckDecision(requestVfCount6,DENY);
+        //
+        // Add two entry into operations history DB
+        //
+        insertOperationEvent(requestVfCount1);
+        insertOperationEvent(requestVfCount1);
+        //
+        // vfcount=3 between min of 2 and max of 5, but 2 recent actions is above frequency limit: should get a Deny
+        //
+        requestAndCheckDecision(requestVfCount3, DENY);
+        //
+        // vfcount=6 above max of 5: should get a Deny
+        //
+        requestAndCheckDecision(requestVfCount6, DENY);
     }
 
     @Test
@@ -323,5 +371,34 @@ public class GuardPdpApplicationTest {
             assertThat(response.getStatus()).isNotNull();
             assertThat(response.getStatus()).isEqualTo("Deny");
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void insertOperationEvent(DecisionRequest request) {
+        //
+        // Get the properties
+        //
+        Map<String, Object> properties = (Map<String, Object>) request.getResource().get("guard");
+        assertThat(properties).isNotNull();
+        //
+        // Add an entry
+        //
+        OnapOperationsHistoryDbao newEntry = new OnapOperationsHistoryDbao();
+        newEntry.setActor(properties.get("actor").toString());
+        newEntry.setOperation(properties.get("recipe").toString());
+        newEntry.setClName(properties.get("clname").toString());
+        newEntry.setOutcome("SUCCESS");
+        newEntry.setStarttime(Date.from(Instant.now().minusMillis(20000)));
+        newEntry.setEndtime(Date.from(Instant.now()));
+        newEntry.setRequestId(UUID.randomUUID().toString());
+        newEntry.setTarget(properties.get("target").toString());
+        em.getTransaction().begin();
+        em.persist(newEntry);
+        em.getTransaction().commit();
+    }
+
+    @AfterClass
+    public static void cleanup() throws Exception {
+        em.close();
     }
 }

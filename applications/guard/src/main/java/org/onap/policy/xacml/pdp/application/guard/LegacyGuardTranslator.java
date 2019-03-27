@@ -398,23 +398,16 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         // Now combine into an And
         //
         ApplyType applyAnd = new ApplyType();
-        applyAnd.setDescription("return true if all the apply's are true.");
+        applyAnd.setDescription("return true if time range and count checks are true.");
         applyAnd.setFunctionId(XACML3.ID_FUNCTION_AND.stringValue());
         applyAnd.getExpression().add(new ObjectFactory().createApply(timeRange));
         applyAnd.getExpression().add(new ObjectFactory().createApply(countCheck));
-        //
-        // And create an outer negation of the And
-        //
-        ApplyType applyNot = new ApplyType();
-        applyNot.setDescription("Negate the and");
-        applyNot.setFunctionId(XACML3.ID_FUNCTION_NOT.stringValue());
-        applyNot.getExpression().add(new ObjectFactory().createApply(applyAnd));
 
         //
         // Create our condition
         //
         final ConditionType condition = new ConditionType();
-        condition.setExpression(new ObjectFactory().createApply(applyNot));
+        condition.setExpression(new ObjectFactory().createApply(applyAnd));
 
         //
         // Now we can create our rule
@@ -617,8 +610,8 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         //
         // Right now I am faking the count value by re-using the request-id field
         //
-        //String issuer = "org:onap:xacml:guard:historydb:tw:" + timeWindow + ":" + timeUnits;
-        //designator.setIssuer(issuer);
+        String issuer = ToscaDictionary.GUARD_ISSUER + ":tw:" + timeWindow + ":" + timeUnits;
+        designator.setIssuer(issuer);
 
         AttributeValueType valueLimit = new AttributeValueType();
         valueLimit.setDataType(XACML3.ID_DATATYPE_INTEGER.stringValue());
@@ -636,13 +629,13 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         applyOneAndOnly.setFunctionId(XACML3.ID_FUNCTION_INTEGER_ONE_AND_ONLY.stringValue());
         applyOneAndOnly.getExpression().add(factory.createAttributeDesignator(designator));
 
-        ApplyType applyGreaterThanEqual = new ApplyType();
-        applyGreaterThanEqual.setDescription("return true if current count is greater than or equal.");
-        applyGreaterThanEqual.setFunctionId(XACML3.ID_FUNCTION_INTEGER_GREATER_THAN_OR_EQUAL.stringValue());
-        applyGreaterThanEqual.getExpression().add(factory.createApply(applyOneAndOnly));
-        applyGreaterThanEqual.getExpression().add(factory.createAttributeValue(valueLimit));
+        ApplyType applyLessThan = new ApplyType();
+        applyLessThan.setDescription("return true if current count is less than.");
+        applyLessThan.setFunctionId(XACML3.ID_FUNCTION_INTEGER_LESS_THAN.stringValue());
+        applyLessThan.getExpression().add(factory.createApply(applyOneAndOnly));
+        applyLessThan.getExpression().add(factory.createAttributeValue(valueLimit));
 
-        return applyGreaterThanEqual;
+        return applyLessThan;
     }
 
     private static ApplyType generateMinCheck(Integer min) {
@@ -706,13 +699,13 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         applyOneAndOnly.setFunctionId(XACML3.ID_FUNCTION_INTEGER_ONE_AND_ONLY.stringValue());
         applyOneAndOnly.getExpression().add(factory.createAttributeDesignator(designator));
 
-        ApplyType applyGreaterThanEqual = new ApplyType();
-        applyGreaterThanEqual.setDescription("return true if current count is less than or equal.");
-        applyGreaterThanEqual.setFunctionId(XACML3.ID_FUNCTION_INTEGER_LESS_THAN_OR_EQUAL.stringValue());
-        applyGreaterThanEqual.getExpression().add(factory.createApply(applyOneAndOnly));
-        applyGreaterThanEqual.getExpression().add(factory.createAttributeValue(valueLimit));
+        ApplyType applyLessThanEqual = new ApplyType();
+        applyLessThanEqual.setDescription("return true if current count is less than or equal.");
+        applyLessThanEqual.setFunctionId(XACML3.ID_FUNCTION_INTEGER_LESS_THAN_OR_EQUAL.stringValue());
+        applyLessThanEqual.getExpression().add(factory.createApply(applyOneAndOnly));
+        applyLessThanEqual.getExpression().add(factory.createAttributeValue(valueLimit));
 
-        return applyGreaterThanEqual;
+        return applyLessThanEqual;
     }
 
     private static AdviceExpressionsType generateRequestIdAdvice() {
