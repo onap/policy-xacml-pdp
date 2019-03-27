@@ -138,8 +138,8 @@ public class LegacyGuardPolicyRequest {
         if (guard.containsKey("clname")) {
             request.clnameId = guard.get("clname").toString();
         }
-        if (guard.containsKey("targets")) {
-            request.targetId = guard.get("targets").toString();
+        if (guard.containsKey("target")) {
+            request.targetId = guard.get("target").toString();
         }
         if (guard.containsKey("vfCount")) {
             request.vfCount = Integer.decode(guard.get("vfCount").toString());
