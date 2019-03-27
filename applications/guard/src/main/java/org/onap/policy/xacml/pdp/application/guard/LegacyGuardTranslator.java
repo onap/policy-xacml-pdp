@@ -398,7 +398,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         // Now combine into an And
         //
         ApplyType applyAnd = new ApplyType();
-        applyAnd.setDescription("return true if all the apply's are true.");
+        applyAnd.setDescription("return true if time range and count checks are true.");
         applyAnd.setFunctionId(XACML3.ID_FUNCTION_AND.stringValue());
         applyAnd.getExpression().add(new ObjectFactory().createApply(timeRange));
         applyAnd.getExpression().add(new ObjectFactory().createApply(countCheck));
@@ -617,8 +617,8 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         //
         // Right now I am faking the count value by re-using the request-id field
         //
-        //String issuer = "org:onap:xacml:guard:historydb:tw:" + timeWindow + ":" + timeUnits;
-        //designator.setIssuer(issuer);
+        String issuer = ToscaDictionary.GUARD_ISSUER + ":tw:" + timeWindow + ":" + timeUnits;
+        designator.setIssuer(issuer);
 
         AttributeValueType valueLimit = new AttributeValueType();
         valueLimit.setDataType(XACML3.ID_DATATYPE_INTEGER.stringValue());
