@@ -38,6 +38,11 @@
             <artifactId>common</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

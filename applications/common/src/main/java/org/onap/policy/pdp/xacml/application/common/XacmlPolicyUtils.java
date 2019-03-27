@@ -34,6 +34,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -162,7 +163,7 @@ public class XacmlPolicyUtils {
         //
         int id = 1;
         while (true) {
-            String refId = "ref" + id;
+            String refId = "root" + id;
             if (rootPolicies.contains(refId)) {
                 id++;
             } else {
@@ -326,6 +327,16 @@ public class XacmlPolicyUtils {
         try (InputStream is = Files.newInputStream(propertyPath)) {
             Properties properties = new Properties();
             properties.load(is);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Loaded xacml properties {} {}", System.lineSeparator(), properties);
+                //
+                // It would be nice to sort this first
+                //
+                properties.list(System.out);
+                for (Entry<Object, Object> entrySet : properties.entrySet()) {
+                    LOGGER.debug("{} -> {}", entrySet.getKey(), entrySet.getValue());
+                }
+            }
             return properties;
         }
     }
@@ -336,6 +347,10 @@ public class XacmlPolicyUtils {
      * @throws IOException If unable to store the file.
      */
     public static void storeXacmlProperties(Properties properties, Path propertyPath) throws IOException {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Storing xacml properties {} {} {}", properties, System.lineSeparator(), propertyPath);
+            properties.list(System.out);
+        }
         try (OutputStream os = Files.newOutputStream(propertyPath)) {
             String strComments = "#";
             properties.store(os, strComments);
