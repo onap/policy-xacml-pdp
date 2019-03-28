@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7fc1dc42_05ffa7b4",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/OnapOperationsHistoryPipEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-28T18:43:22Z",
+      "side": 1,
+      "message": "Given this class implements a PIP that counts the number of recent failures (as opposed to any of the other things that could be queried from the OperationHistory DB), we should find a way to work that into the name. Perhaps OnapOperationsHistoryCountFailuresPipEngine? Or if this is too long, perhaps omit the OnapOperationsHistory at the beginning?",
+      "range": {
+        "startLine": 51,
+        "startChar": 13,
+        "endLine": 51,
+        "endChar": 43
+      },
+      "revId": "1c8bc3c1e07c8f0babc434ebc64d1e729fd19f5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3bf3ce91_e6c82e6d",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/OnapOperationsHistoryPipEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-28T18:43:22Z",
+      "side": 1,
+      "message": "name mismatch (part 1)",
+      "range": {
+        "startLine": 296,
+        "startChar": 62,
+        "endLine": 296,
+        "endChar": 79
+      },
+      "revId": "1c8bc3c1e07c8f0babc434ebc64d1e729fd19f5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d686ab2_1937ee1d",
+        "filename": "applications/guard/src/main/resources/META-INF/persistence.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-28T18:43:22Z",
+      "side": 1,
+      "message": "given this is a persistence file using a h2 mem test db, perhaps it should be in src/test instead of src/main?",
+      "range": {
+        "startLine": 31,
+        "startChar": 12,
+        "endLine": 31,
+        "endChar": 109
+      },
+      "revId": "1c8bc3c1e07c8f0babc434ebc64d1e729fd19f5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17637c51_b54b5478",
+        "filename": "applications/guard/src/main/resources/META-INF/services/createtest.sql",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-28T18:43:22Z",
+      "side": 1,
+      "message": "should createtest.sql be in src/test instead of src/main?",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 37
+      },
+      "revId": "1c8bc3c1e07c8f0babc434ebc64d1e729fd19f5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4aa0008c_58eb4686",
+        "filename": "applications/guard/src/main/resources/META-INF/services/createtest.sql",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-28T18:43:22Z",
+      "side": 1,
+      "message": "name mismatch (part 2)",
+      "range": {
+        "startLine": 4,
+        "startChar": 14,
+        "endLine": 4,
+        "endChar": 33
+      },
+      "revId": "1c8bc3c1e07c8f0babc434ebc64d1e729fd19f5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fde5c7a0_8c8ba4e0",
+        "filename": "applications/guard/src/test/resources/xacml.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-03-28T18:43:22Z",
+      "side": 1,
+      "message": "possibly unnecessary. (already been defined in persistence.xml)",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 49
+      },
+      "revId": "1c8bc3c1e07c8f0babc434ebc64d1e729fd19f5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
