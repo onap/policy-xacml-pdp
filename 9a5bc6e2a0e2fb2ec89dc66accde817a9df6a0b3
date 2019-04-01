@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6dc6fe55_88230bb5",
+        "filename": "applications/guard/src/test/java/org/onap/policy/xacml/pdp/application/guard/GuardPdpApplicationTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-04-01T18:52:18Z",
+      "side": 1,
+      "message": "this makes latter tests dependent on this one, perhaps move to setUp()?",
+      "range": {
+        "startLine": 128,
+        "startChar": 1,
+        "endLine": 141,
+        "endChar": 10
+      },
+      "revId": "9a5bc6e2a0e2fb2ec89dc66accde817a9df6a0b3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0431d1c8_c212a142",
+        "filename": "applications/guard/src/test/java/org/onap/policy/xacml/pdp/application/guard/GuardPdpApplicationTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-04-01T18:52:18Z",
+      "side": 1,
+      "message": "to preserve test independence, need to remove all loaded policies, ideally in @After block. Will require adding a clearPolicies() or clearPolicy() method to the service.",
+      "range": {
+        "startLine": 195,
+        "startChar": 10,
+        "endLine": 195,
+        "endChar": 46
+      },
+      "revId": "9a5bc6e2a0e2fb2ec89dc66accde817a9df6a0b3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aeaf386a_76508c5f",
+        "filename": "applications/guard/src/test/java/org/onap/policy/xacml/pdp/application/guard/GuardPdpApplicationTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-04-01T18:52:18Z",
+      "side": 1,
+      "message": "at some point, probably should add @After class to clean up database after each test, in order to preserve test independence.",
+      "range": {
+        "startLine": 213,
+        "startChar": 7,
+        "endLine": 213,
+        "endChar": 49
+      },
+      "revId": "9a5bc6e2a0e2fb2ec89dc66accde817a9df6a0b3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
