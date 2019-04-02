@@ -34,11 +34,11 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
@@ -111,8 +111,9 @@ public class TestXacmlPdpStatistics {
     }
 
 
-    private Main startXacmlPdpService() {
-        final String[] XacmlPdpConfigParameters = {"-c", "parameters/XacmlPdpConfigParameters.json"};
+    private Main startXacmlPdpService() throws TopicSinkClientException {
+        final String[] XacmlPdpConfigParameters = {"-c", "parameters/XacmlPdpConfigParameters.json", "-p",
+            "parameters/topic.properties"};
         return new Main(XacmlPdpConfigParameters);
     }
 
