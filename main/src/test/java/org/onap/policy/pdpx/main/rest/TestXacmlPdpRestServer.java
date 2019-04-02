@@ -46,6 +46,7 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
@@ -113,7 +114,7 @@ public class TestXacmlPdpRestServer {
     }
 
     @Test
-    public void testHealthCheckSuccess() throws IOException, InterruptedException {
+    public void testHealthCheckSuccess() throws IOException, InterruptedException, TopicSinkClientException {
         main = startXacmlPdpService(true);
         final Invocation.Builder invocationBuilder = sendHttpRequest(HEALTHCHECK_ENDPOINT);
         final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
@@ -142,7 +143,7 @@ public class TestXacmlPdpRestServer {
     }
 
     @Test
-    public void testStatistics_200() throws IOException, InterruptedException {
+    public void testStatistics_200() throws IOException, InterruptedException, TopicSinkClientException {
         main = startXacmlPdpService(true);
         Invocation.Builder invocationBuilder = sendHttpRequest(STATISTICS_ENDPOINT);
         StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
@@ -188,11 +189,13 @@ public class TestXacmlPdpRestServer {
         }
     }
 
-    private Main startXacmlPdpService(final boolean http) {
-        final String[] xacmlPdpConfigParameters = new String[2];
+    private Main startXacmlPdpService(final boolean http) throws TopicSinkClientException {
+        final String[] xacmlPdpConfigParameters = new String[4];
         if (http) {
             xacmlPdpConfigParameters[0] = "-c";
             xacmlPdpConfigParameters[1] = "parameters/XacmlPdpConfigParameters.json";
+            xacmlPdpConfigParameters[2] = "-p";
+            xacmlPdpConfigParameters[3] = "parameters/topic.properties";
         } else {
             final Properties systemProps = System.getProperties();
             systemProps.put("javax.net.ssl.keyStore", KEYSTORE);
@@ -200,6 +203,8 @@ public class TestXacmlPdpRestServer {
             System.setProperties(systemProps);
             xacmlPdpConfigParameters[0] = "-c";
             xacmlPdpConfigParameters[1] = "parameters/XacmlPdpConfigParameters_Https.json";
+            xacmlPdpConfigParameters[2] = "-p";
+            xacmlPdpConfigParameters[3] = "parameters/topic.properties";
         }
         return new Main(xacmlPdpConfigParameters);
     }

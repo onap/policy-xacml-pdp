@@ -27,6 +27,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
 
@@ -47,7 +48,7 @@ public class TestMain {
     }
 
     @Test
-    public void testMain() throws PolicyXacmlPdpException {
+    public void testMain() throws PolicyXacmlPdpException, TopicSinkClientException {
         final String[] xacmlPdpConfigParameters = {"-c", "parameters/XacmlPdpConfigParameters.json"};
         final Main main = new Main(xacmlPdpConfigParameters);
         assertTrue(main.getParameters().isValid());
@@ -56,7 +57,7 @@ public class TestMain {
     }
 
     @Test
-    public void testMain_NoArguments() throws PolicyXacmlPdpException {
+    public void testMain_NoArguments() throws PolicyXacmlPdpException, TopicSinkClientException {
         final String[] xacmlPdpConfigParameters = {};
         final Main main = new Main(xacmlPdpConfigParameters);
         assertNull(main.getParameters());
@@ -64,14 +65,14 @@ public class TestMain {
     }
 
     @Test
-    public void testMain_InvalidArguments() {
+    public void testMain_InvalidArguments() throws TopicSinkClientException {
         final String[] xacmlPdpConfigParameters = {"parameters/XacmlPdpConfigParameters.json"};
         final Main main = new Main(xacmlPdpConfigParameters);
         assertNull(main.getParameters());
     }
 
     @Test
-    public void testMain_Help() {
+    public void testMain_Help() throws TopicSinkClientException {
         final String[] xacmlPdpConfigParameters = {"-h"};
         final Main main = new Main(xacmlPdpConfigParameters);
         final String message = "-h,--help                     outputs the usage of this command";
@@ -80,7 +81,7 @@ public class TestMain {
     }
 
     @Test
-    public void testMain_InvalidParameters() {
+    public void testMain_InvalidParameters() throws TopicSinkClientException {
         final String[] xacmlPdpConfigParameters = {"-c", "parameters/XacmlPdpConfigParameters_InvalidName.json"};
         final Main main = new Main(xacmlPdpConfigParameters);
         assertNull(main.getParameters());

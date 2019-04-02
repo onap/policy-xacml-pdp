@@ -48,6 +48,7 @@ public class XacmlPdpCommandLineArguments {
 
     // The command line options
     private String configurationFilePath = null;
+    private String propertyFilePath = null;
 
     /**
      * Construct the options for the CLI editor.
@@ -73,6 +74,15 @@ public class XacmlPdpCommandLineArguments {
                         + "the configuration file must be a Json file containing the policy xacml pdp parameters")
                 .hasArg()
                 .argName("CONFIG_FILE")
+                .required(false)
+                .type(String.class)
+                .build());
+        options.addOption(Option.builder("p")
+                .longOpt("property-file")
+                .desc("the full path to the topic property file to use, "
+                        + "the property file contains the policy pap topic properties")
+                .hasArg()
+                .argName("PROP_FILE")
                 .required(false)
                 .type(String.class)
                 .build());
@@ -106,6 +116,7 @@ public class XacmlPdpCommandLineArguments {
     public String parse(final String[] args) throws PolicyXacmlPdpException {
         // Clear all our arguments
         setConfigurationFilePath(null);
+        setPropertyFilePath(null);
 
         CommandLine commandLine = null;
         try {
@@ -135,6 +146,10 @@ public class XacmlPdpCommandLineArguments {
 
         if (commandLine.hasOption('c')) {
             setConfigurationFilePath(commandLine.getOptionValue('c'));
+        }
+
+        if (commandLine.hasOption('p')) {
+            setPropertyFilePath(commandLine.getOptionValue('p'));
         }
 
         return null;
@@ -210,6 +225,34 @@ public class XacmlPdpCommandLineArguments {
      */
     public boolean checkSetConfigurationFilePath() {
         return configurationFilePath != null && !configurationFilePath.isEmpty();
+    }
+
+    /**
+     * Gets the property file path.
+     *
+     * @return the property file path
+     */
+    public String getPropertyFilePath() {
+        return propertyFilePath;
+    }
+
+    /**
+     * Gets the full expanded property file path.
+     *
+     * @return the property file path
+     */
+    public String getFullPropertyFilePath() {
+        return ResourceUtils.getFilePath4Resource(getPropertyFilePath());
+    }
+
+    /**
+     * Sets the property file path.
+     *
+     * @param propertyFilePath the property file path
+     */
+    public void setPropertyFilePath(final String propertyFilePath) {
+        this.propertyFilePath = propertyFilePath;
+
     }
 
     /**
