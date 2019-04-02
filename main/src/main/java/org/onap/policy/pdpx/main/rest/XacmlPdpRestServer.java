@@ -67,7 +67,7 @@ public class XacmlPdpRestServer implements Startable {
             //
             // Look for existing policy types loaded into the system
             //
-            locateExistingPolicyTypes();
+            //locateExistingPolicyTypes();
             //
             // Get the server properties
             //

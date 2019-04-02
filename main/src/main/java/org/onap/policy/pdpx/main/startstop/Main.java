@@ -20,8 +20,13 @@
 
 package org.onap.policy.pdpx.main.startstop;
 
+import java.io.FileInputStream;
+import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.Properties;
+import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
+import org.onap.policy.pdpx.main.comm.XacmlPdpPapRegistration;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterHandler;
 import org.slf4j.Logger;
@@ -78,13 +83,25 @@ public class Main {
             return;
         }
 
+        // Read the properties
+        Properties props = new Properties();
+        try {
+            String propFile = arguments.getFullPropertyFilePath();
+            try (FileInputStream stream = new FileInputStream(propFile)) {
+                props.load(stream);
+            }
+        } catch (final Exception e) {
+            LOGGER.error("start of xacml pdp service failed", e);
+            return;
+        }
+
         // Now, create the activator for the policy xacml pdp service
-        activator = new XacmlPdpActivator(parameterGroup);
+        activator = new XacmlPdpActivator(parameterGroup, props);
 
         // Start the activator
         try {
-            activator.initialize();
-        } catch (final PolicyXacmlPdpException e) {
+            activator.start();
+        } catch (final RuntimeException e) {
             LOGGER.error("start of policy xacml pdp service failed, used parameters are " + Arrays.toString(args), e);
             return;
         }

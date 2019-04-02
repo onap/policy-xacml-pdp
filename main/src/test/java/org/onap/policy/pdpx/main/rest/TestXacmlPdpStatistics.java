@@ -35,6 +35,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
@@ -96,7 +97,7 @@ public class TestXacmlPdpStatistics {
     }
 
 
-    private Main startXacmlPdpService() {
+    private Main startXacmlPdpService() throws TopicSinkClientException {
         final String[] XacmlPdpConfigParameters = {"-c", "parameters/XacmlPdpConfigParameters.json"};
         return new Main(XacmlPdpConfigParameters);
     }
