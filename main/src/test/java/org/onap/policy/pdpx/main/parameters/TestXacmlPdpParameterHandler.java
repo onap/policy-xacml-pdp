@@ -93,11 +93,14 @@ public class TestXacmlPdpParameterHandler {
         noArguments.parse(noArgumentString);
 
         assertThatThrownBy(() -> new XacmlPdpParameterHandler().getParameters(noArguments))
-                .hasMessage("validation error(s) on parameters from \"parameters/NoParameters.json\"\nparameter group "
-                        + "\"null\" type \"org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup\" INVALID, "
-                        + "parameter group has status INVALID\n"
-                        + "  field \"name\" type \"java.lang.String\" value \"null\" "
-                        + "INVALID, must be a non-blank string\n");
+                .hasMessage("validation error(s) on parameters from \"parameters/NoParameters.json\"\n"
+                        + "parameter group \"null\" type "
+                        + "\"org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup\""
+                        + " INVALID, parameter group has status INVALID\n"
+                        + "  field \"name\" type \"java.lang.String\" value \"null\" INVALID, "
+                        + "must be a non-blank string\n"
+                        + "  field \"applicationPath\" type \"java.lang.String\" value \"null\" INVALID, "
+                        + "must have application path for applications to store policies and data.\n");
     }
 
     @Test

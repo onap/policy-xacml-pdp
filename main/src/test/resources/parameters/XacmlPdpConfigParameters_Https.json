@@ -6,5 +6,6 @@
         "userName":"healthcheck",
         "password":"zb!XztG34",
         "https":true
-    }
+    },
+    "applicationPath": "apps.test"
 }

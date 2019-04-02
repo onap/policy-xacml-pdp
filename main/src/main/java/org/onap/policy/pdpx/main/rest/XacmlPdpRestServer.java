@@ -20,15 +20,14 @@
 
 package org.onap.policy.pdpx.main.rest;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.ServiceLoader;
 
 import org.onap.policy.common.capabilities.Startable;
 import org.onap.policy.common.endpoints.http.server.HttpServletServer;
-import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
+import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.onap.policy.pdpx.main.parameters.RestServerParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,16 +45,16 @@ public class XacmlPdpRestServer implements Startable {
     private List<HttpServletServer> servers = new ArrayList<>();
 
     private RestServerParameters restServerParameters;
-
-    private ServiceLoader<XacmlApplicationServiceProvider> applicationLoader;
+    private String applicationPath;
 
     /**
      * Constructor for instantiating XacmlPdpRestServer.
      *
      * @param restServerParameters the rest server parameters
      */
-    public XacmlPdpRestServer(final RestServerParameters restServerParameters) {
+    public XacmlPdpRestServer(final RestServerParameters restServerParameters, final String applicationPath) {
         this.restServerParameters = restServerParameters;
+        this.applicationPath = applicationPath;
     }
 
     /**
@@ -65,9 +64,13 @@ public class XacmlPdpRestServer implements Startable {
     public boolean start() {
         try {
             //
-            // Look for existing policy types loaded into the system
+            // Initialize the applications - SEND PROPERTIES
             //
-            locateExistingPolicyTypes();
+            XacmlPdpApplicationManager.initializeApplications(Paths.get(applicationPath));
+            //
+            // Update statistics manager on the policy types
+            //
+            XacmlPdpStatisticsManager.setTotalPolicyTypesCount(XacmlPdpApplicationManager.getPolicyTypeCount());
             //
             // Get the server properties
             //
@@ -112,33 +115,9 @@ public class XacmlPdpRestServer implements Startable {
                 String.valueOf(restServerParameters.isHttps()));
         props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".aaf",
                 String.valueOf(restServerParameters.isAaf()));
+        props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".serialization.provider",
+                GsonMessageBodyHandler.class.getName());
         return props;
-    }
-
-    private void locateExistingPolicyTypes() {
-        //
-        // Load service
-        //
-        applicationLoader = ServiceLoader.load(XacmlApplicationServiceProvider.class);
-        //
-        // Iterate through them
-        //
-        StringBuilder strDump = new StringBuilder("Loaded applications:" + System.lineSeparator());
-        Iterator<XacmlApplicationServiceProvider> iterator = applicationLoader.iterator();
-        long types = 0;
-        while (iterator.hasNext()) {
-            XacmlApplicationServiceProvider application = iterator.next();
-            strDump.append(application.applicationName());
-            strDump.append(" supports ");
-            strDump.append(application.supportedPolicyTypes());
-            types += application.supportedPolicyTypes().size();
-            strDump.append(System.lineSeparator());
-        }
-        LOGGER.debug("{}", strDump);
-        //
-        // Update statistics manager
-        //
-        XacmlPdpStatisticsManager.setTotalPolicyTypesCount(types);
     }
 
     /**

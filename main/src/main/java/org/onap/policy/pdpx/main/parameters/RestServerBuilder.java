@@ -28,7 +28,6 @@ public class RestServerBuilder {
     private boolean https;
     private boolean aaf;
 
-
     public String getHost() {
         return host;
     }

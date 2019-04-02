@@ -30,17 +30,22 @@ import org.onap.policy.common.utils.validation.ParameterValidationUtils;
  *
  */
 public class XacmlPdpParameterGroup implements ParameterGroup {
+    private static final String PARAM_REST_SERVER = "restServerParameters";
+    private static final String PARAM_APPLICATION_PATH = "applicationPath";
     private String name;
     private RestServerParameters restServerParameters;
+    private String applicationPath;
 
     /**
      * Create the xacml pdp parameter group.
      *
      * @param name the parameter group name
      */
-    public XacmlPdpParameterGroup(final String name, final RestServerParameters restServerParameters) {
+    public XacmlPdpParameterGroup(final String name, final RestServerParameters restServerParameters,
+            final String applicationPath) {
         this.name = name;
         this.restServerParameters = restServerParameters;
+        this.applicationPath = applicationPath;
     }
 
     /**
@@ -73,6 +78,15 @@ public class XacmlPdpParameterGroup implements ParameterGroup {
     }
 
     /**
+     * Returns the path where applications will store their data.
+     *
+     * @return String to the path
+     */
+    public String getApplicationPath() {
+        return applicationPath;
+    }
+
+    /**
      * Validate the parameter group.
      *
      * @return the result of the validation
@@ -84,10 +98,17 @@ public class XacmlPdpParameterGroup implements ParameterGroup {
             validationResult.setResult("name", ValidationStatus.INVALID, "must be a non-blank string");
         }
         if (restServerParameters == null) {
-            validationResult.setResult("restServerParameters", ValidationStatus.INVALID,
+            validationResult.setResult(PARAM_REST_SERVER, ValidationStatus.INVALID,
                     "must have restServerParameters to configure xacml pdp rest server");
         } else {
-            validationResult.setResult("restServerParameters", restServerParameters.validate());
+            validationResult.setResult(PARAM_REST_SERVER, restServerParameters.validate());
+        }
+        //
+        // Validate the application path directory
+        //
+        if (applicationPath == null || applicationPath.isEmpty()) {
+            validationResult.setResult(PARAM_APPLICATION_PATH, ValidationStatus.INVALID,
+                    "must have application path for applications to store policies and data.");
         }
         return validationResult;
     }
