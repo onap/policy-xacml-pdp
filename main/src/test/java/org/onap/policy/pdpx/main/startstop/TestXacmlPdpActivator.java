@@ -21,12 +21,19 @@
 package org.onap.policy.pdpx.main.startstop;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.net.UnknownHostException;
+import java.util.Properties;
 import org.junit.After;
 import org.junit.BeforeClass;
 
 import org.junit.Test;
+import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
@@ -42,28 +49,52 @@ public class TestXacmlPdpActivator {
 
     /**
      * Setup the tests.
-     * @throws PolicyXacmlPdpException when Xacml PDP Exceptional condition occurs
      */
     @BeforeClass
-    public static void setup() throws PolicyXacmlPdpException {
-        final String[] xacmlPdpConfigParameters = {"-c", "parameters/XacmlPdpConfigParameters.json"};
-
+    public static void setup() throws Exception {
+        final String[] xacmlPdpConfigParameters =
+            {"-c", "parameters/XacmlPdpConfigParameters.json", "-p", "parameters/topic.properties"};
         final XacmlPdpCommandLineArguments arguments = new XacmlPdpCommandLineArguments(xacmlPdpConfigParameters);
-
         final XacmlPdpParameterGroup parGroup = new XacmlPdpParameterHandler().getParameters(arguments);
 
-        activator = new XacmlPdpActivator(parGroup);
-        activator.initialize();
+        Properties props = new Properties();
+        String propFile = arguments.getFullPropertyFilePath();
+        try (FileInputStream stream = new FileInputStream(propFile)) {
+            props.load(stream);
+        }
+
+        activator = new XacmlPdpActivator(parGroup, props);
     }
 
     @Test
-    public void testXacmlPdpActivator() throws PolicyXacmlPdpException {
+    public void testXacmlPdpActivator() throws PolicyXacmlPdpException, TopicSinkClientException, UnknownHostException {
+        assertFalse(activator.isAlive());
+        activator.start();
+        assertTrue(activator.isAlive());
         assertTrue(activator.getParameterGroup().isValid());
         assertEquals(CommonTestData.PDPX_GROUP_NAME, activator.getParameterGroup().getName());
+
     }
 
+    @Test
+    public void testGetCurrent_testSetCurrent() {
+        assertSame(activator, XacmlPdpActivator.getCurrent());
+    }
+
+    @Test
+    public void testTerminate() throws Exception {
+        activator.stop();
+        assertFalse(activator.isAlive());
+    }
+
+    /**
+     * Teardown tests.
+     * @throws PolicyXacmlPdpException on termination errors
+     */
     @After
     public void teardown() throws PolicyXacmlPdpException {
-        activator.terminate();
+        if (activator != null && activator.isAlive()) {
+            activator.stop();
+        }
     }
 }

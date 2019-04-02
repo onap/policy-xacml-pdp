@@ -22,12 +22,15 @@ package org.onap.policy.pdpx.main.rest;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.models.pdp.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +41,7 @@ public class XacmlPdpApplicationManager {
     private static boolean needsInit = true;
     private static ServiceLoader<XacmlApplicationServiceProvider> applicationLoader;
     private static Map<String, XacmlApplicationServiceProvider> providerActionMap = new HashMap<>();
+    private static List<ToscaPolicyTypeIdentifier> toscaPolicyTypeIdents = new ArrayList<>();
 
     private XacmlPdpApplicationManager() {
         super();
@@ -91,6 +95,15 @@ public class XacmlPdpApplicationManager {
                 //
                 application.initialize(path);
             }
+
+            // Get string list of supportedPolicyTypes
+            List<String> supportedPolicyTypes = application.supportedPolicyTypes();
+
+            // Iterate through the supportedPolicyTypes to set the toscaPolicyTypeIdents
+            for (String name : supportedPolicyTypes) {
+                ToscaPolicyTypeIdentifier ident = new ToscaPolicyTypeIdentifier(name, "1.0.0");
+                toscaPolicyTypeIdents.add(ident);
+            }
         }
         //
         // we have initialized
@@ -100,6 +113,10 @@ public class XacmlPdpApplicationManager {
 
     public static XacmlApplicationServiceProvider findApplication(DecisionRequest request) {
         return providerActionMap.get(request.getAction());
+    }
+
+    public static List<ToscaPolicyTypeIdentifier> getToscaPolicyTypeIdents() {
+        return toscaPolicyTypeIdents;
     }
 
     /**
