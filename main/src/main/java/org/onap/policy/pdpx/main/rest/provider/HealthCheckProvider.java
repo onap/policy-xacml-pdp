@@ -43,9 +43,12 @@ public class HealthCheckProvider {
         final HealthCheckReport report = new HealthCheckReport();
         report.setName(NAME);
         report.setUrl(URL);
-        report.setHealthy(XacmlPdpActivator.isAlive());
-        report.setCode(XacmlPdpActivator.isAlive() ? 200 : 500);
-        report.setMessage(XacmlPdpActivator.isAlive() ? ALIVE : NOT_ALIVE);
+
+        boolean alive = XacmlPdpActivator.getCurrent().isAlive();
+
+        report.setHealthy(alive);
+        report.setCode(alive ? 200 : 500);
+        report.setMessage(alive ? ALIVE : NOT_ALIVE);
         return report;
     }
 }

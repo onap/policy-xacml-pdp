@@ -37,7 +37,7 @@ public class StatisticsProvider {
      */
     public StatisticsReport fetchCurrentStatistics() {
         final StatisticsReport report = new StatisticsReport();
-        report.setCode(XacmlPdpActivator.isAlive() ? 200 : 500);
+        report.setCode(XacmlPdpActivator.getCurrent().isAlive() ? 200 : 500);
         report.setTotalPolicyTypesCount(XacmlPdpStatisticsManager.getTotalPolicyTypesCount());
         report.setTotalPoliciesCount(XacmlPdpStatisticsManager.getTotalPoliciesCount());
         report.setPermitDecisionsCount(XacmlPdpStatisticsManager.getPermitDecisionsCount());

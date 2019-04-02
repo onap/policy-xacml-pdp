@@ -67,10 +67,12 @@ public class XacmlPdpRestServer implements Startable {
             // Initialize the applications - SEND PROPERTIES
             //
             XacmlPdpApplicationManager.initializeApplications(Paths.get(applicationPath));
+
             //
             // Update statistics manager on the policy types
             //
             XacmlPdpStatisticsManager.setTotalPolicyTypesCount(XacmlPdpApplicationManager.getPolicyTypeCount());
+
             //
             // Get the server properties
             //
