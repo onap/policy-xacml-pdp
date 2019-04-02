@@ -71,7 +71,8 @@ public class XacmlPdpActivator {
      */
     private void startXacmlPdpRestServer() throws PolicyXacmlPdpException {
         xacmlPdpParameterGroup.getRestServerParameters().setName(xacmlPdpParameterGroup.getName());
-        restServer = new XacmlPdpRestServer(xacmlPdpParameterGroup.getRestServerParameters());
+        restServer = new XacmlPdpRestServer(xacmlPdpParameterGroup.getRestServerParameters(),
+                xacmlPdpParameterGroup.getApplicationPath());
         if (!restServer.start()) {
             throw new PolicyXacmlPdpException("Failed to start xacml pdp rest server. Check log for more details...");
         }

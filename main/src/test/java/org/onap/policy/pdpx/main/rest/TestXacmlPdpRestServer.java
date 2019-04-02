@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
@@ -42,7 +43,9 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.After;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
@@ -69,15 +72,21 @@ public class TestXacmlPdpRestServer {
     private static String KEYSTORE = System.getProperty("user.dir") + "/src/test/resources/ssl/policy-keystore";
     private Main main;
     private XacmlPdpRestServer restServer;
+    private static File applicationPath;
+
+    @ClassRule
+    public static final TemporaryFolder applicationFolder = new TemporaryFolder();
 
     /**
      * setup.
+     *
+     * @throws IOException exception if cannot create temporary folder
      */
     @BeforeClass
-    public static void setUp() {
+    public static void setUp() throws IOException {
         System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StdErrLog");
         System.setProperty("org.eclipse.jetty.LEVEL", "OFF");
-
+        applicationPath = applicationFolder.newFolder();
     }
 
     /**
@@ -115,7 +124,7 @@ public class TestXacmlPdpRestServer {
     public void testHealthCheckFailure() throws InterruptedException, IOException {
         final RestServerParameters restServerParams = new CommonTestData().getRestServerParameters(false);
         restServerParams.setName(CommonTestData.PDPX_GROUP_NAME);
-        restServer = new XacmlPdpRestServer(restServerParams);
+        restServer = new XacmlPdpRestServer(restServerParams, applicationPath.getAbsolutePath());
         restServer.start();
         final Invocation.Builder invocationBuilder = sendHttpRequest(HEALTHCHECK_ENDPOINT);
         final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
@@ -149,7 +158,7 @@ public class TestXacmlPdpRestServer {
     public void testStatistics_500() throws IOException, InterruptedException {
         final RestServerParameters restServerParams = new CommonTestData().getRestServerParameters(false);
         restServerParams.setName(CommonTestData.PDPX_GROUP_NAME);
-        restServer = new XacmlPdpRestServer(restServerParams);
+        restServer = new XacmlPdpRestServer(restServerParams, applicationPath.getAbsolutePath());
         restServer.start();
         final Invocation.Builder invocationBuilder = sendHttpRequest(STATISTICS_ENDPOINT);
         final StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
