@@ -28,6 +28,7 @@ import java.util.ServiceLoader;
 
 import org.onap.policy.common.capabilities.Startable;
 import org.onap.policy.common.endpoints.http.server.HttpServletServer;
+import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdpx.main.parameters.RestServerParameters;
 import org.slf4j.Logger;
@@ -112,6 +113,8 @@ public class XacmlPdpRestServer implements Startable {
                 String.valueOf(restServerParameters.isHttps()));
         props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".aaf",
                 String.valueOf(restServerParameters.isAaf()));
+        props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".serialization.provider",
+                GsonMessageBodyHandler.class.getName());
         return props;
     }
 
