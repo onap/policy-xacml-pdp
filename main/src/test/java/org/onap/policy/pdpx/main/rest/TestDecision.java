@@ -29,7 +29,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -38,7 +37,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.AfterClass;
@@ -119,7 +117,8 @@ public class TestDecision {
     }
 
     private static Main startXacmlPdpService() {
-        final String[] XacmlPdpConfigParameters = {"-c", "parameters/XacmlPdpConfigParameters.json"};
+        final String[] XacmlPdpConfigParameters = {"-c", "parameters/XacmlPdpConfigParameters.json", "-p",
+            "parameters/topic.properties"};
         return new Main(XacmlPdpConfigParameters);
     }
 
