@@ -22,12 +22,13 @@ package org.onap.policy.pdpx.main.rest;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
-
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,7 @@ public class XacmlPdpApplicationManager {
     private static boolean needsInit = true;
     private static ServiceLoader<XacmlApplicationServiceProvider> applicationLoader;
     private static Map<String, XacmlApplicationServiceProvider> providerActionMap = new HashMap<>();
+    private static List<ToscaPolicyTypeIdentifier> toscaPolicyTypeIdents = new ArrayList<>();
 
     private XacmlPdpApplicationManager() {
         super();
@@ -58,19 +60,17 @@ public class XacmlPdpApplicationManager {
         // Load service
         //
         applicationLoader = ServiceLoader.load(XacmlApplicationServiceProvider.class);
+
         //
-        // Iterate through them
+        // Iterate through them the applications for actions and supported policy types
         //
-        Iterator<XacmlApplicationServiceProvider> iterator = applicationLoader.iterator();
-        while (iterator.hasNext()) {
-            //
-            // Get the application
-            //
-            XacmlApplicationServiceProvider application = iterator.next();
+        for (XacmlApplicationServiceProvider application : applicationLoader) {
+
             LOGGER.info("Application {} supports {}", application.applicationName(),
                     application.supportedPolicyTypes());
+
             //
-            // Iterate each application
+            // Iterate through the actions and save in the providerActionMap
             //
             int pathCount = 1;
             for (String action : application.actionDecisionsSupported()) {
@@ -83,13 +83,21 @@ public class XacmlPdpApplicationManager {
                 // May need to scan this name to remove unsafe characters etc.
                 // But for debugging purposes, its good to use the application name
                 //
-                //
                 Path path = Paths.get(applicationPath.toAbsolutePath().toString(),
                         application.applicationName(), Integer.toString(pathCount++));
                 //
                 // Have the application initialize
                 //
                 application.initialize(path);
+            }
+
+            // Get string list of supportedPolicyTypes
+            List<String> supportedPolicyTypes = application.supportedPolicyTypes();
+
+            // Iterate through the supportedPolicyTypes to set the toscaPolicyTypeIdents
+            for (String name : supportedPolicyTypes) {
+                ToscaPolicyTypeIdentifier ident = new ToscaPolicyTypeIdentifier(name, "1.0.0");
+                toscaPolicyTypeIdents.add(ident);
             }
         }
         //
@@ -102,6 +110,10 @@ public class XacmlPdpApplicationManager {
         return providerActionMap.get(request.getAction());
     }
 
+    public static List<ToscaPolicyTypeIdentifier> getToscaPolicyTypeIdents() {
+        return toscaPolicyTypeIdents;
+    }
+
     /**
      * Returns the current count of policy types supported. This could be misleading a bit
      * as some applications can support wildcard of policy types. Eg. onap.Monitoring.* as
@@ -110,10 +122,8 @@ public class XacmlPdpApplicationManager {
      * @return Total count added from all applications
      */
     public static long getPolicyTypeCount() {
-        Iterator<XacmlApplicationServiceProvider> iterator = applicationLoader.iterator();
         long types = 0;
-        while (iterator.hasNext()) {
-            XacmlApplicationServiceProvider application = iterator.next();
+        for (XacmlApplicationServiceProvider application : applicationLoader) {
             types += application.supportedPolicyTypes().size();
         }
         return types;
