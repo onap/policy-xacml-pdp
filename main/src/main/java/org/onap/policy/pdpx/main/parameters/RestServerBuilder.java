@@ -27,7 +27,7 @@ public class RestServerBuilder {
     private String password;
     private boolean https;
     private boolean aaf;
-
+    private String applicationPath;
 
     public String getHost() {
         return host;
@@ -51,6 +51,10 @@ public class RestServerBuilder {
 
     public boolean isAaf() {
         return aaf;
+    }
+
+    public String getApplicationPath() {
+        return applicationPath;
     }
 
     public RestServerBuilder setHost(String host) {
@@ -80,6 +84,11 @@ public class RestServerBuilder {
 
     public RestServerBuilder setAaf(boolean aaf) {
         this.aaf = aaf;
+        return this;
+    }
+
+    public RestServerBuilder setApplicationPath(String applicationPath) {
+        this.applicationPath = applicationPath;
         return this;
     }
 }

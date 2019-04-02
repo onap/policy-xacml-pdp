@@ -20,6 +20,9 @@
 
 package org.onap.policy.pdpx.main.parameters;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.onap.policy.common.parameters.GroupValidationResult;
 import org.onap.policy.common.parameters.ParameterGroup;
 import org.onap.policy.common.parameters.ValidationStatus;
@@ -37,6 +40,7 @@ public class RestServerParameters implements ParameterGroup {
     private String password;
     private boolean https;
     private boolean aaf;
+    private String applicationPath;
 
     /**
      * Constructor for instantiating RestServerParameters.
@@ -51,6 +55,7 @@ public class RestServerParameters implements ParameterGroup {
         this.password = builder.getPassword();
         this.https = builder.isHttps();
         this.aaf = builder.isAaf();
+        this.applicationPath = builder.getApplicationPath();
     }
 
     /**
@@ -125,6 +130,15 @@ public class RestServerParameters implements ParameterGroup {
     @Override
     public void setName(final String name) {
         this.name = name;
+    }
+
+    /**
+     * The local path where applications should initialize.
+     *
+     * @return Path
+     */
+    public Path getApplicationPath() {
+        return Paths.get(applicationPath);
     }
 
     /**
