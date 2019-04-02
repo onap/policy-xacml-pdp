@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c40e405f_c7f2932e",
+        "filename": "main/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-02T17:53:57Z",
+      "side": 1,
+      "message": "remove this dependency - pdp-common is going away",
+      "revId": "9fbc6a2431b7add229add4e629edf35cfc5c54b6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03a1e3b2_564f1eb1",
+        "filename": "main/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-02T17:53:57Z",
+      "side": 1,
+      "message": "changed to policy-models-pdp",
+      "revId": "9fbc6a2431b7add229add4e629edf35cfc5c54b6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff9bf34b_db43356e",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpHeartbeatPublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-02T17:53:57Z",
+      "side": 1,
+      "message": "send() can never throw an exception; if there\u0027s an error, it will log a message and return false.  Could choose to catch RuntimeException here, if so desired",
+      "revId": "9fbc6a2431b7add229add4e629edf35cfc5c54b6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8316927d_8f0ed099",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpMessage.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-02T17:53:57Z",
+      "side": 1,
+      "message": "if this is an expensive operation, then probably don\u0027t want to invoke it for each heartbeat",
+      "revId": "9fbc6a2431b7add229add4e629edf35cfc5c54b6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ecb1366_17e1ae64",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpPapRegistration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-02T17:53:57Z",
+      "side": 1,
+      "message": "similar comments as before - send catches exceptions and returns true/false",
+      "revId": "9fbc6a2431b7add229add4e629edf35cfc5c54b6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a05d3773_3a2a6398",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/listeners/XacmlPdpStateChangeListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-02T17:53:57Z",
+      "side": 1,
+      "message": "should also terminate the PDP?",
+      "revId": "9fbc6a2431b7add229add4e629edf35cfc5c54b6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "360065b8_31c39b79",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/listeners/XacmlPdpStateChangeListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-02T17:53:57Z",
+      "side": 1,
+      "message": "else: update the heartbeat\u0027s internal state?",
+      "revId": "9fbc6a2431b7add229add4e629edf35cfc5c54b6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "42c54988_d05a0611",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-02T17:53:57Z",
+      "side": 1,
+      "message": "is this method needed?  doesn\u0027t stop() do this?",
+      "revId": "9fbc6a2431b7add229add4e629edf35cfc5c54b6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
