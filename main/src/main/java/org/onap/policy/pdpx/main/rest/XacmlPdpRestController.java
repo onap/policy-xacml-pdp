@@ -33,7 +33,9 @@ import io.swagger.annotations.Info;
 import io.swagger.annotations.ResponseHeader;
 import io.swagger.annotations.SecurityDefinition;
 import io.swagger.annotations.SwaggerDefinition;
+
 import java.util.UUID;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -43,8 +45,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
-import org.onap.policy.pdpx.main.rest.model.Decision;
+import org.onap.policy.models.decisions.concepts.DecisionException;
+import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.errors.concepts.ErrorResponse;
 import org.onap.policy.pdpx.main.rest.model.StatisticsReport;
 import org.onap.policy.pdpx.main.rest.provider.DecisionProvider;
 import org.onap.policy.pdpx.main.rest.provider.HealthCheckProvider;
@@ -129,10 +135,17 @@ public class XacmlPdpRestController {
                 .entity(new StatisticsProvider().fetchCurrentStatistics()).build();
     }
 
+    /**
+     * Our decision entry point.
+     *
+     * @param body Should be a DecisionRequest object
+     * @param requestId Unique request id
+     * @return DecisionResponse or ErrorResponse object
+     */
     @POST
     @Path("/decision")
     @ApiOperation(value = "Fetch the decision using specified decision parameters",
-            notes = "Returns the policy decision from Policy Xacml PDP", response = Decision.class,
+            notes = "Returns the policy decision from Policy Xacml PDP", response = DecisionResponse.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                             description = "Used to request or communicate a MINOR version back from the client"
@@ -152,14 +165,20 @@ public class XacmlPdpRestController {
             extensions = {@Extension(name = "interface info",
                     properties = {@ExtensionProperty(name = "pdpx-version", value = "1.0.0"),
                             @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
-    @ApiResponses(value = {@ApiResponse(code = 400, message = "Bad Request"),
+    @ApiResponses(value = {@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
-    public Response decision(Decision body,
+    public Response decision(DecisionRequest body,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                .entity(new DecisionProvider().fetchDecision()).build();
+        try {
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(new DecisionProvider().fetchDecision(body)).build();
+        } catch (DecisionException e) {
+            return addLoggingHeaders(
+                    addVersionControlHeaders(Response.status((e.getErrorResponse().getResponseCode()))), requestId)
+                    .entity(e.getErrorResponse()).build();
+        }
     }
 
     private ResponseBuilder addVersionControlHeaders(ResponseBuilder rb) {

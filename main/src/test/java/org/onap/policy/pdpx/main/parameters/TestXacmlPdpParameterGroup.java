@@ -25,7 +25,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.onap.policy.common.parameters.GroupValidationResult;
 
 /**
@@ -34,12 +40,23 @@ import org.onap.policy.common.parameters.GroupValidationResult;
  */
 public class TestXacmlPdpParameterGroup {
     CommonTestData commonTestData = new CommonTestData();
+    private static File applicationPath;
+
+    @ClassRule
+    public static final TemporaryFolder applicationFolder = new TemporaryFolder();
+
+    @Before
+    public static void setupPath() throws IOException {
+        applicationPath = applicationFolder.newFolder();
+    }
 
     @Test
-    public void testXacmlPdpParameterGroup() {
+    public void testXacmlPdpParameterGroup() throws IOException {
         final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false);
         final XacmlPdpParameterGroup pdpxParameters =
-                new XacmlPdpParameterGroup(CommonTestData.PDPX_GROUP_NAME, restServerParameters);
+                new XacmlPdpParameterGroup(CommonTestData.PDPX_GROUP_NAME,
+                        restServerParameters,
+                        applicationPath.getAbsolutePath());
         final GroupValidationResult validationResult = pdpxParameters.validate();
         assertTrue(validationResult.isValid());
         assertEquals(restServerParameters.getHost(), pdpxParameters.getRestServerParameters().getHost());
@@ -54,7 +71,8 @@ public class TestXacmlPdpParameterGroup {
     @Test
     public void testXacmlPdpParameterGroup_NullName() {
         final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false);
-        final XacmlPdpParameterGroup pdpxParameters = new XacmlPdpParameterGroup(null, restServerParameters);
+        final XacmlPdpParameterGroup pdpxParameters = new XacmlPdpParameterGroup(null, restServerParameters,
+                applicationPath.getAbsolutePath());
         final GroupValidationResult validationResult = pdpxParameters.validate();
         assertFalse(validationResult.isValid());
         assertEquals(null, pdpxParameters.getName());
@@ -66,7 +84,8 @@ public class TestXacmlPdpParameterGroup {
     public void testXacmlPdpParameterGroup_EmptyName() {
         final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false);
 
-        final XacmlPdpParameterGroup pdpxParameters = new XacmlPdpParameterGroup("", restServerParameters);
+        final XacmlPdpParameterGroup pdpxParameters = new XacmlPdpParameterGroup("", restServerParameters,
+                applicationPath.getAbsolutePath());
         final GroupValidationResult validationResult = pdpxParameters.validate();
         assertFalse(validationResult.isValid());
         assertEquals("", pdpxParameters.getName());
@@ -79,7 +98,8 @@ public class TestXacmlPdpParameterGroup {
         final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(true);
 
         final XacmlPdpParameterGroup pdpxParameters =
-                new XacmlPdpParameterGroup(CommonTestData.PDPX_GROUP_NAME, restServerParameters);
+                new XacmlPdpParameterGroup(CommonTestData.PDPX_GROUP_NAME, restServerParameters,
+                        applicationPath.getAbsolutePath());
         final GroupValidationResult validationResult = pdpxParameters.validate();
         assertFalse(validationResult.isValid());
         assertTrue(validationResult.getResult()
