@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e57800a3_dadba599",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestDecision.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-03T16:18:02Z",
+      "side": 1,
+      "message": "This is what I\u0027m trying to get to work right now.",
+      "range": {
+        "startLine": 122,
+        "startChar": 8,
+        "endLine": 135,
+        "endChar": 7
+      },
+      "revId": "c88d99135f3d9afec762cba918d1e428242ddd47",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
