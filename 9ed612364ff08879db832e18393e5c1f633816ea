@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "3a135633_e151c710",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/listeners/XacmlPdpStateChangeListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-04-05T12:34:44Z",
+      "side": 1,
+      "message": "I think I may have to rethink this.. currently I am only instantiating the object when the publisher is not alive.. looks like I need to remove that condition on line 68.  Do you agree Jim?",
+      "parentUuid": "50eeeca1_fb24b075",
+      "revId": "9ed612364ff08879db832e18393e5c1f633816ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cdd025cc_0a3172b0",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
         "patchSetId": 2
