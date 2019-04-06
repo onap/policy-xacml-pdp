@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b372c23_d2c839c2",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-06T01:06:12Z",
+      "side": 1,
+      "message": "We can change this to use ToscaPolicyTypeIdentifier instead of List\u003cString\u003e",
+      "range": {
+        "startLine": 94,
+        "startChar": 12,
+        "endLine": 101,
+        "endChar": 13
+      },
+      "revId": "5dd6d165a0b3ee88563e5bcabd4c2a7fc42a676b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
