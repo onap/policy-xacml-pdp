@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "7afaea5b_18d3aaed",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-04-08T18:38:18Z",
+      "side": 1,
+      "message": "very nice clean up job.. I am not sure why I didn\u0027t suggest this but I did it the hard way",
+      "range": {
+        "startLine": 97,
+        "startChar": 0,
+        "endLine": 97,
+        "endChar": 77
+      },
+      "revId": "a064c2e57cec3a467d4f3c1b6a68fccaaeeb8da8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c7a02be_57089020",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestDecision.java",
         "patchSetId": 1
