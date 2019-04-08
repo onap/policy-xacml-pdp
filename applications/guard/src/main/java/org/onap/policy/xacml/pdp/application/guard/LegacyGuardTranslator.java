@@ -39,6 +39,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
@@ -62,6 +63,8 @@ import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
+import org.onap.policy.pdp.xacml.application.common.operationshistory.CountRecentOperationsPip;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,7 +122,15 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
                 //
                 // Convert this policy
                 //
-                PolicyType policy = this.convertPolicy(entrySet);
+                String policyType = this.getPolicyType(entrySet);
+                LOGGER.debug("policyType: {}", policyType);
+                PolicyType policy;
+                if (policyType.contains("coordination")) {
+                    LOGGER.info("Handle with CoordinationGuardTranslator.convertPolicy");
+                    policy = CoordinationGuardTranslator.convertPolicy(entrySet);
+                } else {
+                    policy = this.convertPolicy(entrySet);
+                }
                 if (policy == null) {
                     //
                     // Somehow there wasn't enough information to create
@@ -194,6 +205,12 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         }
 
         return decisionResponse;
+    }
+
+    @SuppressWarnings("unchecked")
+    private String getPolicyType(Entry<String, Object> entry) throws ToscaPolicyConversionException {
+        Map<String, Object> policyDefinition = (Map<String, Object>) entry.getValue();
+        return policyDefinition.get("type").toString();
     }
 
     @SuppressWarnings("unchecked")
@@ -610,7 +627,9 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         //
         // Right now I am faking the count value by re-using the request-id field
         //
-        String issuer = ToscaDictionary.GUARD_ISSUER + ":tw:" + timeWindow + ":" + timeUnits;
+        String issuer = ToscaDictionary.GUARD_ISSUER_PREFIX
+            + CountRecentOperationsPip.ISSUER_NAME
+            + ":tw:" + timeWindow + ":" + timeUnits;
         designator.setIssuer(issuer);
 
         AttributeValueType valueLimit = new AttributeValueType();
