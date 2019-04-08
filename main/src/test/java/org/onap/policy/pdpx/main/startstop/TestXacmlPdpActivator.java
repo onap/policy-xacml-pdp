@@ -26,12 +26,11 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.net.UnknownHostException;
 import java.util.Properties;
+
 import org.junit.After;
 import org.junit.BeforeClass;
-
 import org.junit.Test;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
