@@ -100,7 +100,8 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
     }
 
     @Override
-    protected ToscaPolicyTranslator getTranslator() {
+    protected ToscaPolicyTranslator getTranslator(String type) {
         return translator;
     }
+
 }

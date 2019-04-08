@@ -20,7 +20,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.pdp.xacml.application.common;
+package org.onap.policy.pdp.xacml.application.common.operationshistory;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -36,7 +36,7 @@ import lombok.Data;
 @Entity
 @Table(name = "operationshistory")
 @Data
-public class OnapOperationsHistoryDbao implements Serializable {
+public class Dbao implements Serializable {
 
     private static final long serialVersionUID = -551420180714993577L;
 
@@ -46,7 +46,7 @@ public class OnapOperationsHistoryDbao implements Serializable {
     private Long id;
 
     @Column(name = "closedLoopName", length = 255)
-    private String clName;
+    private String closedLoopName;
 
     @Column(name = "requestId", length = 50)
     private String requestId;
@@ -74,9 +74,5 @@ public class OnapOperationsHistoryDbao implements Serializable {
 
     @Column(name = "endtime")
     private Date endtime;
-
-    public OnapOperationsHistoryDbao() {
-        super();
-    }
 
 }
