@@ -57,6 +57,7 @@ import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
+import org.onap.policy.pdp.xacml.application.common.operationshistory.CountRecentOperationsPip;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -166,7 +167,6 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
 
         return decisionResponse;
     }
-
 
     /**
      * From the TOSCA metadata section, pull in values that are needed into the XACML policy.
@@ -527,7 +527,9 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         //
         // Right now I am faking the count value by re-using the request-id field
         //
-        String issuer = ToscaDictionary.GUARD_ISSUER + ":tw:" + timeWindow + ":" + timeUnits;
+        String issuer = ToscaDictionary.GUARD_ISSUER_PREFIX
+            + CountRecentOperationsPip.ISSUER_NAME
+            + ":tw:" + timeWindow + ":" + timeUnits;
         designator.setIssuer(issuer);
 
         AttributeValueType valueLimit = new AttributeValueType();

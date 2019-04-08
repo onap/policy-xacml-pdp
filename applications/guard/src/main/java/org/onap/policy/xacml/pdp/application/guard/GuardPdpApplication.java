@@ -49,9 +49,14 @@ public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
      *
      */
     public GuardPdpApplication() {
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.FrequencyLimiter",
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+                "onap.policies.controlloop.guard.FrequencyLimiter",
                 STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.MinMax",
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+                "onap.policies.controlloop.guard.MinMax",
+                STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+                "onap.policies.controlloop.guard.coordination.FirstBlocksSecond",
                 STRING_VERSION100));
     }
 

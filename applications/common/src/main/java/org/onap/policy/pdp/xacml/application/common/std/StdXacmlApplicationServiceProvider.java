@@ -251,7 +251,6 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             PDPEngine engine = factory.newEngine(properties);
             if (engine != null) {
                 this.pdpEngine = engine;
-//                this.pdpProperties = new Properties(properties);
             }
         } catch (FactoryException e) {
             LOGGER.error("Failed to create XACML PDP Engine {}", e);
