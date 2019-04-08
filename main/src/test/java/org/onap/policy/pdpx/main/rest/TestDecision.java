@@ -113,7 +113,7 @@ public class TestDecision {
 
         DecisionResponse response = getDecision(request);
         LOGGER.info("Response {}", response);
-        //assertThat(response.getErrorMessage()).isEqualToIgnoringCase("No application for action foo");
+        assertThat(response.getStatus()).isEqualTo("Permit");
     }
 
     private static Main startXacmlPdpService() {

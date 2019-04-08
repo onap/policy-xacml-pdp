@@ -25,12 +25,11 @@ package org.onap.policy.xacml.pdp.application.guard;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.util.XACMLPolicyWriter;
-import com.google.common.collect.Lists;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -39,6 +38,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServiceProvider;
@@ -55,15 +55,17 @@ public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GuardPdpApplication.class);
     private static final String STRING_VERSION100 = "1.0.0";
-    private Map<String, String> supportedPolicyTypes = new HashMap<>();
+    private List<ToscaPolicyTypeIdentifier> supportedPolicyTypes = new ArrayList<>();
     private LegacyGuardTranslator translator = new LegacyGuardTranslator();
 
     /** Constructor.
      *
      */
     public GuardPdpApplication() {
-        this.supportedPolicyTypes.put("onap.policies.controlloop.guard.FrequencyLimiter", STRING_VERSION100);
-        this.supportedPolicyTypes.put("onap.policies.controlloop.guard.MinMax", STRING_VERSION100);
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.FrequencyLimiter",
+                STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.MinMax",
+                STRING_VERSION100));
     }
 
     @Override
@@ -77,23 +79,22 @@ public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
     }
 
     @Override
-    public List<String> supportedPolicyTypes() {
-        return Lists.newArrayList(supportedPolicyTypes.keySet());
+    public List<ToscaPolicyTypeIdentifier> supportedPolicyTypes() {
+        return supportedPolicyTypes;
     }
 
     @Override
-    public boolean canSupportPolicyType(String policyType, String policyTypeVersion) {
+    public boolean canSupportPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
         //
         // For the time being, restrict this if the version isn't known.
         // Could be too difficult to support changing of versions dynamically.
         //
-        if (! this.supportedPolicyTypes.containsKey(policyType)) {
-            return false;
+        for (ToscaPolicyTypeIdentifier supported : this.supportedPolicyTypes) {
+            if (policyTypeId.equals(supported)) {
+                return true;
+            }
         }
-        //
-        // Must match version exactly
-        //
-        return this.supportedPolicyTypes.get(policyType).equals(policyTypeVersion);
+        return false;
     }
 
     @Override

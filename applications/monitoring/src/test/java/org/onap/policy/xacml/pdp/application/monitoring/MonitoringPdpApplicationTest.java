@@ -46,6 +46,7 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
@@ -131,11 +132,11 @@ public class MonitoringPdpApplicationTest {
         // Ensure it has the supported policy types and
         // can support the correct policy types.
         //
-        assertThat(service.canSupportPolicyType("onap.Monitoring", "1.0.0")).isTrue();
-        assertThat(service.canSupportPolicyType("onap.Monitoring", "1.5.0")).isTrue();
-        assertThat(service.canSupportPolicyType("onap.policies.monitoring.foobar", "1.0.1")).isTrue();
-        assertThat(service.canSupportPolicyType("onap.foobar", "1.0.0")).isFalse();
-        assertThat(service.supportedPolicyTypes()).contains("onap.Monitoring");
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier("onap.Monitoring", "1.0.0"))).isTrue();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier("onap.Monitoring", "1.5.0"))).isTrue();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+                "onap.policies.monitoring.foobar", "1.0.1"))).isTrue();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier("onap.foobar", "1.0.0"))).isFalse();
         //
         // Ensure it supports decisions
         //
@@ -185,8 +186,9 @@ public class MonitoringPdpApplicationTest {
                     //
                     assertThat(policyDefinition.containsKey("type")).isTrue();
                     assertThat(service.canSupportPolicyType(
+                            new ToscaPolicyTypeIdentifier(
                             policyDefinition.get("type").toString(),
-                            policyDefinition.get("version").toString()))
+                            policyDefinition.get("version").toString())))
                         .isTrue();
                 }
             }

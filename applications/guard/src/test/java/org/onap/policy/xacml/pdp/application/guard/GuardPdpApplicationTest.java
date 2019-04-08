@@ -54,6 +54,7 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.OnapOperationsHistoryDbao;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
@@ -214,13 +215,15 @@ public class GuardPdpApplicationTest {
         //
         assertThat(service.supportedPolicyTypes()).isNotEmpty();
         assertThat(service.supportedPolicyTypes().size()).isEqualTo(2);
-        assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.FrequencyLimiter", "1.0.0"))
-            .isTrue();
-        assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.FrequencyLimiter", "1.0.1"))
-            .isFalse();
-        assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.MinMax", "1.0.0")).isTrue();
-        assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.MinMax", "1.0.1")).isFalse();
-        assertThat(service.canSupportPolicyType("onap.foo", "1.0.1")).isFalse();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+                "onap.policies.controlloop.guard.FrequencyLimiter", "1.0.0"))).isTrue();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+                "onap.policies.controlloop.guard.FrequencyLimiter", "1.0.1"))).isFalse();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+                "onap.policies.controlloop.guard.MinMax", "1.0.0"))).isTrue();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+                "onap.policies.controlloop.guard.MinMax", "1.0.1"))).isFalse();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier("onap.foo", "1.0.1"))).isFalse();
     }
 
     @Test
