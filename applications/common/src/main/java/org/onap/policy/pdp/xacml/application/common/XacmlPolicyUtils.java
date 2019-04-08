@@ -329,10 +329,6 @@ public class XacmlPolicyUtils {
             properties.load(is);
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Loaded xacml properties {} {}", System.lineSeparator(), properties);
-                //
-                // It would be nice to sort this first
-                //
-                properties.list(System.out);
                 for (Entry<Object, Object> entrySet : properties.entrySet()) {
                     LOGGER.debug("{} -> {}", entrySet.getKey(), entrySet.getValue());
                 }
@@ -349,7 +345,6 @@ public class XacmlPolicyUtils {
     public static void storeXacmlProperties(Properties properties, Path propertyPath) throws IOException {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Storing xacml properties {} {} {}", properties, System.lineSeparator(), propertyPath);
-            properties.list(System.out);
         }
         try (OutputStream os = Files.newOutputStream(propertyPath)) {
             String strComments = "#";
@@ -367,6 +362,7 @@ public class XacmlPolicyUtils {
         return Paths.get(rootPath.toAbsolutePath().toString(), "xacml.properties");
     }
 
+    @FunctionalInterface
     public interface FileCreator {
         public File createAFile(String filename) throws IOException;
 

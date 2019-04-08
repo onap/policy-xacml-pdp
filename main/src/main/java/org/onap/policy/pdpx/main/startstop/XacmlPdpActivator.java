@@ -22,6 +22,7 @@ package org.onap.policy.pdpx.main.startstop;
 
 import java.util.Arrays;
 import java.util.Properties;
+
 import org.onap.policy.common.endpoints.event.comm.TopicEndpoint;
 import org.onap.policy.common.endpoints.event.comm.TopicSource;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
@@ -33,7 +34,6 @@ import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.models.pdp.enums.PdpMessageType;
 import org.onap.policy.models.pdp.enums.PdpState;
-import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpRuntimeException;
 import org.onap.policy.pdpx.main.comm.XacmlPdpMessage;
 import org.onap.policy.pdpx.main.comm.XacmlPdpPapRegistration;

@@ -23,12 +23,23 @@ package org.onap.policy.pdpx.main.rest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonWriter;
+
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -37,11 +48,14 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.endpoints.http.client.HttpClient;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
@@ -50,6 +64,9 @@ import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.errors.concepts.ErrorResponse;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
+import org.onap.policy.pdpx.main.parameters.RestServerBuilder;
+import org.onap.policy.pdpx.main.parameters.RestServerParameters;
+import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
 import org.onap.policy.pdpx.main.startstop.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,14 +77,40 @@ public class TestDecision {
 
     private static Main main;
 
+    @ClassRule
+    public static final TemporaryFolder appsFolder = new TemporaryFolder();
+
     /**
      * BeforeClass setup environment.
+     * @throws IOException Cannot create temp apps folder
      */
     @BeforeClass
-    public static void beforeClass() {
+    public static void beforeClass() throws IOException {
         System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StdErrLog");
         System.setProperty("org.eclipse.jetty.LEVEL", "OFF");
-        main = startXacmlPdpService();
+        //
+        // Copy test directory over of the application directories
+        //
+        Path src = Paths.get("../packages/policy-xacmlpdp-tarball/src/main/resources/etc/apps");
+        File apps = appsFolder.newFolder("apps");
+        Files.walk(src).forEach(source -> {
+            copy(source, apps.toPath().resolve(src.relativize(source)));
+        });
+        //
+        // Get the parameters file correct.
+        //
+        RestServerParameters rest = new RestServerParameters(new RestServerBuilder()
+                .setHost("0.0.0.0").setPort(6969).setUserName("healthcheck").setPassword("zb!XztG34"));
+        XacmlPdpParameterGroup params = new XacmlPdpParameterGroup("XacmlPdpGroup", rest, apps.getAbsolutePath());
+        final Gson gson = new GsonBuilder().create();
+        File fileParams = appsFolder.newFile("params.json");
+        String jsonParams = gson.toJson(params);
+        LOGGER.info("Creating new params: {}", jsonParams);
+        Files.write(fileParams.toPath(), jsonParams.getBytes());
+        //
+        // Start the service
+        //
+        main = startXacmlPdpService(fileParams);
     }
 
     @AfterClass
@@ -113,11 +156,11 @@ public class TestDecision {
 
         DecisionResponse response = getDecision(request);
         LOGGER.info("Response {}", response);
-        //assertThat(response.getErrorMessage()).isEqualToIgnoringCase("No application for action foo");
+        assertThat(response.getStatus()).isEqualTo("Permit");
     }
 
-    private static Main startXacmlPdpService() {
-        final String[] XacmlPdpConfigParameters = {"-c", "parameters/XacmlPdpConfigParameters.json", "-p",
+    private static Main startXacmlPdpService(File params) {
+        final String[] XacmlPdpConfigParameters = {"-c", params.getAbsolutePath(), "-p",
             "parameters/topic.properties"};
         return new Main(XacmlPdpConfigParameters);
     }
@@ -167,5 +210,13 @@ public class TestDecision {
                 .userName("healthcheck").password("zb!XztG34").managed(true).build());
     }
 
+    private static void copy(Path source, Path dest) {
+        try {
+            LOGGER.info("Copying {} to {}", source, dest);
+            Files.copy(source, dest, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            LOGGER.error("Failed to copy {} to {}", source, dest);
+        }
+    }
 
 }
