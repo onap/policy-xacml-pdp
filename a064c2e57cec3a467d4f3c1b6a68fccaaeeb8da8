@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c7a02be_57089020",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestDecision.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-08T12:50:18Z",
+      "side": 1,
+      "message": "This is failing for the moment - until I finish the initialization of applications. Mike - do you have any other recommendations on how to setup the tarball/packaging etc.?",
+      "range": {
+        "startLine": 116,
+        "startChar": 2,
+        "endLine": 116,
+        "endChar": 61
+      },
+      "revId": "a064c2e57cec3a467d4f3c1b6a68fccaaeeb8da8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
