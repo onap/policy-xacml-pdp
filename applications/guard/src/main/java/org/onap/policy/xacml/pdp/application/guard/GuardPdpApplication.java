@@ -24,10 +24,14 @@ package org.onap.policy.xacml.pdp.application.guard;
 
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
+import com.att.research.xacml.util.XACMLPolicyScanner;
 import com.att.research.xacml.util.XACMLPolicyWriter;
 import com.google.common.collect.Lists;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -62,8 +66,12 @@ public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
      *
      */
     public GuardPdpApplication() {
-        this.supportedPolicyTypes.put("onap.policies.controlloop.guard.FrequencyLimiter", STRING_VERSION100);
-        this.supportedPolicyTypes.put("onap.policies.controlloop.guard.MinMax", STRING_VERSION100);
+        this.supportedPolicyTypes.put("onap.policies.controlloop.guard.FrequencyLimiter",
+                                      STRING_VERSION100);
+        this.supportedPolicyTypes.put("onap.policies.controlloop.guard.MinMax",
+                                      STRING_VERSION100);
+        this.supportedPolicyTypes.put("onap.policies.controlloop.guard.coordination.FirstBlocksSecond",
+                                      STRING_VERSION100);
     }
 
     @Override
@@ -123,6 +131,19 @@ public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
                 // Maybe check for an error
                 //
                 XACMLPolicyWriter.writePolicyFile(refPath, newPolicy);
+                //
+                // Test
+                //
+                PolicyType scannedPolicy = null;
+                try (InputStream is = Files.newInputStream(refPath)) {
+                    scannedPolicy = (PolicyType) XACMLPolicyScanner.readPolicy(is);
+                } catch (IOException e) {
+                    LOGGER.error("Failed to read policy", e);
+                    continue;
+                }
+                if (scannedPolicy == null) {
+                    continue;
+                }
                 //
                 // Add root policy to properties object
                 //

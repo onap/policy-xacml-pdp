@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.pdp.xacml.application.common;
+package org.onap.policy.pdp.xacml.application.common.operationshistory;
 
 import com.att.research.xacml.api.Attribute;
 import com.att.research.xacml.api.AttributeValue;
@@ -46,44 +46,51 @@ import java.util.Properties;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 
+import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
+import org.onap.policy.pdp.xacml.application.common.std.StdOnapPip;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OnapOperationsHistoryPipEngine extends StdConfigurableEngine {
-    private static Logger logger = LoggerFactory.getLogger(OnapOperationsHistoryPipEngine.class);
 
-    private static final PIPRequest PIP_REQUEST_ACTOR   = new StdPIPRequest(
-            XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
-            ToscaDictionary.ID_RESOURCE_GUARD_ACTOR,
-            XACML3.ID_DATATYPE_STRING);
+public class CountRecentOperationsPip extends StdOnapPip {
+    public static final String ISSUER_NAME = "count-recent-operations";
+    private static Logger logger = LoggerFactory.getLogger(CountRecentOperationsPip.class);
 
-    private static final PIPRequest PIP_REQUEST_RECIPE  = new StdPIPRequest(
-            XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
-            ToscaDictionary.ID_RESOURCE_GUARD_RECIPE,
-            XACML3.ID_DATATYPE_STRING);
-
-    private static final PIPRequest PIP_REQUEST_TARGET  = new StdPIPRequest(
-            XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
-            ToscaDictionary.ID_RESOURCE_GUARD_TARGETID,
-            XACML3.ID_DATATYPE_STRING);
-
-    private Properties properties;
-
-    public OnapOperationsHistoryPipEngine() {
+    public CountRecentOperationsPip() {
         super();
     }
 
     @Override
-    public Collection<PIPRequest> attributesRequired() {
-        return Arrays.asList(PIP_REQUEST_ACTOR, PIP_REQUEST_RECIPE, PIP_REQUEST_TARGET);
+    public void configure(String id, Properties properties) throws PIPException {
+        super.configure(id, properties);
+        //
+        // Create our entity manager
+        //
+        em = null;
+        try {
+            //
+            // In case there are any overloaded properties for the JPA
+            //
+            Properties emProperties = new Properties(properties);
+            //
+            // Create the entity manager factory
+            //
+            em = Persistence.createEntityManagerFactory(
+                    properties.getProperty(ISSUER_NAME + ".persistenceunit"),
+                    emProperties).createEntityManager();
+        } catch (Exception e) {
+            logger.error("Persistence failed {} operations history db {}", e.getLocalizedMessage(), e);
+        }
     }
 
-    @Override
-    public Collection<PIPRequest> attributesProvided() {
-        return Collections.emptyList();
-    }
-
-    @Override
+    /**
+     * getAttributes.
+     *
+     * @param pipRequest the request
+     * @param pipFinder the pip finder
+     * @return PIPResponse
+     */
     public PIPResponse getAttributes(PIPRequest pipRequest, PIPFinder pipFinder) throws PIPException {
         logger.debug("getAttributes requesting attribute {} of type {} for issuer {}",
                 pipRequest.getAttributeId(), pipRequest.getDataTypeId(), pipRequest.getIssuer());
@@ -97,7 +104,7 @@ public class OnapOperationsHistoryPipEngine extends StdConfigurableEngine {
             //
             return StdPIPResponse.PIP_RESPONSE_EMPTY;
         }
-        if (! pipRequest.getIssuer().startsWith(ToscaDictionary.GUARD_ISSUER)) {
+        if (! pipRequest.getIssuer().startsWith(ToscaDictionary.GUARD_ISSUER_PREFIX)) {
             logger.debug("Issuer does not start with guard");
             //
             // We only respond to ourself as the issuer
@@ -106,8 +113,7 @@ public class OnapOperationsHistoryPipEngine extends StdConfigurableEngine {
         }
         //
         // Parse out the issuer which denotes the time window
-        //
-        // Eg: urn:org:onapxacml:guard:historydb:tw:10:minute
+        // Eg: any-prefix:tw:10:minute
         //
         String[] s1 = pipRequest.getIssuer().split("tw:");
         String[] s2 = s1[1].split(":");
@@ -137,142 +143,23 @@ public class OnapOperationsHistoryPipEngine extends StdConfigurableEngine {
         //
         int operationCount = doDatabaseQuery(actor, operation, target, timeWindowVal, timeWindowScale);
         //
-        // Right now return empty
+        // Create and return PipResponse
         //
-        StdMutablePIPResponse stdPipResponse    = new StdMutablePIPResponse();
-        this.addIntegerAttribute(stdPipResponse,
+        StdMutablePIPResponse pipResponse    = new StdMutablePIPResponse();
+        this.addIntegerAttribute(pipResponse,
                 XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
                 ToscaDictionary.ID_RESOURCE_GUARD_OPERATIONCOUNT,
                 operationCount,
                 pipRequest);
-        return new StdPIPResponse(stdPipResponse);
-    }
-
-    @Override
-    public void configure(String id, Properties properties) throws PIPException {
-        super.configure(id, properties);
-        logger.debug("Configuring historyDb PIP {}", properties);
-        this.properties = properties;
-    }
-
-    private String getActor(PIPFinder pipFinder) {
-        //
-        // Get the actor value
-        //
-        PIPResponse pipResponse = this.getAttribute(PIP_REQUEST_ACTOR, pipFinder);
-        if (pipResponse == null) {
-            logger.error("Need actor attribute which is not found");
-            return null;
-        }
-        //
-        // Find the actor
-        //
-        return findFirstAttributeValue(pipResponse);
-    }
-
-    private String getRecipe(PIPFinder pipFinder) {
-        //
-        // Get the actor value
-        //
-        PIPResponse pipResponse = this.getAttribute(PIP_REQUEST_RECIPE, pipFinder);
-        if (pipResponse == null) {
-            logger.error("Need recipe attribute which is not found");
-            return null;
-        }
-        //
-        // Find the actor
-        //
-        return findFirstAttributeValue(pipResponse);
-    }
-
-    private String getTarget(PIPFinder pipFinder) {
-        //
-        // Get the actor value
-        //
-        PIPResponse pipResponse = this.getAttribute(PIP_REQUEST_TARGET, pipFinder);
-        if (pipResponse == null) {
-            logger.error("Need target attribute which is not found");
-            return null;
-        }
-        //
-        // Find the actor
-        //
-        return findFirstAttributeValue(pipResponse);
-    }
-
-    private PIPResponse getAttribute(PIPRequest pipRequest, PIPFinder pipFinder) {
-        PIPResponse pipResponse = null;
-        try {
-            pipResponse = pipFinder.getMatchingAttributes(pipRequest, this);
-            if (pipResponse.getStatus() != null && !pipResponse.getStatus().isOk()) {
-                if (logger.isInfoEnabled()) {
-                    logger.info("get attribute error retrieving {}: {}", pipRequest.getAttributeId().stringValue(),
-                        pipResponse.getStatus());
-                }
-                pipResponse = null;
-            }
-            if (pipResponse != null && pipResponse.getAttributes().isEmpty()) {
-                if (logger.isInfoEnabled()) {
-                    logger.info("No value for {}", pipRequest.getAttributeId().stringValue());
-                }
-                pipResponse = null;
-            }
-        } catch (PIPException ex) {
-            logger.error("PIPException getting subject-id attribute: " + ex.getMessage(), ex);
-        }
-        return pipResponse;
-    }
-
-    private String findFirstAttributeValue(PIPResponse pipResponse) {
-        for (Attribute attribute: pipResponse.getAttributes()) {
-            Iterator<AttributeValue<String>> iterAttributeValues    = attribute.findValues(DataTypes.DT_STRING);
-            if (iterAttributeValues != null) {
-                while (iterAttributeValues.hasNext()) {
-                    String value   = iterAttributeValues.next().getValue();
-                    if (value != null) {
-                        return value;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    private void addIntegerAttribute(StdMutablePIPResponse stdPipResponse, Identifier category,
-            Identifier attributeId, int value, PIPRequest pipRequest) {
-        AttributeValue<BigInteger> attributeValue   = null;
-        try {
-            attributeValue  = DataTypes.DT_INTEGER.createAttributeValue(value);
-        } catch (Exception e) {
-            logger.error("Failed to convert {} to integer {}", value, e);
-        }
-        if (attributeValue != null) {
-            stdPipResponse.addAttribute(new StdMutableAttribute(category, attributeId, attributeValue,
-                    pipRequest.getIssuer(), false));
-        }
+        return new StdPIPResponse(pipResponse);
     }
 
     private int doDatabaseQuery(String actor, String operation, String target, int timeWindowVal,
             String timeWindowScale) {
         logger.info("Querying operations history for {} {} {} {} {}",
                 actor, operation, target, timeWindowVal, timeWindowScale);
-        //
-        // Create our entity manager
-        //
-        EntityManager em;
-        try {
-            //
-            // In case there are any overloaded properties for the JPA
-            //
-            Properties emProperties = new Properties(properties);
-            //
-            // Create the entity manager factory
-            //
-            em = Persistence.createEntityManagerFactory(
-                    properties.getProperty("historydb.persistenceunit", "OperationsHistoryPU"),
-                    emProperties).createEntityManager();
-        } catch (Exception e) {
-            logger.error("Persistence failed {} operations history db {}", e.getLocalizedMessage(), e);
+        if (em == null) {
+            logger.error("No EntityManager available");
             return -1;
         }
         //
@@ -299,17 +186,16 @@ public class OnapOperationsHistoryPipEngine extends StdConfigurableEngine {
         Object result = null;
         try {
             //
-            //
+            // Set up query --- operationshistory is magic, should fix sometime
             //
             String strQuery = "select count(*) as numops from operationshistory"
-                    + " where outcome<>'Failure_Guard'"
-                    + " and actor=?"
-                    + " and operation=?"
-                    + " and target=?"
-                    + " and endtime between TIMESTAMPADD("
-                    + timeWindowScale.toUpperCase()
-                    + ", ?, CURRENT_TIMESTAMP)"
-                    + " and CURRENT_TIMESTAMP";
+                + " where outcome<>'Failure_Guard'"
+                + " and actor=?"
+                + " and operation=?"
+                + " and target=?"
+                + " and endtime between"
+                + " TIMESTAMPADD(?, ?, CURRENT_TIMESTAMP)"
+                + " and CURRENT_TIMESTAMP";
             //
             // We are expecting a single result
             //
@@ -317,7 +203,8 @@ public class OnapOperationsHistoryPipEngine extends StdConfigurableEngine {
                 .setParameter(1, actor)
                 .setParameter(2, operation)
                 .setParameter(3, target)
-                .setParameter(4, timeWindowVal * -1)
+                .setParameter(4, timeWindowScale)
+                .setParameter(5, timeWindowVal * -1)
                 .getSingleResult();
         } catch (Exception e) {
             logger.error("Named query failed ", e);

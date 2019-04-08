@@ -31,17 +31,18 @@ public final class ToscaDictionary {
     /*
      * These are the ID's for various TOSCA Policy Types we are supporting in the Applications.
      */
-    public static final Identifier URN_ONAP =
-            new IdentifierImpl("urn:org:onap");
+    public static final String URN_ONAP = "urn:org:onap";
+    public static final Identifier ID_URN_ONAP =
+            new IdentifierImpl(URN_ONAP);
 
     public static final Identifier ID_RESOURCE_POLICY_ID =
             XACML3.ID_RESOURCE_RESOURCE_ID;
 
     public static final Identifier ID_RESOURCE_POLICY_TYPE =
-            new IdentifierImpl(URN_ONAP, "policy-type");
+            new IdentifierImpl(ID_URN_ONAP, "policy-type");
 
     public static final Identifier ID_RESOURCE_POLICY_TYPE_VERSION =
-            new IdentifierImpl(URN_ONAP, "policy-type-version");
+            new IdentifierImpl(ID_URN_ONAP, "policy-type-version");
 
     /*
      * These ID's are for identifying Subjects
@@ -51,70 +52,75 @@ public final class ToscaDictionary {
             XACML3.ID_SUBJECT_SUBJECT_ID;
 
     public static final Identifier ID_SUBJECT_ONAP_COMPONENT =
-            new IdentifierImpl(URN_ONAP, "onap-component");
+            new IdentifierImpl(ID_URN_ONAP, "onap-component");
 
     public static final Identifier ID_SUBJECT_ONAP_INSTANCE =
-            new IdentifierImpl(URN_ONAP, "onap-instance");
+            new IdentifierImpl(ID_URN_ONAP, "onap-instance");
 
     /*
      * These 2 ID's are for Optimization policies
      */
 
     public static final Identifier ID_RESOURCE_POLICY_SCOPE_PROPERTY =
-            new IdentifierImpl(URN_ONAP, "policy-scope-property");
+            new IdentifierImpl(ID_URN_ONAP, "policy-scope-property");
 
     public static final Identifier ID_RESOURCE_POLICY_TYPE_PROPERTY =
-            new IdentifierImpl(URN_ONAP, "policy-type-property");
+            new IdentifierImpl(ID_URN_ONAP, "policy-type-property");
 
     /*
      * These ID's are for Legacy Guard Policies
      */
     public static final Identifier ID_RESOURCE_GUARD_ACTOR =
-            new IdentifierImpl(URN_ONAP, "guard:actor:actor-id");
+            new IdentifierImpl(ID_URN_ONAP, "guard:actor:actor-id");
     public static final Identifier ID_RESOURCE_GUARD_RECIPE =
-            new IdentifierImpl(URN_ONAP, "guard:operation:operation-id");
+            new IdentifierImpl(ID_URN_ONAP, "guard:operation:operation-id");
     public static final Identifier ID_RESOURCE_GUARD_CLNAME =
-            new IdentifierImpl(URN_ONAP, "guard:clname:clname-id");
+            new IdentifierImpl(ID_URN_ONAP, "guard:clname:clname-id");
     public static final Identifier ID_RESOURCE_GUARD_TARGETID =
-            new IdentifierImpl(URN_ONAP, "guard:target:target-id");
+            new IdentifierImpl(ID_URN_ONAP, "guard:target:target-id");
     public static final Identifier ID_SUBJECT_GUARD_REQUESTID =
-            new IdentifierImpl(URN_ONAP, "guard:request:request-id");
+            new IdentifierImpl(ID_URN_ONAP, "guard:request:request-id");
     public static final Identifier ID_RESOURCE_GUARD_VFCOUNT =
-            new IdentifierImpl(URN_ONAP, "guard:target:vf-count");
+            new IdentifierImpl(ID_URN_ONAP, "guard:target:vf-count");
     public static final Identifier ID_RESOURCE_GUARD_MIN =
-            new IdentifierImpl(URN_ONAP, "guard:target:min");
+            new IdentifierImpl(ID_URN_ONAP, "guard:target:min");
     public static final Identifier ID_RESOURCE_GUARD_MAX =
-            new IdentifierImpl(URN_ONAP, "guard:target:max");
+            new IdentifierImpl(ID_URN_ONAP, "guard:target:max");
 
     /*
      * This id specifically for guard is provided by the
      * operational history database PIP.
      */
+    public static final String GUARD_OPERATIONCOUNT = "guard:operation:operation-count";
     public static final Identifier ID_RESOURCE_GUARD_OPERATIONCOUNT =
-            new IdentifierImpl(URN_ONAP, "guard:operation:operation-count");
+            new IdentifierImpl(ID_URN_ONAP, GUARD_OPERATIONCOUNT);
 
-    public static final String GUARD_ISSUER = URN_ONAP.stringValue() + "xacml:guard:historydb";
+    public static final String GUARD_OPERATIONOUTCOME = "guard:operation:operation-outcome";
+    public static final Identifier ID_RESOURCE_GUARD_OPERATIONOUTCOME =
+            new IdentifierImpl(ID_URN_ONAP, GUARD_OPERATIONOUTCOME);
+
+    public static final String GUARD_ISSUER_PREFIX = URN_ONAP + ":xacml:guard:";
 
     /*
      * This id is specifically for advice returned from guard
      */
     public static final Identifier ID_ADVICE_GUARD =
-            new IdentifierImpl(URN_ONAP, "guard:advice");
+            new IdentifierImpl(ID_URN_ONAP, "guard:advice");
     public static final Identifier ID_ADVICE_GUARD_REQUESTID =
-            new IdentifierImpl(URN_ONAP, "guard:advice:request-id");
+            new IdentifierImpl(ID_URN_ONAP, "guard:advice:request-id");
 
     /*
      * Obligation specific ID's
      */
 
     public static final Identifier ID_OBLIGATION_REST_BODY =
-            new IdentifierImpl(URN_ONAP, "rest:body");
+            new IdentifierImpl(ID_URN_ONAP, "rest:body");
 
     public static final Identifier ID_OBLIGATION_POLICY_MONITORING =
-            new IdentifierImpl(URN_ONAP, ":obligation:monitoring");
+            new IdentifierImpl(ID_URN_ONAP, ":obligation:monitoring");
 
     public static final Identifier ID_OBLIGATION_POLICY_MONITORING_CONTENTS =
-            new IdentifierImpl(URN_ONAP, ":obligation:monitoring:contents");
+            new IdentifierImpl(ID_URN_ONAP, ":obligation:monitoring:contents");
 
     public static final Identifier ID_OBLIGATION_POLICY_MONITORING_CATEGORY =
             XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE;
@@ -123,7 +129,7 @@ public final class ToscaDictionary {
             XACML3.ID_DATATYPE_STRING;
 
     public static final Identifier ID_OBLIGATION_MONITORING_ISSUER =
-            new IdentifierImpl(URN_ONAP, "issuer:monitoring");
+            new IdentifierImpl(ID_URN_ONAP, "issuer:monitoring");
 
 
 
