@@ -25,12 +25,12 @@ package org.onap.policy.xacml.pdp.application.optimization;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.util.XACMLPolicyWriter;
-import com.google.common.collect.Lists;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -39,6 +39,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.onap.policy.pdp.xacml.application.common.std.StdMatchableTranslator;
@@ -52,26 +53,35 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
     private static final String STRING_VERSION100 = "1.0.0";
 
     private StdMatchableTranslator translator = new StdMatchableTranslator();
-    private Map<String, String> supportedPolicyTypes = new HashMap<>();
+    private List<ToscaPolicyTypeIdentifier> supportedPolicyTypes = new ArrayList<>();
 
     /**
      * Constructor.
      */
     public OptimizationPdpApplication() {
-        this.supportedPolicyTypes.put("onap.policies.optimization.AffinityPolicy", STRING_VERSION100);
-        this.supportedPolicyTypes.put("onap.policies.optimization.DistancePolicy", STRING_VERSION100);
-        this.supportedPolicyTypes.put("onap.policies.optimization.HpaPolicy", STRING_VERSION100);
-        this.supportedPolicyTypes.put("onap.policies.optimization.OptimizationPolicy", STRING_VERSION100);
-        this.supportedPolicyTypes.put("onap.policies.optimization.PciPolicy", STRING_VERSION100);
-        this.supportedPolicyTypes.put("onap.policies.optimization.QueryPolicy", STRING_VERSION100);
-        this.supportedPolicyTypes.put("onap.policies.optimization.SubscriberPolicy", STRING_VERSION100);
-        this.supportedPolicyTypes.put("onap.policies.optimization.Vim_fit", STRING_VERSION100);
-        this.supportedPolicyTypes.put("onap.policies.optimization.VnfPolicy", STRING_VERSION100);
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+                "onap.policies.optimization.AffinityPolicy", STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+                "onap.policies.optimization.DistancePolicy", STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+                "onap.policies.optimization.HpaPolicy", STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+                "onap.policies.optimization.OptimizationPolicy", STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+                "onap.policies.optimization.PciPolicy", STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+                "onap.policies.optimization.QueryPolicy", STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+                "onap.policies.optimization.SubscriberPolicy", STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+                "onap.policies.optimization.Vim_fit", STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+                "onap.policies.optimization.VnfPolicy", STRING_VERSION100));
     }
 
     @Override
     public String applicationName() {
-        return "Optimization Application";
+        return "Optimization";
     }
 
     @Override
@@ -80,23 +90,26 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
     }
 
     @Override
-    public synchronized List<String> supportedPolicyTypes() {
-        return Lists.newArrayList(supportedPolicyTypes.keySet());
+    public synchronized List<ToscaPolicyTypeIdentifier> supportedPolicyTypes() {
+        return Collections.unmodifiableList(supportedPolicyTypes);
     }
 
     @Override
-    public boolean canSupportPolicyType(String policyType, String policyTypeVersion) {
+    public boolean canSupportPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
         //
         // For the time being, restrict this if the version isn't known.
         // Could be too difficult to support changing of versions dynamically.
         //
-        if (! this.supportedPolicyTypes.containsKey(policyType)) {
-            return false;
+        //
+        // For the time being, restrict this if the version isn't known.
+        // Could be too difficult to support changing of versions dynamically.
+        //
+        for (ToscaPolicyTypeIdentifier supported : this.supportedPolicyTypes) {
+            if (policyTypeId.equals(supported)) {
+                return true;
+            }
         }
-        //
-        // Must match version exactly
-        //
-        return this.supportedPolicyTypes.get(policyType).equals(policyTypeVersion);
+        return false;
     }
 
     @Override

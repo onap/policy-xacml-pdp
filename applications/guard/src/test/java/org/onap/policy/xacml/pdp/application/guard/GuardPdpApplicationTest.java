@@ -54,7 +54,9 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.OnapOperationsHistoryDbao;
+import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
@@ -214,13 +216,15 @@ public class GuardPdpApplicationTest {
         //
         assertThat(service.supportedPolicyTypes()).isNotEmpty();
         assertThat(service.supportedPolicyTypes().size()).isEqualTo(2);
-        assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.FrequencyLimiter", "1.0.0"))
-            .isTrue();
-        assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.FrequencyLimiter", "1.0.1"))
-            .isFalse();
-        assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.MinMax", "1.0.0")).isTrue();
-        assertThat(service.canSupportPolicyType("onap.policies.controlloop.guard.MinMax", "1.0.1")).isFalse();
-        assertThat(service.canSupportPolicyType("onap.foo", "1.0.1")).isFalse();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+                "onap.policies.controlloop.guard.FrequencyLimiter", "1.0.0"))).isTrue();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+                "onap.policies.controlloop.guard.FrequencyLimiter", "1.0.1"))).isFalse();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+                "onap.policies.controlloop.guard.MinMax", "1.0.0"))).isTrue();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+                "onap.policies.controlloop.guard.MinMax", "1.0.1"))).isFalse();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier("onap.foo", "1.0.1"))).isFalse();
     }
 
     @Test
@@ -230,7 +234,8 @@ public class GuardPdpApplicationTest {
     }
 
     @Test
-    public void test3FrequencyLimiter() throws CoderException, FileNotFoundException, IOException {
+    public void test3FrequencyLimiter() throws CoderException, FileNotFoundException, IOException,
+        XacmlApplicationException {
         LOGGER.info("**************** Running test3 ****************");
         //
         // Now load the vDNS frequency limiter Policy - make sure
@@ -271,7 +276,7 @@ public class GuardPdpApplicationTest {
     }
 
     @Test
-    public void test4MinMax() throws CoderException, FileNotFoundException, IOException {
+    public void test4MinMax() throws CoderException, FileNotFoundException, IOException, XacmlApplicationException {
         LOGGER.info("**************** Running test4 ****************");
         //
         // Now load the vDNS min max Policy - make sure
@@ -317,7 +322,7 @@ public class GuardPdpApplicationTest {
     }
 
     @Test
-    public void test5MissingFields() throws FileNotFoundException, IOException {
+    public void test5MissingFields() throws FileNotFoundException, IOException, XacmlApplicationException {
         LOGGER.info("**************** Running test5 ****************");
         //
         // Most likely we would not get a policy with missing fields passed to
