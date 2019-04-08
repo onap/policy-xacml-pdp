@@ -23,8 +23,15 @@
 
     <persistence-unit name="OperationsHistoryPU" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <class>org.onap.policy.pdp.xacml.application.common.OnapOperationsHistoryDbao</class>
         <properties>
-             <property name="eclipselink.ddl-generation" value="create-tables" />
+            <property name="javax.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:mariadb://policydb:3306/policy" />
+            <property name="javax.persistence.jdbc.user" value="policy_user" />
+            <property name="javax.persistence.jdbc.password" value="policy_user" />
+            <property name="javax.persistence.schema-generation.database.action" value="create" />
+            <property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
+            <property name="eclipselink.ddl-generation.output-mode" value="database" />
             <property name="eclipselink.logging.level" value="INFO" />
         </properties>
     </persistence-unit>
