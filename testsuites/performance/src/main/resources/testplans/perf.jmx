@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.0 r1840935">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Policy XACML PDP Stability" enabled="true">
-      <stringProp name="TestPlan.comments">Policy XACML PDP Stability Tests</stringProp>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Policy XACML PDP Performance" enabled="true">
+      <stringProp name="TestPlan.comments">Policy XACML PDP Performance Tests</stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
-      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
       <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
         <collectionProp name="Arguments.arguments">
           <elementProp name="POLICY_XACML_PDP_HOST" elementType="Argument">
@@ -33,7 +33,7 @@
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
     <hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="XACML PDP Health Check Test" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Policy XACML PDP Health Check " enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -90,9 +90,6 @@ if (prev.getResponseCode() == &apos;200&apos;) {
 
     assert res instanceof Map;
     assert res.code == 200;
-    assert res.name == &quot;Policy Xacml PDP&quot;;
-    assert res.healthy==true;
-    assert res.message==&quot;alive&quot;;
 
 }</stringProp>
           </JSR223Assertion>
@@ -158,11 +155,11 @@ if (prev.getResponseCode() == &apos;200&apos;) {
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename"></stringProp>
+          <stringProp name="filename">/tmp/pdpx_perf_health.log</stringProp>
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="XACML PDP Statistics API" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="XACML PDP Statistics Check " enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -219,12 +216,6 @@ if (prev.getResponseCode() == &apos;200&apos;) {
 
     assert res instanceof Map;
     assert res.code == 200;
-    assert res.totalPoliciesCount == 0;
-    assert res.permitDecisionsCount == 0;
-    assert res.denyDecisionsCount == 0;
-    assert res.indeterminantDecisionsCount == 0;
-    assert res.notApplicableDecisionsCount == 0;
-    
 
 
 }</stringProp>
@@ -291,7 +282,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename"></stringProp>
+          <stringProp name="filename">/tmp/pdpx_perf_stats.log</stringProp>
         </ResultCollector>
         <hashTree/>
       </hashTree>

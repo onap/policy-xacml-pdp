@@ -1,6 +1,6 @@
 <!--
   ============LICENSE_START=======================================================
-  ONAP Policy XACML PDP
+  ONAP Policy XACML PDP Stability
   ================================================================================
   Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
   ================================================================================
@@ -17,17 +17,26 @@
   limitations under the License.
   ============LICENSE_END=========================================================
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.onap.policy.xacml-pdp</groupId>
-        <artifactId>policy-xacml-pdp</artifactId>
-        <version>2.0.0-SNAPSHOT</version>
-    </parent>
-    <artifactId>testsuites</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>stability</module>
-        <module>performance</module>
-    </modules>
-</project>
+<assembly
+    xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+    <id>performance</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <baseDirectory>/policy-xacml-pdp/performance</baseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/testplans/</directory>
+            <outputDirectory>tests/testplans</outputDirectory>
+            <includes>
+                <include>*.jmx</include>
+                <include>*.sh</include>
+            </includes>
+            <lineEnding>unix</lineEnding>
+            <fileMode>0644</fileMode>
+            <filtered>true</filtered>
+        </fileSet>
+    </fileSets>
+</assembly>
