@@ -42,6 +42,7 @@ import java.util.Properties;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
@@ -91,12 +92,12 @@ public class StdXacmlApplicationServiceProvider implements XacmlApplicationServi
     }
 
     @Override
-    public List<String> supportedPolicyTypes() {
+    public List<ToscaPolicyTypeIdentifier> supportedPolicyTypes() {
         return Collections.emptyList();
     }
 
     @Override
-    public boolean canSupportPolicyType(String policyType, String policyTypeVersion) {
+    public boolean canSupportPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
         return false;
     }
 

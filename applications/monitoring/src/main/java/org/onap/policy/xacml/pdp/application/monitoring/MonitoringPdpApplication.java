@@ -27,7 +27,6 @@ import com.att.research.xacml.api.Response;
 import com.att.research.xacml.util.XACMLPolicyScanner;
 import com.att.research.xacml.util.XACMLPolicyWriter;
 import com.att.research.xacml.util.XACMLProperties;
-import com.google.common.collect.Lists;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -35,8 +34,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -47,6 +46,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.onap.policy.pdp.xacml.application.common.std.StdCombinedPolicyResultsTranslator;
@@ -70,7 +70,7 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
     private static final String ONAP_MONITORING_DERIVED_POLICY_TYPE = "onap.policies.monitoring";
 
     private StdCombinedPolicyResultsTranslator translator = new StdCombinedPolicyResultsTranslator();
-    private Map<String, String> supportedPolicyTypes = new HashMap<>();
+    private List<ToscaPolicyTypeIdentifier> supportedPolicyTypes = new ArrayList<>();
 
     /**
      * Constructor.
@@ -79,7 +79,7 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
         //
         // By default this supports just Monitoring policy types
         //
-        supportedPolicyTypes.put(ONAP_MONITORING_BASE_POLICY_TYPE, "1.0.0");
+        supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_BASE_POLICY_TYPE, "1.0.0"));
     }
 
     @Override
@@ -93,19 +93,19 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
     }
 
     @Override
-    public synchronized List<String> supportedPolicyTypes() {
-        return Lists.newArrayList(supportedPolicyTypes.keySet());
+    public synchronized List<ToscaPolicyTypeIdentifier> supportedPolicyTypes() {
+        return supportedPolicyTypes;
     }
 
     @Override
-    public boolean canSupportPolicyType(String policyType, String policyTypeVersion) {
+    public boolean canSupportPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
         //
         // For Monitoring, we will attempt to support all versions
         // of the policy type. Since we are only packaging a decision
         // back with a JSON payload of the property contents.
         //
-        return (policyType.equals(ONAP_MONITORING_BASE_POLICY_TYPE)
-                || policyType.startsWith(ONAP_MONITORING_DERIVED_POLICY_TYPE));
+        return (policyTypeId.getName().equals(ONAP_MONITORING_BASE_POLICY_TYPE)
+                || policyTypeId.getName().startsWith(ONAP_MONITORING_DERIVED_POLICY_TYPE));
     }
 
     @Override

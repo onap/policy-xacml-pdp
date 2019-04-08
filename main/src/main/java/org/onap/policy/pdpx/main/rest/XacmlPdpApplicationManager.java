@@ -91,14 +91,10 @@ public class XacmlPdpApplicationManager {
                 application.initialize(path);
             }
 
-            // Get string list of supportedPolicyTypes
-            List<String> supportedPolicyTypes = application.supportedPolicyTypes();
-
-            // Iterate through the supportedPolicyTypes to set the toscaPolicyTypeIdents
-            for (String name : supportedPolicyTypes) {
-                ToscaPolicyTypeIdentifier ident = new ToscaPolicyTypeIdentifier(name, "1.0.0");
-                toscaPolicyTypeIdents.add(ident);
-            }
+            //
+            // Add all the supported policy types
+            //
+            toscaPolicyTypeIdents.addAll(application.supportedPolicyTypes());
         }
         //
         // we have initialized

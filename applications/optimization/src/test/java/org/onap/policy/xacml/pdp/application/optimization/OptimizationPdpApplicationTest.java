@@ -47,6 +47,7 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
@@ -139,8 +140,10 @@ public class OptimizationPdpApplicationTest {
         // Ensure it has the supported policy types and
         // can support the correct policy types.
         //
-        assertThat(service.canSupportPolicyType("onap.policies.optimization.AffinityPolicy", "1.0.0")).isTrue();
-        assertThat(service.canSupportPolicyType("onap.foobar", "1.0.0")).isFalse();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+                "onap.policies.optimization.AffinityPolicy", "1.0.0"))).isTrue();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+                "onap.foobar", "1.0.0"))).isFalse();
     }
 
     @Test
@@ -184,8 +187,9 @@ public class OptimizationPdpApplicationTest {
                     //
                     assertThat(policyDefinition.containsKey("type")).isTrue();
                     assertThat(service.canSupportPolicyType(
+                            new ToscaPolicyTypeIdentifier(
                             policyDefinition.get("type").toString(),
-                            policyDefinition.get("version").toString()))
+                            policyDefinition.get("version").toString())))
                         .isTrue();
                 }
             }

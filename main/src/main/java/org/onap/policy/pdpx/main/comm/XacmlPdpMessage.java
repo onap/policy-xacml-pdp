@@ -58,6 +58,8 @@ public class XacmlPdpMessage {
         status.setState(state);
         status.setSupportedPolicyTypes(XacmlPdpApplicationManager.getToscaPolicyTypeIdents());
 
+        LOGGER.debug("formatStatusMessage state {} status{}", state, status);
+
         return status;
 
     }

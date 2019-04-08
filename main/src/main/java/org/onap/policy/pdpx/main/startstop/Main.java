@@ -21,12 +21,10 @@
 package org.onap.policy.pdpx.main.startstop;
 
 import java.io.FileInputStream;
-import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Properties;
-import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
+
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
-import org.onap.policy.pdpx.main.comm.XacmlPdpPapRegistration;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterHandler;
 import org.slf4j.Logger;
