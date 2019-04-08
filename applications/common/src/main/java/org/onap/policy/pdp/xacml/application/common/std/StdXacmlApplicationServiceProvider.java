@@ -129,7 +129,8 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             //
             // Convert the policies first
             //
-            PolicyType xacmlPolicy = this.getTranslator().convertPolicy(toscaPolicy);
+            PolicyType xacmlPolicy = this.getTranslator(toscaPolicy.getType())
+                .convertPolicy(toscaPolicy);
             if (xacmlPolicy == null) {
                 throw new ToscaPolicyConversionException("Failed to convert policy");
             }
@@ -187,8 +188,11 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
         return this.getTranslator().convertResponse(xacmlResponse);
     }
 
+    protected abstract ToscaPolicyTranslator getTranslator(String type);
 
-    protected abstract ToscaPolicyTranslator getTranslator();
+    protected ToscaPolicyTranslator getTranslator() {
+        return this.getTranslator("");
+    }
 
     protected synchronized PDPEngine getEngine() {
         return this.pdpEngine;
@@ -251,7 +255,6 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             PDPEngine engine = factory.newEngine(properties);
             if (engine != null) {
                 this.pdpEngine = engine;
-//                this.pdpProperties = new Properties(properties);
             }
         } catch (FactoryException e) {
             LOGGER.error("Failed to create XACML PDP Engine {}", e);

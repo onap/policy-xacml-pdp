@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ============LICENSE_START=======================================================
+  drools-applications
+  ================================================================================
+  Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  ============LICENSE_END=========================================================
+  -->
+
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"
+    PolicyId="UNIQUE_ID" Version="1"
+    RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-unless-deny">
+    <Description>Policy for first_blocks_second coordination (if first
+        running and second requests to run, deny second).</Description>
+    <Target>
+        <AnyOf>
+            <AllOf>
+                <Match
+                    MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                    <AttributeValue
+                        DataType="http://www.w3.org/2001/XMLSchema#string">CONTROL_LOOP_TWO</AttributeValue>
+                    <AttributeDesignator
+                        Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource"
+                        AttributeId="urn:org:onap:guard:clname:clname-id"
+                        DataType="http://www.w3.org/2001/XMLSchema#string"
+                        MustBePresent="false" />
+                </Match>
+            </AllOf>
+        </AnyOf>
+    </Target>
+
+    <Rule RuleId="UNIQUE_ID:rule:1" Effect="Deny">
+        <Description>First Is Running</Description>
+        <Condition>
+            <Apply
+                FunctionId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                <Apply
+                    FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                    <AttributeDesignator
+                        Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource"
+                        AttributeId="urn:org:onap:guard:operation:operation-outcome"
+                        DataType="http://www.w3.org/2001/XMLSchema#string"
+                        Issuer="urn:org:onap:xacml:guard:get-operation-outcome:clname:CONTROL_LOOP_ONE"
+                        MustBePresent="false" />
+                </Apply>
+                <AttributeValue
+                    DataType="http://www.w3.org/2001/XMLSchema#string">Success</AttributeValue>
+            </Apply>
+        </Condition>
+    </Rule>
+</Policy>
