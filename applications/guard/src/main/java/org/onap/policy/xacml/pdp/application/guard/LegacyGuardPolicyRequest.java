@@ -34,6 +34,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 
 @Getter
 @Setter
@@ -42,6 +43,7 @@ import org.onap.policy.models.decisions.concepts.DecisionRequest;
 public class LegacyGuardPolicyRequest {
 
     private static final String STR_GUARD = "guard";
+    private static final String URN_ONAP = ToscaDictionary.URN_ONAP;
 
     @XACMLSubject(includeInResults = true)
     private String onapName;
@@ -78,6 +80,7 @@ public class LegacyGuardPolicyRequest {
 
     @XACMLResource(includeInResults = true, attributeId = "urn:org:onap:guard:target:max")
     private Integer max;
+
 
     public LegacyGuardPolicyRequest() {
         super();

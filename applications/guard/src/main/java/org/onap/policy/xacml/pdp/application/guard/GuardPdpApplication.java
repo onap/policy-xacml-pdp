@@ -43,15 +43,22 @@ public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(GuardPdpApplication.class);
     private static final String STRING_VERSION100 = "1.0.0";
     private List<ToscaPolicyTypeIdentifier> supportedPolicyTypes = new ArrayList<>();
-    private LegacyGuardTranslator translator = new LegacyGuardTranslator();
+    private LegacyGuardTranslator legacyTranslator = new LegacyGuardTranslator();
+    private CoordinationGuardTranslator coordinationTranslator = new CoordinationGuardTranslator();
+
 
     /** Constructor.
      *
      */
     public GuardPdpApplication() {
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.FrequencyLimiter",
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+                "onap.policies.controlloop.guard.FrequencyLimiter",
                 STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.MinMax",
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+                "onap.policies.controlloop.guard.MinMax",
+                STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+                "onap.policies.controlloop.guard.coordination.FirstBlocksSecond",
                 STRING_VERSION100));
     }
 
@@ -85,7 +92,15 @@ public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
     }
 
     @Override
-    protected ToscaPolicyTranslator getTranslator() {
-        return translator;
+    protected ToscaPolicyTranslator getTranslator(String type) {
+        LOGGER.debug("Policy type {}", type);
+        if ( type.contains("coordination") ) {
+            LOGGER.debug("returning coordinationTranslator");
+            return coordinationTranslator;
+        } else {
+            LOGGER.debug("returning legacyTranslator");
+            return legacyTranslator;
+        }
     }
+
 }

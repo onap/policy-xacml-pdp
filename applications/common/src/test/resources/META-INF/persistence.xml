@@ -8,9 +8,9 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-  
+
        http://www.apache.org/licenses/LICENSE-2.0
-  
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,12 +23,13 @@
 
     <persistence-unit name="PipEngineTest" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        
-        <class>org.onap.policy.pdp.xacml.application.common.OnapOperationsHistoryDbao</class>
-        
+
+        <class>org.onap.policy.pdp.xacml.application.common.operationshistory.Dbao</class>
+
         <properties>
             <property name="eclipselink.ddl-generation" value="create-tables" />
             <property name="eclipselink.logging.level" value="FINE" />
+	    <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:testdb;DATABASE_TO_UPPER=FALSE" />
             <property name="javax.persistence.jdbc.user" value="policy" />
@@ -39,4 +40,3 @@
     </persistence-unit>
 
 </persistence>
-  
