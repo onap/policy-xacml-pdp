@@ -30,7 +30,6 @@ import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.enums.PdpState;
 import org.onap.policy.pdpx.main.comm.XacmlPdpHeartbeatPublisher;
 import org.onap.policy.pdpx.main.comm.XacmlPdpMessage;
-import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

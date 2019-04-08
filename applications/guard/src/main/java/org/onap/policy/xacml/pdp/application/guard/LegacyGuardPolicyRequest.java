@@ -79,9 +79,6 @@ public class LegacyGuardPolicyRequest {
     @XACMLResource(includeInResults = true, attributeId = "urn:org:onap:guard:target:max")
     private Integer max;
 
-    @XACMLResource(includeInResults = true, attributeId = "urn:org:onap:guard:operation:operation-count")
-    private Integer operationCount;
-
     public LegacyGuardPolicyRequest() {
         super();
     }
@@ -149,12 +146,6 @@ public class LegacyGuardPolicyRequest {
         }
         if (guard.containsKey("max")) {
             request.max = Integer.decode(guard.get("max").toString());
-        }
-        //
-        // TODO - remove this when the PIP is hooked up
-        //
-        if (guard.containsKey("operationCount")) {
-            request.operationCount = Integer.decode(guard.get("operationCount").toString());
         }
 
         return request;
