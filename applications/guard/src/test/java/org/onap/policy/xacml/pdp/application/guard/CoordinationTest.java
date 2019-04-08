@@ -63,15 +63,20 @@ import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class GuardPdpApplicationTest {
+public class CoordinationTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GuardPdpApplicationTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoordinationTest.class);
     private static Properties properties = new Properties();
     private static File propertiesFile;
     private static XacmlApplicationServiceProvider service;
-    private static DecisionRequest requestVfCount1;
-    private static DecisionRequest requestVfCount3;
-    private static DecisionRequest requestVfCount6;
+    private static DecisionRequest requestCl1OpenNode1;
+    private static DecisionRequest requestCl1OpenNode2;
+    private static DecisionRequest requestCl1CloseNode1;
+    private static DecisionRequest requestCl1CloseNode2;
+    private static DecisionRequest requestCl2OpenNode1;
+    private static DecisionRequest requestCl2OpenNode2;
+    private static DecisionRequest requestCl2CloseNode1;
+    private static DecisionRequest requestCl2CloseNode2;
     private static StandardCoder gson = new StandardCoder();
     private static EntityManager em;
     private static final String DENY = "Deny";
@@ -130,24 +135,45 @@ public class GuardPdpApplicationTest {
         //
         // Load Decision Requests
         //
-        requestVfCount1 = gson.decode(
+        requestCl1OpenNode1 = gson.decode(
                 TextFileUtils.getTextFileAsString(
-                    "src/test/resources/requests/guard.vfCount.1.json"),
+                    "src/test/resources/requests/coordination.cl.1.open.node.1.json"),
                     DecisionRequest.class);
-        requestVfCount3 = gson.decode(
+        requestCl2OpenNode1 = gson.decode(
                 TextFileUtils.getTextFileAsString(
-                    "src/test/resources/requests/guard.vfCount.3.json"),
+                    "src/test/resources/requests/coordination.cl.2.open.node.1.json"),
                     DecisionRequest.class);
-        requestVfCount6 = gson.decode(
+        requestCl1CloseNode1 = gson.decode(
                 TextFileUtils.getTextFileAsString(
-                    "src/test/resources/requests/guard.vfCount.6.json"),
+                    "src/test/resources/requests/coordination.cl.1.close.node.1.json"),
                     DecisionRequest.class);
+        requestCl2CloseNode1 = gson.decode(
+                TextFileUtils.getTextFileAsString(
+                    "src/test/resources/requests/coordination.cl.2.close.node.1.json"),
+                    DecisionRequest.class);
+        requestCl1OpenNode2 = gson.decode(
+                TextFileUtils.getTextFileAsString(
+                    "src/test/resources/requests/coordination.cl.1.open.node.2.json"),
+                    DecisionRequest.class);
+        requestCl2OpenNode2 = gson.decode(
+                TextFileUtils.getTextFileAsString(
+                    "src/test/resources/requests/coordination.cl.2.open.node.2.json"),
+                    DecisionRequest.class);
+        requestCl1CloseNode2 = gson.decode(
+                TextFileUtils.getTextFileAsString(
+                    "src/test/resources/requests/coordination.cl.1.close.node.2.json"),
+                    DecisionRequest.class);
+        requestCl2CloseNode2 = gson.decode(
+                TextFileUtils.getTextFileAsString(
+                    "src/test/resources/requests/coordination.cl.2.close.node.2.json"),
+                    DecisionRequest.class);
+
         //
         // Create EntityManager for manipulating DB
         //
         String persistenceUnit = CountRecentOperationsPip.ISSUER_NAME + ".persistenceunit";
         em = Persistence.createEntityManagerFactory(
-                GuardPdpApplicationTest.properties.getProperty(persistenceUnit), properties)
+                CoordinationTest.properties.getProperty(persistenceUnit), properties)
                 .createEntityManager();
     }
 
@@ -230,20 +256,16 @@ public class GuardPdpApplicationTest {
     }
 
     @Test
-    public void test2NoPolicies() throws CoderException {
+    public void test2() throws CoderException, IOException {
         LOGGER.info("**************** Running test2 ****************");
-        requestAndCheckDecision(requestVfCount1,PERMIT);
-    }
-
-    @Test
-    public void test3FrequencyLimiter() throws CoderException, FileNotFoundException, IOException {
-        LOGGER.info("**************** Running test3 ****************");
         //
-        // Now load the vDNS frequency limiter Policy - make sure
+        // Now load the test coordination policy - make sure
         // the pdp can support it and have it load
         // into the PDP.
         //
-        try (InputStream is = new FileInputStream("src/test/resources/vDNS.policy.guard.frequency.output.tosca.yaml")) {
+        String testPath = "src/test/resources/";
+        String testPolicy = "test.policy.guard.coordination.firstBlocksSecond.tosca.yaml";
+        try (InputStream is = new FileInputStream(testPath + testPolicy)) {
             //
             // Have yaml parse it
             //
@@ -255,128 +277,53 @@ public class GuardPdpApplicationTest {
             service.loadPolicies(toscaObject);
         }
         //
-        // Zero recent actions: should get permit
+        // cl1 doesn't have open action: cl2 should get permit
         //
-        requestAndCheckDecision(requestVfCount1,PERMIT);
+        requestAndCheckDecision(requestCl2OpenNode1,PERMIT);
         //
-        // Add entry into operations history DB
+        // Open cl2 on node1
         //
-        insertOperationEvent(requestVfCount1);
+        insertOperationEvent(requestCl2OpenNode1);
         //
-        // Only one recent actions: should get permit
+        // Under current coordination policy cl1 always can go
         //
-        requestAndCheckDecision(requestVfCount1,PERMIT);
+        requestAndCheckDecision(requestCl1OpenNode1,PERMIT);
         //
-        // Add entry into operations history DB
+        // Open cl1 on node1
         //
-        insertOperationEvent(requestVfCount1);
+        insertOperationEvent(requestCl1OpenNode1);
         //
-        // Two recent actions, more than specified limit of 2: should get deny
+        // Close cl2 on node1
         //
-        requestAndCheckDecision(requestVfCount1,DENY);
-    }
-
-    @Test
-    public void test4MinMax() throws CoderException, FileNotFoundException, IOException {
-        LOGGER.info("**************** Running test4 ****************");
+        insertOperationEvent(requestCl2CloseNode1);
         //
-        // Now load the vDNS min max Policy - make sure
-        // the pdp can support it and have it load
-        // into the PDP.
+        // Try cl2 again, cl1 has open action on node1: should get deny
         //
-        try (InputStream is = new FileInputStream("src/test/resources/vDNS.policy.guard.minmax.output.tosca.yaml")) {
-            //
-            // Have yaml parse it
-            //
-            Yaml yaml = new Yaml();
-            Map<String, Object> toscaObject = yaml.load(is);
-            //
-            // Load the policies
-            //
-            service.loadPolicies(toscaObject);
-        }
+        requestAndCheckDecision(requestCl2OpenNode1,DENY);
         //
-        // vfcount=1 below min of 2: should get a Deny
+        // Close cl1 on node1
         //
-        requestAndCheckDecision(requestVfCount1, DENY);
+        insertOperationEvent(requestCl1CloseNode1);
         //
-        // vfcount=3 between min of 2 and max of 5: should get a Permit
+        // Under current coordination policy cl1 always can go
         //
-        requestAndCheckDecision(requestVfCount3, PERMIT);
+        requestAndCheckDecision(requestCl1OpenNode1,PERMIT);
         //
-        // vfcount=6 above max of 5: should get a Deny
+        // Open cl1 on node1
         //
-        requestAndCheckDecision(requestVfCount6,DENY);
+        insertOperationEvent(requestCl1OpenNode1);
         //
-        // Add two entry into operations history DB
+        // Try cl2 on node2, cl1 only open on node1: should get permit
         //
-        insertOperationEvent(requestVfCount1);
-        insertOperationEvent(requestVfCount1);
+        requestAndCheckDecision(requestCl2OpenNode2,PERMIT);
         //
-        // vfcount=3 between min of 2 and max of 5, but 2 recent actions is above frequency limit: should get a Deny
+        // Open cl2 on node2
         //
-        requestAndCheckDecision(requestVfCount3, DENY);
+        insertOperationEvent(requestCl2OpenNode2);
         //
-        // vfcount=6 above max of 5: should get a Deny
+        // Try cl2 on node1, cl1 open on node1: should get DENY
         //
-        requestAndCheckDecision(requestVfCount6, DENY);
-    }
-
-    @Test
-    public void test5MissingFields() throws FileNotFoundException, IOException {
-        LOGGER.info("**************** Running test5 ****************");
-        //
-        // Most likely we would not get a policy with missing fields passed to
-        // us from the API. But in case that happens, or we decide that some fields
-        // will be optional due to re-working of how the XACML policies are built,
-        // let's add support in for that.
-        //
-        try (InputStream is = new FileInputStream("src/test/resources/guard.policy-minmax-missing-fields1.yaml")) {
-            //
-            // Have yaml parse it
-            //
-            Yaml yaml = new Yaml();
-            Map<String, Object> toscaObject = yaml.load(is);
-            //
-            // Load the policies
-            //
-            service.loadPolicies(toscaObject);
-            //
-            // We can create a DecisionRequest on the fly - no need
-            // to have it in the .json files
-            //
-            DecisionRequest request = new DecisionRequest();
-            request.setOnapName("JUnit");
-            request.setOnapComponent("test5MissingFields");
-            request.setRequestId(UUID.randomUUID().toString());
-            request.setAction("guard");
-            Map<String, Object> guard = new HashMap<>();
-            guard.put("actor", "FOO");
-            guard.put("recipe", "bar");
-            guard.put("vfCount", "4");
-            Map<String, Object> resource = new HashMap<>();
-            resource.put("guard", guard);
-            request.setResource(resource);
-            //
-            // Ask for a decision - should get permit
-            //
-            DecisionResponse response = service.makeDecision(request);
-            LOGGER.info("Looking for Permit Decision {}", response);
-            assertThat(response).isNotNull();
-            assertThat(response.getStatus()).isNotNull();
-            assertThat(response.getStatus()).isEqualTo("Permit");
-            //
-            // Try a deny
-            //
-            guard.put("vfCount", "10");
-            resource.put("guard", guard);
-            request.setResource(resource);
-            response = service.makeDecision(request);
-            LOGGER.info("Looking for Deny Decision {}", response);
-            assertThat(response).isNotNull();
-            assertThat(response.getStatus()).isNotNull();
-            assertThat(response.getStatus()).isEqualTo("Deny");
-        }
+        requestAndCheckDecision(requestCl2OpenNode1,DENY);
     }
 
     @SuppressWarnings("unchecked")
@@ -385,7 +332,6 @@ public class GuardPdpApplicationTest {
         // Get the properties
         //
         Map<String, Object> properties = (Map<String, Object>) request.getResource().get("guard");
-        assertThat(properties).isNotNull();
         //
         // Add an entry
         //
@@ -393,7 +339,11 @@ public class GuardPdpApplicationTest {
         newEntry.setActor(properties.get("actor").toString());
         newEntry.setOperation(properties.get("recipe").toString());
         newEntry.setClosedLoopName(properties.get("clname").toString());
-        newEntry.setOutcome("SUCCESS");
+        if (properties.containsKey("outcome")) {
+            newEntry.setOutcome(properties.get("outcome").toString());
+        }  else {
+            newEntry.setOutcome("SUCCESS");
+        }
         newEntry.setStarttime(Date.from(Instant.now().minusMillis(20000)));
         newEntry.setEndtime(Date.from(Instant.now()));
         newEntry.setRequestId(UUID.randomUUID().toString());
@@ -412,5 +362,4 @@ public class GuardPdpApplicationTest {
             em.close();
         }
     }
-
 }
