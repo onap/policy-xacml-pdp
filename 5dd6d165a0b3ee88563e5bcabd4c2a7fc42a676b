@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7752a3ba_fe840160",
+        "filename": "testsuites/stability/src/main/resources/testplans/stability.jmx",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-08T21:15:15Z",
+      "side": 0,
+      "message": "we should keep this right?",
+      "range": {
+        "startLine": 2,
+        "startChar": 1,
+        "endLine": 20,
+        "endChar": 5
+      },
+      "revId": "5dd6d165a0b3ee88563e5bcabd4c2a7fc42a676b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
