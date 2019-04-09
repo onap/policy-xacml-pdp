@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba8b099d_f5d76ac8",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-09T18:00:33Z",
+      "side": 1,
+      "message": "messed this up - need to move outside the for",
+      "range": {
+        "startLine": 79,
+        "startChar": 2,
+        "endLine": 90,
+        "endChar": 6
+      },
+      "revId": "79f00921945dba14bdea48e2471ee19572b834c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
