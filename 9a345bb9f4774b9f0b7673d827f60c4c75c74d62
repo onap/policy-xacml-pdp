@@ -22,6 +22,30 @@
       "revId": "9a345bb9f4774b9f0b7673d827f60c4c75c74d62",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9f1db25_59d0809e",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-09T22:53:40Z",
+      "side": 1,
+      "message": "Nope - I forgot to clean it out.",
+      "parentUuid": "e33b40d7_a8d24e59",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 69,
+        "endChar": 33
+      },
+      "revId": "9a345bb9f4774b9f0b7673d827f60c4c75c74d62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
