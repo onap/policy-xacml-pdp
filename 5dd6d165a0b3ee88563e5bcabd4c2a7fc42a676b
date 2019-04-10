@@ -16,6 +16,24 @@
       "revId": "5dd6d165a0b3ee88563e5bcabd4c2a7fc42a676b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4efc127a_79477acc",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/Dockerfile",
+        "patchSetId": 4
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-10T11:12:14Z",
+      "side": 0,
+      "message": "Yes I was wondering that myself when I was looking through it. But not familiar enough. Let me go ahead and clean that up now while I am at it. But I do need this review in this morning.",
+      "parentUuid": "52f788be_34b43e18",
+      "revId": "5dd6d165a0b3ee88563e5bcabd4c2a7fc42a676b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
