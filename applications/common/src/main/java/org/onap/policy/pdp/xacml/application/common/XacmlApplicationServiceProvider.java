@@ -23,10 +23,10 @@ package org.onap.policy.pdp.xacml.application.common;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 
 /**
@@ -79,11 +79,11 @@ public interface XacmlApplicationServiceProvider {
     boolean          canSupportPolicyType(ToscaPolicyTypeIdentifier toscaPolicyId);
 
     /**
-     * Load a Map representation of a Tosca Policy.
+     * Load a Tosca Policy.
      *
-     * @param toscaPolicies Map of Tosca Policy Objects
+     * @param toscaPolicy object
      */
-    void             loadPolicies(Map<String, Object> toscaPolicies) throws XacmlApplicationException;
+    void             loadPolicy(ToscaPolicy toscaPolicy) throws XacmlApplicationException;
 
     /**
      * Makes a decision given the incoming request and returns a response.

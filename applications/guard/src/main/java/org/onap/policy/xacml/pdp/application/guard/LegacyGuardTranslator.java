@@ -30,15 +30,9 @@ import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.annotations.RequestParser;
-import com.att.research.xacml.util.XACMLPolicyWriter;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
@@ -58,6 +52,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
@@ -69,8 +64,6 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LegacyGuardTranslator.class);
 
-    private static final String FIELD_POLICIES = "policies";
-    private static final String FIELD_TOPOLOGY_TEMPLATE = "topology_template";
     private static final String FIELD_GUARD_ACTIVE_START = "guardActiveStart";
     private static final String FIELD_GUARD_ACTIVE_END = "guardActiveEnd";
 
@@ -78,73 +71,52 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         super();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public List<PolicyType> scanAndConvertPolicies(Map<String, Object> toscaObject)
-            throws ToscaPolicyConversionException {
+    public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
         //
-        // Our return object
+        // Policy name should be at the root
         //
-        List<PolicyType> scannedPolicies = new ArrayList<>();
+        String policyName = toscaPolicy.getMetadata().get("policy-id");
         //
-        // Find the Policies
+        // Set it as the policy ID
         //
-        List<Object> policies;
-
-        if (toscaObject.containsKey(FIELD_POLICIES)) {
-            policies = (List<Object>) toscaObject.get(FIELD_POLICIES);
-        } else if (toscaObject.containsKey(FIELD_TOPOLOGY_TEMPLATE)) {
-            Map<String, Object> topologyTemplate = (Map<String, Object>) toscaObject.get(FIELD_TOPOLOGY_TEMPLATE);
-            if (topologyTemplate.containsKey(FIELD_POLICIES)) {
-                policies = (List<Object>) topologyTemplate.get(FIELD_POLICIES);
-            } else {
-                LOGGER.warn("topologyTemplate does not contain policies");
-                return scannedPolicies;
-            }
-        } else {
-            LOGGER.warn("Failed to find policies or topologyTemplate");
-            return scannedPolicies;
+        PolicyType newPolicyType = new PolicyType();
+        newPolicyType.setPolicyId(policyName);
+        //
+        // Optional description
+        //
+        newPolicyType.setDescription(toscaPolicy.getDescription());
+        //
+        // There should be a metadata section
+        //
+        this.fillMetadataSection(newPolicyType, toscaPolicy.getMetadata());
+        //
+        // Set the combining rule
+        //
+        newPolicyType.setRuleCombiningAlgId(XACML3.ID_RULE_DENY_UNLESS_PERMIT.stringValue());
+        //
+        // Generate the TargetType
+        //
+        newPolicyType.setTarget(this.generateTargetType(toscaPolicy.getProperties()));
+        //
+        // Now create the Permit Rule
+        //
+        RuleType rule = generatePermitRule(policyName, toscaPolicy.getType(), toscaPolicy.getProperties());
+        //
+        // Check if we were able to create the rule
+        //
+        if (rule == null) {
+            LOGGER.warn("Failed to create rule");
+            return null;
         }
         //
-        // Iterate each of the Policies
+        // Add the rule to the policy
         //
-        for (Object policyObject : policies) {
-            //
-            // Get the contents
-            //
-            LOGGER.debug("Found policy {}", policyObject.getClass());
-            Map<String, Object> policyContents = (Map<String, Object>) policyObject;
-            for (Entry<String, Object> entrySet : policyContents.entrySet()) {
-                LOGGER.debug("Entry set {}", entrySet);
-                //
-                // Convert this policy
-                //
-                PolicyType policy = this.convertPolicy(entrySet);
-                if (policy == null) {
-                    //
-                    // Somehow there wasn't enough information to create
-                    // a policy
-                    //
-                    LOGGER.debug("Failed to convert policy");
-                    continue;
-                }
-                //
-                // Debug dump this
-                //
-                try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
-                    XACMLPolicyWriter.writePolicyFile(os, policy);
-                    LOGGER.debug("{}", os);
-                } catch (IOException e) {
-                    LOGGER.error("Failed to convert {}", e);
-                }
-                //
-                // Convert and add in the new policy
-                //
-                scannedPolicies.add(policy);
-            }
-        }
-
-        return scannedPolicies;
+        newPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
+        //
+        // Return our new policy
+        //
+        return newPolicyType;
     }
 
     @Override
@@ -160,7 +132,6 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         //
         return null;
     }
-
 
     @Override
     public DecisionResponse convertResponse(Response xacmlResponse) {
@@ -196,89 +167,31 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         return decisionResponse;
     }
 
-    @SuppressWarnings("unchecked")
-    private PolicyType convertPolicy(Entry<String, Object> entrySet) throws ToscaPolicyConversionException {
-        //
-        // Policy name should be at the root
-        //
-        String policyName = entrySet.getKey();
-        Map<String, Object> policyDefinition = (Map<String, Object>) entrySet.getValue();
-        //
-        // Set it as the policy ID
-        //
-        PolicyType newPolicyType = new PolicyType();
-        newPolicyType.setPolicyId(policyName);
-        //
-        // Optional description
-        //
-        if (policyDefinition.containsKey("description")) {
-            newPolicyType.setDescription(policyDefinition.get("description").toString());
-        }
-        //
-        // There should be a metadata section
-        //
-        if (! policyDefinition.containsKey("metadata")) {
-            throw new ToscaPolicyConversionException(policyName + " missing metadata section");
-        }
-        this.fillMetadataSection(newPolicyType,
-                (Map<String, Object>) policyDefinition.get("metadata"));
-        //
-        // Set the combining rule
-        //
-        newPolicyType.setRuleCombiningAlgId(XACML3.ID_RULE_DENY_UNLESS_PERMIT.stringValue());
-        //
-        // Generate the TargetType
-        //
-        if (! policyDefinition.containsKey("properties")) {
-            throw new ToscaPolicyConversionException(policyName + " missing properties section");
-        }
-        newPolicyType.setTarget(this.generateTargetType((Map<String, Object>) policyDefinition.get("properties")));
-        //
-        // Now create the Permit Rule
-        //
-        RuleType rule = generatePermitRule(policyName, policyDefinition.get("type").toString(),
-                (Map<String, Object>) policyDefinition.get("properties"));
-        //
-        // Check if we were able to create the rule
-        //
-        if (rule == null) {
-            LOGGER.warn("Failed to create rule");
-            return null;
-        }
-        //
-        // Add the rule to the policy
-        //
-        newPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
-        //
-        // Return our new policy
-        //
-        return newPolicyType;
-    }
 
     /**
      * From the TOSCA metadata section, pull in values that are needed into the XACML policy.
      *
      * @param policy Policy Object to store the metadata
-     * @param metadata The Metadata TOSCA Map
+     * @param map The Metadata TOSCA Map
      * @return Same Policy Object
      * @throws ToscaPolicyConversionException If there is something missing from the metadata
      */
     protected PolicyType fillMetadataSection(PolicyType policy,
-            Map<String, Object> metadata) throws ToscaPolicyConversionException {
-        if (! metadata.containsKey("policy-id")) {
+            Map<String, String> map) throws ToscaPolicyConversionException {
+        if (! map.containsKey("policy-id")) {
             throw new ToscaPolicyConversionException(policy.getPolicyId() + " missing metadata policy-id");
         } else {
             //
             // Do nothing here - the XACML PolicyId is used from TOSCA Policy Name field
             //
         }
-        if (! metadata.containsKey("policy-version")) {
+        if (! map.containsKey("policy-version")) {
             throw new ToscaPolicyConversionException(policy.getPolicyId() + " missing metadata policy-version");
         } else {
             //
             // Add in the Policy Version
             //
-            policy.setVersion(metadata.get("policy-version").toString());
+            policy.setVersion(map.get("policy-version").toString());
         }
         return policy;
     }
@@ -343,7 +256,8 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         return allOf;
     }
 
-    private static RuleType generatePermitRule(String policyName, String policyType, Map<String, Object> properties) {
+    private static RuleType generatePermitRule(String policyName, String policyType, Map<String, Object> properties)
+            throws ToscaPolicyConversionException {
         //
         // Now determine which policy type we are generating
         //
@@ -352,17 +266,16 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         } else if ("onap.policies.controlloop.guard.MinMax".equals(policyType)) {
             return generateMinMaxPermit(policyName, properties);
         }
+        LOGGER.error("Missing policy type in the policy");
         return null;
     }
 
-    private static RuleType generateFrequencyPermit(String policyName, Map<String, Object> properties) {
+    private static RuleType generateFrequencyPermit(String policyName, Map<String, Object> properties)
+            throws ToscaPolicyConversionException {
         //
         // See if its possible to generate a count
         //
-        Integer limit = null;
-        if (properties.containsKey("limit")) {
-            limit = Integer.decode(properties.get("limit").toString());
-        }
+        Integer limit = parseInteger(properties.get("limit").toString());
         if (limit == null) {
             LOGGER.debug("Must have a limit value for frequency guard policy to be created");
             return null;
@@ -372,7 +285,11 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         //
         String timeWindow = null;
         if (properties.containsKey("timeWindow")) {
-            timeWindow = properties.get("timeWindow").toString();
+            Integer intTimeWindow = parseInteger(properties.get("timeWindow").toString());
+            if (intTimeWindow == null) {
+                throw new ToscaPolicyConversionException("timeWindow is not an integer");
+            }
+            timeWindow = intTimeWindow.toString();
         }
         String timeUnits = null;
         if (properties.containsKey("timeUnits")) {
@@ -452,11 +369,11 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         //
         Integer min = null;
         if (properties.containsKey("min")) {
-            min = Integer.decode(properties.get("min").toString());
+            min = parseInteger(properties.get("min").toString());
         }
         Integer max = null;
         if (properties.containsKey("max")) {
-            max = Integer.decode(properties.get("max").toString());
+            max = parseInteger(properties.get("max").toString());
         }
         final ApplyType minApply = generateMinCheck(min);
         final ApplyType maxApply = generateMaxCheck(max);
@@ -706,6 +623,23 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         applyLessThanEqual.getExpression().add(factory.createAttributeValue(valueLimit));
 
         return applyLessThanEqual;
+    }
+
+    private static Integer parseInteger(String strInteger) {
+        Integer theInt = null;
+        try {
+            theInt = Integer.parseInt(strInteger);
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Expecting an integer for limit", e);
+            try {
+                Double dblLimit = Double.parseDouble(strInteger);
+                theInt = dblLimit.intValue();
+            } catch (NumberFormatException e1) {
+                LOGGER.error("Failed to parse expected integer as a double", e);
+                return null;
+            }
+        }
+        return theInt;
     }
 
     private static AdviceExpressionsType generateRequestIdAdvice() {

@@ -28,7 +28,7 @@ import org.onap.policy.common.utils.coder.StandardCoderObject;
 import org.onap.policy.models.pdp.concepts.PdpStateChange;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.enums.PdpState;
-import org.onap.policy.pdpx.main.comm.XacmlPdpHeartbeatPublisher;
+import org.onap.policy.pdpx.main.comm.XacmlPdpHearbeatPublisher;
 import org.onap.policy.pdpx.main.comm.XacmlPdpMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +39,7 @@ public class XacmlPdpStateChangeListener extends ScoListener<PdpStateChange> {
 
     private TopicSinkClient client;
 
-    private XacmlPdpHeartbeatPublisher heartbeat;
+    private XacmlPdpHearbeatPublisher heartbeat;
 
     /**
      * Constructs the object.
@@ -48,7 +48,9 @@ public class XacmlPdpStateChangeListener extends ScoListener<PdpStateChange> {
      */
     public XacmlPdpStateChangeListener(TopicSinkClient client) {
         super(PdpStateChange.class);
-        heartbeat = new XacmlPdpHeartbeatPublisher(client, PdpState.PASSIVE);
+        PdpStateChange message = new PdpStateChange();
+        message.setState(PdpState.PASSIVE);
+        heartbeat = new XacmlPdpHearbeatPublisher(client, message);
         this.client = client;
     }
 
@@ -66,10 +68,10 @@ public class XacmlPdpStateChangeListener extends ScoListener<PdpStateChange> {
             }
 
             // Update the heartbeat internal state if publisher is running else create new publisher
-            if (XacmlPdpHeartbeatPublisher.isAlive()) {
+            if (XacmlPdpHearbeatPublisher.isAlive()) {
                 heartbeat.updateInternalState(message.getState());
             } else {
-                heartbeat = new XacmlPdpHeartbeatPublisher(client, message.getState());
+                heartbeat = new XacmlPdpHearbeatPublisher(client, message);
             }
 
         } catch (final Exception e) {

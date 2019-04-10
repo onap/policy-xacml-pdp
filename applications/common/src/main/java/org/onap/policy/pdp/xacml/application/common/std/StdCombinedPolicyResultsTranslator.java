@@ -31,16 +31,11 @@ import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.annotations.RequestParser;
-import com.att.research.xacml.util.XACMLPolicyWriter;
 import com.google.gson.Gson;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
@@ -54,9 +49,11 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
-import org.json.JSONObject;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
@@ -72,44 +69,61 @@ public class StdCombinedPolicyResultsTranslator implements ToscaPolicyTranslator
         super();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public List<PolicyType> scanAndConvertPolicies(Map<String, Object> toscaObject)
-            throws ToscaPolicyConversionException {
+    public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
         //
-        // Our return object
+        // Set it as the policy ID
         //
-        List<PolicyType> scannedPolicies = new ArrayList<>();
+        PolicyType newPolicyType = new PolicyType();
+        newPolicyType.setPolicyId(toscaPolicy.getMetadata().get("policy-id"));
         //
-        // Iterate each of the Policies
+        // Optional description
         //
-        List<Object> policies = (List<Object>) toscaObject.get("policies");
-        for (Object policyObject : policies) {
-            //
-            // Get the contents
-            //
-            LOGGER.debug("Found policy {}", policyObject.getClass());
-            Map<String, Object> policyContents = (Map<String, Object>) policyObject;
-            for (Entry<String, Object> entrySet : policyContents.entrySet()) {
-                LOGGER.debug("Entry set {}", entrySet);
-                //
-                // Convert this policy
-                //
-                PolicyType policy = this.convertPolicy(entrySet);
-                try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
-                    XACMLPolicyWriter.writePolicyFile(os, policy);
-                    LOGGER.debug("{}", os);
-                } catch (IOException e) {
-                    LOGGER.error("Failed to convert {}", e);
-                }
-                //
-                // Convert and add in the new policy
-                //
-                scannedPolicies.add(policy);
-            }
+        newPolicyType.setDescription(toscaPolicy.getDescription());
+        //
+        // There should be a metadata section
+        //
+        this.fillMetadataSection(newPolicyType, toscaPolicy.getMetadata());
+        //
+        // Set the combining rule
+        //
+        newPolicyType.setRuleCombiningAlgId(XACML3.ID_RULE_FIRST_APPLICABLE.stringValue());
+        //
+        // Generate the TargetType
+        //
+        TargetType target = this.generateTargetType(toscaPolicy.getMetadata().get("policy-id"),
+                toscaPolicy.getType(), toscaPolicy.getVersion());
+        newPolicyType.setTarget(target);
+        //
+        // Now create the Permit Rule
+        // No target since the policy has a target
+        // With obligations.
+        //
+        RuleType rule = new RuleType();
+        rule.setDescription("Default is to PERMIT if the policy matches.");
+        rule.setRuleId(toscaPolicy.getMetadata().get("policy-id") + ":rule");
+        rule.setEffect(EffectType.PERMIT);
+        rule.setTarget(new TargetType());
+        //
+        // Now represent the policy as Json
+        //
+        StandardCoder coder = new StandardCoder();
+        String jsonPolicy;
+        try {
+            jsonPolicy = coder.encode(toscaPolicy);
+        } catch (CoderException e) {
+            LOGGER.error("Failed to encode policy to json", e);
+            throw new ToscaPolicyConversionException(e);
         }
-
-        return scannedPolicies;
+        addObligation(rule, jsonPolicy);
+        //
+        // Add the rule to the policy
+        //
+        newPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
+        //
+        // Return our new policy
+        //
+        return newPolicyType;
     }
 
     @Override
@@ -194,99 +208,30 @@ public class StdCombinedPolicyResultsTranslator implements ToscaPolicyTranslator
         }
     }
 
-    @SuppressWarnings("unchecked")
-    protected PolicyType convertPolicy(Entry<String, Object> entrySet) throws ToscaPolicyConversionException {
-        //
-        // Policy name should be at the root
-        //
-        String policyName = entrySet.getKey();
-        Map<String, Object> policyDefinition = (Map<String, Object>) entrySet.getValue();
-        //
-        // Set it as the policy ID
-        //
-        PolicyType newPolicyType = new PolicyType();
-        newPolicyType.setPolicyId(policyName);
-        //
-        // Optional description
-        //
-        if (policyDefinition.containsKey("description")) {
-            newPolicyType.setDescription(policyDefinition.get("description").toString());
-        }
-        //
-        // There should be a metadata section
-        //
-        if (! policyDefinition.containsKey("metadata")) {
-            throw new ToscaPolicyConversionException(policyName + " missing metadata section");
-        }
-        this.fillMetadataSection(newPolicyType,
-                (Map<String, Object>) policyDefinition.get("metadata"));
-        //
-        // Set the combining rule
-        //
-        newPolicyType.setRuleCombiningAlgId(XACML3.ID_RULE_FIRST_APPLICABLE.stringValue());
-        //
-        // Generate the TargetType
-        //
-        if (! policyDefinition.containsKey("type")) {
-            throw new ToscaPolicyConversionException(policyName + " missing type value");
-        }
-        if (! policyDefinition.containsKey("version")) {
-            throw new ToscaPolicyConversionException(policyName + " missing version value");
-        }
-        TargetType target = this.generateTargetType(policyName,
-                policyDefinition.get("type").toString(),
-                policyDefinition.get("version").toString());
-        newPolicyType.setTarget(target);
-        //
-        // Now create the Permit Rule
-        // No target since the policy has a target
-        // With obligations.
-        //
-        RuleType rule = new RuleType();
-        rule.setDescription("Default is to PERMIT if the policy matches.");
-        rule.setRuleId(policyName + ":rule");
-        rule.setEffect(EffectType.PERMIT);
-        rule.setTarget(new TargetType());
-        //
-        // Now represent the policy as Json
-        //
-        JSONObject jsonObligation = new JSONObject();
-        jsonObligation.put(policyName, policyDefinition);
-        addObligation(rule, jsonObligation);
-        //
-        // Add the rule to the policy
-        //
-        newPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
-        //
-        // Return our new policy
-        //
-        return newPolicyType;
-    }
-
     /**
      * From the TOSCA metadata section, pull in values that are needed into the XACML policy.
      *
      * @param policy Policy Object to store the metadata
-     * @param metadata The Metadata TOSCA Map
+     * @param map The Metadata TOSCA Map
      * @return Same Policy Object
      * @throws ToscaPolicyConversionException If there is something missing from the metadata
      */
     protected PolicyType fillMetadataSection(PolicyType policy,
-            Map<String, Object> metadata) throws ToscaPolicyConversionException {
-        if (! metadata.containsKey("policy-id")) {
+            Map<String, String> map) throws ToscaPolicyConversionException {
+        if (! map.containsKey("policy-id")) {
             throw new ToscaPolicyConversionException(policy.getPolicyId() + " missing metadata policy-id");
         } else {
             //
             // Do nothing here - the XACML PolicyId is used from TOSCA Policy Name field
             //
         }
-        if (! metadata.containsKey("policy-version")) {
+        if (! map.containsKey("policy-version")) {
             throw new ToscaPolicyConversionException(policy.getPolicyId() + " missing metadata policy-version");
         } else {
             //
             // Add in the Policy Version
             //
-            policy.setVersion(metadata.get("policy-version").toString());
+            policy.setVersion(map.get("policy-version").toString());
         }
         return policy;
     }
@@ -346,7 +291,7 @@ public class StdCombinedPolicyResultsTranslator implements ToscaPolicyTranslator
         return target;
     }
 
-    protected RuleType addObligation(RuleType rule, JSONObject jsonPolicy) {
+    protected RuleType addObligation(RuleType rule, String jsonPolicy) {
         //
         // Convert the YAML Policy to JSON Object
         //
@@ -358,7 +303,7 @@ public class StdCombinedPolicyResultsTranslator implements ToscaPolicyTranslator
         //
         AttributeValueType value = new AttributeValueType();
         value.setDataType(ToscaDictionary.ID_OBLIGATION_POLICY_MONITORING_DATATYPE.stringValue());
-        value.getContent().add(jsonPolicy.toString());
+        value.getContent().add(jsonPolicy);
         //
         // Create our AttributeAssignmentExpression where we will
         // store the contents of the policy in JSON format.
