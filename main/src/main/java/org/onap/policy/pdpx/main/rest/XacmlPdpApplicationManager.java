@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
@@ -43,6 +45,7 @@ public class XacmlPdpApplicationManager {
     private static ServiceLoader<XacmlApplicationServiceProvider> applicationLoader;
     private static Map<String, XacmlApplicationServiceProvider> providerActionMap = new HashMap<>();
     private static List<ToscaPolicyTypeIdentifier> toscaPolicyTypeIdents = new ArrayList<>();
+    private static List<ToscaPolicyIdentifier> toscaPolicies = new ArrayList<>();
 
     private XacmlPdpApplicationManager() {
         super();
@@ -114,6 +117,34 @@ public class XacmlPdpApplicationManager {
 
     public static List<ToscaPolicyTypeIdentifier> getToscaPolicyTypeIdents() {
         return toscaPolicyTypeIdents;
+    }
+
+    /**
+     * Finds the appropriate application and loads the policy.
+     *
+     * @param policy Incoming policy
+     */
+    public static void loadDeployedPolicy(ToscaPolicy policy) {
+
+        for (XacmlApplicationServiceProvider application : applicationLoader) {
+            try {
+                //
+                // There should be only one application per policytype. We can
+                // put more logic surrounding enforcement of that later. For now,
+                // just use the first one found.
+                //
+                if (application.canSupportPolicyType(policy.getTypeIdentifier())) {
+                    application.loadPolicy(policy);
+                    return;
+                }
+            } catch (XacmlApplicationException e) {
+                LOGGER.error("Failed to load the Tosca Policy", e);
+            }
+        }
+    }
+
+    public static List<ToscaPolicyIdentifier> getToscaPolicies() {
+        return toscaPolicies;
     }
 
     /**

@@ -24,7 +24,9 @@ package org.onap.policy.pdpx.main.comm;
 
 import java.net.UnknownHostException;
 import org.onap.policy.common.utils.network.NetworkUtil;
+import org.onap.policy.models.pdp.concepts.PdpStateChange;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
+import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.models.pdp.enums.PdpHealthStatus;
 import org.onap.policy.models.pdp.enums.PdpState;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
@@ -42,7 +44,6 @@ public class XacmlPdpMessage {
      *
      * @param state of the PDP
      * @return status message of the PDP
-     * @throws UnknownHostException if cannot get hostname
      */
     public PdpStatus formatStatusMessage(PdpState state) {
         PdpStatus status = new PdpStatus();
@@ -62,5 +63,56 @@ public class XacmlPdpMessage {
 
         return status;
 
+    }
+
+    /**
+     * Method used to format the heartbeat status message.
+     *
+     * @param message PdpStateChange message received from the PAP
+     * @return status message of the PDP
+     */
+    public PdpStatus formatHeartbeatMessage(PdpStateChange message) {
+        PdpStatus status = new PdpStatus();
+        status.setName(NetworkUtil.getHostname());
+
+        if (XacmlPdpActivator.getCurrent().isAlive()) {
+            status.setHealthy(PdpHealthStatus.HEALTHY);
+        } else {
+            status.setHealthy(PdpHealthStatus.NOT_HEALTHY);
+        }
+
+        status.setPdpType("xacml");
+        status.setState(message.getState());
+        status.setPdpGroup(message.getPdpGroup());
+        status.setPdpSubgroup(message.getPdpSubgroup());
+        status.setSupportedPolicyTypes(XacmlPdpApplicationManager.getToscaPolicyTypeIdents());
+
+        return status;
+    }
+
+    /**
+     * Method used to format the PdpUpdate message.
+     *
+     * @param message PdpUpdate message that was received from the PAP
+     * @return status message of the PDP
+     */
+    public PdpStatus formatPdpUpdateMessage(PdpUpdate message, PdpState state) {
+        PdpStatus status = new PdpStatus();
+        status.setName(NetworkUtil.getHostname());
+
+        if (XacmlPdpActivator.getCurrent().isAlive()) {
+            status.setHealthy(PdpHealthStatus.HEALTHY);
+        } else {
+            status.setHealthy(PdpHealthStatus.NOT_HEALTHY);
+        }
+
+        status.setPdpType("xacml");
+        status.setState(state);
+        status.setPdpGroup(message.getPdpGroup());
+        status.setPdpSubgroup(message.getPdpSubgroup());
+        status.setSupportedPolicyTypes(XacmlPdpApplicationManager.getToscaPolicyTypeIdents());
+        status.setPolicies(XacmlPdpApplicationManager.getToscaPolicies());
+
+        return status;
     }
 }

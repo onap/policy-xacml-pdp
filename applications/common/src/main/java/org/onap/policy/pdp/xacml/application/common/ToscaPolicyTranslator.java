@@ -25,24 +25,22 @@ package org.onap.policy.pdp.xacml.application.common;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
 
-import java.util.List;
-import java.util.Map;
-
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 
 public interface ToscaPolicyTranslator {
 
     /**
      * Implement this method to translate policies.
      *
-     * @param toscaObject Incoming Tosca Policies object
-     * @return List of translated policies
+     * @param toscaPolicy Incoming Tosca Policy object
+     * @return Xacml PolicyType object
      * @throws ToscaPolicyConversionException Exception
      */
-    List<PolicyType> scanAndConvertPolicies(Map<String, Object> toscaObject) throws ToscaPolicyConversionException;
+    PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException;
 
     /**
      * Implement this method to convert an ONAP DecisionRequest into
