@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52206c09_4558b20e",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpHearbeatPublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-10T16:30:31Z",
+      "side": 1,
+      "message": "looks like this is always a \"PdpStateChange\".  Could change the type declaration and then eliminate all of the casts.",
+      "revId": "2eeb8ceda9c7c204d3cf0ef852ddb7dc8bb9fb2e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b8109e76_82f44564",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpHearbeatPublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-10T16:30:31Z",
+      "side": 1,
+      "message": "ok to remove \"static\"?",
+      "revId": "2eeb8ceda9c7c204d3cf0ef852ddb7dc8bb9fb2e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
