@@ -28,6 +28,7 @@ import com.att.research.xacml.api.pdp.PDPEngine;
 import com.att.research.xacml.api.pdp.PDPEngineFactory;
 import com.att.research.xacml.api.pdp.PDPException;
 import com.att.research.xacml.util.FactoryException;
+import com.att.research.xacml.util.XACMLPolicyWriter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,19 +38,23 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
+
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
+import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class StdXacmlApplicationServiceProvider implements XacmlApplicationServiceProvider {
+public abstract class StdXacmlApplicationServiceProvider implements XacmlApplicationServiceProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StdXacmlApplicationServiceProvider.class);
     private Path pathForData = null;
@@ -115,21 +120,71 @@ public class StdXacmlApplicationServiceProvider implements XacmlApplicationServi
 
     @Override
     public boolean canSupportPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
-        return false;
+        throw new UnsupportedOperationException("Please override and implement canSupportPolicyType");
     }
 
     @Override
-    public void loadPolicies(Map<String, Object> toscaPolicies) throws XacmlApplicationException {
-        throw new UnsupportedOperationException("Please override and implement loadPolicies");
+    public synchronized void loadPolicy(ToscaPolicy toscaPolicy) {
+        try {
+            //
+            // Convert the policies first
+            //
+            PolicyType xacmlPolicy = this.getTranslator().convertPolicy(toscaPolicy);
+            if (xacmlPolicy == null) {
+                throw new ToscaPolicyConversionException("Failed to convert policy");
+            }
+            //
+            // Create a copy of the properties object
+            //
+            Properties newProperties = this.getProperties();
+            //
+            // Construct the filename
+            //
+            Path refPath = XacmlPolicyUtils.constructUniquePolicyFilename(xacmlPolicy, this.getDataPath());
+            //
+            // Write the policy to disk
+            // Maybe check for an error
+            //
+            XACMLPolicyWriter.writePolicyFile(refPath, xacmlPolicy);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Xacml Policy is {}{}", System.lineSeparator(), new String(Files.readAllBytes(refPath)));
+            }
+            //
+            // Add root policy to properties object
+            //
+            XacmlPolicyUtils.addRootPolicy(newProperties, refPath);
+            //
+            // Write the properties to disk
+            //
+            XacmlPolicyUtils.storeXacmlProperties(newProperties,
+                    XacmlPolicyUtils.getPropertiesPath(this.getDataPath()));
+            //
+            // Reload the engine
+            //
+            this.createEngine(newProperties);
+        } catch (IOException | ToscaPolicyConversionException e) {
+            LOGGER.error("Failed to loadPolicies {}", e);
+        }
     }
 
     @Override
-    public DecisionResponse makeDecision(DecisionRequest request) {
+    public synchronized DecisionResponse makeDecision(DecisionRequest request) {
         //
-        // We should have a standard error response to return
+        // Convert to a XacmlRequest
         //
-        return null;
+        Request xacmlRequest = this.getTranslator().convertRequest(request);
+        //
+        // Now get a decision
+        //
+        Response xacmlResponse = this.xacmlDecision(xacmlRequest);
+        //
+        // Convert to a DecisionResponse
+        //
+        return this.getTranslator().convertResponse(xacmlResponse);
     }
+
+
+    protected abstract ToscaPolicyTranslator getTranslator();
 
     protected synchronized PDPEngine getEngine() {
         return this.pdpEngine;
