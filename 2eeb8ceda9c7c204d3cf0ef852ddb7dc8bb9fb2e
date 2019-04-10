@@ -56,6 +56,29 @@
       "revId": "2eeb8ceda9c7c204d3cf0ef852ddb7dc8bb9fb2e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4e5e5c9_df924fdf",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-10T16:41:11Z",
+      "side": 1,
+      "message": "You should not be loading into ALL the applications - only the application that supports the policy type. You have a map of that",
+      "range": {
+        "startLine": 124,
+        "startChar": 8,
+        "endLine": 131,
+        "endChar": 5
+      },
+      "revId": "2eeb8ceda9c7c204d3cf0ef852ddb7dc8bb9fb2e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
