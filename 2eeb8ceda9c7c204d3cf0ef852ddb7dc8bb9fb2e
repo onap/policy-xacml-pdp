@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f22c0710_bdeca39e",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpHearbeatPublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-04-10T18:25:13Z",
+      "side": 1,
+      "message": "Oops. I was trying something else and aborted the idea.. forgot to change this",
+      "parentUuid": "52206c09_4558b20e",
+      "revId": "2eeb8ceda9c7c204d3cf0ef852ddb7dc8bb9fb2e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b8109e76_82f44564",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpHearbeatPublisher.java",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2019-04-10T16:30:31Z",
       "side": 1,
       "message": "ok to remove \"static\"?",
+      "revId": "2eeb8ceda9c7c204d3cf0ef852ddb7dc8bb9fb2e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0174fef5_c4a9ce16",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpHearbeatPublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-04-10T18:25:13Z",
+      "side": 1,
+      "message": "same.. trying something and forgot to revert.",
+      "parentUuid": "b8109e76_82f44564",
       "revId": "2eeb8ceda9c7c204d3cf0ef852ddb7dc8bb9fb2e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
