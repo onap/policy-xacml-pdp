@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 
 /**
  * This interface is how the XACML REST controller can communicate
@@ -59,31 +60,30 @@ public interface XacmlApplicationServiceProvider {
      *
      * @param pathForData Local Path
      */
-    void             initialize(Path pathForData);
+    void             initialize(Path pathForData) throws XacmlApplicationException;
 
     /**
      * Returns a list of supported Tosca Policy Types.
      *
      * @return List of Strings (eg. "onap.policy.foo.bar")
      */
-    List<String>     supportedPolicyTypes();
+    List<ToscaPolicyTypeIdentifier>     supportedPolicyTypes();
 
     /**
      * Asks whether the application can support the incoming
      * Tosca Policy Type and version.
      *
-     * @param policyType String Tosca Policy Type
-     * @param policyTypeVersion String of the Tosca Policy Type version
+     * @param toscaPolicyId Identifier for policy type
      * @return true if supported
      */
-    boolean          canSupportPolicyType(String policyType, String policyTypeVersion);
+    boolean          canSupportPolicyType(ToscaPolicyTypeIdentifier toscaPolicyId);
 
     /**
      * Load a Map representation of a Tosca Policy.
      *
      * @param toscaPolicies Map of Tosca Policy Objects
      */
-    void             loadPolicies(Map<String, Object> toscaPolicies);
+    void             loadPolicies(Map<String, Object> toscaPolicies) throws XacmlApplicationException;
 
     /**
      * Makes a decision given the incoming request and returns a response.

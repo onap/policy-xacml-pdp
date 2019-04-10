@@ -42,6 +42,8 @@ import java.util.Properties;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
@@ -69,12 +71,28 @@ public class StdXacmlApplicationServiceProvider implements XacmlApplicationServi
     }
 
     @Override
-    public void initialize(Path pathForData) {
+    public void initialize(Path pathForData) throws XacmlApplicationException {
         //
         // Save our path
         //
         this.pathForData = pathForData;
-        LOGGER.debug("New Path is {}", this.pathForData.toAbsolutePath());
+        LOGGER.info("New Path is {}", this.pathForData.toAbsolutePath());
+        //
+        // Ensure properties exist
+        //
+        Path propertiesPath = XacmlPolicyUtils.getPropertiesPath(pathForData);
+        if (! propertiesPath.toFile().exists()) {
+            LOGGER.info("Copying src/main/resources/xacml.properties to path");
+            //
+            // Properties do not exist, by default we will copy ours over
+            // from src/main/resources
+            //
+            try {
+                Files.copy(Paths.get("src/main/resources/xacml.properties"), propertiesPath);
+            } catch (IOException e) {
+                throw new XacmlApplicationException("Failed to copy xacml.propertis", e);
+            }
+        }
         //
         // Look for and load the properties object
         //
@@ -82,7 +100,7 @@ public class StdXacmlApplicationServiceProvider implements XacmlApplicationServi
             pdpProperties = XacmlPolicyUtils.loadXacmlProperties(XacmlPolicyUtils.getPropertiesPath(pathForData));
             LOGGER.debug("{}", pdpProperties);
         } catch (IOException e) {
-            LOGGER.error("{}", e);
+            throw new XacmlApplicationException("Failed to load xacml.propertis", e);
         }
         //
         // Create an engine
@@ -91,17 +109,17 @@ public class StdXacmlApplicationServiceProvider implements XacmlApplicationServi
     }
 
     @Override
-    public List<String> supportedPolicyTypes() {
+    public List<ToscaPolicyTypeIdentifier> supportedPolicyTypes() {
         return Collections.emptyList();
     }
 
     @Override
-    public boolean canSupportPolicyType(String policyType, String policyTypeVersion) {
+    public boolean canSupportPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
         return false;
     }
 
     @Override
-    public void loadPolicies(Map<String, Object> toscaPolicies) {
+    public void loadPolicies(Map<String, Object> toscaPolicies) throws XacmlApplicationException {
         throw new UnsupportedOperationException("Please override and implement loadPolicies");
     }
 
