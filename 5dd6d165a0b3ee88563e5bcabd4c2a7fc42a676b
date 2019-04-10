@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52f788be_34b43e18",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/Dockerfile",
+        "patchSetId": 4
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-04-10T02:03:25Z",
+      "side": 0,
+      "message": "Not a comment for this review, but I feel it can be simplified this install quite a bit, the Dockerfile together with the tar packaging.  Not sure why POLICY_HOME and POLICY_PDX_HOME are both needed, I think it makes it more complex that it should be, with copying files around that end up duplicated, seems to me for what I read.  We can talk about it at a later point, not a comment for this review.",
+      "revId": "5dd6d165a0b3ee88563e5bcabd4c2a7fc42a676b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
