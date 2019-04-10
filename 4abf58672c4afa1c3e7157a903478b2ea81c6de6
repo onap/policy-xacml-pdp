@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "78db223a_3fe96d26",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/Dockerfile",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-10T12:06:38Z",
+      "side": 1,
+      "message": "Please confirm these changes are ok. Seems like there is no need to copy anything around when you extract the tarball. Everything should be in place.",
+      "revId": "4abf58672c4afa1c3e7157a903478b2ea81c6de6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
