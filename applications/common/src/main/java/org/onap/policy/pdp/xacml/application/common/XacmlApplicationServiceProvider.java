@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 
 /**
@@ -84,6 +85,13 @@ public interface XacmlApplicationServiceProvider {
      * @param toscaPolicies Map of Tosca Policy Objects
      */
     void             loadPolicies(Map<String, Object> toscaPolicies) throws XacmlApplicationException;
+
+    /**
+     * Load a Tosca Policy.
+     *
+     * @param toscaPolicy object
+     */
+    void             loadPolicy(ToscaPolicy toscaPolicy) throws XacmlApplicationException;
 
     /**
      * Makes a decision given the incoming request and returns a response.
