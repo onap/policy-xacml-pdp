@@ -25,12 +25,9 @@ package org.onap.policy.xacml.pdp.application.optimization;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -44,10 +41,13 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
@@ -64,6 +64,7 @@ public class OptimizationPdpApplicationTest {
     private static XacmlApplicationServiceProvider service;
     private static StandardCoder gson = new StandardCoder();
     private static DecisionRequest requestAffinity;
+    private static final StandardCoder standardCoder = new StandardCoder();
 
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
@@ -159,59 +160,37 @@ public class OptimizationPdpApplicationTest {
         assertThat(response.getPolicies().size()).isEqualTo(0);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void test3AddOptimizationPolicies() throws CoderException, FileNotFoundException, IOException,
         XacmlApplicationException {
         //
         // Now load the optimization policies
         //
-        try (InputStream is = new FileInputStream("src/test/resources/vCPE.policies.optimization.input.tosca.yaml")) {
-            //
-            // Have yaml parse it
-            //
-            Yaml yaml = new Yaml();
-            Map<String, Object> toscaObject = yaml.load(is);
-            List<Object> policies = (List<Object>) toscaObject.get("policies");
-            //
-            // Sanity check to ensure the policy type and version are supported
-            //
-            for (Object policyObject : policies) {
-                //
-                // Get the contents
-                //
-                Map<String, Object> policyContents = (Map<String, Object>) policyObject;
-                for (Entry<String, Object> entrySet : policyContents.entrySet()) {
-                    LOGGER.info("Entry set {}", entrySet.getKey());
-                    Map<String, Object> policyDefinition = (Map<String, Object>) entrySet.getValue();
-                    //
-                    // Find the type and make sure the engine supports it
-                    //
-                    assertThat(policyDefinition.containsKey("type")).isTrue();
-                    assertThat(service.canSupportPolicyType(
-                            new ToscaPolicyTypeIdentifier(
-                            policyDefinition.get("type").toString(),
-                            policyDefinition.get("version").toString())))
-                        .isTrue();
-                }
+        String policyYaml = ResourceUtils.getResourceAsString(
+                "src/test/resources/vCPE.policies.optimization.input.tosca.yaml");
+        Yaml yaml = new Yaml();
+        Object yamlObject = yaml.load(policyYaml);
+        String yamlAsJsonString = new StandardCoder().encode(yamlObject);
+        ToscaServiceTemplate serviceTemplate = standardCoder.decode(yamlAsJsonString, ToscaServiceTemplate.class);
+        //
+        // Get the policies
+        //
+        for (Map<String, ToscaPolicy> policies : serviceTemplate.getToscaTopologyTemplate().getPolicies()) {
+            for (Entry<String, ToscaPolicy> entrySet : policies.entrySet()) {
+                service.loadPolicy(entrySet.getValue());
             }
-            //
-            // Load the policies
-            //
-            service.loadPolicies(toscaObject);
-            //
-            // Ask for a decision
-            //
-            DecisionResponse response = service.makeDecision(requestAffinity);
-            LOGGER.info("Decision {}", response);
-
-            assertThat(response).isNotNull();
-            assertThat(response.getPolicies().size()).isEqualTo(1);
-            //
-            // Dump it out as Json
-            //
-            LOGGER.info(gson.encode(response));
         }
-    }
+        //
+        // Ask for a decision
+        //
+        DecisionResponse response = service.makeDecision(requestAffinity);
+        LOGGER.info("Decision {}", response);
 
+        assertThat(response).isNotNull();
+        assertThat(response.getPolicies().size()).isEqualTo(1);
+        //
+        // Dump it out as Json
+        //
+        LOGGER.info(gson.encode(response));
+    }
 }

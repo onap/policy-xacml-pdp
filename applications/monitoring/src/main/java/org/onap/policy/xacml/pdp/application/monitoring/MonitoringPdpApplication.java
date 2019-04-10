@@ -24,28 +24,20 @@ package org.onap.policy.xacml.pdp.application.monitoring;
 
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
-import com.att.research.xacml.util.XACMLPolicyScanner;
 import com.att.research.xacml.util.XACMLPolicyWriter;
-import com.att.research.xacml.util.XACMLProperties;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
@@ -109,87 +101,41 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
     }
 
     @Override
-    public synchronized void loadPolicies(Map<String, Object> toscaPolicies) {
+    public synchronized void loadPolicy(ToscaPolicy toscaPolicy) {
         try {
             //
             // Convert the policies first
             //
-            List<PolicyType> listPolicies = translator.scanAndConvertPolicies(toscaPolicies);
-            if (listPolicies.isEmpty()) {
-                throw new ToscaPolicyConversionException("Converted 0 policies");
+            PolicyType xacmlPolicy = translator.convertPolicy(toscaPolicy);
+            if (xacmlPolicy == null) {
+                throw new ToscaPolicyConversionException("Failed to convert policy");
             }
             //
-            // Get our properties because we are going to update
+            // Create a copy of the properties object
             //
-            Properties currentProperties = this.getProperties();
+            Properties newProperties = this.getProperties();
             //
-            // Read in our Root Policy
+            // Construct the filename
             //
-            Set<String> roots = XACMLProperties.getRootPolicyIDs(currentProperties);
-            if (roots.isEmpty()) {
-                throw new ToscaPolicyConversionException("There are NO root policies defined");
-            }
+            Path refPath = XacmlPolicyUtils.constructUniquePolicyFilename(xacmlPolicy, this.getDataPath());
             //
-            // Really only should be one
+            // Write the policy to disk
+            // Maybe check for an error
             //
-            String rootFile = currentProperties.getProperty(roots.iterator().next() + ".file");
-            try (InputStream is = new FileInputStream(rootFile)) {
-                //
-                // Read the Root Policy into memory
-                //
-                Object policyData = XACMLPolicyScanner.readPolicy(is);
-                //
-                // Should be a PolicySet
-                //
-                if (policyData instanceof PolicySetType) {
-                    //
-                    // Add the referenced policies into a new Root Policy
-                    //
-                    PolicyType[] newPolicies = listPolicies.toArray(new PolicyType[listPolicies.size()]);
-                    PolicySetType newRootPolicy = XacmlPolicyUtils.addPoliciesToXacmlRootPolicy(
-                            (PolicySetType) policyData, newPolicies);
-                    LOGGER.debug("New ROOT Policy");
-                    try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
-                        XACMLPolicyWriter.writePolicyFile(os, newRootPolicy);
-                        LOGGER.debug("{}", os);
-                    } catch (IOException e) {
-                        LOGGER.error("Failed to convert {}", e);
-                    }
-                    //
-                    // Save the new Policies to disk
-                    //
-                    for (PolicyType policy : newPolicies) {
-                        //
-                        // Construct the filename
-                        //
-                        Path refPath = XacmlPolicyUtils.constructUniquePolicyFilename(policy, this.getDataPath());
-                        //
-                        // Write the policy to disk
-                        // Maybe check for an error
-                        //
-                        XACMLPolicyWriter.writePolicyFile(refPath, policy);
-                        //
-                        // Save it off
-                        //
-                        XacmlPolicyUtils.addReferencedPolicy(currentProperties, refPath);
-                    }
-                    //
-                    // Save the root policy to disk
-                    //
-                    XACMLPolicyWriter.writePolicyFile(Paths.get(rootFile), newRootPolicy);
-                    //
-                    // Write the policies to disk
-                    //
-                    XacmlPolicyUtils.storeXacmlProperties(currentProperties,
-                            XacmlPolicyUtils.getPropertiesPath(this.getDataPath()));
-                    //
-                    // Reload the engine
-                    //
-                    this.createEngine(currentProperties);
-                } else {
-                    throw new ToscaPolicyConversionException("Root policy isn't a PolicySet");
-                }
-            }
+            XACMLPolicyWriter.writePolicyFile(refPath, xacmlPolicy);
+            //
+            // Add root policy to properties object
+            //
+            XacmlPolicyUtils.addRootPolicy(newProperties, refPath);
+            //
+            // Write the properties to disk
+            //
+            XacmlPolicyUtils.storeXacmlProperties(newProperties,
+                    XacmlPolicyUtils.getPropertiesPath(this.getDataPath()));
+            //
+            // Reload the engine
+            //
+            this.createEngine(newProperties);
         } catch (IOException | ToscaPolicyConversionException e) {
             LOGGER.error("Failed to loadPolicies {}", e);
         }
