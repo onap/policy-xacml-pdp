@@ -33,6 +33,29 @@
       "revId": "2eeb8ceda9c7c204d3cf0ef852ddb7dc8bb9fb2e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b05e403_d5fff2b7",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpHearbeatPublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-10T16:40:31Z",
+      "side": 1,
+      "message": "Mike - sonar shows mixture of static non-static access. As Jim noted above - there are several instances of this. Please activate sonarlint in your developer environment to avoid these.",
+      "range": {
+        "startLine": 50,
+        "startChar": 8,
+        "endLine": 51,
+        "endChar": 21
+      },
+      "revId": "2eeb8ceda9c7c204d3cf0ef852ddb7dc8bb9fb2e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
