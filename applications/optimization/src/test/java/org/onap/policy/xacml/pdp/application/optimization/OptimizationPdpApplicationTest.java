@@ -25,14 +25,9 @@ package org.onap.policy.xacml.pdp.application.optimization;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.ServiceLoader;
 
@@ -48,12 +43,12 @@ import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.pdp.xacml.application.common.TestUtils;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class OptimizationPdpApplicationTest {
@@ -159,59 +154,24 @@ public class OptimizationPdpApplicationTest {
         assertThat(response.getPolicies().size()).isEqualTo(0);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void test3AddOptimizationPolicies() throws CoderException, FileNotFoundException, IOException,
         XacmlApplicationException {
         //
         // Now load the optimization policies
         //
-        try (InputStream is = new FileInputStream("src/test/resources/vCPE.policies.optimization.input.tosca.yaml")) {
-            //
-            // Have yaml parse it
-            //
-            Yaml yaml = new Yaml();
-            Map<String, Object> toscaObject = yaml.load(is);
-            List<Object> policies = (List<Object>) toscaObject.get("policies");
-            //
-            // Sanity check to ensure the policy type and version are supported
-            //
-            for (Object policyObject : policies) {
-                //
-                // Get the contents
-                //
-                Map<String, Object> policyContents = (Map<String, Object>) policyObject;
-                for (Entry<String, Object> entrySet : policyContents.entrySet()) {
-                    LOGGER.info("Entry set {}", entrySet.getKey());
-                    Map<String, Object> policyDefinition = (Map<String, Object>) entrySet.getValue();
-                    //
-                    // Find the type and make sure the engine supports it
-                    //
-                    assertThat(policyDefinition.containsKey("type")).isTrue();
-                    assertThat(service.canSupportPolicyType(
-                            new ToscaPolicyTypeIdentifier(
-                            policyDefinition.get("type").toString(),
-                            policyDefinition.get("version").toString())))
-                        .isTrue();
-                }
-            }
-            //
-            // Load the policies
-            //
-            service.loadPolicies(toscaObject);
-            //
-            // Ask for a decision
-            //
-            DecisionResponse response = service.makeDecision(requestAffinity);
-            LOGGER.info("Decision {}", response);
+        TestUtils.loadPolicies("src/test/resources/vCPE.policies.optimization.input.tosca.yaml", service);
+        //
+        // Ask for a decision
+        //
+        DecisionResponse response = service.makeDecision(requestAffinity);
+        LOGGER.info("Decision {}", response);
 
-            assertThat(response).isNotNull();
-            assertThat(response.getPolicies().size()).isEqualTo(1);
-            //
-            // Dump it out as Json
-            //
-            LOGGER.info(gson.encode(response));
-        }
+        assertThat(response).isNotNull();
+        assertThat(response.getPolicies().size()).isEqualTo(1);
+        //
+        // Dump it out as Json
+        //
+        LOGGER.info(gson.encode(response));
     }
-
 }

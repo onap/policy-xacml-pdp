@@ -32,13 +32,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
@@ -113,37 +113,32 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
     }
 
     @Override
-    public synchronized void loadPolicies(Map<String, Object> toscaPolicies) {
+    public synchronized void loadPolicy(ToscaPolicy toscaPolicy) {
         try {
             //
             // Convert the policies first
             //
-            List<PolicyType> listPolicies = translator.scanAndConvertPolicies(toscaPolicies);
-            if (listPolicies.isEmpty()) {
-                throw new ToscaPolicyConversionException("Converted 0 policies");
+            PolicyType xacmlPolicy = translator.convertPolicy(toscaPolicy);
+            if (xacmlPolicy == null) {
+                throw new ToscaPolicyConversionException("Failed to convert policy");
             }
             //
             // Create a copy of the properties object
             //
             Properties newProperties = this.getProperties();
             //
-            // Iterate through the policies
+            // Construct the filename
             //
-            for (PolicyType newPolicy : listPolicies) {
-                //
-                // Construct the filename
-                //
-                Path refPath = XacmlPolicyUtils.constructUniquePolicyFilename(newPolicy, this.getDataPath());
-                //
-                // Write the policy to disk
-                // Maybe check for an error
-                //
-                XACMLPolicyWriter.writePolicyFile(refPath, newPolicy);
-                //
-                // Add root policy to properties object
-                //
-                XacmlPolicyUtils.addRootPolicy(newProperties, refPath);
-            }
+            Path refPath = XacmlPolicyUtils.constructUniquePolicyFilename(xacmlPolicy, this.getDataPath());
+            //
+            // Write the policy to disk
+            // Maybe check for an error
+            //
+            XACMLPolicyWriter.writePolicyFile(refPath, xacmlPolicy);
+            //
+            // Add root policy to properties object
+            //
+            XacmlPolicyUtils.addRootPolicy(newProperties, refPath);
             //
             // Write the properties to disk
             //

@@ -37,11 +37,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
@@ -115,12 +115,12 @@ public class StdXacmlApplicationServiceProvider implements XacmlApplicationServi
 
     @Override
     public boolean canSupportPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
-        return false;
+        throw new UnsupportedOperationException("Please override and implement canSupportPolicyType");
     }
 
     @Override
-    public void loadPolicies(Map<String, Object> toscaPolicies) throws XacmlApplicationException {
-        throw new UnsupportedOperationException("Please override and implement loadPolicies");
+    public void loadPolicy(ToscaPolicy toscaPolicy) throws XacmlApplicationException {
+        throw new UnsupportedOperationException("Please override and implement loadPolicy");
     }
 
     @Override

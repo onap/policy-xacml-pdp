@@ -32,15 +32,11 @@ import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.annotations.RequestParser;
-import com.att.research.xacml.util.XACMLPolicyWriter;
 import com.google.gson.Gson;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -56,9 +52,11 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
-import org.json.JSONObject;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
@@ -72,46 +70,6 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
 
     public StdMatchableTranslator() {
         super();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<PolicyType> scanAndConvertPolicies(Map<String, Object> toscaObject)
-            throws ToscaPolicyConversionException {
-        //
-        // Our return object
-        //
-        List<PolicyType> scannedPolicies = new ArrayList<>();
-        //
-        // Iterate each of the Policies
-        //
-        List<Object> policies = (List<Object>) toscaObject.get("policies");
-        for (Object policyObject : policies) {
-            //
-            // Get the contents
-            //
-            LOGGER.debug("Found policy {}", policyObject.getClass());
-            Map<String, Object> policyContents = (Map<String, Object>) policyObject;
-            for (Entry<String, Object> entrySet : policyContents.entrySet()) {
-                LOGGER.debug("Entry set {}", entrySet);
-                //
-                // Convert this policy
-                //
-                PolicyType policy = this.convertPolicy(entrySet);
-                try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
-                    XACMLPolicyWriter.writePolicyFile(os, policy);
-                    LOGGER.debug("{}", os);
-                } catch (IOException e) {
-                    LOGGER.error("Failed to convert {}", e);
-                }
-                //
-                // Convert and add in the new policy
-                //
-                scannedPolicies.add(policy);
-            }
-        }
-
-        return scannedPolicies;
     }
 
     @Override
@@ -197,13 +155,12 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
 
     }
 
-    @SuppressWarnings("unchecked")
-    protected PolicyType convertPolicy(Entry<String, Object> entrySet) throws ToscaPolicyConversionException {
+    @Override
+    public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
         //
         // Policy name should be at the root
         //
-        String policyName = entrySet.getKey();
-        Map<String, Object> policyDefinition = (Map<String, Object>) entrySet.getValue();
+        String policyName = toscaPolicy.getMetadata().get("policy-id");
         //
         // Set it as the policy ID
         //
@@ -212,17 +169,11 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
         //
         // Optional description
         //
-        if (policyDefinition.containsKey("description")) {
-            newPolicyType.setDescription(policyDefinition.get("description").toString());
-        }
+        newPolicyType.setDescription(toscaPolicy.getDescription());
         //
         // There should be a metadata section
         //
-        if (! policyDefinition.containsKey("metadata")) {
-            throw new ToscaPolicyConversionException(policyName + " missing metadata section");
-        }
-        this.fillMetadataSection(newPolicyType,
-                (Map<String, Object>) policyDefinition.get("metadata"));
+        this.fillMetadataSection(newPolicyType, toscaPolicy.getMetadata());
         //
         // Set the combining rule
         //
@@ -230,11 +181,7 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
         //
         // Generate the TargetType
         //
-        if (! policyDefinition.containsKey("properties")) {
-            throw new ToscaPolicyConversionException(policyName + " missing properties section");
-        }
-        policyDefinition.get("properties");
-        newPolicyType.setTarget(generateTargetType((Map<String, Object>) policyDefinition.get("properties")));
+        newPolicyType.setTarget(generateTargetType(toscaPolicy.getProperties()));
         //
         // Now create the Permit Rule
         // No target since the policy has a target
@@ -248,9 +195,15 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
         //
         // Now represent the policy as Json
         //
-        JSONObject jsonObligation = new JSONObject();
-        jsonObligation.put(policyName, policyDefinition);
-        addObligation(rule, jsonObligation);
+        StandardCoder coder = new StandardCoder();
+        String jsonPolicy;
+        try {
+            jsonPolicy = coder.encode(toscaPolicy);
+        } catch (CoderException e) {
+            LOGGER.error("Failed to encode policy to json", e);
+            throw new ToscaPolicyConversionException(e);
+        }
+        addObligation(rule, jsonPolicy);
         //
         // Add the rule to the policy
         //
@@ -265,26 +218,26 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
      * From the TOSCA metadata section, pull in values that are needed into the XACML policy.
      *
      * @param policy Policy Object to store the metadata
-     * @param metadata The Metadata TOSCA Map
+     * @param map The Metadata TOSCA Map
      * @return Same Policy Object
      * @throws ToscaPolicyConversionException If there is something missing from the metadata
      */
     protected PolicyType fillMetadataSection(PolicyType policy,
-            Map<String, Object> metadata) throws ToscaPolicyConversionException {
-        if (! metadata.containsKey("policy-id")) {
+            Map<String, String> map) throws ToscaPolicyConversionException {
+        if (! map.containsKey("policy-id")) {
             throw new ToscaPolicyConversionException(policy.getPolicyId() + " missing metadata policy-id");
         } else {
             //
             // Do nothing here - the XACML PolicyId is used from TOSCA Policy Name field
             //
         }
-        if (! metadata.containsKey("policy-version")) {
+        if (! map.containsKey("policy-version")) {
             throw new ToscaPolicyConversionException(policy.getPolicyId() + " missing metadata policy-version");
         } else {
             //
             // Add in the Policy Version
             //
-            policy.setVersion(metadata.get("policy-version").toString());
+            policy.setVersion(map.get("policy-version").toString());
         }
         return policy;
     }
@@ -360,7 +313,7 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
         return anyOf;
     }
 
-    protected RuleType addObligation(RuleType rule, JSONObject jsonPolicy) {
+    protected RuleType addObligation(RuleType rule, String jsonPolicy) {
         //
         // Convert the YAML Policy to JSON Object
         //
