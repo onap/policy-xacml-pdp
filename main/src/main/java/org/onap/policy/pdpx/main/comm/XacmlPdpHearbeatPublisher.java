@@ -23,31 +23,34 @@ package org.onap.policy.pdpx.main.comm;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
+import org.onap.policy.models.pdp.concepts.PdpStateChange;
 import org.onap.policy.models.pdp.enums.PdpState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class XacmlPdpHeartbeatPublisher extends TimerTask {
+public class XacmlPdpHearbeatPublisher extends TimerTask {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpHeartbeatPublisher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpHearbeatPublisher.class);
 
-    private TopicSinkClient topicSinkClient;
     private Timer timer;
     private XacmlPdpMessage heartbeatMessage;
-    private PdpState pdpState;
-
+    private Object message;
+    private static TopicSinkClient topicSinkClient;
     private static volatile  boolean alive = false;
+    public static PdpState pdpState;
+
 
     /**
-     * Constructor for instantiating XacmlPdpHeartbeatPublisher.
+     * Constructor for instantiating XacmlPdpPublisher.
      *
      * @param state of the PDP
      * @param topicSinkClient used to send heartbeat message
      */
-    public XacmlPdpHeartbeatPublisher(TopicSinkClient topicSinkClient, PdpState state) {
+    public XacmlPdpHearbeatPublisher(TopicSinkClient topicSinkClient, PdpStateChange message) {
+        this.message = message;
+        this.pdpState = message.getState();
         this.topicSinkClient = topicSinkClient;
         this.heartbeatMessage = new XacmlPdpMessage();
-        this.pdpState = state;
         timer = new Timer(false);
         timer.scheduleAtFixedRate(this, 0, 60000); // time interval temp hard coded now but will be parameterized
         setAlive(true);
@@ -55,7 +58,7 @@ public class XacmlPdpHeartbeatPublisher extends TimerTask {
 
     @Override
     public void run() {
-        topicSinkClient.send(heartbeatMessage.formatStatusMessage(pdpState));
+        topicSinkClient.send(heartbeatMessage.formatHeartbeatMessage((PdpStateChange) message));
         LOGGER.info("Sending Xacml PDP heartbeat to the PAP");
     }
 
@@ -69,6 +72,7 @@ public class XacmlPdpHeartbeatPublisher extends TimerTask {
     }
 
     public void updateInternalState(PdpState state) {
+        ((PdpStateChange) this.message).setState(state);
         this.pdpState = state;
     }
 
@@ -79,5 +83,4 @@ public class XacmlPdpHeartbeatPublisher extends TimerTask {
     public void setAlive(boolean alive) {
         this.alive = alive;
     }
-
 }
