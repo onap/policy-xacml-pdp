@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xv
 #
 # ============LICENSE_START=======================================================
 #  Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
@@ -18,7 +18,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # ============LICENSE_END=========================================================
 #
-
 JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk/
 POLICY_PDPX_HOME=/opt/app/policy/pdpx
 KEYSTORE="${POLICY_HOME}/etc/ssl/policy-keystore"
@@ -27,11 +26,16 @@ TRUSTSTORE="${POLICY_HOME}/etc/ssl/policy-truststore"
 TRUSTSTORE_PASSWD="Pol1cy_0nap"
 
 
-if [ "$#" -eq 1 ]; then
+if [ "$#" -ge 1 ]; then
     CONFIG_FILE=$1
 else
     CONFIG_FILE=${CONFIG_FILE}
 fi
+
+if [ "$#" -ge 2 ]; then
+	PROP_FILE=$2
+else
+	PROP_FILE=${PROP_FILE}
 
 if [ -z "$CONFIG_FILE" ]
   then
@@ -44,5 +48,6 @@ if [ -z "$PROP_FILE" ]
 fi
 
 echo "Policy Xacml PDP config file: $CONFIG_FILE"
+echo "Policy Xacml PDP topic properties file: $PROP_FILE"
 
 $JAVA_HOME/bin/java -cp "$POLICY_PDPX_HOME/etc:$POLICY_PDPX_HOME/lib/*" -Djavax.net.ssl.keyStore="$KEYSTORE" -Djavax.net.ssl.keyStorePassword="$KEYSTORE_PASSWD" -Djavax.net.ssl.trustStore="$TRUSTSTORE" -Djavax.net.ssl.trustStorePassword="$TRUSTSTORE_PASSWD" org.onap.policy.pdpx.main.startstop.Main -c $CONFIG_FILE -p $PROP_FILE
