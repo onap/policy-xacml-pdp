@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "403a164b_be25ea2f",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-11T23:07:47Z",
+      "side": 1,
+      "message": "Is this still needed?",
+      "range": {
+        "startLine": 50,
+        "startChar": 1,
+        "endLine": 51,
+        "endChar": 1
+      },
+      "revId": "432cec9fa6f143dad324cd11f62fb052c7da32b7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e55bfbb_5504c93d",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/package/tarball/assembly.xml",
+        "patchSetId": 5
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-11T23:07:47Z",
+      "side": 1,
+      "message": "fix formatting later",
+      "range": {
+        "startLine": 70,
+        "startChar": 8,
+        "endLine": 70,
+        "endChar": 16
+      },
+      "revId": "432cec9fa6f143dad324cd11f62fb052c7da32b7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
