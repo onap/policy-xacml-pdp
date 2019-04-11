@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e2160f2_bf9b11b9",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/XacmlApplicationServiceProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-11T18:11:08Z",
+      "side": 1,
+      "message": "we should call that unload",
+      "range": {
+        "startLine": 93,
+        "startChar": 21,
+        "endLine": 93,
+        "endChar": 29
+      },
+      "revId": "12e47c1ddd389dc10533fdc826e1e0cb06b72a59",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5f93252_551a70fe",
+        "filename": "applications/common/src/test/java/org/onap/policy/pdp/xacml/application/common/XacmlPolicyUtilsTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-11T18:11:08Z",
+      "side": 1,
+      "message": "whoops - should be removeRootPolicy",
+      "range": {
+        "startLine": 275,
+        "startChar": 23,
+        "endLine": 275,
+        "endChar": 59
+      },
+      "revId": "12e47c1ddd389dc10533fdc826e1e0cb06b72a59",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1eb0ec3_0e7fb947",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-11T18:11:08Z",
+      "side": 1,
+      "message": "Let\u0027s change this to a map\nMap\u003cToscaPolicy, application\u003e",
+      "range": {
+        "startLine": 49,
+        "startChar": 13,
+        "endLine": 49,
+        "endChar": 68
+      },
+      "revId": "12e47c1ddd389dc10533fdc826e1e0cb06b72a59",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
