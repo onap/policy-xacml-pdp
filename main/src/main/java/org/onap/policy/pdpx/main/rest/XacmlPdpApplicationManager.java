@@ -45,7 +45,10 @@ public class XacmlPdpApplicationManager {
     private static ServiceLoader<XacmlApplicationServiceProvider> applicationLoader;
     private static Map<String, XacmlApplicationServiceProvider> providerActionMap = new HashMap<>();
     private static List<ToscaPolicyTypeIdentifier> toscaPolicyTypeIdents = new ArrayList<>();
-    private static List<ToscaPolicyIdentifier> toscaPolicies = new ArrayList<>();
+    private static List<ToscaPolicyIdentifier> toscaPolicyIdents = new ArrayList<>();
+    private static List<ToscaPolicy> toscaPolicies = new ArrayList<>();
+
+
 
     private XacmlPdpApplicationManager() {
         super();
@@ -115,8 +118,38 @@ public class XacmlPdpApplicationManager {
         return providerActionMap.get(request.getAction());
     }
 
+    public static List<ToscaPolicy> getToscaPolicies() {
+        //TODO Get the list of deployed ToscaPolicies from the applications
+        // this is used to get the current set of policies before the update is handled
+        // this list will be compared with the incoming policies in the update and used to determine
+        // whether to deploy or undeploy the policy
+        return toscaPolicies;
+    }
+
+    public static List<ToscaPolicyIdentifier> getToscaPolicyIdentifiers() {
+        //TODO Need to get the list of toscaPolicyIdentifiers from the deployed policies for PdpUpdate message
+        // back to the PAP
+        return toscaPolicyIdents;
+    }
+
     public static List<ToscaPolicyTypeIdentifier> getToscaPolicyTypeIdents() {
         return toscaPolicyTypeIdents;
+    }
+
+    /**
+     * Finds the appropriate application and removes the policy.
+     *
+     * @param policy Incoming policy
+     */
+    public static void removeUndeployedPolicy(ToscaPolicy policy) {
+
+        for (XacmlApplicationServiceProvider application : applicationLoader) {
+            try {
+                application.unDeployPolicy(policy);
+            } catch (XacmlApplicationException e) {
+                LOGGER.error("Failed to undeploy the Tosca Policy", e);
+            }
+        }
     }
 
     /**
@@ -141,10 +174,6 @@ public class XacmlPdpApplicationManager {
                 LOGGER.error("Failed to load the Tosca Policy", e);
             }
         }
-    }
-
-    public static List<ToscaPolicyIdentifier> getToscaPolicies() {
-        return toscaPolicies;
     }
 
     /**

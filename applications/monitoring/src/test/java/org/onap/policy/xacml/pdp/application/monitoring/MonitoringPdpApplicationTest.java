@@ -27,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.ServiceLoader;
 
@@ -41,6 +42,7 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.TestUtils;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
@@ -161,7 +163,8 @@ public class MonitoringPdpApplicationTest {
         //
         // Now load the optimization policies
         //
-        TestUtils.loadPolicies("src/test/resources/vDNS.policy.input.yaml", service);
+        final List<ToscaPolicy> loadedPolicies = TestUtils.loadPolicies("src/test/resources/vDNS.policy.input.yaml",
+                service);
         //
         // Ask for a decision
         //
@@ -174,6 +177,21 @@ public class MonitoringPdpApplicationTest {
         // Dump it out as Json
         //
         LOGGER.info(gson.encode(response));
+        LOGGER.info("Now testing unloading of policy");
+        //
+        // Now unload it
+        //
+        for (ToscaPolicy policy : loadedPolicies) {
+            assertThat(service.undeployPolicy(policy)).isTrue();
+        }
+        //
+        // Ask for a decision
+        //
+        response = service.makeDecision(requestSinglePolicy);
+        LOGGER.info("Decision {}", response);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getPolicies().size()).isEqualTo(0);
     }
 
     @Test

@@ -83,7 +83,14 @@ public interface XacmlApplicationServiceProvider {
      *
      * @param toscaPolicy object
      */
-    void             loadPolicy(ToscaPolicy toscaPolicy) throws XacmlApplicationException;
+    boolean          loadPolicy(ToscaPolicy toscaPolicy) throws XacmlApplicationException;
+
+    /**
+     * Undeploy a Tosca Policy.
+     *
+     * @param toscaPolicy object
+     */
+    boolean          undeployPolicy(ToscaPolicy toscaPolicy) throws XacmlApplicationException;
 
     /**
      * Makes a decision given the incoming request and returns a response.

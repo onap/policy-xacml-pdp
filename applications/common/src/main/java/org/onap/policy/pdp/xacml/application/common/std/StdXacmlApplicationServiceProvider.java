@@ -37,7 +37,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
@@ -60,6 +62,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
     private Path pathForData = null;
     private Properties pdpProperties = null;
     private PDPEngine pdpEngine = null;
+    private Map<ToscaPolicy, Path> mapLoadedPolicies = new HashMap<>();
 
     public StdXacmlApplicationServiceProvider() {
         super();
@@ -115,7 +118,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
 
     @Override
     public List<ToscaPolicyTypeIdentifier> supportedPolicyTypes() {
-        return Collections.emptyList();
+        throw new UnsupportedOperationException("Please override and implement supportedPolicyTypes");
     }
 
     @Override
@@ -124,7 +127,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
     }
 
     @Override
-    public synchronized void loadPolicy(ToscaPolicy toscaPolicy) {
+    public synchronized boolean loadPolicy(ToscaPolicy toscaPolicy) {
         try {
             //
             // Convert the policies first
@@ -166,13 +169,77 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             // Save the properties
             //
             this.pdpProperties = newProperties;
+            //
+            // Save in our map
+            //
+            this.mapLoadedPolicies.put(toscaPolicy, refPath);
         } catch (IOException | ToscaPolicyConversionException e) {
             LOGGER.error("Failed to loadPolicies {}", e);
+            return false;
         }
+        return true;
     }
 
     @Override
-    public synchronized DecisionResponse makeDecision(DecisionRequest request) {
+    public synchronized boolean undeployPolicy(ToscaPolicy toscaPolicy) throws XacmlApplicationException {
+        //
+        // Find it in our map
+        //
+        Path refPolicy = this.mapLoadedPolicies.get(toscaPolicy);
+        if (refPolicy == null) {
+            LOGGER.error("Failed to find ToscaPolicy {} in our map size {}", toscaPolicy.getMetadata(),
+                    this.mapLoadedPolicies.size());
+            return false;
+        }
+        //
+        // Create a copy of the properties object
+        //
+        Properties newProperties = this.getProperties();
+        //
+        // Remove it from the properties
+        //
+        XacmlPolicyUtils.removeRootPolicy(newProperties, refPolicy);
+        //
+        // We can delete the file
+        //
+        try {
+            Files.delete(refPolicy);
+        } catch (IOException e) {
+            LOGGER.error("Failed to delete policy {} from disk {}", toscaPolicy.getMetadata(),
+                    refPolicy.toAbsolutePath().toString(), e);
+        }
+        //
+        // Write the properties to disk
+        //
+        try {
+            XacmlPolicyUtils.storeXacmlProperties(newProperties,
+                    XacmlPolicyUtils.getPropertiesPath(this.getDataPath()));
+        } catch (IOException e) {
+            LOGGER.error("Failed to save the properties to disk {}", newProperties);
+        }
+        //
+        // Reload the engine
+        //
+        this.createEngine(newProperties);
+        //
+        // Save the properties
+        //
+        this.pdpProperties = newProperties;
+        //
+        // Save in our map
+        //
+        if (this.mapLoadedPolicies.remove(toscaPolicy) == null) {
+            LOGGER.error("Failed to remove toscaPolicy {} from internal map size {}", toscaPolicy.getMetadata(),
+                    this.mapLoadedPolicies.size());
+        }
+        //
+        // Not sure if any of the errors above warrant returning false
+        //
+        return true;
+    }
+
+    @Override
+    public DecisionResponse makeDecision(DecisionRequest request) {
         //
         // Convert to a XacmlRequest
         //
@@ -251,7 +318,6 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             PDPEngine engine = factory.newEngine(properties);
             if (engine != null) {
                 this.pdpEngine = engine;
-//                this.pdpProperties = new Properties(properties);
             }
         } catch (FactoryException e) {
             LOGGER.error("Failed to create XACML PDP Engine {}", e);
