@@ -59,5 +59,32 @@
             <outputDirectory>/etc/ssl</outputDirectory>
             <lineEnding>keep</lineEnding>
         </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/apps/guard
+            </directory>
+            <includes>
+                <include>*.properties</include>
+            </includes>
+            <outputDirectory>/apps/guard</outputDirectory>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
+                <fileSet>
+            <directory>${project.basedir}/src/main/resources/apps/monitoring
+            </directory>
+            <includes>
+                <include>*.properties</include>
+            </includes>
+            <outputDirectory>/apps/monitoring</outputDirectory>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
+                <fileSet>
+            <directory>${project.basedir}/src/main/resources/apps/optimization
+            </directory>
+            <includes>
+                <include>*.properties</include>
+            </includes>
+            <outputDirectory>/apps/optimization</outputDirectory>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
     </fileSets>
 </assembly>
