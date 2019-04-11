@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.stream.Collectors;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
@@ -45,7 +46,10 @@ public class XacmlPdpApplicationManager {
     private static ServiceLoader<XacmlApplicationServiceProvider> applicationLoader;
     private static Map<String, XacmlApplicationServiceProvider> providerActionMap = new HashMap<>();
     private static List<ToscaPolicyTypeIdentifier> toscaPolicyTypeIdents = new ArrayList<>();
-    private static List<ToscaPolicyIdentifier> toscaPolicies = new ArrayList<>();
+    private static List<ToscaPolicyIdentifier> toscaPolicyIdents = new ArrayList<>();
+    private static List<ToscaPolicy> toscaPolicies = new ArrayList<>();
+    private static Map<ToscaPolicy, XacmlApplicationServiceProvider> mapLoadedPolicies = new HashMap<>();
+
 
     private XacmlPdpApplicationManager() {
         super();
@@ -115,8 +119,52 @@ public class XacmlPdpApplicationManager {
         return providerActionMap.get(request.getAction());
     }
 
+    /**
+     * getToscaPolicies.
+     *
+     * @return the map containing ToscaPolicies
+     */
+    public static Map<ToscaPolicy, XacmlApplicationServiceProvider> getToscaPolicies() {
+        return mapLoadedPolicies;
+    }
+
+    /**
+     * getToscaPolicyIdentifiers.
+     *
+     * @return list of ToscaPolicyIdentifier
+     */
+    public static List<ToscaPolicyIdentifier> getToscaPolicyIdentifiers() {
+        //
+        // converting map to return List of ToscaPolicyIdentiers
+        //
+        return mapLoadedPolicies.keySet().stream().map(ToscaPolicy::getIdentifier).collect(Collectors.toList());
+    }
+
     public static List<ToscaPolicyTypeIdentifier> getToscaPolicyTypeIdents() {
         return toscaPolicyTypeIdents;
+    }
+
+    /**
+     * Finds the appropriate application and removes the policy.
+     *
+     * @param policy Incoming policy
+     */
+    public static void removeUndeployedPolicy(ToscaPolicy policy) {
+
+        for (XacmlApplicationServiceProvider application : applicationLoader) {
+            try {
+                if (application.unloadPolicy(policy)) {
+                    LOGGER.info("Unloaded ToscaPolicy {} from application {}", policy.getMetadata(),
+                            application.applicationName());
+                    if (mapLoadedPolicies.remove(policy) == null) {
+                        LOGGER.error("Failed to remove unloaded policy {} from map size {}", policy.getMetadata(),
+                                mapLoadedPolicies.size());
+                    }
+                }
+            } catch (XacmlApplicationException e) {
+                LOGGER.error("Failed to undeploy the Tosca Policy", e);
+            }
+        }
     }
 
     /**
@@ -134,17 +182,17 @@ public class XacmlPdpApplicationManager {
                 // just use the first one found.
                 //
                 if (application.canSupportPolicyType(policy.getTypeIdentifier())) {
-                    application.loadPolicy(policy);
+                    if (application.loadPolicy(policy)) {
+                        LOGGER.info("Loaded ToscaPolicy {} into application {}", policy.getMetadata(),
+                                application.applicationName());
+                        mapLoadedPolicies.put(policy, application);
+                    }
                     return;
                 }
             } catch (XacmlApplicationException e) {
                 LOGGER.error("Failed to load the Tosca Policy", e);
             }
         }
-    }
-
-    public static List<ToscaPolicyIdentifier> getToscaPolicies() {
-        return toscaPolicies;
     }
 
     /**
