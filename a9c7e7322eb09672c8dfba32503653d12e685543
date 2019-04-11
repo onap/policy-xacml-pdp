@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c9575be2_f889b44b",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdXacmlApplicationServiceProvider.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-04-11T12:11:59Z",
+      "side": 1,
+      "message": "Commented code can be removed",
+      "range": {
+        "startLine": 254,
+        "startChar": 0,
+        "endLine": 254,
+        "endChar": 66
+      },
+      "revId": "a9c7e7322eb09672c8dfba32503653d12e685543",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
