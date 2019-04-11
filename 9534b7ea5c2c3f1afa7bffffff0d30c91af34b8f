@@ -68,6 +68,30 @@
       "revId": "9534b7ea5c2c3f1afa7bffffff0d30c91af34b8f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "213d4f81_6383f41e",
+        "filename": "applications/guard/src/test/resources/requests/coordination.cl.2.open.node.2.json",
+        "patchSetId": 7
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-04-11T20:57:45Z",
+      "side": 1,
+      "message": "good catch, I was being lazy. Will fix.",
+      "parentUuid": "f7542b14_470f3135",
+      "range": {
+        "startLine": 13,
+        "startChar": 10,
+        "endLine": 13,
+        "endChar": 30
+      },
+      "revId": "9534b7ea5c2c3f1afa7bffffff0d30c91af34b8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
