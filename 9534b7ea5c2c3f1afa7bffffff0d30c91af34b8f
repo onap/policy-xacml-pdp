@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c3e2a62_eb76cecb",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/operationshistory/GetOperationOutcomePip.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-11T19:49:04Z",
+      "side": 1,
+      "message": "2019",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 3,
+        "endChar": 21
+      },
+      "revId": "9534b7ea5c2c3f1afa7bffffff0d30c91af34b8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "60fc3219_867dc0fe",
+        "filename": "applications/common/src/test/java/org/onap/policy/pdp/xacml/application/common/operationshistory/GetOperationOutcomePipTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-11T19:49:04Z",
+      "side": 1,
+      "message": "2019",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 3,
+        "endChar": 21
+      },
+      "revId": "9534b7ea5c2c3f1afa7bffffff0d30c91af34b8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7542b14_470f3135",
+        "filename": "applications/guard/src/test/resources/requests/coordination.cl.2.open.node.2.json",
+        "patchSetId": 7
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-11T19:49:04Z",
+      "side": 1,
+      "message": "isn\u0027t outcome something stored in the db? You wouldn\u0027t pass that value in a request right?",
+      "range": {
+        "startLine": 13,
+        "startChar": 10,
+        "endLine": 13,
+        "endChar": 30
+      },
+      "revId": "9534b7ea5c2c3f1afa7bffffff0d30c91af34b8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
