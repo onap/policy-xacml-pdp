@@ -172,7 +172,12 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
     }
 
     @Override
-    public synchronized DecisionResponse makeDecision(DecisionRequest request) {
+    public void undeployPolicy(ToscaPolicy toscaPolicy) throws XacmlApplicationException {
+        throw new UnsupportedOperationException("Please override and implement undeployPolicy");
+    }
+
+    @Override
+    public DecisionResponse makeDecision(DecisionRequest request) {
         //
         // Convert to a XacmlRequest
         //

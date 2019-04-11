@@ -20,6 +20,8 @@
 
 package org.onap.policy.pdpx.main.comm;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
@@ -45,9 +47,24 @@ public class XacmlPdpUpdatePublisher {
     public static void handlePdpUpdate(PdpUpdate message, TopicSinkClient client) {
 
         if (!message.getPolicies().isEmpty() || message.getPolicies() != null) {
-            // Load the policies on PDP applications
-            for (ToscaPolicy toscaPolicy : message.getPolicies()) {
-                XacmlPdpApplicationManager.loadDeployedPolicy(toscaPolicy);
+
+            Set<ToscaPolicy> incomingPolicies = new HashSet<>(message.getPolicies());
+            Set<ToscaPolicy> deployedPolicies = new HashSet<>(XacmlPdpApplicationManager.getToscaPolicies());
+
+            // Deploy a policy
+            // if deployed policies do not contain the incoming policy load it
+            for (ToscaPolicy policy : incomingPolicies) {
+                if (!deployedPolicies.contains(policy)) {
+                    XacmlPdpApplicationManager.loadDeployedPolicy(policy);
+                }
+            }
+
+            // Undeploy a policy
+            // if incoming policies do not contain the deployed policy then remove it from PDP
+            for (ToscaPolicy policy : deployedPolicies) {
+                if (!incomingPolicies.contains(policy)) {
+                    XacmlPdpApplicationManager.removeUndeployedPolicy(policy);
+                }
             }
         }
 
