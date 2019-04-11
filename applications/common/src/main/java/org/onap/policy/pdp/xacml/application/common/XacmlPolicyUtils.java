@@ -215,6 +215,50 @@ public class XacmlPolicyUtils {
     }
 
     /**
+     * Removes a root policy from the Properties object. Both in the line
+     * that identifies the policy and the .file property that points to the path.
+     *
+     * @param properties Input Properties object to remove
+     * @param rootPolicyPath The policy file path
+     * @return Properties object
+     */
+    public static Properties removeRootPolicy(Properties properties, Path rootPolicyPath) {
+        //
+        // Get the current set of referenced policy ids
+        //
+        StringJoiner join = new StringJoiner(",");
+        boolean found = false;
+        Set<String> rootPolicies = XACMLProperties.getRootPolicyIDs(properties);
+        for (String refPolicy : rootPolicies) {
+            String refPolicyFile = refPolicy + DOT_FILE_SUFFIX;
+            //
+            // If the key and value match, then it will return true
+            //
+            if (properties.remove(refPolicyFile, rootPolicyPath.toString())) {
+                //
+                // Record that we actually removed it
+                //
+                found = true;
+            } else {
+                //
+                // Retain it
+                //
+                join.add(refPolicy);
+            }
+        }
+        //
+        // Did we remove it?
+        //
+        if (found) {
+            //
+            // Now update the list of referenced properties
+            //
+            properties.setProperty(XACMLProperties.PROP_ROOTPOLICIES, join.toString());
+        }
+        return properties;
+    }
+
+    /**
      * Removes a referenced policy from the Properties object. Both in the line
      * that identifies the policy and the .file property that points to the path.
      *
