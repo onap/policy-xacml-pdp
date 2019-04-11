@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffffdbb9_0eb5b7d1",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/operationshistory/CountRecentOperationsPip.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-11T01:21:33Z",
+      "side": 1,
+      "message": "change this to a return statement and add Long.class as a second parameter (making it a TypedQuery).  Then you can eliminate the \"result\" variable altogether.\n\nsame comment applies to other files",
+      "revId": "40d41558ca8006c50809d88095ad4d50a2b2d63b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a27605bc_a3b283ea",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/operationshistory/GetOperationOutcomePip.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-11T01:21:33Z",
+      "side": 1,
+      "message": "since this block seems to be repeated, perhaps do it in the superclass?",
+      "revId": "40d41558ca8006c50809d88095ad4d50a2b2d63b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79d9f3db_dfbd068b",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdOnapPip.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-11T01:21:33Z",
+      "side": 1,
+      "message": "extract a common method that all of these getXxx methods can use",
+      "revId": "40d41558ca8006c50809d88095ad4d50a2b2d63b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97e650c0_6c83fd66",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdOnapPip.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-11T01:21:33Z",
+      "side": 1,
+      "message": "\"if\" \u003d\u003e \"else if\" and eliminate check for !\u003d null\n(or simply return null on line 151)",
+      "revId": "40d41558ca8006c50809d88095ad4d50a2b2d63b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76f4ec33_cec110a6",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdOnapPip.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-11T01:21:33Z",
+      "side": 1,
+      "message": "extract a common, parameterized method",
+      "revId": "40d41558ca8006c50809d88095ad4d50a2b2d63b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe27121c_19a2e123",
+        "filename": "applications/guard/src/main/resources/coordination/function/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-11T01:21:33Z",
+      "side": 1,
+      "message": "tabs \u003d\u003e spaces",
+      "revId": "40d41558ca8006c50809d88095ad4d50a2b2d63b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
