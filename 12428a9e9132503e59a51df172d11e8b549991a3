@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cab0f7fa_96595315",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/TestUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-11T18:50:56Z",
+      "side": 1,
+      "message": "since not using the keys, can change this to loop on policies.values()",
+      "revId": "12428a9e9132503e59a51df172d11e8b549991a3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
