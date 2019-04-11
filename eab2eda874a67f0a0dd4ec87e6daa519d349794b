@@ -45,6 +45,30 @@
       "revId": "eab2eda874a67f0a0dd4ec87e6daa519d349794b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a99977b_b43105aa",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-11T19:40:52Z",
+      "side": 1,
+      "message": "I believe so - why not just keep a list of what we load. Now, I don\u0027t know what to do about if an application actually fails to load something. May end up on a loop. But those things we can deal with during testing.",
+      "parentUuid": "2becdfaf_dd501dd0",
+      "range": {
+        "startLine": 180,
+        "startChar": 0,
+        "endLine": 180,
+        "endChar": 67
+      },
+      "revId": "eab2eda874a67f0a0dd4ec87e6daa519d349794b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
