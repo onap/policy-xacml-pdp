@@ -36,6 +36,7 @@ if [ "$#" -ge 2 ]; then
 	PROP_FILE=$2
 else
 	PROP_FILE=${PROP_FILE}
+fi
 
 if [ -z "$CONFIG_FILE" ]
   then
