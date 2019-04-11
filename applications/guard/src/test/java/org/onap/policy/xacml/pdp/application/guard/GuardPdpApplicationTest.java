@@ -25,10 +25,8 @@ package org.onap.policy.xacml.pdp.application.guard;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Date;
 import java.time.Instant;
 import java.util.HashMap;
@@ -56,12 +54,12 @@ import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.OnapOperationsHistoryDbao;
+import org.onap.policy.pdp.xacml.application.common.TestUtils;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class GuardPdpApplicationTest {
@@ -242,17 +240,7 @@ public class GuardPdpApplicationTest {
         // the pdp can support it and have it load
         // into the PDP.
         //
-        try (InputStream is = new FileInputStream("src/test/resources/vDNS.policy.guard.frequency.output.tosca.yaml")) {
-            //
-            // Have yaml parse it
-            //
-            Yaml yaml = new Yaml();
-            Map<String, Object> toscaObject = yaml.load(is);
-            //
-            // Load the policies
-            //
-            service.loadPolicies(toscaObject);
-        }
+        TestUtils.loadPolicies("src/test/resources/vDNS.policy.guard.frequency.output.tosca.yaml", service);
         //
         // Zero recent actions: should get permit
         //
@@ -283,17 +271,7 @@ public class GuardPdpApplicationTest {
         // the pdp can support it and have it load
         // into the PDP.
         //
-        try (InputStream is = new FileInputStream("src/test/resources/vDNS.policy.guard.minmax.output.tosca.yaml")) {
-            //
-            // Have yaml parse it
-            //
-            Yaml yaml = new Yaml();
-            Map<String, Object> toscaObject = yaml.load(is);
-            //
-            // Load the policies
-            //
-            service.loadPolicies(toscaObject);
-        }
+        TestUtils.loadPolicies("src/test/resources/vDNS.policy.guard.minmax.output.tosca.yaml", service);
         //
         // vfcount=1 below min of 2: should get a Deny
         //
@@ -322,7 +300,8 @@ public class GuardPdpApplicationTest {
     }
 
     @Test
-    public void test5MissingFields() throws FileNotFoundException, IOException, XacmlApplicationException {
+    public void test5MissingFields() throws FileNotFoundException, IOException, XacmlApplicationException,
+        CoderException {
         LOGGER.info("**************** Running test5 ****************");
         //
         // Most likely we would not get a policy with missing fields passed to
@@ -330,52 +309,42 @@ public class GuardPdpApplicationTest {
         // will be optional due to re-working of how the XACML policies are built,
         // let's add support in for that.
         //
-        try (InputStream is = new FileInputStream("src/test/resources/guard.policy-minmax-missing-fields1.yaml")) {
-            //
-            // Have yaml parse it
-            //
-            Yaml yaml = new Yaml();
-            Map<String, Object> toscaObject = yaml.load(is);
-            //
-            // Load the policies
-            //
-            service.loadPolicies(toscaObject);
-            //
-            // We can create a DecisionRequest on the fly - no need
-            // to have it in the .json files
-            //
-            DecisionRequest request = new DecisionRequest();
-            request.setOnapName("JUnit");
-            request.setOnapComponent("test5MissingFields");
-            request.setRequestId(UUID.randomUUID().toString());
-            request.setAction("guard");
-            Map<String, Object> guard = new HashMap<>();
-            guard.put("actor", "FOO");
-            guard.put("recipe", "bar");
-            guard.put("vfCount", "4");
-            Map<String, Object> resource = new HashMap<>();
-            resource.put("guard", guard);
-            request.setResource(resource);
-            //
-            // Ask for a decision - should get permit
-            //
-            DecisionResponse response = service.makeDecision(request);
-            LOGGER.info("Looking for Permit Decision {}", response);
-            assertThat(response).isNotNull();
-            assertThat(response.getStatus()).isNotNull();
-            assertThat(response.getStatus()).isEqualTo("Permit");
-            //
-            // Try a deny
-            //
-            guard.put("vfCount", "10");
-            resource.put("guard", guard);
-            request.setResource(resource);
-            response = service.makeDecision(request);
-            LOGGER.info("Looking for Deny Decision {}", response);
-            assertThat(response).isNotNull();
-            assertThat(response.getStatus()).isNotNull();
-            assertThat(response.getStatus()).isEqualTo("Deny");
-        }
+        TestUtils.loadPolicies("src/test/resources/guard.policy-minmax-missing-fields1.yaml", service);
+        //
+        // We can create a DecisionRequest on the fly - no need
+        // to have it in the .json files
+        //
+        DecisionRequest request = new DecisionRequest();
+        request.setOnapName("JUnit");
+        request.setOnapComponent("test5MissingFields");
+        request.setRequestId(UUID.randomUUID().toString());
+        request.setAction("guard");
+        Map<String, Object> guard = new HashMap<>();
+        guard.put("actor", "FOO");
+        guard.put("recipe", "bar");
+        guard.put("vfCount", "4");
+        Map<String, Object> resource = new HashMap<>();
+        resource.put("guard", guard);
+        request.setResource(resource);
+        //
+        // Ask for a decision - should get permit
+        //
+        DecisionResponse response = service.makeDecision(request);
+        LOGGER.info("Looking for Permit Decision {}", response);
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isNotNull();
+        assertThat(response.getStatus()).isEqualTo("Permit");
+        //
+        // Try a deny
+        //
+        guard.put("vfCount", "10");
+        resource.put("guard", guard);
+        request.setResource(resource);
+        response = service.makeDecision(request);
+        LOGGER.info("Looking for Deny Decision {}", response);
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isNotNull();
+        assertThat(response.getStatus()).isEqualTo("Deny");
     }
 
     @SuppressWarnings("unchecked")
@@ -397,6 +366,7 @@ public class GuardPdpApplicationTest {
         newEntry.setEndtime(Date.from(Instant.now()));
         newEntry.setRequestId(UUID.randomUUID().toString());
         newEntry.setTarget(properties.get("target").toString());
+        LOGGER.info("Inserting {}", newEntry);
         em.getTransaction().begin();
         em.persist(newEntry);
         em.getTransaction().commit();

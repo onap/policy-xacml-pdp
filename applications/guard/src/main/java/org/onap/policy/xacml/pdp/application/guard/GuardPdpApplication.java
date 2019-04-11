@@ -22,26 +22,12 @@
 
 package org.onap.policy.xacml.pdp.application.guard;
 
-import com.att.research.xacml.api.Request;
-import com.att.research.xacml.api.Response;
-import com.att.research.xacml.util.XACMLPolicyWriter;
-
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
-
-import org.onap.policy.models.decisions.concepts.DecisionRequest;
-import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
-import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
-import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
-import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
+import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,65 +85,7 @@ public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
     }
 
     @Override
-    public void loadPolicies(Map<String, Object> toscaPolicies) throws XacmlApplicationException {
-        try {
-            //
-            // Convert the policies first
-            //
-            List<PolicyType> listPolicies = translator.scanAndConvertPolicies(toscaPolicies);
-            if (listPolicies.isEmpty()) {
-                throw new XacmlApplicationException("Converted 0 policies");
-            }
-            //
-            // Create a copy of the properties object
-            //
-            Properties newProperties = this.getProperties();
-            //
-            // Iterate through the policies
-            //
-            for (PolicyType newPolicy : listPolicies) {
-                //
-                // Construct the filename
-                //
-                Path refPath = XacmlPolicyUtils.constructUniquePolicyFilename(newPolicy, this.getDataPath());
-                //
-                // Write the policy to disk
-                // Maybe check for an error
-                //
-                XACMLPolicyWriter.writePolicyFile(refPath, newPolicy);
-                //
-                // Add root policy to properties object
-                //
-                XacmlPolicyUtils.addRootPolicy(newProperties, refPath);
-            }
-            //
-            // Write the properties to disk
-            //
-            XacmlPolicyUtils.storeXacmlProperties(newProperties,
-                    XacmlPolicyUtils.getPropertiesPath(this.getDataPath()));
-            //
-            // Reload the engine
-            //
-            this.createEngine(newProperties);
-        } catch (IOException | ToscaPolicyConversionException e) {
-            LOGGER.error("Failed to loadPolicies {}", e);
-        }
+    protected ToscaPolicyTranslator getTranslator() {
+        return translator;
     }
-
-    @Override
-    public DecisionResponse makeDecision(DecisionRequest request) {
-        //
-        // Convert to a XacmlRequest
-        //
-        Request xacmlRequest = translator.convertRequest(request);
-        //
-        // Now get a decision
-        //
-        Response xacmlResponse = this.xacmlDecision(xacmlRequest);
-        //
-        // Convert to a DecisionResponse
-        //
-        return translator.convertResponse(xacmlResponse);
-    }
-
 }

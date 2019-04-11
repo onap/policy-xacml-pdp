@@ -38,6 +38,7 @@ import org.onap.policy.pdpx.main.PolicyXacmlPdpRuntimeException;
 import org.onap.policy.pdpx.main.comm.XacmlPdpMessage;
 import org.onap.policy.pdpx.main.comm.XacmlPdpPapRegistration;
 import org.onap.policy.pdpx.main.comm.listeners.XacmlPdpStateChangeListener;
+import org.onap.policy.pdpx.main.comm.listeners.XacmlPdpUpdateListener;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
 import org.onap.policy.pdpx.main.rest.XacmlPdpRestServer;
 import org.slf4j.Logger;
@@ -65,15 +66,19 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
 
     /**
      * Listens for messages on the topic, decodes them into a {@link PdpStatus} message, and then
-     * dispatches them to {@link #pdpUpdateListener}.
+     * dispatches them to appropriate listener.
      */
     private final MessageTypeDispatcher msgDispatcher;
 
     /**
-     * Listens for {@link PdpUpdate} messages and then routes them to the listener associated with the
-     * ID of the originating request.
+     * Listens for {@link PdpStateChange} messages from the PAP.
      */
     private final XacmlPdpStateChangeListener pdpStateChangeListener;
+
+    /**
+     * Listens for {@link PdpUpdate} messages from the PAP.
+     */
+    private final XacmlPdpUpdateListener pdpUpdateListener;
 
     /**
      * The current activator.
@@ -101,6 +106,7 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
             this.xacmlPdpParameterGroup = xacmlPdpParameterGroup;
             this.msgDispatcher = new MessageTypeDispatcher(MSG_TYPE_NAMES);
             this.pdpStateChangeListener = new XacmlPdpStateChangeListener(sinkClient);
+            this.pdpUpdateListener = new XacmlPdpUpdateListener(sinkClient);
             this.register = new XacmlPdpPapRegistration(sinkClient);
             this.message = new XacmlPdpMessage();
         } catch (RuntimeException | TopicSinkClientException e) {
@@ -113,9 +119,13 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
         addAction("XACML PDP parameters", () -> ParameterService.register(xacmlPdpParameterGroup),
             () -> ParameterService.deregister(xacmlPdpParameterGroup.getName()));
 
-        addAction("Request ID Dispatcher",
+        addAction("PdpStateChange Dispatcher",
             () -> msgDispatcher.register(PdpMessageType.PDP_STATE_CHANGE.name(), this.pdpStateChangeListener),
             () -> msgDispatcher.unregister(PdpMessageType.PDP_STATE_CHANGE.name()));
+
+        addAction("PdpUpdate Dispatcher",
+            () -> msgDispatcher.register(PdpMessageType.PDP_UPDATE.name(), this.pdpUpdateListener),
+            () -> msgDispatcher.unregister(PdpMessageType.PDP_UPDATE.name()));
 
         addAction("Message Dispatcher",
             () -> registerMsgDispatcher(),
