@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6cfbe9c8_f6e74707",
+        "filename": "applications/guard/src/test/java/org/onap/policy/xacml/pdp/application/guard/GuardPdpApplicationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-11T00:56:57Z",
+      "side": 1,
+      "message": "looks like lines 250-261 could be extracted into a common function (eclipse may be able to do that for you)",
+      "revId": "05f949bf37e3b2c9897d328a5964176effffe192",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f742a3d8_706e452f",
+        "filename": "applications/guard/src/test/java/org/onap/policy/xacml/pdp/application/guard/GuardPdpApplicationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-11T00:56:57Z",
+      "side": 1,
+      "message": "since not using the key, could just loop over policies.values()\n\nas an alternative, could replace the whole \"for\" loop with:\n\n  policies.values().foreach(service::loadPolicy);\n\nsame comment applies several places below",
+      "revId": "05f949bf37e3b2c9897d328a5964176effffe192",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cc37ec20_555c4182",
+        "filename": "applications/monitoring/src/test/java/org/onap/policy/xacml/pdp/application/monitoring/MonitoringPdpApplicationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-11T00:56:57Z",
+      "side": 1,
+      "message": "same comments as before",
+      "revId": "05f949bf37e3b2c9897d328a5964176effffe192",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94842cb8_0d3c8e89",
+        "filename": "applications/monitoring/src/test/java/org/onap/policy/xacml/pdp/application/monitoring/MonitoringPdpApplicationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-11T00:56:57Z",
+      "side": 1,
+      "message": "same comments as before",
+      "revId": "05f949bf37e3b2c9897d328a5964176effffe192",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b335e1b5_1009192e",
+        "filename": "applications/optimization/src/test/java/org/onap/policy/xacml/pdp/application/optimization/OptimizationPdpApplicationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-11T00:56:57Z",
+      "side": 1,
+      "message": "same comments as before",
+      "revId": "05f949bf37e3b2c9897d328a5964176effffe192",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2407a494_6827ef97",
+        "filename": "applications/optimization/src/test/java/org/onap/policy/xacml/pdp/application/optimization/OptimizationPdpApplicationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-11T00:56:57Z",
+      "side": 1,
+      "message": "same comments as before",
+      "revId": "05f949bf37e3b2c9897d328a5964176effffe192",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
