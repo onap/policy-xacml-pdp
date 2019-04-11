@@ -225,7 +225,7 @@ public class XacmlPolicyUtilsTest {
     }
 
     @Test
-    public void testRemovingProperties() {
+    public void testRemovingReferencedProperties() {
         //
         // Dump what we are starting with
         //
@@ -260,5 +260,28 @@ public class XacmlPolicyUtilsTest {
         XacmlPolicyUtils.removeReferencedPolicy(properties, ref);
         XacmlPolicyUtils.debugDumpPolicyProperties(properties, LOGGER);
         assertThat(properties.getProperty("refstart4.file")).isNullOrEmpty();
+    }
+
+    @Test
+    public void testRemovingRootProperties() {
+        //
+        // Dump what we are starting with
+        //
+        XacmlPolicyUtils.debugDumpPolicyProperties(properties, LOGGER);
+        //
+        // Remove root policies
+        //
+        Path ref = Paths.get("src/test/resources/root.xml");
+        XacmlPolicyUtils.removeRootPolicy(properties, ref);
+        XacmlPolicyUtils.debugDumpPolicyProperties(properties, LOGGER);
+        assertThat(properties.getProperty("root.file")).isNullOrEmpty();
+
+        //
+        // Test one that isn't in there
+        //
+        ref = Paths.get("src/test/resources/NotThere.xml");
+        XacmlPolicyUtils.removeRootPolicy(properties, ref);
+        XacmlPolicyUtils.debugDumpPolicyProperties(properties, LOGGER);
+        assertThat(properties.getProperty("refstart3.file")).isNotBlank();
     }
 }

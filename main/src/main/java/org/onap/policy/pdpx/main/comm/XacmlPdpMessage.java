@@ -22,7 +22,6 @@
 
 package org.onap.policy.pdpx.main.comm;
 
-import java.net.UnknownHostException;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.pdp.concepts.PdpStateChange;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
@@ -111,7 +110,7 @@ public class XacmlPdpMessage {
         status.setPdpGroup(message.getPdpGroup());
         status.setPdpSubgroup(message.getPdpSubgroup());
         status.setSupportedPolicyTypes(XacmlPdpApplicationManager.getToscaPolicyTypeIdents());
-        status.setPolicies(XacmlPdpApplicationManager.getToscaPolicies());
+        status.setPolicies(XacmlPdpApplicationManager.getToscaPolicyIdentifiers());
 
         return status;
     }
