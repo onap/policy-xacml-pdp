@@ -16,6 +16,52 @@
       "revId": "12428a9e9132503e59a51df172d11e8b549991a3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b61db04d_5125496f",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpUpdatePublisher.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-04-11T19:49:05Z",
+      "side": 1,
+      "message": "minor: if we are dealing with large changes, then swapping the order (i.e., doing the undeploy before the deploy) will increase efficiency.",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 13
+      },
+      "revId": "12428a9e9132503e59a51df172d11e8b549991a3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d3f38be4_b79c16c3",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-04-11T19:49:05Z",
+      "side": 1,
+      "message": "minor: lowercase",
+      "range": {
+        "startLine": 159,
+        "startChar": 34,
+        "endLine": 159,
+        "endChar": 35
+      },
+      "revId": "12428a9e9132503e59a51df172d11e8b549991a3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
