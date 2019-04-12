@@ -24,6 +24,8 @@ package org.onap.policy.xacml.pdp.application.optimization;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.att.research.xacml.api.Response;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -31,6 +33,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.ServiceLoader;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
@@ -147,11 +150,11 @@ public class OptimizationPdpApplicationTest {
         //
         // Ask for a decision
         //
-        DecisionResponse response = service.makeDecision(requestAffinity);
-        LOGGER.info("Decision {}", response);
+        Pair<DecisionResponse, Response> decision = service.makeDecision(requestAffinity);
+        LOGGER.info("Decision {}", decision.getKey());
 
-        assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(0);
+        assertThat(decision.getKey()).isNotNull();
+        assertThat(decision.getKey().getPolicies().size()).isEqualTo(0);
     }
 
     @Test
@@ -164,14 +167,14 @@ public class OptimizationPdpApplicationTest {
         //
         // Ask for a decision
         //
-        DecisionResponse response = service.makeDecision(requestAffinity);
-        LOGGER.info("Decision {}", response);
+        Pair<DecisionResponse, Response> decision = service.makeDecision(requestAffinity);
+        LOGGER.info("Decision {}", decision.getKey());
 
-        assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(1);
+        assertThat(decision.getKey()).isNotNull();
+        assertThat(decision.getKey().getPolicies().size()).isEqualTo(1);
         //
         // Dump it out as Json
         //
-        LOGGER.info(gson.encode(response));
+        LOGGER.info(gson.encode(decision.getKey()));
     }
 }

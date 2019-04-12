@@ -67,6 +67,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
 
     private static final String FIELD_GUARD_ACTIVE_START = "guardActiveStart";
     private static final String FIELD_GUARD_ACTIVE_END = "guardActiveEnd";
+    private static final String FIELD_TARGET = "targets";
 
     public LegacyGuardTranslator() {
         super();
@@ -96,9 +97,10 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         //
         newPolicyType.setRuleCombiningAlgId(XACML3.ID_RULE_DENY_UNLESS_PERMIT.stringValue());
         //
-        // Generate the TargetType
+        // Generate the TargetType - add true if not blacklist
         //
-        newPolicyType.setTarget(this.generateTargetType(toscaPolicy.getProperties()));
+        newPolicyType.setTarget(this.generateTargetType(toscaPolicy.getProperties(),
+                ! "onap.policies.controlloop.guard.Blacklist".equals(toscaPolicy.getType())));
         //
         // Now create the Permit Rule
         //
@@ -196,7 +198,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         return policy;
     }
 
-    protected TargetType generateTargetType(Map<String, Object> properties) {
+    protected TargetType generateTargetType(Map<String, Object> properties, boolean addTargets) {
         //
         // Go through potential properties
         //
@@ -207,14 +209,13 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         if (properties.containsKey("recipe")) {
             addMatch(allOf, properties.get("recipe"), ToscaDictionary.ID_RESOURCE_GUARD_RECIPE);
         }
-        if (properties.containsKey("targets")) {
-            addMatch(allOf, properties.get("targets"), ToscaDictionary.ID_RESOURCE_GUARD_TARGETID);
+        if (addTargets) {
+            if (properties.containsKey("targets")) {
+                addMatch(allOf, properties.get("targets"), ToscaDictionary.ID_RESOURCE_GUARD_TARGETID);
+            }
         }
         if (properties.containsKey("clname")) {
             addMatch(allOf, properties.get("clname"), ToscaDictionary.ID_RESOURCE_GUARD_CLNAME);
-        }
-        if (properties.containsKey("targets")) {
-            addMatch(allOf, properties.get("targets"), ToscaDictionary.ID_RESOURCE_GUARD_TARGETID);
         }
         //
         // Create target
@@ -265,6 +266,8 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
             return generateFrequencyPermit(policyName, properties);
         } else if ("onap.policies.controlloop.guard.MinMax".equals(policyType)) {
             return generateMinMaxPermit(policyName, properties);
+        } else if ("onap.policies.controlloop.guard.Blacklist".equals(policyType)) {
+            return generateBlacklistPermit(policyName, properties);
         }
         LOGGER.error("Missing policy type in the policy");
         return null;
@@ -475,6 +478,82 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         return permit;
     }
 
+    private static RuleType generateBlacklistPermit(String policyName, Map<String, Object> properties) {
+        //
+        // Generate target
+        //
+        if (! properties.containsKey(FIELD_TARGET)) {
+            LOGGER.error("Missing target for blacklist policy");
+            return null;
+        }
+        final ApplyType targetApply = generateTargetApply(properties.get(FIELD_TARGET));
+        //
+        // Get the properties that are common among guards
+        //
+        String guardActiveStart = null;
+        if (properties.containsKey(FIELD_GUARD_ACTIVE_START)) {
+            guardActiveStart = properties.get(FIELD_GUARD_ACTIVE_START).toString();
+        }
+        String guardActiveEnd = null;
+        if (properties.containsKey(FIELD_GUARD_ACTIVE_END)) {
+            guardActiveEnd = properties.get(FIELD_GUARD_ACTIVE_END).toString();
+        }
+        //
+        // Generate the time in range
+        //
+        final ApplyType timeRange = generateTimeInRange(guardActiveStart, guardActiveEnd);
+        //
+        // Create our rule
+        //
+        RuleType permit = new RuleType();
+        permit.setDescription("Default is to PERMIT if the policy matches.");
+        permit.setRuleId(policyName + ":rule");
+        permit.setEffect(EffectType.PERMIT);
+        permit.setTarget(new TargetType());
+        //
+        // Create our condition
+        //
+        ObjectFactory factory = new ObjectFactory();
+        ApplyType innerApply;
+        if (timeRange != null) {
+            ApplyType applyAnd = new ApplyType();
+            applyAnd.setDescription("Combine the timeRange with target to create AND");
+            applyAnd.setFunctionId(XACML3.ID_FUNCTION_AND.stringValue());
+            applyAnd.getExpression().add(factory.createApply(timeRange));
+            applyAnd.getExpression().add(factory.createApply(targetApply));
+            //
+            // Now we need to NOT this so the permit happens
+            //
+            ApplyType applyNot = new ApplyType();
+            applyNot.setDescription("This should be false for a  permit.");
+            applyNot.setFunctionId(XACML3.ID_FUNCTION_NOT.stringValue());
+            applyNot.getExpression().add(factory.createApply(applyAnd));
+            innerApply = applyNot;
+        } else {
+            //
+            // Just the target is needed
+            //
+            ApplyType applyNot = new ApplyType();
+            applyNot.setDescription("This should be false for a  permit.");
+            applyNot.setFunctionId(XACML3.ID_FUNCTION_NOT.stringValue());
+            applyNot.getExpression().add(factory.createApply(targetApply));
+            innerApply = applyNot;
+        }
+        //
+        // Create our condition
+        //
+        final ConditionType condition = new ConditionType();
+        //
+        // Add into the condition
+        //
+        condition.setExpression(factory.createApply(innerApply));
+        //
+        // Add the condition
+        //
+        permit.setCondition(condition);
+        return permit;
+    }
+
     private static ApplyType generateTimeInRange(String start, String end) {
         if (start == null || end == null) {
             LOGGER.warn("Missing time range start {} end {}", start, end);
@@ -521,11 +600,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         designator.setCategory(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue());
         designator.setDataType(XACML3.ID_DATATYPE_INTEGER.stringValue());
         //
-        // TODO Add this back in when the operational database PIP is configured.
-        // The issuer indicates that the PIP will be providing this attribute during
-        // the decision making.
-        //
-        // Right now I am faking the count value by re-using the request-id field
+        // Setup issuer
         //
         String issuer = ToscaDictionary.GUARD_ISSUER_PREFIX
             + CountRecentOperationsPip.ISSUER_NAME
@@ -625,6 +700,53 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         applyLessThanEqual.getExpression().add(factory.createAttributeValue(valueLimit));
 
         return applyLessThanEqual;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static ApplyType generateTargetApply(Object targetObject) {
+        ObjectFactory factory = new ObjectFactory();
+        //
+        // Create a bag of values
+        //
+        ApplyType applyStringBag = new ApplyType();
+        applyStringBag.setDescription("Bag the target values");
+        applyStringBag.setFunctionId(XACML3.ID_FUNCTION_STRING_BAG.stringValue());
+        if (targetObject instanceof Collection) {
+            for (Object target : ((Collection<Object>) targetObject)) {
+                if (! (target instanceof String)) {
+                    LOGGER.error("Collection of unsupported objects {}", target.getClass());
+                    return null;
+                }
+                AttributeValueType value = new AttributeValueType();
+                value.setDataType(XACML3.ID_DATATYPE_STRING.stringValue());
+                value.getContent().add(target.toString());
+                applyStringBag.getExpression().add(factory.createAttributeValue(value));
+            }
+        } else if (targetObject instanceof String) {
+            AttributeValueType value = new AttributeValueType();
+            value.setDataType(XACML3.ID_DATATYPE_STRING.stringValue());
+            value.getContent().add(targetObject.toString());
+            applyStringBag.getExpression().add(factory.createAttributeValue(value));
+        } else {
+            LOGGER.warn("Unsupported object for target {}", targetObject.getClass());
+            return null;
+        }
+        //
+        // Create our designator
+        //
+        AttributeDesignatorType designator = new AttributeDesignatorType();
+        designator.setAttributeId(ToscaDictionary.ID_RESOURCE_GUARD_TARGETID.stringValue());
+        designator.setCategory(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue());
+        designator.setDataType(XACML3.ID_DATATYPE_STRING.stringValue());
+        //
+        // Create apply for our AnyOf
+        //
+        ApplyType applyAnyOf = new ApplyType();
+        applyAnyOf.setDescription("Find designator as anyof the possible values");
+        applyAnyOf.setFunctionId(XACML3.ID_FUNCTION_ANY_OF.stringValue());
+        applyAnyOf.getExpression().add(factory.createAttributeDesignator(designator));
+        applyAnyOf.getExpression().add(factory.createApply(applyStringBag));
+        return applyAnyOf;
     }
 
     private static Integer parseInteger(String strInteger) {

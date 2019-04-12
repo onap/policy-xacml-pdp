@@ -44,8 +44,10 @@ import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runners.MethodSorters;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.utils.network.NetworkUtil;
@@ -61,6 +63,7 @@ import org.slf4j.LoggerFactory;
  * Class to perform unit test of {@link XacmlPdpRestServer}.
  *
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestXacmlPdpRestServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestXacmlPdpRestServer.class);
@@ -99,10 +102,12 @@ public class TestXacmlPdpRestServer {
             if (NetworkUtil.isTcpPortOpen("localhost", 6969, 1, 1000L)) {
                 if (main != null) {
                     stopXacmlPdpService(main);
+                    main = null;
                 }
 
                 if (restServer != null) {
                     restServer.stop();
+                    restServer = null;
                 }
             }
         } catch (IOException | PolicyXacmlPdpException e) {
@@ -114,69 +119,84 @@ public class TestXacmlPdpRestServer {
     }
 
     @Test
-    public void testHealthCheckSuccess() throws IOException, InterruptedException, TopicSinkClientException {
+    public void test1HealthCheckSuccess() throws IOException, InterruptedException, TopicSinkClientException {
+        LOGGER.info("***************************** Running test1HealthCheckSuccess *****************************");
         main = startXacmlPdpService(true);
         final Invocation.Builder invocationBuilder = sendHttpRequest(HEALTHCHECK_ENDPOINT);
         final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
+        LOGGER.info("test1HealthCheckSuccess health report {}", report);
         validateHealthCheckReport(NAME, SELF, true, 200, ALIVE, report);
     }
 
     @Test
-    public void testHealthCheckFailure() throws InterruptedException, IOException {
+    public void test7HealthCheckFailure() throws InterruptedException, IOException {
+        LOGGER.info("***************************** Running test7HealthCheckFailure *****************************");
         final RestServerParameters restServerParams = new CommonTestData().getRestServerParameters(false);
         restServerParams.setName(CommonTestData.PDPX_GROUP_NAME);
         restServer = new XacmlPdpRestServer(restServerParams, applicationPath.getAbsolutePath());
         restServer.start();
         final Invocation.Builder invocationBuilder = sendHttpRequest(HEALTHCHECK_ENDPOINT);
         final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
+        LOGGER.info("test7HealthCheckFailure health report {}", report);
         validateHealthCheckReport(NAME, SELF, false, 500, NOT_ALIVE, report);
         assertTrue(restServer.isAlive());
         assertTrue(restServer.toString().startsWith("XacmlPdpRestServer [servers="));
     }
 
     @Test
-    public void testHttpsHealthCheckSuccess() throws Exception {
+    public void test2HttpsHealthCheckSuccess() throws Exception {
+        LOGGER.info("**************************** Running test2HttpsHealthCheckSuccess ****************************");
         main = startXacmlPdpService(false);
         final Invocation.Builder invocationBuilder = sendHttpsRequest(HEALTHCHECK_ENDPOINT);
         final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
+        LOGGER.info("test2HttpsHealthCheckSuccess health report {}", report);
         validateHealthCheckReport(NAME, SELF, true, 200, ALIVE, report);
     }
 
     @Test
-    public void testStatistics_200() throws IOException, InterruptedException, TopicSinkClientException {
+    public void test4Statistics_200() throws IOException, InterruptedException, TopicSinkClientException {
+        LOGGER.info("***************************** Running test4Statistics_200 *****************************");
+        XacmlPdpStatisticsManager.resetAllStatistics();
         main = startXacmlPdpService(true);
         Invocation.Builder invocationBuilder = sendHttpRequest(STATISTICS_ENDPOINT);
         StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
+        LOGGER.info("test4Statistics_200 health report {}", report);
         validateStatisticsReport(report, 0, 200);
         updateXacmlPdpStatistics();
         invocationBuilder = sendHttpRequest(STATISTICS_ENDPOINT);
         report = invocationBuilder.get(StatisticsReport.class);
+        LOGGER.info("test4Statistics_200 health report {}", report);
         validateStatisticsReport(report, 1, 200);
         XacmlPdpStatisticsManager.resetAllStatistics();
     }
 
     @Test
-    public void testStatistics_500() throws IOException, InterruptedException {
+    public void test5Statistics_500() throws IOException, InterruptedException {
+        LOGGER.info("***************************** Running test5Statistics_500 *****************************");
         final RestServerParameters restServerParams = new CommonTestData().getRestServerParameters(false);
         restServerParams.setName(CommonTestData.PDPX_GROUP_NAME);
         restServer = new XacmlPdpRestServer(restServerParams, applicationPath.getAbsolutePath());
         restServer.start();
         final Invocation.Builder invocationBuilder = sendHttpRequest(STATISTICS_ENDPOINT);
         final StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
+        LOGGER.info("test5Statistics_500 health report {}", report);
         validateStatisticsReport(report, 0, 500);
         XacmlPdpStatisticsManager.resetAllStatistics();
     }
 
     @Test
-    public void testHttpsStatistic() throws Exception {
+    public void test6HttpsStatistic() throws Exception {
+        LOGGER.info("***************************** Running test6HttpsStatistic *****************************");
         main = startXacmlPdpService(false);
         final Invocation.Builder invocationBuilder = sendHttpsRequest(STATISTICS_ENDPOINT);
         final StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
+        LOGGER.info("test6HttpsStatistic health report {}", report);
         validateStatisticsReport(report, 0, 200);
     }
 
     @Test
-    public void testStatisticsConstructorIsPrivate() {
+    public void test3StatisticsConstructorIsPrivate() {
+        LOGGER.info("************************* Running test3StatisticsConstructorIsPrivate *************************");
         try {
             final Constructor<XacmlPdpStatisticsManager> constructor =
                     XacmlPdpStatisticsManager.class.getDeclaredConstructor();
@@ -224,9 +244,10 @@ public class TestXacmlPdpRestServer {
 
         final Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 
-        if (!NetworkUtil.isTcpPortOpen("localhost", 6969, 6, 10000L)) {
-            throw new IllegalStateException("cannot connect to port 6969");
+        if (!NetworkUtil.isTcpPortOpen("localhost", 6969, 20, 1000L)) {
+            throw new IllegalStateException("Cannot connect to port 6969");
         }
+
         return invocationBuilder;
     }
 

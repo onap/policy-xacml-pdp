@@ -63,6 +63,7 @@ public class XacmlPdpRestServer implements Startable {
     @Override
     public boolean start() {
         try {
+            LOGGER.info("Starting XacmlPdpRestServer...");
             //
             // Initialize the applications - SEND PROPERTIES
             //
@@ -86,6 +87,7 @@ public class XacmlPdpRestServer implements Startable {
                 }
                 server.start();
             }
+            LOGGER.info("servers are started");
         } catch (final Exception exp) {
             LOGGER.error("Failed to start xacml pdp http server", exp);
             return false;

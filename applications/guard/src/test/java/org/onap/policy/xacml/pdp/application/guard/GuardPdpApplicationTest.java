@@ -24,6 +24,8 @@ package org.onap.policy.xacml.pdp.application.guard;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.att.research.xacml.api.Response;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -39,6 +41,7 @@ import java.util.UUID;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -191,11 +194,11 @@ public class GuardPdpApplicationTest {
         //
         // Ask for a decision
         //
-        DecisionResponse response = service.makeDecision(request);
+        Pair<DecisionResponse, Response> decision = service.makeDecision(request);
         //
         // Check decision
         //
-        checkDecision(expected, response);
+        checkDecision(expected, decision.getKey());
     }
 
     @Test
@@ -215,7 +218,7 @@ public class GuardPdpApplicationTest {
         // can support the correct policy types.
         //
         assertThat(service.supportedPolicyTypes()).isNotEmpty();
-        assertThat(service.supportedPolicyTypes().size()).isEqualTo(3);
+        assertThat(service.supportedPolicyTypes().size()).isEqualTo(4);
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
                 "onap.policies.controlloop.guard.FrequencyLimiter", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
@@ -224,6 +227,10 @@ public class GuardPdpApplicationTest {
                 "onap.policies.controlloop.guard.MinMax", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
                 "onap.policies.controlloop.guard.MinMax", "1.0.1"))).isFalse();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+                "onap.policies.controlloop.guard.Blacklist", "1.0.0"))).isTrue();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+                "onap.policies.controlloop.guard.Blacklist", "1.0.1"))).isFalse();
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
                 "onap.policies.controlloop.guard.coordination.FirstBlocksSecond", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
@@ -335,22 +342,43 @@ public class GuardPdpApplicationTest {
         //
         // Ask for a decision - should get permit
         //
-        DecisionResponse response = service.makeDecision(request);
-        LOGGER.info("Looking for Permit Decision {}", response);
-        assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isNotNull();
-        assertThat(response.getStatus()).isEqualTo("Permit");
+        Pair<DecisionResponse, Response> decision = service.makeDecision(request);
+        LOGGER.info("Looking for Permit Decision {}", decision.getKey());
+        assertThat(decision.getKey()).isNotNull();
+        assertThat(decision.getKey().getStatus()).isNotNull();
+        assertThat(decision.getKey().getStatus()).isEqualTo("Permit");
         //
         // Try a deny
         //
         guard.put("vfCount", "10");
         resource.put("guard", guard);
         request.setResource(resource);
-        response = service.makeDecision(request);
-        LOGGER.info("Looking for Deny Decision {}", response);
-        assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isNotNull();
-        assertThat(response.getStatus()).isEqualTo("Deny");
+        decision = service.makeDecision(request);
+        LOGGER.info("Looking for Deny Decision {}", decision.getKey());
+        assertThat(decision.getKey()).isNotNull();
+        assertThat(decision.getKey().getStatus()).isNotNull();
+        assertThat(decision.getKey().getStatus()).isEqualTo("Deny");
+    }
+
+    @Test
+    public void test6Blacklist() throws CoderException, XacmlApplicationException {
+        LOGGER.info("**************** Running test4 ****************");
+        //
+        // Setup requestVfCount1 to point to another target for this test
+        //
+        ((Map<String, Object>)requestVfCount3.getResource().get("guard")).put("targets", "vLoadBalancer-01");
+        //
+        // vfcount=1 above min of 2: should get a permit
+        //
+        requestAndCheckDecision(requestVfCount3, PERMIT);
+        //
+        // Now load the vDNS blacklist policy
+        //
+        TestUtils.loadPolicies("src/test/resources/vDNS.policy.guard.blacklist.output.tosca.yaml", service);
+        //
+        // vfcount=1 above min of 2: should get a permit
+        //
+        requestAndCheckDecision(requestVfCount3, DENY);
     }
 
     @SuppressWarnings("unchecked")

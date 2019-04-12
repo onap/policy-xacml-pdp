@@ -175,6 +175,7 @@ public class XacmlPdpRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(new DecisionProvider().fetchDecision(body)).build();
         } catch (DecisionException e) {
+            XacmlPdpStatisticsManager.updateErrorCount();
             return addLoggingHeaders(
                     addVersionControlHeaders(Response.status((e.getErrorResponse().getResponseCode()))), requestId)
                     .entity(e.getErrorResponse()).build();

@@ -44,6 +44,7 @@ import java.util.Properties;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -240,7 +241,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
     }
 
     @Override
-    public DecisionResponse makeDecision(DecisionRequest request) {
+    public Pair<DecisionResponse, Response> makeDecision(DecisionRequest request) {
         //
         // Convert to a XacmlRequest
         //
@@ -252,7 +253,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
         //
         // Convert to a DecisionResponse
         //
-        return this.getTranslator().convertResponse(xacmlResponse);
+        return Pair.of(this.getTranslator().convertResponse(xacmlResponse), xacmlResponse);
     }
 
     protected abstract ToscaPolicyTranslator getTranslator(String type);

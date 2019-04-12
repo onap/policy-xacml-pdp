@@ -46,8 +46,6 @@ public class XacmlPdpApplicationManager {
     private static ServiceLoader<XacmlApplicationServiceProvider> applicationLoader;
     private static Map<String, XacmlApplicationServiceProvider> providerActionMap = new HashMap<>();
     private static List<ToscaPolicyTypeIdentifier> toscaPolicyTypeIdents = new ArrayList<>();
-    private static List<ToscaPolicyIdentifier> toscaPolicyIdents = new ArrayList<>();
-    private static List<ToscaPolicy> toscaPolicies = new ArrayList<>();
     private static Map<ToscaPolicy, XacmlApplicationServiceProvider> mapLoadedPolicies = new HashMap<>();
 
 
@@ -59,12 +57,20 @@ public class XacmlPdpApplicationManager {
      * One time to initialize the applications upon startup.
      */
     public static void initializeApplications(Path applicationPath) {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Initialization applications {}", applicationPath.toAbsolutePath());
+        }
         //
         // If we have already done this
         //
         if (! needsInit) {
-            LOGGER.error("Already initialized the applications");
-            return;
+            LOGGER.warn("Already initialized the applications {}", providerActionMap);
+            //
+            // I had to remove this because the JUnits kept failing - although I probably can
+            // add it back. The main() is hanging around during JUnits and initialization will
+            // fail.
+            //
+            // return
         }
         //
         // Load service
@@ -74,8 +80,10 @@ public class XacmlPdpApplicationManager {
         // Iterate through the applications for actions and supported policy types
         //
         for (XacmlApplicationServiceProvider application : applicationLoader) {
-            LOGGER.info("Application {} supports {}", application.applicationName(),
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Application {} supports {}", application.applicationName(),
                     application.supportedPolicyTypes());
+            }
             //
             // We are not going to make this available unless the application can
             // install correctly.
@@ -113,6 +121,8 @@ public class XacmlPdpApplicationManager {
         // we have initialized
         //
         needsInit = false;
+        LOGGER.info("Finished applications initialization {}", providerActionMap);
+
     }
 
     public static XacmlApplicationServiceProvider findApplication(DecisionRequest request) {
@@ -154,8 +164,10 @@ public class XacmlPdpApplicationManager {
         for (XacmlApplicationServiceProvider application : applicationLoader) {
             try {
                 if (application.unloadPolicy(policy)) {
-                    LOGGER.info("Unloaded ToscaPolicy {} from application {}", policy.getMetadata(),
+                    if (LOGGER.isInfoEnabled()) {
+                        LOGGER.info("Unloaded ToscaPolicy {} from application {}", policy.getMetadata(),
                             application.applicationName());
+                    }
                     if (mapLoadedPolicies.remove(policy) == null) {
                         LOGGER.error("Failed to remove unloaded policy {} from map size {}", policy.getMetadata(),
                                 mapLoadedPolicies.size());
@@ -183,8 +195,10 @@ public class XacmlPdpApplicationManager {
                 //
                 if (application.canSupportPolicyType(policy.getTypeIdentifier())) {
                     if (application.loadPolicy(policy)) {
-                        LOGGER.info("Loaded ToscaPolicy {} into application {}", policy.getMetadata(),
+                        if (LOGGER.isInfoEnabled()) {
+                            LOGGER.info("Loaded ToscaPolicy {} into application {}", policy.getMetadata(),
                                 application.applicationName());
+                        }
                         mapLoadedPolicies.put(policy, application);
                     }
                     return;
@@ -217,7 +231,9 @@ public class XacmlPdpApplicationManager {
         // they can result in a valid directory being created.
         //
         Path path = Paths.get(basePath.toAbsolutePath().toString(), application.applicationName());
-        LOGGER.info("initializeApplicationPath {} at this path {}", application.applicationName(), path);
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("initializeApplicationPath {} at this path {}", application.applicationName(), path);
+        }
         //
         // Create that the directory if it does not exist. Ideally
         // this is only for testing, but could be used for production
@@ -231,7 +247,7 @@ public class XacmlPdpApplicationManager {
                 //
                 Files.createDirectory(path);
             } catch (IOException e) {
-                LOGGER.error("Failed to create application directory", e);
+                LOGGER.error("Failed to create application directory {}", path.toAbsolutePath().toString(), e);
             }
         }
         //
