@@ -24,6 +24,8 @@ package org.onap.policy.xacml.pdp.application.guard;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.att.research.xacml.api.Response;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
@@ -53,6 +55,7 @@ import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.pdp.xacml.application.common.TestUtils;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
+import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider.Pair;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.onap.policy.pdp.xacml.application.common.operationshistory.CountRecentOperationsPip;
 import org.onap.policy.pdp.xacml.application.common.operationshistory.Dbao;
@@ -196,11 +199,11 @@ public class CoordinationTest {
         //
         // Ask for a decision
         //
-        DecisionResponse response = service.makeDecision(request);
+        Pair<DecisionResponse, Response> decision = service.makeDecision(request);
         //
         // Check decision
         //
-        checkDecision(expected, response);
+        checkDecision(expected, decision.first);
     }
 
     @Test

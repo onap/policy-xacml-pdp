@@ -76,6 +76,7 @@ public class TestXacmlPdpStatistics {
     @Test
     public void testXacmlPdpStatistics_200() throws PolicyXacmlPdpException, InterruptedException {
         try {
+            LOGGER.info("*************************** Running testXacmlPdpStatistics_200 ***************************");
             final Main main = startXacmlPdpService();
             StatisticsReport report = getXacmlPdpStatistics();
             validateReport(report, 0, 200);
@@ -93,6 +94,7 @@ public class TestXacmlPdpStatistics {
 
     @Test
     public void testXacmlPdpStatistics_500() throws InterruptedException {
+        LOGGER.info("***************************** Running testXacmlPdpStatistics_500 *****************************");
         final RestServerParameters restServerParams = new CommonTestData().getRestServerParameters(false);
         restServerParams.setName(CommonTestData.PDPX_GROUP_NAME);
         final XacmlPdpRestServer restServer = new XacmlPdpRestServer(restServerParams,
@@ -133,7 +135,14 @@ public class TestXacmlPdpStatistics {
 
         final Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 
-        if (!NetworkUtil.isTcpPortOpen("localhost", 6969, 6, 10000L)) {
+        boolean isOpen = false;
+        for (long time = 1000L; time <= 6000L; time += 1000L) {
+            if (NetworkUtil.isTcpPortOpen("localhost", 6969, 6, time)) {
+                isOpen = true;
+                break;
+            }
+        }
+        if (! isOpen) {
             throw new IllegalStateException("Cannot connect to port 6969");
         }
 
