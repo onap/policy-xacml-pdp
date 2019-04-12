@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ae921df_48b600cd",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestXacmlPdpRestServer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-12T20:45:00Z",
+      "side": 1,
+      "message": "Mike - this is what I had to add in order to get the JUnit running successfully via maven. Obviously an ordering issue. In Eclipse, things run in a different order.",
+      "range": {
+        "startLine": 159,
+        "startChar": 4,
+        "endLine": 159,
+        "endChar": 55
+      },
+      "revId": "ab48c7a812b3b85b9bec46dc82972770e0b0f87b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
