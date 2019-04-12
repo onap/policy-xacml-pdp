@@ -30,8 +30,6 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifi
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdCombinedPolicyResultsTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServiceProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is the engine class that manages the instance of the XACML PDP engine.
@@ -44,7 +42,6 @@ import org.slf4j.LoggerFactory;
  */
 public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringPdpApplication.class);
     private static final String ONAP_MONITORING_BASE_POLICY_TYPE = "onap.Monitoring";
     private static final String ONAP_MONITORING_DERIVED_POLICY_TYPE = "onap.policies.monitoring";
 

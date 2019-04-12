@@ -178,7 +178,14 @@ public class TestDecision {
 
         final Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 
-        if (!NetworkUtil.isTcpPortOpen("localhost", 6969, 6, 10000L)) {
+        boolean isOpen = false;
+        for (long time = 1000L; time <= 6000L; time += 1000L) {
+            if (NetworkUtil.isTcpPortOpen("localhost", 6969, 6, time)) {
+                isOpen = true;
+                break;
+            }
+        }
+        if (! isOpen) {
             throw new IllegalStateException("Cannot connect to port 6969");
         }
 

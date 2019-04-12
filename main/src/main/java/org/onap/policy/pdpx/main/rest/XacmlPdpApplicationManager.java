@@ -46,8 +46,6 @@ public class XacmlPdpApplicationManager {
     private static ServiceLoader<XacmlApplicationServiceProvider> applicationLoader;
     private static Map<String, XacmlApplicationServiceProvider> providerActionMap = new HashMap<>();
     private static List<ToscaPolicyTypeIdentifier> toscaPolicyTypeIdents = new ArrayList<>();
-    private static List<ToscaPolicyIdentifier> toscaPolicyIdents = new ArrayList<>();
-    private static List<ToscaPolicy> toscaPolicies = new ArrayList<>();
     private static Map<ToscaPolicy, XacmlApplicationServiceProvider> mapLoadedPolicies = new HashMap<>();
 
 
@@ -231,7 +229,7 @@ public class XacmlPdpApplicationManager {
                 //
                 Files.createDirectory(path);
             } catch (IOException e) {
-                LOGGER.error("Failed to create application directory", e);
+                LOGGER.error("Failed to create application directory {}", path.toAbsolutePath().toString(), e);
             }
         }
         //

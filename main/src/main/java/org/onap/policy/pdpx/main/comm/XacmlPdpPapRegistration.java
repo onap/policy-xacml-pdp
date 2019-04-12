@@ -49,12 +49,10 @@ public class XacmlPdpPapRegistration {
     public void pdpRegistration(PdpStatus status) throws TopicSinkClientException {
         try {
             if (!client.send(status)) {
-                LOGGER.error("Failed to send to topic sink " + client.getTopic());
-                return;
+                LOGGER.error("Failed to send to topic sink {}", client.getTopic());
             }
         } catch (IllegalStateException e) {
-            LOGGER.error("Failed ot send to topic sink " + client.getTopic(), e);
-            return;
+            LOGGER.error("Failed ot send to topic sink {}", client.getTopic(), e);
         }
     }
 }
