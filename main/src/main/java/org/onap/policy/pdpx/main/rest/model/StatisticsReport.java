@@ -29,6 +29,7 @@ public class StatisticsReport {
     private int code;
     private long totalPolicyTypesCount;
     private long totalPoliciesCount;
+    private long totalErrorCount;
     private long permitDecisionsCount;
     private long denyDecisionsCount;
     private long indeterminantDecisionsCount;
@@ -87,6 +88,24 @@ public class StatisticsReport {
      */
     public void setTotalPoliciesCount(long totalPoliciesCount) {
         this.totalPoliciesCount = totalPoliciesCount;
+    }
+
+    /**
+     * Returns the totalErrorCount of this {@link StatisticsReport} instance.
+     *
+     * @return the totalErrorCount
+     */
+    public long getTotalErrorCount() {
+        return totalErrorCount;
+    }
+
+    /**
+     * Set totalErrorCount in this {@link StatisticsReport} instance.
+     *
+     * @param totalErrorCount the totalErrorCount to set
+     */
+    public void setTotalErrorCount(long totalErrorCount) {
+        this.totalErrorCount = totalErrorCount;
     }
 
     /**
@@ -173,6 +192,8 @@ public class StatisticsReport {
         builder.append(getTotalPolicyTypesCount());
         builder.append(", totalPoliciesCount=");
         builder.append(getTotalPoliciesCount());
+        builder.append(", totalErrorCount=");
+        builder.append(getTotalErrorCount());
         builder.append(", permitDecisionsCount=");
         builder.append(getPermitDecisionsCount());
         builder.append(", denyDecisionsCount=");

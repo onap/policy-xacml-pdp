@@ -24,6 +24,8 @@ package org.onap.policy.xacml.pdp.application.optimization;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.att.research.xacml.api.Response;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -46,6 +48,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifi
 import org.onap.policy.pdp.xacml.application.common.TestUtils;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
+import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider.Pair;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,11 +150,11 @@ public class OptimizationPdpApplicationTest {
         //
         // Ask for a decision
         //
-        DecisionResponse response = service.makeDecision(requestAffinity);
-        LOGGER.info("Decision {}", response);
+        Pair<DecisionResponse, Response> decision = service.makeDecision(requestAffinity);
+        LOGGER.info("Decision {}", decision.first);
 
-        assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(0);
+        assertThat(decision.first).isNotNull();
+        assertThat(decision.first.getPolicies().size()).isEqualTo(0);
     }
 
     @Test
@@ -164,14 +167,14 @@ public class OptimizationPdpApplicationTest {
         //
         // Ask for a decision
         //
-        DecisionResponse response = service.makeDecision(requestAffinity);
-        LOGGER.info("Decision {}", response);
+        Pair<DecisionResponse, Response> decision = service.makeDecision(requestAffinity);
+        LOGGER.info("Decision {}", decision.first);
 
-        assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(1);
+        assertThat(decision.first).isNotNull();
+        assertThat(decision.first.getPolicies().size()).isEqualTo(1);
         //
         // Dump it out as Json
         //
-        LOGGER.info(gson.encode(response));
+        LOGGER.info(gson.encode(decision.first));
     }
 }

@@ -32,7 +32,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Properties;
 
-import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
@@ -65,7 +64,8 @@ public class GetOperationOutcomePip extends StdOnapPip {
             //
             // In case there are any overloaded properties for the JPA
             //
-            Properties emProperties = new Properties(properties);
+            Properties emProperties = new Properties();
+            emProperties.putAll(properties);
             //
             // Create the entity manager factory
             //

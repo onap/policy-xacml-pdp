@@ -20,13 +20,17 @@
 
 package org.onap.policy.pdpx.main.rest.provider;
 
-import javax.ws.rs.core.Response.Status;
+import com.att.research.xacml.api.Decision;
+import com.att.research.xacml.api.Response;
+import com.att.research.xacml.api.Result;
 
 import org.onap.policy.models.decisions.concepts.DecisionException;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
+import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider.Pair;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
+import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,9 +51,23 @@ public class DecisionProvider {
         //
         XacmlApplicationServiceProvider application = findApplication(request);
         //
-        // Cannot find application for action
+        // Found application for action
         //
-        return application.makeDecision(request);
+        Pair<DecisionResponse, Response> decision;
+        try {
+            decision = application.makeDecision(request);
+        } catch (Exception e) {
+            LOGGER.error("makeDecision failed", e);
+            throw e;
+        }
+        //
+        // Calculate statistics
+        //
+        this.calculateStatistic(decision.second);
+        //
+        // Return the decision
+        //
+        return decision.first;
     }
 
     private XacmlApplicationServiceProvider findApplication(DecisionRequest request) {
@@ -57,7 +75,29 @@ public class DecisionProvider {
         if (application != null) {
             return application;
         }
-        throw new DecisionException(Status.BAD_REQUEST, "No application for action " + request.getAction());
+        throw new DecisionException(javax.ws.rs.core.Response.Status.BAD_REQUEST,
+                "No application for action " + request.getAction());
+    }
+
+    private void calculateStatistic(Response xacmlResponse) {
+
+        for (Result result : xacmlResponse.getResults()) {
+            if (Decision.PERMIT.equals(result.getDecision())) {
+                XacmlPdpStatisticsManager.updatePermitDecisionsCount();
+            }
+            if (Decision.DENY.equals(result.getDecision())) {
+                XacmlPdpStatisticsManager.updateDenyDecisionsCount();
+            }
+            if (Decision.INDETERMINATE.equals(result.getDecision())
+                    || Decision.INDETERMINATE_DENY.equals(result.getDecision())
+                    || Decision.INDETERMINATE_DENYPERMIT.equals(result.getDecision())
+                    || Decision.INDETERMINATE_PERMIT.equals(result.getDecision())) {
+                XacmlPdpStatisticsManager.updateIndeterminantDecisionsCount();
+            }
+            if (Decision.NOTAPPLICABLE.equals(result.getDecision())) {
+                XacmlPdpStatisticsManager.updateNotApplicableDecisionsCount();
+            }
+        }
     }
 
 }
