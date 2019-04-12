@@ -88,7 +88,8 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
     }
 
     @Override
-    protected ToscaPolicyTranslator getTranslator() {
+    protected ToscaPolicyTranslator getTranslator(String type) {
         return translator;
     }
+
 }

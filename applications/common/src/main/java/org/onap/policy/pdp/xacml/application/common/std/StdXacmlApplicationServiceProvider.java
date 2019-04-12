@@ -132,7 +132,8 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             //
             // Convert the policies first
             //
-            PolicyType xacmlPolicy = this.getTranslator().convertPolicy(toscaPolicy);
+            PolicyType xacmlPolicy = this.getTranslator(toscaPolicy.getType())
+                .convertPolicy(toscaPolicy);
             if (xacmlPolicy == null) {
                 throw new ToscaPolicyConversionException("Failed to convert policy");
             }
@@ -254,8 +255,11 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
         return this.getTranslator().convertResponse(xacmlResponse);
     }
 
+    protected abstract ToscaPolicyTranslator getTranslator(String type);
 
-    protected abstract ToscaPolicyTranslator getTranslator();
+    protected ToscaPolicyTranslator getTranslator() {
+        return this.getTranslator("");
+    }
 
     protected synchronized PDPEngine getEngine() {
         return this.pdpEngine;
