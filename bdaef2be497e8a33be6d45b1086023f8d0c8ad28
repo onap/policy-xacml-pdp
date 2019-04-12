@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e78d000b_93df5f72",
+        "filename": "applications/common/src/test/resources/META-INF/persistence.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-12T23:19:05Z",
+      "side": 1,
+      "message": "I\u0027m not sure this was needed - need to be careful because the production version of persistence.xml uses mariadb. We also don\u0027t use hibernate I thought??",
+      "range": {
+        "startLine": 32,
+        "startChar": 11,
+        "endLine": 32,
+        "endChar": 88
+      },
+      "revId": "bdaef2be497e8a33be6d45b1086023f8d0c8ad28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99bf0402_98dd9970",
+        "filename": "applications/guard/src/test/resources/META-INF/persistence.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-12T23:19:05Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 30,
+        "startChar": 12,
+        "endLine": 30,
+        "endChar": 88
+      },
+      "revId": "bdaef2be497e8a33be6d45b1086023f8d0c8ad28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
