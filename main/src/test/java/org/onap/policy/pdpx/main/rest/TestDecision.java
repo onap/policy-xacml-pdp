@@ -38,17 +38,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -74,6 +68,7 @@ public class TestDecision {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestDecision.class);
 
     private static Main main;
+    private static HttpClient client;
 
     @ClassRule
     public static final TemporaryFolder appsFolder = new TemporaryFolder();
@@ -81,9 +76,10 @@ public class TestDecision {
     /**
      * BeforeClass setup environment.
      * @throws IOException Cannot create temp apps folder
+     * @throws Exception exception if service does not start
      */
     @BeforeClass
-    public static void beforeClass() throws IOException {
+    public static void beforeClass() throws Exception {
         System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StdErrLog");
         System.setProperty("org.eclipse.jetty.LEVEL", "OFF");
         //
@@ -109,6 +105,23 @@ public class TestDecision {
         // Start the service
         //
         main = startXacmlPdpService(fileParams);
+        //
+        // Make sure it is running
+        //
+        boolean isOpen = false;
+        for (long time = 1000L; time <= 6000L; time += 1000L) {
+            if (NetworkUtil.isTcpPortOpen("localhost", 6969, 6, time)) {
+                isOpen = true;
+                break;
+            }
+        }
+        if (! isOpen) {
+            throw new IllegalStateException("Cannot connect to port 6969");
+        }
+        //
+        // Create a client
+        //
+        client = getNoAuthHttpClient();
     }
 
     @AfterClass
@@ -139,7 +152,9 @@ public class TestDecision {
     }
 
     @Test
-    public void testDecision_Guard() throws InterruptedException, IOException {
+    public void testDecision_Guard() throws KeyManagementException, NoSuchAlgorithmException,
+        ClassNotFoundException {
+
         LOGGER.info("Running test testDecision_Guard");
 
         DecisionRequest request = new DecisionRequest();
@@ -167,28 +182,17 @@ public class TestDecision {
         main.shutdown();
     }
 
-    private DecisionResponse getDecision(DecisionRequest request) throws InterruptedException, IOException {
-        final ClientConfig clientConfig = new ClientConfig();
+    private DecisionResponse getDecision(DecisionRequest request) {
 
-        final HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("healthcheck", "zb!XztG34");
-        clientConfig.register(feature);
+        Entity<DecisionRequest> entityRequest = Entity.entity(request, MediaType.APPLICATION_JSON);
+        Response response = client.post("", entityRequest, Collections.emptyMap());
 
-        final Client client = ClientBuilder.newClient(clientConfig);
-        final WebTarget webTarget = client.target("http://localhost:6969/policy/pdpx/v1/decision");
+        assertEquals(200, response.getStatus());
 
-        final Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-
-        if (!NetworkUtil.isTcpPortOpen("localhost", 6969, 6, 10000L)) {
-            throw new IllegalStateException("Cannot connect to port 6969");
-        }
-
-        return invocationBuilder.post(Entity.json(request), DecisionResponse.class);
+        return HttpClient.getBody(response, DecisionResponse.class);
     }
 
-    private ErrorResponse getErrorDecision(DecisionRequest request) throws KeyManagementException,
-        NoSuchAlgorithmException, ClassNotFoundException {
-
-        HttpClient client = getNoAuthHttpClient();
+    private ErrorResponse getErrorDecision(DecisionRequest request) {
 
         Entity<DecisionRequest> entityRequest = Entity.entity(request, MediaType.APPLICATION_JSON);
         Response response = client.post("", entityRequest, Collections.emptyMap());
@@ -198,7 +202,7 @@ public class TestDecision {
         return HttpClient.getBody(response, ErrorResponse.class);
     }
 
-    private HttpClient getNoAuthHttpClient()
+    private static HttpClient getNoAuthHttpClient()
             throws KeyManagementException, NoSuchAlgorithmException, ClassNotFoundException {
         return HttpClient.factory.build(BusTopicParams.builder()
                 .clientName("testDecisionClient")

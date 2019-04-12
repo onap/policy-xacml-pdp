@@ -29,7 +29,7 @@
         <properties>
             <property name="eclipselink.ddl-generation" value="create-tables" />
             <property name="eclipselink.logging.level" value="FINE" />
-	    <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:testdb;DATABASE_TO_UPPER=FALSE" />
             <property name="javax.persistence.jdbc.user" value="policy" />

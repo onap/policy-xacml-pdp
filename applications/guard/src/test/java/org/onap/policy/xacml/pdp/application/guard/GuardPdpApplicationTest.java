@@ -24,6 +24,8 @@ package org.onap.policy.xacml.pdp.application.guard;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.att.research.xacml.api.Response;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -56,6 +58,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifi
 import org.onap.policy.pdp.xacml.application.common.TestUtils;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
+import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider.Pair;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.onap.policy.pdp.xacml.application.common.operationshistory.CountRecentOperationsPip;
 import org.onap.policy.pdp.xacml.application.common.operationshistory.Dbao;
@@ -191,11 +194,11 @@ public class GuardPdpApplicationTest {
         //
         // Ask for a decision
         //
-        DecisionResponse response = service.makeDecision(request);
+        Pair<DecisionResponse, Response> decision = service.makeDecision(request);
         //
         // Check decision
         //
-        checkDecision(expected, response);
+        checkDecision(expected, decision.first);
     }
 
     @Test
@@ -335,22 +338,22 @@ public class GuardPdpApplicationTest {
         //
         // Ask for a decision - should get permit
         //
-        DecisionResponse response = service.makeDecision(request);
-        LOGGER.info("Looking for Permit Decision {}", response);
-        assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isNotNull();
-        assertThat(response.getStatus()).isEqualTo("Permit");
+        Pair<DecisionResponse, Response> decision = service.makeDecision(request);
+        LOGGER.info("Looking for Permit Decision {}", decision.first);
+        assertThat(decision.first).isNotNull();
+        assertThat(decision.first.getStatus()).isNotNull();
+        assertThat(decision.first.getStatus()).isEqualTo("Permit");
         //
         // Try a deny
         //
         guard.put("vfCount", "10");
         resource.put("guard", guard);
         request.setResource(resource);
-        response = service.makeDecision(request);
-        LOGGER.info("Looking for Deny Decision {}", response);
-        assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isNotNull();
-        assertThat(response.getStatus()).isEqualTo("Deny");
+        decision = service.makeDecision(request);
+        LOGGER.info("Looking for Deny Decision {}", decision.first);
+        assertThat(decision.first).isNotNull();
+        assertThat(decision.first.getStatus()).isNotNull();
+        assertThat(decision.first.getStatus()).isEqualTo("Deny");
     }
 
     @SuppressWarnings("unchecked")
