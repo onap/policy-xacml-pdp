@@ -240,7 +240,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
     }
 
     @Override
-    public DecisionResponse makeDecision(DecisionRequest request) {
+    public Pair<DecisionResponse, Response> makeDecision(DecisionRequest request) {
         //
         // Convert to a XacmlRequest
         //
@@ -252,7 +252,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
         //
         // Convert to a DecisionResponse
         //
-        return this.getTranslator().convertResponse(xacmlResponse);
+        return new Pair<>(this.getTranslator().convertResponse(xacmlResponse), xacmlResponse);
     }
 
     protected abstract ToscaPolicyTranslator getTranslator(String type);

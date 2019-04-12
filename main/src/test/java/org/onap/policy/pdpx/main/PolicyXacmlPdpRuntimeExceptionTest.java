@@ -1,5 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
+ * ONAP
+ * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,27 +20,19 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.pdpx.main.rest.model;
+package org.onap.policy.pdpx.main;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import static org.junit.Assert.assertEquals;
 
-/**
- * Class to represent statistics report of xacmlPdp service.
- *
- */
-@Getter
-@Setter
-@ToString
-public class StatisticsReport {
+import org.junit.Test;
+import org.onap.policy.common.utils.test.ExceptionsTester;
 
-    private int code;
-    private long totalPolicyTypesCount;
-    private long totalPoliciesCount;
-    private long totalErrorCount;
-    private long permitDecisionsCount;
-    private long denyDecisionsCount;
-    private long indeterminantDecisionsCount;
-    private long notApplicableDecisionsCount;
+public class PolicyXacmlPdpRuntimeExceptionTest {
+
+    @Test
+    public void test() {
+        assertEquals(2, new ExceptionsTester().test(PolicyXacmlPdpRuntimeException.class));
+    }
+
+
 }

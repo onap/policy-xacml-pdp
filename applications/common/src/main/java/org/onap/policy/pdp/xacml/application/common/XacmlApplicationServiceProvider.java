@@ -21,6 +21,8 @@
 
 package org.onap.policy.pdp.xacml.application.common;
 
+import com.att.research.xacml.api.Response;
+
 import java.nio.file.Path;
 import java.util.List;
 
@@ -39,6 +41,16 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifi
  *
  */
 public interface XacmlApplicationServiceProvider {
+
+    public class Pair<A, B> {
+        public final A first;
+        public final B second;
+
+        public Pair(A first, B second) {
+            this.first = first;
+            this.second = second;
+        }
+    }
 
     /**
      * Name of the application for auditing and organization of its data.
@@ -98,6 +110,6 @@ public interface XacmlApplicationServiceProvider {
      * @param request Incoming DecisionRequest object
      * @return response Responding DecisionResponse object
      */
-    DecisionResponse       makeDecision(DecisionRequest request);
+    Pair<DecisionResponse, Response>       makeDecision(DecisionRequest request);
 
 }

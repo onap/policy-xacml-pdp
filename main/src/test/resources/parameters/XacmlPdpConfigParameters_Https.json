@@ -7,5 +7,5 @@
         "password":"zb!XztG34",
         "https":true
     },
-    "applicationPath": "apps.test"
+    "applicationPath": "src/test/resources/apps"
 }
