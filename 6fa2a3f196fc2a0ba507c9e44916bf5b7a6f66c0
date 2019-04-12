@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ecf59d54_ac08d70d",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/XacmlApplicationServiceProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-12T21:25:56Z",
+      "side": 1,
+      "message": "We have been defining our own throughout all the repos. Look into that later though to see if we could use that.",
+      "parentUuid": "59561ed5_228363a7",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 53,
+        "endChar": 5
+      },
+      "revId": "6fa2a3f196fc2a0ba507c9e44916bf5b7a6f66c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83fb84fc_2f9dfcdd",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/model/StatisticsReport.java",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2019-04-12T17:22:51Z",
       "side": 1,
       "message": "looks like a good candidate for lombok @Data",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 3
+      },
+      "revId": "6fa2a3f196fc2a0ba507c9e44916bf5b7a6f66c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "785d2cb3_148c4c19",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/model/StatisticsReport.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-12T21:25:56Z",
+      "side": 1,
+      "message": "Tried that once - it failed. Will look to do that another time.",
+      "parentUuid": "83fb84fc_2f9dfcdd",
       "range": {
         "startLine": 23,
         "startChar": 0,
