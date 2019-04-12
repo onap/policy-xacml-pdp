@@ -34,7 +34,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
-import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 
 @Getter
 @Setter
@@ -43,7 +42,6 @@ import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 public class LegacyGuardPolicyRequest {
 
     private static final String STR_GUARD = "guard";
-    private static final String URN_ONAP = ToscaDictionary.URN_ONAP;
 
     @XACMLSubject(includeInResults = true)
     private String onapName;

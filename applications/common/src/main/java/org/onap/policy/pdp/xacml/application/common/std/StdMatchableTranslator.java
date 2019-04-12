@@ -200,8 +200,7 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
         try {
             jsonPolicy = coder.encode(toscaPolicy);
         } catch (CoderException e) {
-            LOGGER.error("Failed to encode policy to json", e);
-            throw new ToscaPolicyConversionException(e);
+            throw new ToscaPolicyConversionException("Failed to encode policy to json", e);
         }
         addObligation(rule, jsonPolicy);
         //
@@ -237,7 +236,7 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
             //
             // Add in the Policy Version
             //
-            policy.setVersion(map.get("policy-version").toString());
+            policy.setVersion(map.get("policy-version"));
         }
         return policy;
     }
@@ -325,7 +324,7 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
         //
         AttributeValueType value = new AttributeValueType();
         value.setDataType(ToscaDictionary.ID_OBLIGATION_POLICY_MONITORING_DATATYPE.stringValue());
-        value.getContent().add(jsonPolicy.toString());
+        value.getContent().add(jsonPolicy);
         //
         // Create our AttributeAssignmentExpression where we will
         // store the contents of the policy in JSON format.

@@ -93,6 +93,7 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
         //
         for (ToscaPolicyTypeIdentifier supported : this.supportedPolicyTypes) {
             if (policyTypeId.equals(supported)) {
+                LOGGER.info("optimization can support {}", supported);
                 return true;
             }
         }

@@ -28,6 +28,7 @@ public class XacmlPdpStatisticsManager {
 
     private static long totalPolicyTypesCount;
     private static long totalPoliciesCount;
+    private static long errorsCount;
     private static long permitDecisionsCount;
     private static long denyDecisionsCount;
     private static long indeterminantDecisionsCount;
@@ -56,6 +57,15 @@ public class XacmlPdpStatisticsManager {
      */
     public static long updateTotalPoliciesCount() {
         return ++totalPoliciesCount;
+    }
+
+    /**
+     * Method to update the number of error decisions.
+     *
+     * @return the errorDecisionsCount
+     */
+    public static long updateErrorCount() {
+        return ++errorsCount;
     }
 
     /**
@@ -113,6 +123,15 @@ public class XacmlPdpStatisticsManager {
     }
 
     /**
+     * Returns the current value of errorDecisionsCount.
+
+     * @return the permitDecisionsCount
+     */
+    public static long getErrorCount() {
+        return errorsCount;
+    }
+
+    /**
      * Returns the current value of permitDecisionsCount.
 
      * @return the permitDecisionsCount
@@ -152,7 +171,9 @@ public class XacmlPdpStatisticsManager {
      * Reset all the statistics counts to 0.
      */
     public static void resetAllStatistics() {
+        totalPolicyTypesCount = 0L;
         totalPoliciesCount = 0L;
+        errorsCount = 0L;
         permitDecisionsCount = 0L;
         denyDecisionsCount = 0L;
         indeterminantDecisionsCount = 0L;

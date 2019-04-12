@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(GuardPdpApplication.class);
     private static final String STRING_VERSION100 = "1.0.0";
     private List<ToscaPolicyTypeIdentifier> supportedPolicyTypes = new ArrayList<>();
