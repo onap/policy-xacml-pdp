@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f8da82ce_414b1716",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/XacmlApplicationServiceProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-12T21:41:15Z",
+      "side": 1,
+      "message": "just use Pair from apache.lang3\n\nnote: this will entail changing:\n\n  new Pair\u003c\u003e(xxx, yyy)\n\nto\n\n  Pair.of(xxx, yyy)",
+      "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43f7cca6_5ac6a901",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-12T21:41:15Z",
+      "side": 1,
+      "message": "why was this test added?\n\nsame comment below",
+      "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ec468b03_29e83335",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/model/StatisticsReport.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-12T21:41:15Z",
+      "side": 1,
+      "message": "Add lombok @Getter, @Setter, and @ToString and then ALL of the methods can be removed from this class.",
+      "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd36eeb1_7d8087ab",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-12T21:41:15Z",
+      "side": 1,
+      "message": "use a \"switch\" statement instead",
+      "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e9968d2b_00be7ffa",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/StatisticsProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-12T21:41:15Z",
+      "side": 1,
+      "message": "we have similar copy code in PAP - should probably create a utility to copy fields (some day :-) )",
+      "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2571060a_387668e3",
+        "filename": "main/src/main/resources/META-INF/persistence.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-12T21:41:15Z",
+      "side": 1,
+      "message": "shouldn\u0027t these javax.xxx.jdbc properties be placed into a property file instead?",
+      "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63cc4458_5d2091a9",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestDecision.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-12T21:41:15Z",
+      "side": 1,
+      "message": "no need to put this in a loop - just tell NetworkUtil to try several more times",
+      "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a8b7d92_0ba0ce7c",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestXacmlPdpRestServer.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-12T21:41:15Z",
+      "side": 1,
+      "message": "same comment as before",
+      "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9c6bb9e_fab87ee3",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestXacmlPdpStatistics.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-12T21:41:15Z",
+      "side": 1,
+      "message": "same comment as before",
+      "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
