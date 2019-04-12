@@ -68,7 +68,8 @@ public class CountRecentOperationsPip extends StdOnapPip {
             //
             // In case there are any overloaded properties for the JPA
             //
-            Properties emProperties = new Properties(properties);
+            Properties emProperties = new Properties();
+            emProperties.putAll(properties);
             //
             // Create the entity manager factory
             //

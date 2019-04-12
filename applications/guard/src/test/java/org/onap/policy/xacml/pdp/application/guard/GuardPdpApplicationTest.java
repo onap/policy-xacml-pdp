@@ -24,6 +24,8 @@ package org.onap.policy.xacml.pdp.application.guard;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.att.research.xacml.api.Response;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -39,6 +41,7 @@ import java.util.UUID;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -191,11 +194,11 @@ public class GuardPdpApplicationTest {
         //
         // Ask for a decision
         //
-        DecisionResponse response = service.makeDecision(request);
+        Pair<DecisionResponse, Response> decision = service.makeDecision(request);
         //
         // Check decision
         //
-        checkDecision(expected, response);
+        checkDecision(expected, decision.getKey());
     }
 
     @Test
@@ -335,22 +338,22 @@ public class GuardPdpApplicationTest {
         //
         // Ask for a decision - should get permit
         //
-        DecisionResponse response = service.makeDecision(request);
-        LOGGER.info("Looking for Permit Decision {}", response);
-        assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isNotNull();
-        assertThat(response.getStatus()).isEqualTo("Permit");
+        Pair<DecisionResponse, Response> decision = service.makeDecision(request);
+        LOGGER.info("Looking for Permit Decision {}", decision.getKey());
+        assertThat(decision.getKey()).isNotNull();
+        assertThat(decision.getKey().getStatus()).isNotNull();
+        assertThat(decision.getKey().getStatus()).isEqualTo("Permit");
         //
         // Try a deny
         //
         guard.put("vfCount", "10");
         resource.put("guard", guard);
         request.setResource(resource);
-        response = service.makeDecision(request);
-        LOGGER.info("Looking for Deny Decision {}", response);
-        assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isNotNull();
-        assertThat(response.getStatus()).isEqualTo("Deny");
+        decision = service.makeDecision(request);
+        LOGGER.info("Looking for Deny Decision {}", decision.getKey());
+        assertThat(decision.getKey()).isNotNull();
+        assertThat(decision.getKey().getStatus()).isNotNull();
+        assertThat(decision.getKey().getStatus()).isEqualTo("Deny");
     }
 
     @SuppressWarnings("unchecked")

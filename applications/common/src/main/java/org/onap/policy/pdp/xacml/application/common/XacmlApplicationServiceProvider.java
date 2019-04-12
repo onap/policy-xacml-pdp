@@ -21,9 +21,12 @@
 
 package org.onap.policy.pdp.xacml.application.common;
 
+import com.att.research.xacml.api.Response;
+
 import java.nio.file.Path;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -98,6 +101,6 @@ public interface XacmlApplicationServiceProvider {
      * @param request Incoming DecisionRequest object
      * @return response Responding DecisionResponse object
      */
-    DecisionResponse       makeDecision(DecisionRequest request);
+    Pair<DecisionResponse, Response>       makeDecision(DecisionRequest request);
 
 }

@@ -98,6 +98,8 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
      * @param topicProperties properties used to configure the topics
      */
     public XacmlPdpActivator(final XacmlPdpParameterGroup xacmlPdpParameterGroup, Properties topicProperties) {
+        LOGGER.info("Activator initializing using {} and {}", xacmlPdpParameterGroup, topicProperties);
+
         TopicEndpoint.manager.addTopicSinks(topicProperties);
         TopicEndpoint.manager.addTopicSources(topicProperties);
 

@@ -20,13 +20,16 @@
 
 package org.onap.policy.pdpx.main.rest.provider;
 
-import javax.ws.rs.core.Response.Status;
+import com.att.research.xacml.api.Response;
+import com.att.research.xacml.api.Result;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.models.decisions.concepts.DecisionException;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
+import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,9 +50,23 @@ public class DecisionProvider {
         //
         XacmlApplicationServiceProvider application = findApplication(request);
         //
-        // Cannot find application for action
+        // Found application for action
         //
-        return application.makeDecision(request);
+        Pair<DecisionResponse, Response> decision;
+        try {
+            decision = application.makeDecision(request);
+        } catch (Exception e) {
+            LOGGER.error("makeDecision failed", e);
+            throw e;
+        }
+        //
+        // Calculate statistics
+        //
+        this.calculateStatistic(decision.getValue());
+        //
+        // Return the decision
+        //
+        return decision.getKey();
     }
 
     private XacmlApplicationServiceProvider findApplication(DecisionRequest request) {
@@ -57,7 +74,38 @@ public class DecisionProvider {
         if (application != null) {
             return application;
         }
-        throw new DecisionException(Status.BAD_REQUEST, "No application for action " + request.getAction());
+        throw new DecisionException(javax.ws.rs.core.Response.Status.BAD_REQUEST,
+                "No application for action " + request.getAction());
+    }
+
+    private void calculateStatistic(Response xacmlResponse) {
+
+        for (Result result : xacmlResponse.getResults()) {
+            switch (result.getDecision()) {
+                case PERMIT:
+                    XacmlPdpStatisticsManager.updatePermitDecisionsCount();
+                    break;
+
+                case DENY:
+                    XacmlPdpStatisticsManager.updateDenyDecisionsCount();
+                    break;
+
+                case INDETERMINATE:
+                case INDETERMINATE_DENY:
+                case INDETERMINATE_DENYPERMIT:
+                case INDETERMINATE_PERMIT:
+                    XacmlPdpStatisticsManager.updateIndeterminantDecisionsCount();
+                    break;
+
+                case NOTAPPLICABLE:
+                    XacmlPdpStatisticsManager.updateNotApplicableDecisionsCount();
+                    break;
+
+                default:
+                    break;
+
+            }
+        }
     }
 
 }

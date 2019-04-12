@@ -40,6 +40,7 @@ public class StatisticsProvider {
         report.setCode(XacmlPdpActivator.getCurrent().isAlive() ? 200 : 500);
         report.setTotalPolicyTypesCount(XacmlPdpStatisticsManager.getTotalPolicyTypesCount());
         report.setTotalPoliciesCount(XacmlPdpStatisticsManager.getTotalPoliciesCount());
+        report.setTotalErrorCount(XacmlPdpStatisticsManager.getErrorCount());
         report.setPermitDecisionsCount(XacmlPdpStatisticsManager.getPermitDecisionsCount());
         report.setDenyDecisionsCount(XacmlPdpStatisticsManager.getDenyDecisionsCount());
         report.setIndeterminantDecisionsCount(XacmlPdpStatisticsManager.getIndeterminantDecisionsCount());
