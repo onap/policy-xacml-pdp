@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "67804049_34d39e2c",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/XacmlApplicationServiceProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-12T22:42:55Z",
+      "side": 1,
+      "message": "Will look into this also - yes if its already a dependency I don\u0027t want to add something new. I guess we could go into all the policy/model code and replace those at some point.",
+      "parentUuid": "f8da82ce_414b1716",
+      "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "43f7cca6_5ac6a901",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
         "patchSetId": 4
@@ -102,6 +120,24 @@
       "side": 1,
       "message": "what was the sonar complaint?  Does getMetadata() or applicationName() do more than simply return a field?  Why didn\u0027t it complain about the LOGGER.error() line below?",
       "parentUuid": "bb6f1114_44ba1a43",
+      "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f15b4262_60f0233a",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-12T22:42:55Z",
+      "side": 1,
+      "message": "Yes it was applicationName() - which only returns a string. No idea why the LOGGER.error has no issue.",
+      "parentUuid": "ee2b3e93_89d58be2",
       "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
