@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59561ed5_228363a7",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/XacmlApplicationServiceProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-04-12T17:22:51Z",
+      "side": 1,
+      "message": "perhaps use javafx.util.Pair instead? (https://docs.oracle.com/javase/8/javafx/api/javafx/util/Pair.html)",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 53,
+        "endChar": 5
+      },
+      "revId": "6fa2a3f196fc2a0ba507c9e44916bf5b7a6f66c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83fb84fc_2f9dfcdd",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/model/StatisticsReport.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-04-12T17:22:51Z",
+      "side": 1,
+      "message": "looks like a good candidate for lombok @Data",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 3
+      },
+      "revId": "6fa2a3f196fc2a0ba507c9e44916bf5b7a6f66c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "113f99f0_5d697769",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-04-12T17:22:51Z",
+      "side": 1,
+      "message": "conditions appear mutually exclusive, perhaps use else if",
+      "range": {
+        "startLine": 79,
+        "startChar": 11,
+        "endLine": 94,
+        "endChar": 9
+      },
+      "revId": "6fa2a3f196fc2a0ba507c9e44916bf5b7a6f66c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
