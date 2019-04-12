@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8717b79c_e56040b7",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/XacmlApplicationServiceProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-04-12T21:45:04Z",
+      "side": 1,
+      "message": "curious why do you prefer this Pair to javaxf.util.Pair?",
+      "parentUuid": "f8da82ce_414b1716",
+      "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "43f7cca6_5ac6a901",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
         "patchSetId": 4
@@ -47,6 +65,24 @@
       "writtenOn": "2019-04-12T21:41:15Z",
       "side": 1,
       "message": "Add lombok @Getter, @Setter, and @ToString and then ALL of the methods can be removed from this class.",
+      "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e0009f80_d6a340fb",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/model/StatisticsReport.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-04-12T21:45:04Z",
+      "side": 1,
+      "message": "curious, any reason not to just use @Data?",
+      "parentUuid": "ec468b03_29e83335",
       "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
