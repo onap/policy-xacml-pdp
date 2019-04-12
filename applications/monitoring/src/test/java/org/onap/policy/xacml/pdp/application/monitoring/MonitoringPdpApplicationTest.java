@@ -24,6 +24,8 @@ package org.onap.policy.xacml.pdp.application.monitoring;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.att.research.xacml.api.Response;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
@@ -47,6 +49,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifi
 import org.onap.policy.pdp.xacml.application.common.TestUtils;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
+import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider.Pair;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,11 +149,11 @@ public class MonitoringPdpApplicationTest {
         //
         // Ask for a decision
         //
-        DecisionResponse response = service.makeDecision(requestSinglePolicy);
-        LOGGER.info("Decision {}", response);
+        Pair<DecisionResponse, Response> decision = service.makeDecision(requestSinglePolicy);
+        LOGGER.info("Decision {}", decision);
 
-        assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(0);
+        assertThat(decision.first).isNotNull();
+        assertThat(decision.first.getPolicies().size()).isEqualTo(0);
     }
 
     @Test
@@ -168,15 +171,15 @@ public class MonitoringPdpApplicationTest {
         //
         // Ask for a decision
         //
-        DecisionResponse response = service.makeDecision(requestSinglePolicy);
-        LOGGER.info("Decision {}", response);
+        Pair<DecisionResponse, Response> decision = service.makeDecision(requestSinglePolicy);
+        LOGGER.info("Decision {}", decision);
 
-        assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(1);
+        assertThat(decision.first).isNotNull();
+        assertThat(decision.first.getPolicies().size()).isEqualTo(1);
         //
         // Dump it out as Json
         //
-        LOGGER.info(gson.encode(response));
+        LOGGER.info(gson.encode(decision.first));
         LOGGER.info("Now testing unloading of policy");
         //
         // Now unload it
@@ -187,61 +190,11 @@ public class MonitoringPdpApplicationTest {
         //
         // Ask for a decision
         //
-        response = service.makeDecision(requestSinglePolicy);
-        LOGGER.info("Decision {}", response);
+        decision = service.makeDecision(requestSinglePolicy);
+        LOGGER.info("Decision {}", decision.first);
 
-        assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(0);
-    }
-
-    @Test
-    public void test4BadPolicies() {
-        /*
-         *
-         * THESE TEST SHOULD BE MOVED INTO THE API PROJECT
-         *
-        //
-        // No need for service, just test some of the methods
-        // for bad policies
-        //
-        MonitoringPdpApplication onapPdpEngine = new MonitoringPdpApplication();
-
-        assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() -> {
-            try (InputStream is =
-                    new FileInputStream("src/test/resources/test.monitoring.policy.missingmetadata.yaml")) {
-                onapPdpEngine.convertPolicies(is);
-            }
-        }).withMessageContaining("missing metadata section");
-
-        assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() -> {
-            try (InputStream is =
-                    new FileInputStream("src/test/resources/test.monitoring.policy.missingtype.yaml")) {
-                onapPdpEngine.convertPolicies(is);
-            }
-        }).withMessageContaining("missing type value");
-
-        assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() -> {
-            try (InputStream is =
-                    new FileInputStream("src/test/resources/test.monitoring.policy.missingversion.yaml")) {
-                onapPdpEngine.convertPolicies(is);
-            }
-        }).withMessageContaining("missing version value");
-
-        assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() -> {
-            try (InputStream is =
-                    new FileInputStream("src/test/resources/test.monitoring.policy.badmetadata.1.yaml")) {
-                onapPdpEngine.convertPolicies(is);
-            }
-        }).withMessageContaining("missing metadata policy-version");
-
-        assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() -> {
-            try (InputStream is =
-                    new FileInputStream("src/test/resources/test.monitoring.policy.badmetadata.2.yaml")) {
-                onapPdpEngine.convertPolicies(is);
-            }
-        }).withMessageContaining("missing metadata policy-id");
-
-        */
+        assertThat(decision.first).isNotNull();
+        assertThat(decision.first.getPolicies().size()).isEqualTo(0);
     }
 
 }

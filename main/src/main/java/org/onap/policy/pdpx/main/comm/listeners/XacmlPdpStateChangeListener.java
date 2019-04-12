@@ -63,7 +63,7 @@ public class XacmlPdpStateChangeListener extends ScoListener<PdpStateChange> {
 
             // Send State Change Status to PAP
             if (!client.send(newStatus)) {
-                LOGGER.error("failed to send to topic sink " + client.getTopic());
+                LOGGER.error("failed to send to topic sink {}", client.getTopic());
                 throw new TopicSinkClientException("failed to send to topic sink " + client.getTopic());
             }
 
