@@ -178,6 +178,24 @@
     },
     {
       "key": {
+        "uuid": "92699f40_196b57f7",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-12T22:00:47Z",
+      "side": 1,
+      "message": "Its not an enumeration",
+      "parentUuid": "cd36eeb1_7d8087ab",
+      "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e9968d2b_00be7ffa",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/StatisticsProvider.java",
         "patchSetId": 4
@@ -189,6 +207,24 @@
       "writtenOn": "2019-04-12T21:41:15Z",
       "side": 1,
       "message": "we have similar copy code in PAP - should probably create a utility to copy fields (some day :-) )",
+      "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba04fb0a_5ddddbd9",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/StatisticsProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-12T22:00:47Z",
+      "side": 1,
+      "message": "Yeah i thought this was unnecessary.",
+      "parentUuid": "e9968d2b_00be7ffa",
       "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -223,6 +259,24 @@
       "writtenOn": "2019-04-12T21:41:15Z",
       "side": 1,
       "message": "no need to put this in a loop - just tell NetworkUtil to try several more times",
+      "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7d050a4_3c3cde1f",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestDecision.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-12T22:00:47Z",
+      "side": 1,
+      "message": "ok",
+      "parentUuid": "63cc4458_5d2091a9",
       "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
