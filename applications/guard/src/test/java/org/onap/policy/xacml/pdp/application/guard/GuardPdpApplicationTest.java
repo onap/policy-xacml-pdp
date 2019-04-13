@@ -24,13 +24,17 @@ package org.onap.policy.xacml.pdp.application.guard;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.att.research.xacml.api.DataTypeException;
 import com.att.research.xacml.api.Response;
+import com.att.research.xacml.std.datatypes.DataTypeTime;
+import com.att.research.xacml.std.datatypes.ISO8601Time;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Date;
 import java.time.Instant;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -254,6 +258,21 @@ public class GuardPdpApplicationTest {
         // into the PDP.
         //
         TestUtils.loadPolicies("src/test/resources/vDNS.policy.guard.frequency.output.tosca.yaml", service);
+        //
+        // DEBUG FOR POLICY-1639 ISSUE
+        //
+        java.util.Date date = new java.util.Date();
+        Calendar calendar = Calendar.getInstance();
+        LOGGER.debug("POLICY-1639 date is {} calendar is {}", date, calendar);
+        DataTypeTime dtTime = DataTypeTime.newInstance();
+        try {
+            ISO8601Time isoDate = dtTime.convert(date);
+            LOGGER.debug("POLICY-1639 ISO8601Time of date is {}", isoDate);
+            ISO8601Time isoCalendar = dtTime.convert(calendar);
+            LOGGER.debug("POLICY-1639 ISO8601Time of calendar is {}", isoCalendar);
+        } catch (DataTypeException e) {
+            LOGGER.error("POLICY-1639", e);
+        }
         //
         // Zero recent actions: should get permit
         //
