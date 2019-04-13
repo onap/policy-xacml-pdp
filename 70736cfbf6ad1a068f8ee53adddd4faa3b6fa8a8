@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "65b99e63_c2cb6dd0",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/LegacyGuardTranslator.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-13T00:33:36Z",
+      "side": 1,
+      "message": "I could add a simple static for this check - later perhaps.",
+      "range": {
+        "startLine": 103,
+        "startChar": 18,
+        "endLine": 103,
+        "endChar": 94
+      },
+      "revId": "70736cfbf6ad1a068f8ee53adddd4faa3b6fa8a8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b320ecd_2d011eee",
+        "filename": "applications/guard/src/test/java/org/onap/policy/xacml/pdp/application/guard/GuardPdpApplicationTest.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-13T00:33:36Z",
+      "side": 1,
+      "message": "Kept this real simple for now. Next week perhaps I will go through and really run some robust tests.",
+      "range": {
+        "startLine": 364,
+        "startChar": 1,
+        "endLine": 365,
+        "endChar": 1
+      },
+      "revId": "70736cfbf6ad1a068f8ee53adddd4faa3b6fa8a8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
