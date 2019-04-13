@@ -16,5 +16,5 @@ topology_template:
           limit: 2
           timeWindow: 10
           timeUnits: minute
-          guardActiveStart: 00:00:00-05:00
-          guardActiveEnd: 23:59:59-05:00
+          guardActiveStart: 00:00:00Z
+          guardActiveEnd: 23:59:59Z
