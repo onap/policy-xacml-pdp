@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "af57a64d_b1a05ff8",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/XacmlApplicationServiceProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-04-13T00:23:14Z",
+      "side": 1,
+      "message": "makes sense :-)",
+      "parentUuid": "ef7fc250_cfb52f31",
+      "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "43f7cca6_5ac6a901",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
         "patchSetId": 4
@@ -191,6 +209,24 @@
       "side": 1,
       "message": "that would be the preference, but then you have to add more code to the junit tests, unless you\u0027re using ValidatorBuilder to validate the code (since it will automatically tests the additional methods)",
       "parentUuid": "e0009f80_d6a340fb",
+      "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6525798c_19e5c6a9",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/model/StatisticsReport.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-04-13T00:23:14Z",
+      "side": 1,
+      "message": "thanks! now I know something new :-)",
+      "parentUuid": "d06c7175_b8496e5b",
       "revId": "43fba3d0643a7690404a9708deb06da1b9f91e4f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
