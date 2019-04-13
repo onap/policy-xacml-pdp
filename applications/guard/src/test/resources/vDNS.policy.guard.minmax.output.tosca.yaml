@@ -15,5 +15,5 @@ topology_template:
           clname: ControlLoop-vDNS-6f37f56d-a87d-4b85-b6a9-cc953cf779b3
           min: 2
           max: 5
-          guardActiveStart: 00:00:00-05:00
-          guardActiveEnd: 23:59:59-05:00
+          guardActiveStart: 00:00:00Z
+          guardActiveEnd: 23:59:59Z

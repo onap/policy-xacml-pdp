@@ -360,6 +360,7 @@ public class GuardPdpApplicationTest {
         assertThat(decision.getKey().getStatus()).isEqualTo("Deny");
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void test6Blacklist() throws CoderException, XacmlApplicationException {
         LOGGER.info("**************** Running test4 ****************");
