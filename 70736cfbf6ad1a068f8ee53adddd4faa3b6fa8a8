@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "72e9c746_748bc39e",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/LegacyGuardTranslator.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-13T02:37:04Z",
+      "side": 1,
+      "message": "if there\u0027s actually a class by that name, then you could use:\n\n  Blacklist.class.getName().equals(...)",
+      "parentUuid": "65b99e63_c2cb6dd0",
+      "range": {
+        "startLine": 103,
+        "startChar": 18,
+        "endLine": 103,
+        "endChar": 94
+      },
+      "revId": "70736cfbf6ad1a068f8ee53adddd4faa3b6fa8a8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7b320ecd_2d011eee",
         "filename": "applications/guard/src/test/java/org/onap/policy/xacml/pdp/application/guard/GuardPdpApplicationTest.java",
         "patchSetId": 9
@@ -42,6 +66,23 @@
         "endLine": 365,
         "endChar": 1
       },
+      "revId": "70736cfbf6ad1a068f8ee53adddd4faa3b6fa8a8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff75f9bd_67c2b5a7",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-13T02:37:04Z",
+      "side": 1,
+      "message": "yes, ensuring that threads are terminated for subsequent tests is a pain, particularly threads associated with singleton objects - one reason to avoid singletons and static methods",
       "revId": "70736cfbf6ad1a068f8ee53adddd4faa3b6fa8a8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
