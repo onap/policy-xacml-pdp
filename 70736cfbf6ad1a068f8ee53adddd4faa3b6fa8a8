@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "b9ced497_fb070f28",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/LegacyGuardTranslator.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-13T14:51:45Z",
+      "side": 1,
+      "message": "Not a class, a policy type.",
+      "parentUuid": "72e9c746_748bc39e",
+      "range": {
+        "startLine": 103,
+        "startChar": 18,
+        "endLine": 103,
+        "endChar": 94
+      },
+      "revId": "70736cfbf6ad1a068f8ee53adddd4faa3b6fa8a8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7b320ecd_2d011eee",
         "filename": "applications/guard/src/test/java/org/onap/policy/xacml/pdp/application/guard/GuardPdpApplicationTest.java",
         "patchSetId": 9
@@ -83,6 +107,24 @@
       "writtenOn": "2019-04-13T02:37:04Z",
       "side": 1,
       "message": "yes, ensuring that threads are terminated for subsequent tests is a pain, particularly threads associated with singleton objects - one reason to avoid singletons and static methods",
+      "revId": "70736cfbf6ad1a068f8ee53adddd4faa3b6fa8a8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcbde1c6_6b923bb8",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-13T14:51:45Z",
+      "side": 1,
+      "message": "Perhaps that is what we do - remove statics and singletons. Hold instances of statistics and application managers.",
+      "parentUuid": "ff75f9bd_67c2b5a7",
       "revId": "70736cfbf6ad1a068f8ee53adddd4faa3b6fa8a8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
