@@ -96,6 +96,23 @@
     },
     {
       "key": {
+        "uuid": "b7c9ef37_ab7773cb",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-04-13T23:04:55Z",
+      "side": 1,
+      "message": "In general there\u0027s no need for the \"isInfoEnabled/isDebugEnabled\" checks for simple string passing arguments as in the statement in line 61.",
+      "revId": "70736cfbf6ad1a068f8ee53adddd4faa3b6fa8a8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff75f9bd_67c2b5a7",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
         "patchSetId": 9
