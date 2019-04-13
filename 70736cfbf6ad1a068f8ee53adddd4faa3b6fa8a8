@@ -113,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "c2387978_30952bbb",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-13T23:23:18Z",
+      "side": 1,
+      "message": "Sonar flagged these - that\u0027s why I added it. The blue line was annoying me.",
+      "parentUuid": "b7c9ef37_ab7773cb",
+      "revId": "70736cfbf6ad1a068f8ee53adddd4faa3b6fa8a8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff75f9bd_67c2b5a7",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
         "patchSetId": 9
