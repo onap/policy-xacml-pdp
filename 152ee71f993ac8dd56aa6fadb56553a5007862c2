@@ -22,6 +22,30 @@
       "revId": "152ee71f993ac8dd56aa6fadb56553a5007862c2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7dcdcb93_7c8461cb",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/CoordinationGuardTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 423
+      },
+      "writtenOn": "2019-04-15T18:50:11Z",
+      "side": 1,
+      "message": "That\u0027s a good point. Am unsure what the best way to handle would be. If xacmlStr is null then an exception has already been caught and logged in generateXacmlFromCoordinationDirective (line 163 below). Would you prefer to have that function throw the exception and instead have a try block starting at current line 81? If so, just let me know and I\u0027ll submit an updated patch.",
+      "parentUuid": "4d8a3578_21c26cb1",
+      "range": {
+        "startLine": 86,
+        "startChar": 7,
+        "endLine": 86,
+        "endChar": 31
+      },
+      "revId": "152ee71f993ac8dd56aa6fadb56553a5007862c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
