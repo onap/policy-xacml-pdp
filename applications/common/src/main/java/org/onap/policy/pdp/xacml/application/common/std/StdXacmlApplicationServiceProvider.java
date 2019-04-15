@@ -217,7 +217,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             XacmlPolicyUtils.storeXacmlProperties(newProperties,
                     XacmlPolicyUtils.getPropertiesPath(this.getDataPath()));
         } catch (IOException e) {
-            LOGGER.error("Failed to save the properties to disk {}", newProperties);
+            LOGGER.error("Failed to save the properties to disk {}", newProperties, e);
         }
         //
         // Reload the engine

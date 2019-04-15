@@ -67,7 +67,6 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
         //
         // Policy name should be at the root
         //
-        String policyName = toscaPolicy.getMetadata().get("policy-id");
         String type = toscaPolicy.getType();
         String coordinationFunctionPath = "src/main/resources/coordination/function";
         Map<String, Object> policyProps = toscaPolicy.getProperties();
@@ -83,11 +82,15 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
 
         LOGGER.debug("xacmlStr\n{}", xacmlStr);
         PolicyType scannedPolicy = null;
-        try (InputStream is = new ByteArrayInputStream(xacmlStr.getBytes(StandardCharsets.UTF_8))) {
-            scannedPolicy = (PolicyType) XACMLPolicyScanner.readPolicy(is);
-        } catch (IOException e) {
-            LOGGER.error("Failed to read policy", e);
+
+        if (xacmlStr != null) {
+            try (InputStream is = new ByteArrayInputStream(xacmlStr.getBytes(StandardCharsets.UTF_8))) {
+                scannedPolicy = (PolicyType) XACMLPolicyScanner.readPolicy(is);
+            } catch (IOException e) {
+                LOGGER.error("Failed to read policy", e);
+            }
         }
+
         return scannedPolicy;
     }
 
@@ -99,7 +102,7 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
 
     @Override
     public DecisionResponse convertResponse(Response xacmlResponse) {
-        LOGGER.info("this convertRequest shouldn't be used");
+        LOGGER.info("this convertResponse shouldn't be used");
         return null;
     }
 
