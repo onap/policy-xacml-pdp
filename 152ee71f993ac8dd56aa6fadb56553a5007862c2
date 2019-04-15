@@ -46,6 +46,30 @@
       "revId": "152ee71f993ac8dd56aa6fadb56553a5007862c2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6f5d7ae8_a01bb65d",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/CoordinationGuardTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-15T18:57:28Z",
+      "side": 1,
+      "message": "Let\u0027s just throw an exception - make sure it is being caught by caller of the method convertPolicy. I need to go through a few other places in the code to take care of these situations also.",
+      "parentUuid": "7dcdcb93_7c8461cb",
+      "range": {
+        "startLine": 86,
+        "startChar": 7,
+        "endLine": 86,
+        "endChar": 31
+      },
+      "revId": "152ee71f993ac8dd56aa6fadb56553a5007862c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
