@@ -67,7 +67,6 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
         //
         // Policy name should be at the root
         //
-        String policyName = toscaPolicy.getMetadata().get("policy-id");
         String type = toscaPolicy.getType();
         String coordinationFunctionPath = "src/main/resources/coordination/function";
         Map<String, Object> policyProps = toscaPolicy.getProperties();
@@ -78,17 +77,19 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
         cd.setCoordinationFunction(type);
         cd.setControlLoop(controlLoop);
         LOGGER.debug("CoordinationDirective = {}", cd);
-
+        //
+        // Generate the xacml policy as a string
+        //
         String xacmlStr = generateXacmlFromCoordinationDirective(cd, coordinationFunctionPath);
-
         LOGGER.debug("xacmlStr\n{}", xacmlStr);
-        PolicyType scannedPolicy = null;
+        //
+        // Scan the string and convert to PoilcyType
+        //
         try (InputStream is = new ByteArrayInputStream(xacmlStr.getBytes(StandardCharsets.UTF_8))) {
-            scannedPolicy = (PolicyType) XACMLPolicyScanner.readPolicy(is);
+            return (PolicyType) XACMLPolicyScanner.readPolicy(is);
         } catch (IOException e) {
-            LOGGER.error("Failed to read policy", e);
+            throw new ToscaPolicyConversionException("Failed to read policy", e);
         }
-        return scannedPolicy;
     }
 
     @Override
@@ -99,7 +100,7 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
 
     @Override
     public DecisionResponse convertResponse(Response xacmlResponse) {
-        LOGGER.info("this convertRequest shouldn't be used");
+        LOGGER.info("this convertResponse shouldn't be used");
         return null;
     }
 
@@ -117,9 +118,7 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
             //
             Yaml yaml = new Yaml(new Constructor(CoordinationDirective.class));
             Object obj = yaml.load(contents);
-
             LOGGER.debug(contents);
-
             return (CoordinationDirective) obj;
         } catch (IOException e) {
             LOGGER.error("Error while loading YAML coordination directive", e);
@@ -135,7 +134,7 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
      * @return the generated Xacml policy
      */
     public static String generateXacmlFromCoordinationDirective(CoordinationDirective cd,
-                                                                String protoDir) {
+                                                                String protoDir) throws ToscaPolicyConversionException {
         /*
          * Determine file names
          */
@@ -148,18 +147,17 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
         final String cLOne = cd.getControlLoop(0);
         final String cLTwo = cd.getControlLoop(1);
         /*
-         * Replace prototype placeholders with appropriate values
+         * Replace function placeholders with appropriate values
          */
-        String xacmlPolicy = null;
         try (Stream<String> stream = Files.lines(Paths.get(xacmlProtoFilename))) {
-            xacmlPolicy = stream.map(s -> s.replaceAll("UNIQUE_ID", uniqueId))
+            return stream.map(s -> s.replaceAll("UNIQUE_ID", uniqueId))
                 .map(s -> s.replaceAll("CONTROL_LOOP_ONE", cLOne))
                 .map(s -> s.replaceAll("CONTROL_LOOP_TWO", cLTwo))
                 .collect(Collectors.joining(System.lineSeparator()));
         } catch (IOException e) {
-            LOGGER.error("Error while generating XACML policy for coordination directive", e);
+            throw new
+                ToscaPolicyConversionException("Error while generating XACML policy for coordination directive", e);
         }
-        return xacmlPolicy;
     }
 
 }
