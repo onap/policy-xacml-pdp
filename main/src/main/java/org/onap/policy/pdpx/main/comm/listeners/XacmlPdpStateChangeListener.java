@@ -25,6 +25,7 @@ import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
 import org.onap.policy.common.endpoints.listeners.ScoListener;
 import org.onap.policy.common.utils.coder.StandardCoderObject;
+import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.pdp.concepts.PdpStateChange;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.enums.PdpState;
@@ -59,21 +60,24 @@ public class XacmlPdpStateChangeListener extends ScoListener<PdpStateChange> {
 
         XacmlPdpMessage newMessage = new XacmlPdpMessage();
         try {
-            PdpStatus newStatus = newMessage.formatStatusMessage(message.getState());
 
-            // Send State Change Status to PAP
-            if (!client.send(newStatus)) {
-                LOGGER.error("failed to send to topic sink {}", client.getTopic());
-                throw new TopicSinkClientException("failed to send to topic sink " + client.getTopic());
+            if (message.appliesTo(NetworkUtil.getHostname(), message.getPdpGroup(), message.getPdpSubgroup())) {
+
+                PdpStatus newStatus = newMessage.formatStatusMessage(message.getState());
+
+                // Send State Change Status to PAP
+                if (!client.send(newStatus)) {
+                    LOGGER.error("failed to send to topic sink {}", client.getTopic());
+                    throw new TopicSinkClientException("failed to send to topic sink " + client.getTopic());
+                }
+
+                // Update the heartbeat internal state if publisher is running else create new publisher
+                if (XacmlPdpHearbeatPublisher.isAlive()) {
+                    heartbeat.updateInternalState(message.getState());
+                } else {
+                    heartbeat = new XacmlPdpHearbeatPublisher(client, message);
+                }
             }
-
-            // Update the heartbeat internal state if publisher is running else create new publisher
-            if (XacmlPdpHearbeatPublisher.isAlive()) {
-                heartbeat.updateInternalState(message.getState());
-            } else {
-                heartbeat = new XacmlPdpHearbeatPublisher(client, message);
-            }
-
         } catch (final Exception e) {
             LOGGER.error("failed to handle the PDP State Change message.", e);
         }

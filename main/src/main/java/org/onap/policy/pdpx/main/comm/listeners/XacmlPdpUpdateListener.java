@@ -24,6 +24,7 @@ import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.common.endpoints.listeners.ScoListener;
 import org.onap.policy.common.utils.coder.StandardCoderObject;
+import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.pdpx.main.comm.XacmlPdpUpdatePublisher;
 import org.slf4j.Logger;
@@ -51,7 +52,10 @@ public class XacmlPdpUpdateListener extends ScoListener<PdpUpdate> {
         try {
 
             LOGGER.info("PDP update message has been received from the PAP - {}", message.toString());
-            XacmlPdpUpdatePublisher.handlePdpUpdate(message, client);
+
+            if (message.appliesTo(NetworkUtil.getHostname(), message.getPdpGroup(), message.getPdpSubgroup())) {
+                XacmlPdpUpdatePublisher.handlePdpUpdate(message, client);
+            }
 
         } catch (final Exception e) {
             LOGGER.error("failed to handle the PDP Update message.", e);
