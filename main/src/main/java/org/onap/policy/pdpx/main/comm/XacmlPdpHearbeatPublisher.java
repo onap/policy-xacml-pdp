@@ -23,7 +23,6 @@ package org.onap.policy.pdpx.main.comm;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
-import org.onap.policy.models.pdp.concepts.PdpStateChange;
 import org.onap.policy.models.pdp.enums.PdpState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +33,8 @@ public class XacmlPdpHearbeatPublisher extends TimerTask {
 
     private Timer timer;
     private XacmlPdpMessage heartbeatMessage;
-    private Object message;
     private static TopicSinkClient topicSinkClient;
     private static volatile  boolean alive = false;
-    public static PdpState pdpState;
-
 
     /**
      * Constructor for instantiating XacmlPdpPublisher.
@@ -46,11 +42,9 @@ public class XacmlPdpHearbeatPublisher extends TimerTask {
      * @param message of the PDP
      * @param topicSinkClient used to send heartbeat message
      */
-    public XacmlPdpHearbeatPublisher(TopicSinkClient topicSinkClient, PdpStateChange message) {
-        this.message = message;
-        this.pdpState = message.getState();
+    public XacmlPdpHearbeatPublisher(TopicSinkClient topicSinkClient, XacmlPdpMessage message ) {
         this.topicSinkClient = topicSinkClient;
-        this.heartbeatMessage = new XacmlPdpMessage();
+        this.heartbeatMessage = message;
         timer = new Timer(false);
         timer.scheduleAtFixedRate(this, 0, 60000); // time interval temp hard coded now but will be parameterized
         setAlive(true);
@@ -58,7 +52,7 @@ public class XacmlPdpHearbeatPublisher extends TimerTask {
 
     @Override
     public void run() {
-        topicSinkClient.send(heartbeatMessage.formatHeartbeatMessage((PdpStateChange) message));
+        topicSinkClient.send(heartbeatMessage.formatPdpStatusMessage());
         LOGGER.info("Sending Xacml PDP heartbeat to the PAP");
     }
 
@@ -69,11 +63,6 @@ public class XacmlPdpHearbeatPublisher extends TimerTask {
         timer.cancel();
         timer.purge();
         setAlive(false);
-    }
-
-    public void updateInternalState(PdpState state) {
-        ((PdpStateChange) this.message).setState(state);
-        this.pdpState = state;
     }
 
     public static boolean isAlive() {
