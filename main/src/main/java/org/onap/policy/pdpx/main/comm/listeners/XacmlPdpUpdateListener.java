@@ -24,7 +24,9 @@ import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.common.endpoints.listeners.ScoListener;
 import org.onap.policy.common.utils.coder.StandardCoderObject;
+import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
+import org.onap.policy.pdpx.main.comm.XacmlPdpMessage;
 import org.onap.policy.pdpx.main.comm.XacmlPdpUpdatePublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,15 +36,17 @@ public class XacmlPdpUpdateListener extends ScoListener<PdpUpdate> {
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpStateChangeListener.class);
 
     private TopicSinkClient client;
+    private XacmlPdpMessage pdpInternalStatus;
 
     /**
      * Constructs the object.
      *
      * @param client used to send back response after receiving state change message
      */
-    public XacmlPdpUpdateListener(TopicSinkClient client) {
+    public XacmlPdpUpdateListener(TopicSinkClient client, XacmlPdpMessage pdpStatusMessage) {
         super(PdpUpdate.class);
         this.client = client;
+        this.pdpInternalStatus = pdpStatusMessage;
     }
 
     @Override
@@ -51,7 +55,12 @@ public class XacmlPdpUpdateListener extends ScoListener<PdpUpdate> {
         try {
 
             LOGGER.info("PDP update message has been received from the PAP - {}", message.toString());
-            XacmlPdpUpdatePublisher.handlePdpUpdate(message, client);
+
+            if (message.appliesTo(pdpInternalStatus.getPdpName(), pdpInternalStatus.getPdpGroup(),
+                    pdpInternalStatus.getPdpSubGroup())) {
+
+                XacmlPdpUpdatePublisher.handlePdpUpdate(message, client, pdpInternalStatus);
+            }
 
         } catch (final Exception e) {
             LOGGER.error("failed to handle the PDP Update message.", e);

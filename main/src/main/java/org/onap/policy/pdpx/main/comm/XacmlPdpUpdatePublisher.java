@@ -44,7 +44,8 @@ public class XacmlPdpUpdatePublisher {
      * @param message Incoming message
      * @param client TopicSinkClient
      */
-    public static void handlePdpUpdate(PdpUpdate message, TopicSinkClient client) {
+    public static void handlePdpUpdate(PdpUpdate message, TopicSinkClient client,
+            XacmlPdpMessage updatePdpMessage) {
 
         if (!message.getPolicies().isEmpty() || message.getPolicies() != null) {
 
@@ -70,8 +71,8 @@ public class XacmlPdpUpdatePublisher {
             }
         }
 
-        XacmlPdpMessage updatePdpMessage = new XacmlPdpMessage();
-        PdpStatus statusMessage = updatePdpMessage.formatPdpUpdateMessage(message, XacmlPdpHearbeatPublisher.pdpState);
+        updatePdpMessage.updateInternalStatus(message);
+        PdpStatus statusMessage = updatePdpMessage.formatPdpStatusMessage();
         sendPdpUpdate(statusMessage, client);
     }
 
