@@ -104,13 +104,13 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
         TopicEndpoint.manager.addTopicSources(topicProperties);
 
         try {
-            TopicSinkClient sinkClient = new TopicSinkClient(TOPIC);
+            final TopicSinkClient sinkClient = new TopicSinkClient(TOPIC);
+            this.message = new XacmlPdpMessage();
             this.xacmlPdpParameterGroup = xacmlPdpParameterGroup;
             this.msgDispatcher = new MessageTypeDispatcher(MSG_TYPE_NAMES);
-            this.pdpStateChangeListener = new XacmlPdpStateChangeListener(sinkClient);
-            this.pdpUpdateListener = new XacmlPdpUpdateListener(sinkClient);
+            this.pdpStateChangeListener = new XacmlPdpStateChangeListener(sinkClient, message);
+            this.pdpUpdateListener = new XacmlPdpUpdateListener(sinkClient, message);
             this.register = new XacmlPdpPapRegistration(sinkClient);
-            this.message = new XacmlPdpMessage();
         } catch (RuntimeException | TopicSinkClientException e) {
             throw new PolicyXacmlPdpRuntimeException(e.getMessage(), e);
         }
@@ -154,10 +154,10 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
 
         addAction("Initial Registration with PAP",
             () -> {
-                register.pdpRegistration(message.formatStatusMessage(PdpState.PASSIVE));
+                register.pdpRegistration(message.formatInitialStatusMessage(PdpState.PASSIVE));
             },
             () -> {
-                register.pdpRegistration(message.formatStatusMessage(PdpState.TERMINATED));
+                register.pdpRegistration(message.formatInitialStatusMessage(PdpState.TERMINATED));
             });
         // @formatter:on
 
