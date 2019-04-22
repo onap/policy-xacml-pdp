@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f65a8737_6d503fac",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/listeners/XacmlPdpStateChangeListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-22T16:49:41Z",
+      "side": 1,
+      "message": "the group \u0026 subgroup parameters should be the values that were extracted/recorded from the last UPDATE that was received.\n\nsuggestion: cache the hostname instead of doing a look-up each time.\n\nsame comments apply to the update listener",
+      "revId": "191eea537b2990fb64f131a239ad6c42f4e04ba3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3d4c873_a5b2cc67",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/listeners/XacmlPdpUpdateListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-22T16:49:41Z",
+      "side": 1,
+      "message": "once this point is reached, the group \u0026 subgroup should be extracted from \"message\" and saved for subsequent invocations of appliesTo().\n\nObviously, they can be recorded right here, or could let handlePdpUpdate() do it - either way is fine.",
+      "revId": "191eea537b2990fb64f131a239ad6c42f4e04ba3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
