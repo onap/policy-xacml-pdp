@@ -22,6 +22,7 @@
 
 package org.onap.policy.pdpx.main.comm;
 
+import lombok.Getter;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.pdp.concepts.PdpStateChange;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
@@ -33,20 +34,25 @@ import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Getter
 public class XacmlPdpMessage {
 
     // The logger for this class
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpMessage.class);
+    private String pdpGroup;
+    private String pdpSubGroup;
+    private PdpState pdpState;
+    private String pdpName = NetworkUtil.getHostname();
 
     /**
-     * Method used to format the status message.
+     * Method used to format the initial registration status message.
      *
      * @param state of the PDP
      * @return status message of the PDP
      */
-    public PdpStatus formatStatusMessage(PdpState state) {
+    public PdpStatus formatInitialStatusMessage(PdpState state) {
         PdpStatus status = new PdpStatus();
-        status.setName(NetworkUtil.getHostname());
+        status.setName(pdpName);
 
         if (XacmlPdpActivator.getCurrent().isAlive()) {
             status.setHealthy(PdpHealthStatus.HEALTHY);
@@ -65,14 +71,13 @@ public class XacmlPdpMessage {
     }
 
     /**
-     * Method used to format the heartbeat status message.
+     * Method used to format the PdpStatus message for heartbeat and PDP Updates.
      *
-     * @param message PdpStateChange message received from the PAP
      * @return status message of the PDP
      */
-    public PdpStatus formatHeartbeatMessage(PdpStateChange message) {
+    public PdpStatus formatPdpStatusMessage() {
         PdpStatus status = new PdpStatus();
-        status.setName(NetworkUtil.getHostname());
+        status.setName(pdpName);
 
         if (XacmlPdpActivator.getCurrent().isAlive()) {
             status.setHealthy(PdpHealthStatus.HEALTHY);
@@ -81,37 +86,29 @@ public class XacmlPdpMessage {
         }
 
         status.setPdpType("xacml");
-        status.setState(message.getState());
-        status.setPdpGroup(message.getPdpGroup());
-        status.setPdpSubgroup(message.getPdpSubgroup());
-        status.setSupportedPolicyTypes(XacmlPdpApplicationManager.getToscaPolicyTypeIdents());
-
-        return status;
-    }
-
-    /**
-     * Method used to format the PdpUpdate message.
-     *
-     * @param message PdpUpdate message that was received from the PAP
-     * @return status message of the PDP
-     */
-    public PdpStatus formatPdpUpdateMessage(PdpUpdate message, PdpState state) {
-        PdpStatus status = new PdpStatus();
-        status.setName(NetworkUtil.getHostname());
-
-        if (XacmlPdpActivator.getCurrent().isAlive()) {
-            status.setHealthy(PdpHealthStatus.HEALTHY);
-        } else {
-            status.setHealthy(PdpHealthStatus.NOT_HEALTHY);
-        }
-
-        status.setPdpType("xacml");
-        status.setState(state);
-        status.setPdpGroup(message.getPdpGroup());
-        status.setPdpSubgroup(message.getPdpSubgroup());
+        status.setState(pdpState);
+        status.setPdpGroup(pdpGroup);
+        status.setPdpSubgroup(pdpSubGroup);
         status.setSupportedPolicyTypes(XacmlPdpApplicationManager.getToscaPolicyTypeIdents());
         status.setPolicies(XacmlPdpApplicationManager.getToscaPolicyIdentifiers());
 
         return status;
+    }
+
+
+    /**
+     * Method used to update PDP status attributes.
+     */
+    public void updateInternalStatus(Object message) {
+        if (message instanceof PdpStateChange) {
+            pdpGroup = ((PdpStateChange) message).getPdpGroup();
+            pdpSubGroup = ((PdpStateChange) message).getPdpSubgroup();
+            pdpState = ((PdpStateChange) message).getState();
+        }
+
+        if (message instanceof PdpUpdate) {
+            pdpGroup = ((PdpUpdate) message).getPdpGroup();
+            pdpSubGroup = ((PdpUpdate) message).getPdpSubgroup();
+        }
     }
 }
