@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7011fb42_8f355e37",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-04-23T21:10:15Z",
+      "side": 1,
+      "message": "fix the parent image version",
+      "revId": "fd5d8671bd122179ae971a9add77b30c6493c437",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
