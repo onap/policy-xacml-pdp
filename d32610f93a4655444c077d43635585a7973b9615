@@ -90,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "03781f26_5ec10cb3",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpMessage.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-24T19:14:31Z",
+      "side": 1,
+      "message": "we may have to disable this check in PAP, otherwise it will always deactivate any PDP that doesn\u0027t return the list that it expects.",
+      "parentUuid": "eea537f3_acd185fe",
+      "revId": "d32610f93a4655444c077d43635585a7973b9615",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83da2fe3_7b77c199",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpMessage.java",
         "patchSetId": 3
