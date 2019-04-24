@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e0192540_d345c0e0",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpHearbeatPublisher.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-04-24T18:54:21Z",
+      "side": 1,
+      "message": "you are correct.  I was of the same thought but wanted a second set of eyes on it just in case I missed something.  I will remove it and the method to update it.",
+      "parentUuid": "68df2e3d_90053ebe",
+      "revId": "d32610f93a4655444c077d43635585a7973b9615",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f556b6c2_6bbf925e",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpMessage.java",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2019-04-24T18:35:47Z",
       "side": 1,
       "message": "note: if this list does not match the list in the PdpUpdate request, then PAP will deactivate the PDP.",
+      "revId": "d32610f93a4655444c077d43635585a7973b9615",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a8fc40a3_c9306ab6",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpMessage.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-04-24T18:54:21Z",
+      "side": 1,
+      "message": "It should match, xacmlPdpApplicationManager is updated from the PdpUpdate.. look at XacmlPdpUpdatePublisher.handlePdpUpdate() for the deploy and undeploy policies",
+      "parentUuid": "f556b6c2_6bbf925e",
       "revId": "d32610f93a4655444c077d43635585a7973b9615",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
