@@ -108,6 +108,24 @@
     },
     {
       "key": {
+        "uuid": "c9bca0f8_b30eb384",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpMessage.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-04-24T19:21:40Z",
+      "side": 1,
+      "message": "Maybe its better to send another update to get in sync with the PAP.. this is how we handled it in the old policy/engine, if the PDP got out of sync we would essentially just retry the Rest Call and overwrite what it had with what was currently in the database because the DB was the master in that case.",
+      "parentUuid": "03781f26_5ec10cb3",
+      "revId": "d32610f93a4655444c077d43635585a7973b9615",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83da2fe3_7b77c199",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpMessage.java",
         "patchSetId": 3
