@@ -175,6 +175,24 @@
       "revId": "d32610f93a4655444c077d43635585a7973b9615",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a0e26470_3b6d4ba1",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/listeners/XacmlPdpStateChangeListener.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-04-24T19:37:32Z",
+      "side": 1,
+      "message": "This is what I meant, but no need to change it:\n\n            if ( ! message.appliesTo(pdpInternalStatus.getPdpName(), pdpInternalStatus.getPdpGroup(),\n                    pdpInternalStatus.getPdpSubGroup())) {\nreturn;\n}\n\nNote the \"!\".\n\n.. continue with the code ..",
+      "parentUuid": "e8c4e53b_4b0f419b",
+      "revId": "d32610f93a4655444c077d43635585a7973b9615",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
