@@ -193,6 +193,24 @@
       "revId": "d32610f93a4655444c077d43635585a7973b9615",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9acf0c1d_c9a04a48",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/listeners/XacmlPdpStateChangeListener.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2019-04-24T19:39:23Z",
+      "side": 1,
+      "message": "lol.. sorry when you said \"negate condition\" I thought you meant to remove it. :)",
+      "parentUuid": "a0e26470_3b6d4ba1",
+      "revId": "d32610f93a4655444c077d43635585a7973b9615",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
