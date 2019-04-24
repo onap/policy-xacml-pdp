@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "eea537f3_acd185fe",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpMessage.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-04-24T19:08:47Z",
+      "side": 1,
+      "message": "Hopefully we can revisit pap behavior next release, by Murphy\u0027s law, when something goes wrong and one cannot processed for whatever reason, invalid syntax etc .., it will cause an outage as the good policies will be disabled too.",
+      "parentUuid": "a8fc40a3_c9306ab6",
+      "revId": "d32610f93a4655444c077d43635585a7973b9615",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83da2fe3_7b77c199",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpMessage.java",
         "patchSetId": 3
@@ -83,6 +101,23 @@
       "writtenOn": "2019-04-24T18:35:47Z",
       "side": 1,
       "message": "suggestion: separate this into two different methods, one taking PdpStateChange and the other taking PdpUpdate",
+      "revId": "d32610f93a4655444c077d43635585a7973b9615",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43f0b9f4_a1957a9f",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/listeners/XacmlPdpStateChangeListener.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-04-24T19:08:47Z",
+      "side": 1,
+      "message": "not important, but could negate condition and simply return in line 67.",
       "revId": "d32610f93a4655444c077d43635585a7973b9615",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
