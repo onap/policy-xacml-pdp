@@ -211,6 +211,24 @@
       "revId": "d32610f93a4655444c077d43635585a7973b9615",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41049c73_adc1045a",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/listeners/XacmlPdpStateChangeListener.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-25T12:49:21Z",
+      "side": 1,
+      "message": "I agree with Jorge, but you don\u0027t have to change this now. This is why the policy/engine code has such a large amount of cyclic complexity and nested if-then-else-try statements. Its easier for readability to just check a condition, if not met exit the method promptly. The rest of the code then moves to the left, is more readable.\n\nFix later.",
+      "parentUuid": "9acf0c1d_c9a04a48",
+      "revId": "d32610f93a4655444c077d43635585a7973b9615",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
