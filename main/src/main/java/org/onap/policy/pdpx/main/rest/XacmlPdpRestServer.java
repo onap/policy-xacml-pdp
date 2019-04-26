@@ -20,11 +20,9 @@
 
 package org.onap.policy.pdpx.main.rest;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
 import org.onap.policy.common.capabilities.Startable;
 import org.onap.policy.common.endpoints.http.server.HttpServletServer;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
@@ -44,17 +42,15 @@ public class XacmlPdpRestServer implements Startable {
 
     private List<HttpServletServer> servers = new ArrayList<>();
 
-    private RestServerParameters restServerParameters;
-    private String applicationPath;
+    private final RestServerParameters restServerParameters;
 
     /**
      * Constructor for instantiating XacmlPdpRestServer.
      *
      * @param restServerParameters the rest server parameters
      */
-    public XacmlPdpRestServer(final RestServerParameters restServerParameters, final String applicationPath) {
+    public XacmlPdpRestServer(final RestServerParameters restServerParameters) {
         this.restServerParameters = restServerParameters;
-        this.applicationPath = applicationPath;
     }
 
     /**
@@ -64,15 +60,6 @@ public class XacmlPdpRestServer implements Startable {
     public boolean start() {
         try {
             LOGGER.info("Starting XacmlPdpRestServer...");
-            //
-            // Initialize the applications - SEND PROPERTIES
-            //
-            XacmlPdpApplicationManager.initializeApplications(Paths.get(applicationPath));
-
-            //
-            // Update statistics manager on the policy types
-            //
-            XacmlPdpStatisticsManager.setTotalPolicyTypesCount(XacmlPdpApplicationManager.getPolicyTypeCount());
 
             //
             // Get the server properties

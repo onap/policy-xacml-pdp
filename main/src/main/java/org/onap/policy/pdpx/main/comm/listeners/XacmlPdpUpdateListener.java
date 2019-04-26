@@ -25,8 +25,10 @@ import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.common.endpoints.listeners.ScoListener;
 import org.onap.policy.common.utils.coder.StandardCoderObject;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
-import org.onap.policy.pdpx.main.comm.XacmlPdpMessage;
+import org.onap.policy.pdpx.main.XacmlState;
+import org.onap.policy.pdpx.main.comm.XacmlPdpHearbeatPublisher;
 import org.onap.policy.pdpx.main.comm.XacmlPdpUpdatePublisher;
+import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,32 +36,40 @@ public class XacmlPdpUpdateListener extends ScoListener<PdpUpdate> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpStateChangeListener.class);
 
-    private TopicSinkClient client;
-    private XacmlPdpMessage pdpInternalStatus;
+    private final XacmlState state;
+
+    private final XacmlPdpHearbeatPublisher heartbeat;
+
+    private final XacmlPdpUpdatePublisher publisher;
 
     /**
      * Constructs the object.
      *
      * @param client used to send back response after receiving state change message
+     * @param state tracks the state of this PDP
+     * @param heartbeat heart beat publisher
+     * @param appManager application manager
      */
-    public XacmlPdpUpdateListener(TopicSinkClient client, XacmlPdpMessage pdpStatusMessage) {
+    public XacmlPdpUpdateListener(TopicSinkClient client, XacmlState state, XacmlPdpHearbeatPublisher heartbeat,
+                    XacmlPdpApplicationManager appManager) {
         super(PdpUpdate.class);
-        this.client = client;
-        this.pdpInternalStatus = pdpStatusMessage;
+        this.state = state;
+        this.heartbeat = heartbeat;
+        this.publisher = new XacmlPdpUpdatePublisher(client, state, appManager);
     }
 
     @Override
     public void onTopicEvent(CommInfrastructure infra, String topic, StandardCoderObject sco, PdpUpdate message) {
 
         try {
-
-            LOGGER.info("PDP update message has been received from the PAP - {}", message.toString());
-
-            if (message.appliesTo(pdpInternalStatus.getPdpName(), pdpInternalStatus.getPdpGroup(),
-                    pdpInternalStatus.getPdpSubGroup())) {
-
-                XacmlPdpUpdatePublisher.handlePdpUpdate(message, client, pdpInternalStatus);
+            if (!state.shouldHandle(message)) {
+                LOGGER.debug("PDP update message discarded - {}", message);
+                return;
             }
+
+            LOGGER.info("PDP update message has been received from the PAP - {}", message);
+            publisher.handlePdpUpdate(message);
+            heartbeat.restart(message.getPdpHeartbeatIntervalMs());
 
         } catch (final Exception e) {
             LOGGER.error("failed to handle the PDP Update message.", e);

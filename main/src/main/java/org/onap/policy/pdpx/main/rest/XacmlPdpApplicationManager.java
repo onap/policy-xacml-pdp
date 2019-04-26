@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.stream.Collectors;
+import lombok.Getter;
+import lombok.Setter;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
@@ -42,35 +44,22 @@ import org.slf4j.LoggerFactory;
 public class XacmlPdpApplicationManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpApplicationManager.class);
 
-    private static boolean needsInit = true;
-    private static ServiceLoader<XacmlApplicationServiceProvider> applicationLoader;
-    private static Map<String, XacmlApplicationServiceProvider> providerActionMap = new HashMap<>();
-    private static List<ToscaPolicyTypeIdentifier> toscaPolicyTypeIdents = new ArrayList<>();
-    private static Map<ToscaPolicy, XacmlApplicationServiceProvider> mapLoadedPolicies = new HashMap<>();
+    @Getter
+    @Setter
+    private static XacmlPdpApplicationManager current;
 
+    private ServiceLoader<XacmlApplicationServiceProvider> applicationLoader;
+    private Map<String, XacmlApplicationServiceProvider> providerActionMap = new HashMap<>();
+    private List<ToscaPolicyTypeIdentifier> toscaPolicyTypeIdents = new ArrayList<>();
+    private Map<ToscaPolicy, XacmlApplicationServiceProvider> mapLoadedPolicies = new HashMap<>();
 
-    private XacmlPdpApplicationManager() {
-        super();
-    }
 
     /**
      * One time to initialize the applications upon startup.
      */
-    public static void initializeApplications(Path applicationPath) {
+    public XacmlPdpApplicationManager(Path applicationPath) {
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Initialization applications {}", applicationPath.toAbsolutePath());
-        }
-        //
-        // If we have already done this
-        //
-        if (! needsInit) {
-            LOGGER.warn("Already initialized the applications {}", providerActionMap);
-            //
-            // I had to remove this because the JUnits kept failing - although I probably can
-            // add it back. The main() is hanging around during JUnits and initialization will
-            // fail.
-            //
-            // return
         }
         //
         // Load service
@@ -120,12 +109,11 @@ public class XacmlPdpApplicationManager {
         //
         // we have initialized
         //
-        needsInit = false;
         LOGGER.info("Finished applications initialization {}", providerActionMap);
 
     }
 
-    public static XacmlApplicationServiceProvider findApplication(DecisionRequest request) {
+    public XacmlApplicationServiceProvider findApplication(DecisionRequest request) {
         return providerActionMap.get(request.getAction());
     }
 
@@ -134,7 +122,7 @@ public class XacmlPdpApplicationManager {
      *
      * @return the map containing ToscaPolicies
      */
-    public static Map<ToscaPolicy, XacmlApplicationServiceProvider> getToscaPolicies() {
+    public Map<ToscaPolicy, XacmlApplicationServiceProvider> getToscaPolicies() {
         return mapLoadedPolicies;
     }
 
@@ -143,14 +131,14 @@ public class XacmlPdpApplicationManager {
      *
      * @return list of ToscaPolicyIdentifier
      */
-    public static List<ToscaPolicyIdentifier> getToscaPolicyIdentifiers() {
+    public List<ToscaPolicyIdentifier> getToscaPolicyIdentifiers() {
         //
         // converting map to return List of ToscaPolicyIdentiers
         //
         return mapLoadedPolicies.keySet().stream().map(ToscaPolicy::getIdentifier).collect(Collectors.toList());
     }
 
-    public static List<ToscaPolicyTypeIdentifier> getToscaPolicyTypeIdents() {
+    public List<ToscaPolicyTypeIdentifier> getToscaPolicyTypeIdents() {
         return toscaPolicyTypeIdents;
     }
 
@@ -159,7 +147,7 @@ public class XacmlPdpApplicationManager {
      *
      * @param policy Incoming policy
      */
-    public static void removeUndeployedPolicy(ToscaPolicy policy) {
+    public void removeUndeployedPolicy(ToscaPolicy policy) {
 
         for (XacmlApplicationServiceProvider application : applicationLoader) {
             try {
@@ -184,7 +172,7 @@ public class XacmlPdpApplicationManager {
      *
      * @param policy Incoming policy
      */
-    public static void loadDeployedPolicy(ToscaPolicy policy) {
+    public void loadDeployedPolicy(ToscaPolicy policy) {
 
         for (XacmlApplicationServiceProvider application : applicationLoader) {
             try {
@@ -216,7 +204,7 @@ public class XacmlPdpApplicationManager {
      *
      * @return Total count added from all applications
      */
-    public static long getPolicyTypeCount() {
+    public long getPolicyTypeCount() {
         long types = 0;
         for (XacmlApplicationServiceProvider application : applicationLoader) {
             types += application.supportedPolicyTypes().size();
@@ -224,7 +212,7 @@ public class XacmlPdpApplicationManager {
         return types;
     }
 
-    private static void initializeApplicationPath(Path basePath, XacmlApplicationServiceProvider application)
+    private void initializeApplicationPath(Path basePath, XacmlApplicationServiceProvider application)
             throws XacmlApplicationException {
         //
         // Making an assumption that all application names are unique, and
@@ -255,5 +243,4 @@ public class XacmlPdpApplicationManager {
         //
         application.initialize(path);
     }
-
 }
