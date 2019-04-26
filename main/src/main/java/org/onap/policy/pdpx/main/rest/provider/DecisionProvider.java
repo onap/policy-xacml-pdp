@@ -83,22 +83,22 @@ public class DecisionProvider {
         for (Result result : xacmlResponse.getResults()) {
             switch (result.getDecision()) {
                 case PERMIT:
-                    XacmlPdpStatisticsManager.updatePermitDecisionsCount();
+                    XacmlPdpStatisticsManager.getCurrent().updatePermitDecisionsCount();
                     break;
 
                 case DENY:
-                    XacmlPdpStatisticsManager.updateDenyDecisionsCount();
+                    XacmlPdpStatisticsManager.getCurrent().updateDenyDecisionsCount();
                     break;
 
                 case INDETERMINATE:
                 case INDETERMINATE_DENY:
                 case INDETERMINATE_DENYPERMIT:
                 case INDETERMINATE_PERMIT:
-                    XacmlPdpStatisticsManager.updateIndeterminantDecisionsCount();
+                    XacmlPdpStatisticsManager.getCurrent().updateIndeterminantDecisionsCount();
                     break;
 
                 case NOTAPPLICABLE:
-                    XacmlPdpStatisticsManager.updateNotApplicableDecisionsCount();
+                    XacmlPdpStatisticsManager.getCurrent().updateNotApplicableDecisionsCount();
                     break;
 
                 default:

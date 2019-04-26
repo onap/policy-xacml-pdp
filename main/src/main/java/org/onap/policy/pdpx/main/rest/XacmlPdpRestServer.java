@@ -72,7 +72,8 @@ public class XacmlPdpRestServer implements Startable {
             //
             // Update statistics manager on the policy types
             //
-            XacmlPdpStatisticsManager.setTotalPolicyTypesCount(XacmlPdpApplicationManager.getPolicyTypeCount());
+            XacmlPdpStatisticsManager.getCurrent()
+                            .setTotalPolicyTypesCount(XacmlPdpApplicationManager.getPolicyTypeCount());
 
             //
             // Get the server properties

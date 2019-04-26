@@ -25,7 +25,7 @@ import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.common.endpoints.listeners.ScoListener;
 import org.onap.policy.common.utils.coder.StandardCoderObject;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
-import org.onap.policy.pdpx.main.comm.XacmlPdpMessage;
+import org.onap.policy.pdpx.main.comm.XacmlPdpHearbeatPublisher;
 import org.onap.policy.pdpx.main.comm.XacmlPdpUpdatePublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,18 +34,17 @@ public class XacmlPdpUpdateListener extends ScoListener<PdpUpdate> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpStateChangeListener.class);
 
-    private TopicSinkClient client;
-    private XacmlPdpMessage pdpInternalStatus;
+    private final XacmlPdpUpdatePublisher publisher;
 
     /**
      * Constructs the object.
      *
      * @param client used to send back response after receiving state change message
+     * @param heartbeat heartbeat publisher
      */
-    public XacmlPdpUpdateListener(TopicSinkClient client, XacmlPdpMessage pdpStatusMessage) {
+    public XacmlPdpUpdateListener(TopicSinkClient client, XacmlPdpHearbeatPublisher heartbeat) {
         super(PdpUpdate.class);
-        this.client = client;
-        this.pdpInternalStatus = pdpStatusMessage;
+        this.publisher = new XacmlPdpUpdatePublisher(client, heartbeat);
     }
 
     @Override
@@ -53,13 +52,8 @@ public class XacmlPdpUpdateListener extends ScoListener<PdpUpdate> {
 
         try {
 
-            LOGGER.info("PDP update message has been received from the PAP - {}", message.toString());
-
-            if (message.appliesTo(pdpInternalStatus.getPdpName(), pdpInternalStatus.getPdpGroup(),
-                    pdpInternalStatus.getPdpSubGroup())) {
-
-                XacmlPdpUpdatePublisher.handlePdpUpdate(message, client, pdpInternalStatus);
-            }
+            LOGGER.info("PDP update message has been received from the PAP - {}", message);
+            publisher.handlePdpUpdate(message);
 
         } catch (final Exception e) {
             LOGGER.error("failed to handle the PDP Update message.", e);

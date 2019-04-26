@@ -23,10 +23,11 @@ package org.onap.policy.pdpx.main.startstop;
 import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.Properties;
-
+import lombok.Getter;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterHandler;
+import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,45 +42,34 @@ public class Main {
     // The policy xacml pdp Activator that activates the policy xacml pdp service
     private XacmlPdpActivator activator;
 
-    // The parameters read in from JSON
-    private XacmlPdpParameterGroup parameterGroup;
-
-    // The argument message for some args that return a message
-    private String argumentMessage = null;
+    @Getter
+    private String argumentMessage;
 
     /**
      * Instantiates the policy xacml pdp service.
      *
      * @param args the command line arguments
+     * @throws PolicyXacmlPdpException if an error occurs
      */
-    public Main(final String[] args) {
+    public Main(final String[] args) throws PolicyXacmlPdpException {
         final String argumentString = Arrays.toString(args);
         LOGGER.info("Starting policy xacml pdp service with arguments - {}", argumentString);
 
         // Check the arguments
         final XacmlPdpCommandLineArguments arguments = new XacmlPdpCommandLineArguments();
-        try {
-            // The arguments return a string if there is a message to print and we should exit
-            argumentMessage = arguments.parse(args);
-            if (argumentMessage != null) {
-                LOGGER.info(argumentMessage);
-                return;
-            }
 
-            // Validate that the arguments are sane
-            arguments.validate();
-        } catch (final PolicyXacmlPdpException e) {
-            LOGGER.error("start of policy xacml pdp service failed", e);
+        // The arguments return a string if there is a message to print and we should exit
+        argumentMessage = arguments.parse(args);
+        if (argumentMessage != null) {
+            LOGGER.info(argumentMessage);
             return;
         }
+
+        // Validate that the arguments are sane
+        arguments.validate();
 
         // Read the parameters
-        try {
-            parameterGroup = new XacmlPdpParameterHandler().getParameters(arguments);
-        } catch (final Exception e) {
-            LOGGER.error("start of policy xacml pdp service failed", e);
-            return;
-        }
+        XacmlPdpParameterGroup parameterGroup = new XacmlPdpParameterHandler().getParameters(arguments);
 
         // Read the properties
         Properties props = new Properties();
@@ -89,42 +79,21 @@ public class Main {
                 props.load(stream);
             }
         } catch (final Exception e) {
-            LOGGER.error("start of xacml pdp service failed", e);
-            return;
+            throw new PolicyXacmlPdpException("cannot load property file", e);
         }
+
+        XacmlPdpStatisticsManager.setCurrent(new XacmlPdpStatisticsManager());
 
         // Now, create the activator for the policy xacml pdp service
         activator = new XacmlPdpActivator(parameterGroup, props);
+        XacmlPdpActivator.setCurrent(activator);
 
         // Start the activator
-        try {
-            activator.start();
-        } catch (final RuntimeException e) {
-            LOGGER.error("start of policy xacml pdp service failed, used parameters are " + Arrays.toString(args), e);
-            return;
-        }
+        activator.start();
 
         // Add a shutdown hook to shut everything down in an orderly manner
         Runtime.getRuntime().addShutdownHook(new PolicyXacmlPdpShutdownHookClass());
         LOGGER.info("Started policy xacml pdp service");
-    }
-
-    /**
-     * Get the parameters specified in JSON.
-     *
-     * @return the parameters
-     */
-    public XacmlPdpParameterGroup getParameters() {
-        return parameterGroup;
-    }
-
-    /**
-     * Get the argumentMessage string.
-     *
-     * @return the argumentMessage
-     */
-    public String getArgumentMessage() {
-        return argumentMessage;
     }
 
     /**
@@ -133,11 +102,8 @@ public class Main {
      * @throws PolicyXacmlPdpException on shutdown errors
      */
     public void shutdown() {
-        // clear the parameterGroup variable
-        parameterGroup = null;
-
         // clear the xacml pdp activator
-        if (activator != null) {
+        if (activator != null && activator.isAlive()) {
             activator.stop();
         }
     }
@@ -155,7 +121,9 @@ public class Main {
         @Override
         public void run() {
             // Shutdown the policy xacml pdp service and wait for everything to stop
-            activator.stop();
+            if (activator != null && activator.isAlive()) {
+                activator.stop();
+            }
         }
     }
 
@@ -165,6 +133,10 @@ public class Main {
      * @param args the arguments
      */
     public static void main(final String[] args) {
-        new Main(args);
+        try {
+            new Main(args);
+        } catch (RuntimeException | PolicyXacmlPdpException e) {
+            LOGGER.error("start of policy xacml pdp service failed", e);
+        }
     }
 }
