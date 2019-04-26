@@ -20,70 +20,84 @@
 
 package org.onap.policy.pdpx.main.startstop;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
+import org.onap.policy.pdpx.main.CommonRest;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
-import org.onap.policy.pdpx.main.parameters.CommonTestData;
 
 /**
  * Class to perform unit test of Main.
  *
  */
-public class TestMain {
+public class TestMain extends CommonRest {
+
+    private Main main;
 
     /**
-     * setup.
+     * Sets up properties and configuration.
+     * @throws Exception if an error occurs
      */
     @BeforeClass
-    public static void setUp() {
-        System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StdErrLog");
-        System.setProperty("org.eclipse.jetty.LEVEL", "OFF");
+    public static void setUpBeforeClass() throws Exception {
+        CommonRest.setUpBeforeClass();
 
+        // don't want the common "main" running
+        CommonRest.stopMain();
+    }
+
+    @Before
+    public void setUp() {
+        main = null;
+    }
+
+    /**
+     * Shuts "main" down.
+     */
+    @After
+    public void tearDown() {
+        if (main != null) {
+            main.shutdown();
+        }
     }
 
     @Test
-    public void testMain() throws PolicyXacmlPdpException, TopicSinkClientException {
-        final String[] xacmlPdpConfigParameters = {"-c", "parameters/XacmlPdpConfigParameters.json"};
-        final Main main = new Main(xacmlPdpConfigParameters);
-        assertTrue(main.getParameters().isValid());
-        assertEquals(CommonTestData.PDPX_GROUP_NAME, main.getParameters().getName());
+    public void testMain() throws PolicyXacmlPdpException {
+        final String[] xacmlPdpConfigParameters = {"-c", CONFIG_FILE, "-p", "parameters/topic.properties"};
+        main = new Main(xacmlPdpConfigParameters);
         main.shutdown();
+        main = null;
     }
 
     @Test
-    public void testMain_NoArguments() throws PolicyXacmlPdpException, TopicSinkClientException {
+    public void testMain_NoArguments() {
         final String[] xacmlPdpConfigParameters = {};
-        final Main main = new Main(xacmlPdpConfigParameters);
-        assertNull(main.getParameters());
-        main.shutdown();
+        assertThatThrownBy(() -> new Main(xacmlPdpConfigParameters)).isInstanceOf(PolicyXacmlPdpException.class)
+                        .hasMessage("policy xacml pdp configuration file was not specified as an argument");
     }
 
     @Test
-    public void testMain_InvalidArguments() throws TopicSinkClientException {
+    public void testMain_InvalidArguments() {
         final String[] xacmlPdpConfigParameters = {"parameters/XacmlPdpConfigParameters.json"};
-        final Main main = new Main(xacmlPdpConfigParameters);
-        assertNull(main.getParameters());
+        assertThatThrownBy(() -> new Main(xacmlPdpConfigParameters)).isInstanceOf(PolicyXacmlPdpException.class)
+            .hasMessage("too many command line arguments specified : [parameters/XacmlPdpConfigParameters.json]");
     }
 
     @Test
-    public void testMain_Help() throws TopicSinkClientException {
+    public void testMain_Help() throws PolicyXacmlPdpException {
         final String[] xacmlPdpConfigParameters = {"-h"};
-        final Main main = new Main(xacmlPdpConfigParameters);
-        final String message = "-h,--help                     outputs the usage of this command";
-        Assert.assertTrue(main.getArgumentMessage().contains(message));
+        Assert.assertTrue(new Main(xacmlPdpConfigParameters).getArgumentMessage().contains("-h,--help"));
 
     }
 
     @Test
-    public void testMain_InvalidParameters() throws TopicSinkClientException {
+    public void testMain_InvalidParameters()  {
         final String[] xacmlPdpConfigParameters = {"-c", "parameters/XacmlPdpConfigParameters_InvalidName.json"};
-        final Main main = new Main(xacmlPdpConfigParameters);
-        assertNull(main.getParameters());
+        assertThatThrownBy(() -> new Main(xacmlPdpConfigParameters)).isInstanceOf(PolicyXacmlPdpException.class)
+                        .hasMessageContaining("validation error");
     }
 }

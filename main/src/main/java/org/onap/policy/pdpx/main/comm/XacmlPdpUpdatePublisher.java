@@ -20,12 +20,14 @@
 
 package org.onap.policy.pdpx.main.comm;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
+import org.onap.policy.pdpx.main.XacmlState;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,49 +36,54 @@ public class XacmlPdpUpdatePublisher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpUpdatePublisher.class);
 
-    private XacmlPdpUpdatePublisher() {
-        throw new IllegalStateException("Please do not create private instance of XacmlPdpUpdatePublisher");
+    private final TopicSinkClient client;
+    private final XacmlState state;
+    private final XacmlPdpApplicationManager appManager;
+
+    /**
+     * Constructs the object.
+     * @param client messages are published to this client
+     * @param state tracks the state of this PDP
+     * @param appManager application manager
+     */
+    public XacmlPdpUpdatePublisher(TopicSinkClient client, XacmlState state, XacmlPdpApplicationManager appManager) {
+        this.client = client;
+        this.state = state;
+        this.appManager = appManager;
     }
 
     /**
      * Handle the PDP Update message.
      *
      * @param message Incoming message
-     * @param client TopicSinkClient
      */
-    public static void handlePdpUpdate(PdpUpdate message, TopicSinkClient client,
-            XacmlPdpMessage updatePdpMessage) {
+    public void handlePdpUpdate(PdpUpdate message) {
 
-        if (!message.getPolicies().isEmpty() || message.getPolicies() != null) {
+        Set<ToscaPolicy> incomingPolicies =
+                new HashSet<>(message.getPolicies() == null ? Collections.emptyList() : message.getPolicies());
+        Set<ToscaPolicy> deployedPolicies =
+                new HashSet<>(appManager.getToscaPolicies().keySet());
 
-            Set<ToscaPolicy> incomingPolicies =
-                    new HashSet<>(message.getPolicies());
-            Set<ToscaPolicy> deployedPolicies =
-                    new HashSet<>(XacmlPdpApplicationManager.getToscaPolicies().keySet());
-
-            // Undeploy a policy
-            // if incoming policies do not contain the deployed policy then remove it from PDP
-            for (ToscaPolicy policy : deployedPolicies) {
-                if (!incomingPolicies.contains(policy)) {
-                    XacmlPdpApplicationManager.removeUndeployedPolicy(policy);
-                }
-            }
-
-            // Deploy a policy
-            // if deployed policies do not contain the incoming policy load it
-            for (ToscaPolicy policy : incomingPolicies) {
-                if (!deployedPolicies.contains(policy)) {
-                    XacmlPdpApplicationManager.loadDeployedPolicy(policy);
-                }
+        // Undeploy a policy
+        // if incoming policies do not contain the deployed policy then remove it from PDP
+        for (ToscaPolicy policy : deployedPolicies) {
+            if (!incomingPolicies.contains(policy)) {
+                appManager.removeUndeployedPolicy(policy);
             }
         }
 
-        updatePdpMessage.updateInternalStatus(message);
-        PdpStatus statusMessage = updatePdpMessage.formatPdpStatusMessage();
-        sendPdpUpdate(statusMessage, client);
+        // Deploy a policy
+        // if deployed policies do not contain the incoming policy load it
+        for (ToscaPolicy policy : incomingPolicies) {
+            if (!deployedPolicies.contains(policy)) {
+                appManager.loadDeployedPolicy(policy);
+            }
+        }
+
+        sendPdpUpdate(state.updateInternalState(message));
     }
 
-    private static void sendPdpUpdate(PdpStatus status, TopicSinkClient client) {
+    private void sendPdpUpdate(PdpStatus status) {
         // Send PdpStatus Change to PAP
         if (!client.send(status)) {
             LOGGER.error("failed to send to topic sink {}", client.getTopic());

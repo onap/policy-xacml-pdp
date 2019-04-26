@@ -67,6 +67,7 @@ public class TestDecision {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestDecision.class);
 
+    private static int port;
     private static Main main;
     private static HttpClient client;
 
@@ -82,6 +83,9 @@ public class TestDecision {
     public static void beforeClass() throws Exception {
         System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StdErrLog");
         System.setProperty("org.eclipse.jetty.LEVEL", "OFF");
+
+        port = NetworkUtil.allocPort();
+
         //
         // Copy test directory over of the application directories
         //
@@ -94,7 +98,7 @@ public class TestDecision {
         // Get the parameters file correct.
         //
         RestServerParameters rest = new RestServerParameters(new RestServerBuilder()
-                .setHost("0.0.0.0").setPort(6969).setUserName("healthcheck").setPassword("zb!XztG34"));
+                .setHost("0.0.0.0").setPort(port).setUserName("healthcheck").setPassword("zb!XztG34"));
         XacmlPdpParameterGroup params = new XacmlPdpParameterGroup("XacmlPdpGroup", rest, apps.getAbsolutePath());
         final Gson gson = new GsonBuilder().create();
         File fileParams = appsFolder.newFile("params.json");
@@ -108,8 +112,8 @@ public class TestDecision {
         //
         // Make sure it is running
         //
-        if (!NetworkUtil.isTcpPortOpen("localhost", 6969, 20, 1000L)) {
-            throw new IllegalStateException("Cannot connect to port 6969");
+        if (!NetworkUtil.isTcpPortOpen("localhost", port, 20, 1000L)) {
+            throw new IllegalStateException("Cannot connect to port " + port);
         }
         //
         // Create a client
@@ -123,8 +127,7 @@ public class TestDecision {
     }
 
     @Test
-    public void testDecision_UnsupportedAction() throws KeyManagementException, NoSuchAlgorithmException,
-        ClassNotFoundException {
+    public void testDecision_UnsupportedAction() throws Exception {
 
         LOGGER.info("Running test testDecision_UnsupportedAction");
 
@@ -165,7 +168,7 @@ public class TestDecision {
         assertThat(response.getStatus()).isEqualTo("Permit");
     }
 
-    private static Main startXacmlPdpService(File params) {
+    private static Main startXacmlPdpService(File params) throws PolicyXacmlPdpException {
         final String[] XacmlPdpConfigParameters = {"-c", params.getAbsolutePath(), "-p",
             "parameters/topic.properties"};
         return new Main(XacmlPdpConfigParameters);
@@ -200,7 +203,7 @@ public class TestDecision {
         return HttpClient.factory.build(BusTopicParams.builder()
                 .clientName("testDecisionClient")
                 .serializationProvider(GsonMessageBodyHandler.class.getName())
-                .useHttps(false).allowSelfSignedCerts(false).hostname("localhost").port(6969)
+                .useHttps(false).allowSelfSignedCerts(false).hostname("localhost").port(port)
                 .basePath("policy/pdpx/v1/decision")
                 .userName("healthcheck").password("zb!XztG34").managed(true).build());
     }
