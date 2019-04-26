@@ -79,7 +79,7 @@ public class XacmlPdpMessage {
         PdpStatus status = new PdpStatus();
         status.setName(pdpName);
 
-        if (XacmlPdpActivator.getCurrent().isAlive()) {
+        if (XacmlPdpActivator.getCurrent().isAlive() && XacmlPdpActivator.getCurrent() != null) {
             status.setHealthy(PdpHealthStatus.HEALTHY);
         } else {
             status.setHealthy(PdpHealthStatus.NOT_HEALTHY);
