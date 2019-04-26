@@ -20,9 +20,11 @@
 
 package org.onap.policy.pdpx.main.startstop;
 
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Properties;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.onap.policy.common.endpoints.event.comm.TopicEndpoint;
 import org.onap.policy.common.endpoints.event.comm.TopicSource;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
@@ -31,16 +33,16 @@ import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
 import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.services.ServiceManagerContainer;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
-import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.models.pdp.enums.PdpMessageType;
-import org.onap.policy.models.pdp.enums.PdpState;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpRuntimeException;
-import org.onap.policy.pdpx.main.comm.XacmlPdpMessage;
-import org.onap.policy.pdpx.main.comm.XacmlPdpPapRegistration;
+import org.onap.policy.pdpx.main.XacmlState;
+import org.onap.policy.pdpx.main.comm.XacmlPdpHearbeatPublisher;
 import org.onap.policy.pdpx.main.comm.listeners.XacmlPdpStateChangeListener;
 import org.onap.policy.pdpx.main.comm.listeners.XacmlPdpUpdateListener;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
+import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
 import org.onap.policy.pdpx.main.rest.XacmlPdpRestServer;
+import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +57,10 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
 
     private static final String[] MSG_TYPE_NAMES = {"messageName"};
     private static final String TOPIC = "POLICY-PDP-PAP";
+
+    @Getter
+    @Setter
+    private static XacmlPdpActivator current = null;
 
     // The parameters of this policy xacml pdp activator
     private final XacmlPdpParameterGroup xacmlPdpParameterGroup;
@@ -71,27 +77,6 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
     private final MessageTypeDispatcher msgDispatcher;
 
     /**
-     * Listens for {@link PdpStateChange} messages from the PAP.
-     */
-    private final XacmlPdpStateChangeListener pdpStateChangeListener;
-
-    /**
-     * Listens for {@link PdpUpdate} messages from the PAP.
-     */
-    private final XacmlPdpUpdateListener pdpUpdateListener;
-
-    /**
-     * The current activator.
-     */
-    private static XacmlPdpActivator current = null;
-
-    private volatile boolean alive = false;
-
-    private XacmlPdpPapRegistration register;
-
-    private XacmlPdpMessage message;
-
-    /**
      * Instantiate the activator for policy xacml pdp as a complete service.
      *
      * @param xacmlPdpParameterGroup the parameters for the xacml pdp service
@@ -103,14 +88,34 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
         TopicEndpoint.manager.addTopicSinks(topicProperties);
         TopicEndpoint.manager.addTopicSources(topicProperties);
 
+        XacmlPdpHearbeatPublisher heartbeat;
+
         try {
-            final TopicSinkClient sinkClient = new TopicSinkClient(TOPIC);
-            this.message = new XacmlPdpMessage();
+            XacmlPdpApplicationManager appmgr =
+                            new XacmlPdpApplicationManager(Paths.get(xacmlPdpParameterGroup.getApplicationPath()));
+            XacmlPdpApplicationManager.setCurrent(appmgr);
+
+            XacmlPdpStatisticsManager stats = new XacmlPdpStatisticsManager();
+            XacmlPdpStatisticsManager.setCurrent(stats);
+            stats.setTotalPolicyTypesCount(appmgr.getPolicyTypeCount());
+
+            XacmlState state = new XacmlState(appmgr);
+
             this.xacmlPdpParameterGroup = xacmlPdpParameterGroup;
             this.msgDispatcher = new MessageTypeDispatcher(MSG_TYPE_NAMES);
-            this.pdpStateChangeListener = new XacmlPdpStateChangeListener(sinkClient, message);
-            this.pdpUpdateListener = new XacmlPdpUpdateListener(sinkClient, message);
-            this.register = new XacmlPdpPapRegistration(sinkClient);
+
+            TopicSinkClient sinkClient = new TopicSinkClient(TOPIC);
+            heartbeat = new XacmlPdpHearbeatPublisher(sinkClient, state);
+
+            /*
+             * since the dispatcher isn't registered with the topic yet, we can go ahead
+             * and register the listeners with it.
+             */
+            msgDispatcher.register(PdpMessageType.PDP_STATE_CHANGE.name(),
+                            new XacmlPdpStateChangeListener(sinkClient, state));
+            msgDispatcher.register(PdpMessageType.PDP_UPDATE.name(),
+                            new XacmlPdpUpdateListener(sinkClient, state, heartbeat, appmgr));
+
         } catch (RuntimeException | TopicSinkClientException e) {
             throw new PolicyXacmlPdpRuntimeException(e.getMessage(), e);
         }
@@ -118,50 +123,31 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
         xacmlPdpParameterGroup.getRestServerParameters().setName(xacmlPdpParameterGroup.getName());
 
         // @formatter:off
-        addAction("XACML PDP parameters", () -> ParameterService.register(xacmlPdpParameterGroup),
+        addAction("XACML PDP parameters",
+            () -> ParameterService.register(xacmlPdpParameterGroup),
             () -> ParameterService.deregister(xacmlPdpParameterGroup.getName()));
 
-        addAction("PdpStateChange Dispatcher",
-            () -> msgDispatcher.register(PdpMessageType.PDP_STATE_CHANGE.name(), this.pdpStateChangeListener),
-            () -> msgDispatcher.unregister(PdpMessageType.PDP_STATE_CHANGE.name()));
-
-        addAction("PdpUpdate Dispatcher",
-            () -> msgDispatcher.register(PdpMessageType.PDP_UPDATE.name(), this.pdpUpdateListener),
-            () -> msgDispatcher.unregister(PdpMessageType.PDP_UPDATE.name()));
-
         addAction("Message Dispatcher",
-            () -> registerMsgDispatcher(),
-            () -> unregisterMsgDispatcher());
+            this::registerMsgDispatcher,
+            this::unregisterMsgDispatcher);
 
         addAction("topics",
-            () -> TopicEndpoint.manager.start(),
-            () -> TopicEndpoint.manager.shutdown());
+            TopicEndpoint.manager::start,
+            TopicEndpoint.manager::shutdown);
+
+        // initial heart beats act as registration messages
+        addAction("Heartbeat Publisher",
+            heartbeat::start,
+            heartbeat::terminate);
 
         addAction("Create REST server",
-            () -> {
-                restServer = new XacmlPdpRestServer(xacmlPdpParameterGroup.getRestServerParameters(),
-                        xacmlPdpParameterGroup.getApplicationPath());
-            },
-            () -> {
-                restServer = null;
-            });
+            () -> restServer = new XacmlPdpRestServer(xacmlPdpParameterGroup.getRestServerParameters()),
+            () -> restServer = null);
 
         addAction("REST server",
             () -> restServer.start(),
             () -> restServer.stop());
-
-        addAction("set alive", () -> setAlive(true), () -> setAlive(false));
-
-        addAction("Initial Registration with PAP",
-            () -> {
-                register.pdpRegistration(message.formatInitialStatusMessage(PdpState.PASSIVE));
-            },
-            () -> {
-                register.pdpRegistration(message.formatInitialStatusMessage(PdpState.TERMINATED));
-            });
         // @formatter:on
-
-        current = this;
     }
 
     /**
@@ -207,32 +193,5 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
         for (TopicSource source : TopicEndpoint.manager.getTopicSources(Arrays.asList(TOPIC))) {
             source.unregister(msgDispatcher);
         }
-    }
-
-    /**
-     * Returns the alive status of xacml pdp service.
-     *
-     * @return the alive
-     */
-    @Override
-    public boolean isAlive() {
-        return alive;
-    }
-
-    /**
-     * Change the alive status of xacml pdp service.
-     *
-     * @param status the status
-     */
-    private void setAlive(final boolean status) {
-        alive = status;
-    }
-
-    public static XacmlPdpActivator getCurrent() {
-        return current;
-    }
-
-    public static void setCurrent(XacmlPdpActivator current) {
-        XacmlPdpActivator.current = current;
     }
 }

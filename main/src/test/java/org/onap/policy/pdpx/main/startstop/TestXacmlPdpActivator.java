@@ -26,13 +26,12 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.FileInputStream;
-import java.net.UnknownHostException;
 import java.util.Properties;
-
 import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
+import org.onap.policy.pdpx.main.CommonRest;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
@@ -43,30 +42,44 @@ import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterHandler;
  * Class to perform unit test of XacmlPdpActivator.
  *
  */
-public class TestXacmlPdpActivator {
-    private static XacmlPdpActivator activator = null;
+public class TestXacmlPdpActivator extends CommonRest {
+    private static XacmlPdpParameterGroup parGroup;
+    private static Properties props;
+
+    private XacmlPdpActivator activator = null;
 
     /**
-     * Setup the tests.
+     * Loads properties.
      */
     @BeforeClass
-    public static void setup() throws Exception {
-        final String[] xacmlPdpConfigParameters =
-            {"-c", "parameters/XacmlPdpConfigParameters.json", "-p", "parameters/topic.properties"};
-        final XacmlPdpCommandLineArguments arguments = new XacmlPdpCommandLineArguments(xacmlPdpConfigParameters);
-        final XacmlPdpParameterGroup parGroup = new XacmlPdpParameterHandler().getParameters(arguments);
+    public static void setUpBeforeClass() throws Exception {
+        CommonRest.setUpBeforeClass();
 
-        Properties props = new Properties();
+        final String[] xacmlPdpConfigParameters =
+            {"-c", CommonRest.CONFIG_FILE, "-p", "parameters/topic.properties"};
+        final XacmlPdpCommandLineArguments arguments = new XacmlPdpCommandLineArguments(xacmlPdpConfigParameters);
+        parGroup = new XacmlPdpParameterHandler().getParameters(arguments);
+
+        props = new Properties();
         String propFile = arguments.getFullPropertyFilePath();
         try (FileInputStream stream = new FileInputStream(propFile)) {
             props.load(stream);
         }
 
+        // don't want the common "main" running
+        CommonRest.stopMain();
+    }
+
+    /**
+     * Creates the activator.
+     */
+    @Before
+    public void setUp() {
         activator = new XacmlPdpActivator(parGroup, props);
     }
 
     @Test
-    public void testXacmlPdpActivator() throws PolicyXacmlPdpException, TopicSinkClientException, UnknownHostException {
+    public void testXacmlPdpActivator() throws Exception {
         assertFalse(activator.isAlive());
         activator.start();
         assertTrue(activator.isAlive());
@@ -77,14 +90,13 @@ public class TestXacmlPdpActivator {
 
     @Test
     public void testGetCurrent_testSetCurrent() {
+        XacmlPdpActivator.setCurrent(activator);
         assertSame(activator, XacmlPdpActivator.getCurrent());
     }
 
     @Test
     public void testTerminate() throws Exception {
-        if (!activator.isAlive()) {
-            activator.start();
-        }
+        activator.start();
         activator.stop();
         assertFalse(activator.isAlive());
     }

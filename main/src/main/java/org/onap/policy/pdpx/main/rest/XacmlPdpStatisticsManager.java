@@ -20,23 +20,25 @@
 
 package org.onap.policy.pdpx.main.rest;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Class to hold statistical data for xacmlPdp component.
  *
  */
 public class XacmlPdpStatisticsManager {
+    @Getter
+    @Setter
+    private static XacmlPdpStatisticsManager current = null;
 
-    private static long totalPolicyTypesCount;
-    private static long totalPoliciesCount;
-    private static long errorsCount;
-    private static long permitDecisionsCount;
-    private static long denyDecisionsCount;
-    private static long indeterminantDecisionsCount;
-    private static long notApplicableDecisionsCount;
-
-    private XacmlPdpStatisticsManager() {
-        throw new IllegalStateException("Instantiation of the class is not allowed");
-    }
+    private long totalPolicyTypesCount;
+    private long totalPoliciesCount;
+    private long errorsCount;
+    private long permitDecisionsCount;
+    private long denyDecisionsCount;
+    private long indeterminantDecisionsCount;
+    private long notApplicableDecisionsCount;
 
     /**
      * Method to set the xacml pdp total policy types count. This
@@ -45,7 +47,7 @@ public class XacmlPdpStatisticsManager {
      *
      * @return the total
      */
-    public static long setTotalPolicyTypesCount(long newCount) {
+    public long setTotalPolicyTypesCount(long newCount) {
         totalPolicyTypesCount = newCount;
         return totalPolicyTypesCount;
     }
@@ -55,7 +57,7 @@ public class XacmlPdpStatisticsManager {
      *
      * @return the total
      */
-    public static long updateTotalPoliciesCount() {
+    public long updateTotalPoliciesCount() {
         return ++totalPoliciesCount;
     }
 
@@ -64,7 +66,7 @@ public class XacmlPdpStatisticsManager {
      *
      * @return the errorDecisionsCount
      */
-    public static long updateErrorCount() {
+    public long updateErrorCount() {
         return ++errorsCount;
     }
 
@@ -73,7 +75,7 @@ public class XacmlPdpStatisticsManager {
      *
      * @return the permitDecisionsCount
      */
-    public static long updatePermitDecisionsCount() {
+    public long updatePermitDecisionsCount() {
         return ++permitDecisionsCount;
     }
 
@@ -82,7 +84,7 @@ public class XacmlPdpStatisticsManager {
      *
      * @return the denyDecisionsCount
      */
-    public static long updateDenyDecisionsCount() {
+    public long updateDenyDecisionsCount() {
         return ++denyDecisionsCount;
     }
 
@@ -91,7 +93,7 @@ public class XacmlPdpStatisticsManager {
      *
      * @return the indeterminantDecisionsCount
      */
-    public static long updateIndeterminantDecisionsCount() {
+    public long updateIndeterminantDecisionsCount() {
         return ++indeterminantDecisionsCount;
     }
 
@@ -100,7 +102,7 @@ public class XacmlPdpStatisticsManager {
      *
      * @return the notApplicableDecisionsCount
      */
-    public static long updateNotApplicableDecisionsCount() {
+    public long updateNotApplicableDecisionsCount() {
         return ++notApplicableDecisionsCount;
     }
 
@@ -109,7 +111,7 @@ public class XacmlPdpStatisticsManager {
 
      * @return the totalPolicyTypesCount
      */
-    public static long getTotalPolicyTypesCount() {
+    public long getTotalPolicyTypesCount() {
         return totalPolicyTypesCount;
     }
 
@@ -118,7 +120,7 @@ public class XacmlPdpStatisticsManager {
 
      * @return the totalPoliciesCount
      */
-    public static long getTotalPoliciesCount() {
+    public long getTotalPoliciesCount() {
         return totalPoliciesCount;
     }
 
@@ -127,7 +129,7 @@ public class XacmlPdpStatisticsManager {
 
      * @return the permitDecisionsCount
      */
-    public static long getErrorCount() {
+    public long getErrorCount() {
         return errorsCount;
     }
 
@@ -136,7 +138,7 @@ public class XacmlPdpStatisticsManager {
 
      * @return the permitDecisionsCount
      */
-    public static long getPermitDecisionsCount() {
+    public long getPermitDecisionsCount() {
         return permitDecisionsCount;
     }
 
@@ -145,7 +147,7 @@ public class XacmlPdpStatisticsManager {
 
      * @return the denyDecisionsCount
      */
-    public static long getDenyDecisionsCount() {
+    public long getDenyDecisionsCount() {
         return denyDecisionsCount;
     }
 
@@ -154,7 +156,7 @@ public class XacmlPdpStatisticsManager {
 
      * @return the indeterminantDecisionsCount
      */
-    public static long getIndeterminantDecisionsCount() {
+    public long getIndeterminantDecisionsCount() {
         return indeterminantDecisionsCount;
     }
 
@@ -163,14 +165,14 @@ public class XacmlPdpStatisticsManager {
 
      * @return the notApplicableDecisionsCount
      */
-    public static long getNotApplicableDecisionsCount() {
+    public long getNotApplicableDecisionsCount() {
         return notApplicableDecisionsCount;
     }
 
     /**
      * Reset all the statistics counts to 0.
      */
-    public static void resetAllStatistics() {
+    public void resetAllStatistics() {
         totalPolicyTypesCount = 0L;
         totalPoliciesCount = 0L;
         errorsCount = 0L;
