@@ -37,8 +37,9 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Properties;
-
+import java.util.stream.Collectors;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
@@ -107,6 +108,16 @@ public class XacmlPolicyUtilsTest {
             try (InputStream is = new FileInputStream("src/test/resources/test.properties")) {
                 properties = new Properties();
                 properties.load(is);
+            }
+            //
+            // Change "/" to file separator in file names
+            //
+            if (!"/".equals(File.separator)) {
+                List<String> fileProps = properties.keySet().stream().map(Object::toString)
+                                .filter(key -> key.endsWith(".file")).collect(Collectors.toList());
+                for (String fileProp : fileProps) {
+                    properties.setProperty(fileProp, properties.getProperty(fileProp).replace("/", File.separator));
+                }
             }
             //
             // Save root policy
