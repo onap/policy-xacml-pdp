@@ -68,6 +68,8 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
     private static final String FIELD_GUARD_ACTIVE_START = "guardActiveStart";
     private static final String FIELD_GUARD_ACTIVE_END = "guardActiveEnd";
     private static final String FIELD_TARGET = "targets";
+    private static final String DEFAULT_PERMIT_DESCRIPTION = "Default is to PERMIT if the policy matches.";
+    private static final String RULE_SUFFIX = ":rule";
 
     public LegacyGuardTranslator() {
         super();
@@ -126,7 +128,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
     public Request convertRequest(DecisionRequest request) {
         LOGGER.debug("Converting Request {}", request);
         try {
-            return RequestParser.parseRequest(LegacyGuardPolicyRequest.createInstance(request));
+            return RequestParser.parseRequest(new LegacyGuardPolicyRequest(request));
         } catch (IllegalArgumentException | IllegalAccessException | DataTypeException e) {
             LOGGER.error("Failed to convert DecisionRequest: {}", e);
         }
@@ -193,7 +195,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
             //
             // Add in the Policy Version
             //
-            policy.setVersion(map.get("policy-version").toString());
+            policy.setVersion(map.get("policy-version"));
         }
         return policy;
     }
@@ -209,10 +211,8 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         if (properties.containsKey("recipe")) {
             addMatch(allOf, properties.get("recipe"), ToscaDictionary.ID_RESOURCE_GUARD_RECIPE);
         }
-        if (addTargets) {
-            if (properties.containsKey("targets")) {
-                addMatch(allOf, properties.get("targets"), ToscaDictionary.ID_RESOURCE_GUARD_TARGETID);
-            }
+        if (addTargets && properties.containsKey(FIELD_TARGET)) {
+            addMatch(allOf, properties.get(FIELD_TARGET), ToscaDictionary.ID_RESOURCE_GUARD_TARGETID);
         }
         if (properties.containsKey("clname")) {
             addMatch(allOf, properties.get("clname"), ToscaDictionary.ID_RESOURCE_GUARD_CLNAME);
@@ -227,7 +227,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         return target;
     }
 
-    private static AllOfType addMatch(AllOfType allOf, Object value, Identifier attributeId) {
+    private AllOfType addMatch(AllOfType allOf, Object value, Identifier attributeId) {
         if (value instanceof String) {
             if (".*".equals(value.toString())) {
                 //
@@ -257,7 +257,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         return allOf;
     }
 
-    private static RuleType generatePermitRule(String policyName, String policyType, Map<String, Object> properties)
+    private RuleType generatePermitRule(String policyName, String policyType, Map<String, Object> properties)
             throws ToscaPolicyConversionException {
         //
         // Now determine which policy type we are generating
@@ -273,7 +273,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         return null;
     }
 
-    private static RuleType generateFrequencyPermit(String policyName, Map<String, Object> properties)
+    private RuleType generateFrequencyPermit(String policyName, Map<String, Object> properties)
             throws ToscaPolicyConversionException {
         //
         // See if its possible to generate a count
@@ -333,8 +333,8 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         // Now we can create our rule
         //
         RuleType permit = new RuleType();
-        permit.setDescription("Default is to PERMIT if the policy matches.");
-        permit.setRuleId(policyName + ":rule");
+        permit.setDescription(DEFAULT_PERMIT_DESCRIPTION);
+        permit.setRuleId(policyName + RULE_SUFFIX);
         permit.setEffect(EffectType.PERMIT);
         permit.setTarget(new TargetType());
         //
@@ -351,7 +351,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         return permit;
     }
 
-    private static RuleType generateMinMaxPermit(String policyName, Map<String, Object> properties) {
+    private RuleType generateMinMaxPermit(String policyName, Map<String, Object> properties) {
         //
         // Get the properties that are common among guards
         //
@@ -391,8 +391,8 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         // Create our rule
         //
         RuleType permit = new RuleType();
-        permit.setDescription("Default is to PERMIT if the policy matches.");
-        permit.setRuleId(policyName + ":rule");
+        permit.setDescription(DEFAULT_PERMIT_DESCRIPTION);
+        permit.setRuleId(policyName + RULE_SUFFIX);
         permit.setEffect(EffectType.PERMIT);
         permit.setTarget(new TargetType());
         //
@@ -478,7 +478,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         return permit;
     }
 
-    private static RuleType generateBlacklistPermit(String policyName, Map<String, Object> properties) {
+    private RuleType generateBlacklistPermit(String policyName, Map<String, Object> properties) {
         //
         // Generate target
         //
@@ -506,8 +506,8 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         // Create our rule
         //
         RuleType permit = new RuleType();
-        permit.setDescription("Default is to PERMIT if the policy matches.");
-        permit.setRuleId(policyName + ":rule");
+        permit.setDescription(DEFAULT_PERMIT_DESCRIPTION);
+        permit.setRuleId(policyName + RULE_SUFFIX);
         permit.setEffect(EffectType.PERMIT);
         permit.setTarget(new TargetType());
         //
@@ -554,7 +554,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         return permit;
     }
 
-    private static ApplyType generateTimeInRange(String start, String end) {
+    private ApplyType generateTimeInRange(String start, String end) {
         if (start == null || end == null) {
             LOGGER.warn("Missing time range start {} end {}", start, end);
             return null;
@@ -594,7 +594,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         return applyTimeInRange;
     }
 
-    private static ApplyType generateCountCheck(Integer limit, String timeWindow, String timeUnits) {
+    private ApplyType generateCountCheck(Integer limit, String timeWindow, String timeUnits) {
         AttributeDesignatorType designator = new AttributeDesignatorType();
         designator.setAttributeId(ToscaDictionary.ID_RESOURCE_GUARD_OPERATIONCOUNT.stringValue());
         designator.setCategory(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue());
@@ -632,7 +632,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         return applyLessThan;
     }
 
-    private static ApplyType generateMinCheck(Integer min) {
+    private ApplyType generateMinCheck(Integer min) {
         if (min == null) {
             return null;
         }
@@ -667,7 +667,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         return applyGreaterThanEqual;
     }
 
-    private static ApplyType generateMaxCheck(Integer max) {
+    private ApplyType generateMaxCheck(Integer max) {
         if (max == null) {
             return null;
         }
@@ -703,7 +703,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
     }
 
     @SuppressWarnings("unchecked")
-    private static ApplyType generateTargetApply(Object targetObject) {
+    private ApplyType generateTargetApply(Object targetObject) {
         ObjectFactory factory = new ObjectFactory();
         //
         // Create a bag of values
@@ -749,7 +749,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         return applyAnyOf;
     }
 
-    private static Integer parseInteger(String strInteger) {
+    private Integer parseInteger(String strInteger) {
         Integer theInt = null;
         try {
             theInt = Integer.parseInt(strInteger);
@@ -766,7 +766,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         return theInt;
     }
 
-    private static AdviceExpressionsType generateRequestIdAdvice() {
+    private AdviceExpressionsType generateRequestIdAdvice() {
         AdviceExpressionType adviceExpression = new AdviceExpressionType();
         adviceExpression.setAppliesTo(EffectType.PERMIT);
         adviceExpression.setAdviceId(ToscaDictionary.ID_ADVICE_GUARD.stringValue());

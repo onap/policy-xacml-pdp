@@ -80,29 +80,19 @@ public class LegacyGuardPolicyRequest {
     private Integer max;
 
 
-    public LegacyGuardPolicyRequest() {
-        super();
-    }
-
     /**
      * Parses the DecisionRequest into a StdMetadataPolicyRequest.
      *
      * @param decisionRequest Input DecisionRequest
-     * @return StdMetadataPolicyRequest
      */
-    @SuppressWarnings("unchecked")
-    public static LegacyGuardPolicyRequest createInstance(DecisionRequest decisionRequest) {
-        //
-        // Create our return object
-        //
-        LegacyGuardPolicyRequest request = new LegacyGuardPolicyRequest();
+    public LegacyGuardPolicyRequest(DecisionRequest decisionRequest) {
         //
         // Add the subject attributes
         //
-        request.onapName = decisionRequest.getOnapName();
-        request.onapComponent = decisionRequest.getOnapComponent();
-        request.onapInstance = decisionRequest.getOnapInstance();
-        request.requestId = decisionRequest.getRequestId();
+        this.onapName = decisionRequest.getOnapName();
+        this.onapComponent = decisionRequest.getOnapComponent();
+        this.onapInstance = decisionRequest.getOnapInstance();
+        this.requestId = decisionRequest.getRequestId();
         //
         // Now pull from the resources
         //
@@ -115,41 +105,40 @@ public class LegacyGuardPolicyRequest {
             // Perhaps we throw an exception and then caller
             // can put together a response
             //
-            return request;
+            return;
         }
+        @SuppressWarnings("unchecked")
         Map<String, Object> guard = (Map<String, Object>) resources.get(STR_GUARD);
         if (guard == null || guard.isEmpty()) {
             //
             // again, same problem throw an exception?
             //
-            return request;
+            return;
         }
         //
         // Find our fields
         //
         if (guard.containsKey("actor")) {
-            request.actorId = guard.get("actor").toString();
+            this.actorId = guard.get("actor").toString();
         }
         if (guard.containsKey("recipe")) {
-            request.operationId = guard.get("recipe").toString();
+            this.operationId = guard.get("recipe").toString();
         }
         if (guard.containsKey("clname")) {
-            request.clnameId = guard.get("clname").toString();
+            this.clnameId = guard.get("clname").toString();
         }
         if (guard.containsKey("target")) {
-            request.targetId = guard.get("target").toString();
+            this.targetId = guard.get("target").toString();
         }
         if (guard.containsKey("vfCount")) {
-            request.vfCount = Integer.decode(guard.get("vfCount").toString());
+            this.vfCount = Integer.decode(guard.get("vfCount").toString());
         }
         if (guard.containsKey("min")) {
-            request.min = Integer.decode(guard.get("min").toString());
+            this.min = Integer.decode(guard.get("min").toString());
         }
         if (guard.containsKey("max")) {
-            request.max = Integer.decode(guard.get("max").toString());
+            this.max = Integer.decode(guard.get("max").toString());
         }
-
-        return request;
     }
 
 }

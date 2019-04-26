@@ -25,9 +25,7 @@ package org.onap.policy.xacml.pdp.application.guard;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.att.research.xacml.api.Response;
-
 import java.io.File;
-import java.io.IOException;
 import java.sql.Date;
 import java.time.Instant;
 import java.util.Iterator;
@@ -35,10 +33,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.UUID;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -54,7 +50,6 @@ import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.pdp.xacml.application.common.TestUtils;
-import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.onap.policy.pdp.xacml.application.common.operationshistory.CountRecentOperationsPip;
@@ -67,7 +62,6 @@ public class CoordinationTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CoordinationTest.class);
     private static Properties properties = new Properties();
-    private static File propertiesFile;
     private static XacmlApplicationServiceProvider service;
     private static DecisionRequest requestCl1Node1;
     private static DecisionRequest requestCl1Node2;
@@ -95,8 +89,8 @@ public class CoordinationTest {
         //
         // Setup our temporary folder
         //
-        XacmlPolicyUtils.FileCreator myCreator = (String filename) -> policyFolder.newFile(filename);
-        propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties",
+        XacmlPolicyUtils.FileCreator myCreator = policyFolder::newFile;
+        File propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties",
                 properties, myCreator);
         //
         // Load service
@@ -207,7 +201,7 @@ public class CoordinationTest {
     }
 
     @Test
-    public void test1() throws CoderException, IOException, XacmlApplicationException {
+    public void test1() throws Exception {
         LOGGER.info("**************** Running test1 ****************");
         //
         // Now load the test coordination policy - make sure
@@ -271,19 +265,19 @@ public class CoordinationTest {
         //
         // Get the properties
         //
-        Map<String, Object> properties = (Map<String, Object>) request.getResource().get("guard");
+        Map<String, Object> properties2 = (Map<String, Object>) request.getResource().get("guard");
         //
         // Add an entry
         //
         Dbao newEntry = new Dbao();
-        newEntry.setActor(properties.get("actor").toString());
-        newEntry.setOperation(properties.get("recipe").toString());
-        newEntry.setClosedLoopName(properties.get("clname").toString());
+        newEntry.setActor(properties2.get("actor").toString());
+        newEntry.setOperation(properties2.get("recipe").toString());
+        newEntry.setClosedLoopName(properties2.get("clname").toString());
         newEntry.setOutcome(outcome);
         newEntry.setStarttime(Date.from(Instant.now().minusMillis(20000)));
         newEntry.setEndtime(Date.from(Instant.now()));
         newEntry.setRequestId(UUID.randomUUID().toString());
-        newEntry.setTarget(properties.get("target").toString());
+        newEntry.setTarget(properties2.get("target").toString());
         em.getTransaction().begin();
         em.persist(newEntry);
         em.getTransaction().commit();
@@ -293,7 +287,7 @@ public class CoordinationTest {
      * Close the entity manager.
      */
     @AfterClass
-    public static void cleanup() throws Exception {
+    public static void cleanup() {
         if (em != null) {
             em.close();
         }
