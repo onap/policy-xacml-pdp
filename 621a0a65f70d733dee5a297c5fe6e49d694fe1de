@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c913062_f0b21fa6",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpMessage.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-26T14:27:57Z",
+      "side": 1,
+      "message": "swap the test",
+      "revId": "621a0a65f70d733dee5a297c5fe6e49d694fe1de",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
