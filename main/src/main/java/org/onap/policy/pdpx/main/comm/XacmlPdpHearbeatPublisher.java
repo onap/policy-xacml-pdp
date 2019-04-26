@@ -22,7 +22,11 @@ package org.onap.policy.pdpx.main.comm;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
+import org.onap.policy.pdpx.main.XacmlState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,45 +34,76 @@ public class XacmlPdpHearbeatPublisher extends TimerTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpHearbeatPublisher.class);
 
+    private final TopicSinkClient topicSinkClient;
+
+    /**
+     * Tracks the state of this PDP.
+     */
+    private final XacmlState currentState;
+
+    /**
+     * Current timer interval, in milliseconds.
+     */
+    private long intervalMs = 60000;
+
     private Timer timer;
-    private XacmlPdpMessage heartbeatMessage;
-    private static TopicSinkClient topicSinkClient;
-    private static volatile  boolean alive = false;
+
+    @Getter
+    @Setter(AccessLevel.PRIVATE)
+    private volatile boolean alive = false;
+
 
     /**
      * Constructor for instantiating XacmlPdpPublisher.
      *
-     * @param message of the PDP
-     * @param topicSinkClient used to send heartbeat message
+     * @param topicSinkClient used to send heart beat message
+     * @param state tracks the state of this PDP
      */
-    public XacmlPdpHearbeatPublisher(TopicSinkClient topicSinkClient, XacmlPdpMessage message ) {
+    public XacmlPdpHearbeatPublisher(TopicSinkClient topicSinkClient, XacmlState state) {
         this.topicSinkClient = topicSinkClient;
-        this.heartbeatMessage = message;
-        timer = new Timer(false);
-        timer.scheduleAtFixedRate(this, 0, 60000); // time interval temp hard coded now but will be parameterized
-        setAlive(true);
+        this.currentState = state;
     }
 
     @Override
     public void run() {
-        topicSinkClient.send(heartbeatMessage.formatPdpStatusMessage());
         LOGGER.info("Sending Xacml PDP heartbeat to the PAP");
+
+        topicSinkClient.send(currentState.genHeartbeat());
     }
 
     /**
-     * Method to terminate the heartbeat.
+     * Method to terminate the heart beat.
      */
     public void terminate() {
-        timer.cancel();
-        timer.purge();
-        setAlive(false);
+        if (isAlive()) {
+            timer.cancel();
+            timer.purge();
+            setAlive(false);
+        }
     }
 
-    public static boolean isAlive() {
-        return alive;
+    /**
+     * Restarts the timer if the interval has changed.
+     *
+     * @param intervalMs desired interval, or {@code null} to leave it unchanged
+     */
+    public void restart(Long intervalMs) {
+        if (intervalMs != null && intervalMs > 0 && intervalMs != this.intervalMs) {
+            terminate();
+
+            this.intervalMs = intervalMs;
+            start();
+        }
     }
 
-    public void setAlive(boolean alive) {
-        this.alive = alive;
+    /**
+     * Starts the timer.
+     */
+    public void start() {
+        if (!isAlive()) {
+            this.timer = new Timer(false);
+            this.timer.scheduleAtFixedRate(this, 0, this.intervalMs);
+            setAlive(true);
+        }
     }
 }

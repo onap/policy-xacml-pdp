@@ -38,13 +38,15 @@ public class StatisticsProvider {
     public StatisticsReport fetchCurrentStatistics() {
         final StatisticsReport report = new StatisticsReport();
         report.setCode(XacmlPdpActivator.getCurrent().isAlive() ? 200 : 500);
-        report.setTotalPolicyTypesCount(XacmlPdpStatisticsManager.getTotalPolicyTypesCount());
-        report.setTotalPoliciesCount(XacmlPdpStatisticsManager.getTotalPoliciesCount());
-        report.setTotalErrorCount(XacmlPdpStatisticsManager.getErrorCount());
-        report.setPermitDecisionsCount(XacmlPdpStatisticsManager.getPermitDecisionsCount());
-        report.setDenyDecisionsCount(XacmlPdpStatisticsManager.getDenyDecisionsCount());
-        report.setIndeterminantDecisionsCount(XacmlPdpStatisticsManager.getIndeterminantDecisionsCount());
-        report.setNotApplicableDecisionsCount(XacmlPdpStatisticsManager.getNotApplicableDecisionsCount());
+        
+        XacmlPdpStatisticsManager stats = XacmlPdpStatisticsManager.getCurrent();
+        report.setTotalPolicyTypesCount(stats.getTotalPolicyTypesCount());
+        report.setTotalPoliciesCount(stats.getTotalPoliciesCount());
+        report.setTotalErrorCount(stats.getErrorCount());
+        report.setPermitDecisionsCount(stats.getPermitDecisionsCount());
+        report.setDenyDecisionsCount(stats.getDenyDecisionsCount());
+        report.setIndeterminantDecisionsCount(stats.getIndeterminantDecisionsCount());
+        report.setNotApplicableDecisionsCount(stats.getNotApplicableDecisionsCount());
         return report;
     }
 }
