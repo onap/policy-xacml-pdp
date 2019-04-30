@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d54ffeb8_547dc3c2",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-04-30T20:48:27Z",
+      "side": 1,
+      "message": "This message must also contain the PdpGroup \u0026 PdpSubGroup name to which it is currently assigned. Otherwise a PdpStatus message without PdpGroup \u0026 PdpSubgroup name is treated as new Pdp for registration.\n\nAlso, any PdpStatus message post successful registration should always come with PdpType, PdpGroup, PdpSubGroup, Health Status, Supported Policy Types, Policies, PdpInstanceId, PdpState.\n\nAdditionally, if it response of PdpUpdate or PdpStateChange then it should also populate the PdpResponseDetails fields.",
+      "range": {
+        "startLine": 164,
+        "startChar": 4,
+        "endLine": 170,
+        "endChar": 5
+      },
+      "revId": "ae76ba76e227e77700684929b891122822b66c5c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
