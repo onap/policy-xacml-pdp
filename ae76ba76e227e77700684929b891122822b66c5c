@@ -94,6 +94,30 @@
       "revId": "ae76ba76e227e77700684929b891122822b66c5c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50b07a17_4140f3a6",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-04-30T21:20:27Z",
+      "side": 1,
+      "message": "policy type or policy lists are not needed for termination. PAP will honor the \"TERMINATED\" state.",
+      "parentUuid": "680300e5_bac2ca0c",
+      "range": {
+        "startLine": 164,
+        "startChar": 4,
+        "endLine": 170,
+        "endChar": 5
+      },
+      "revId": "ae76ba76e227e77700684929b891122822b66c5c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
