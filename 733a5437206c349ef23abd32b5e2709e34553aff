@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12b34ccc_caa2227b",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-30T19:02:15Z",
+      "side": 1,
+      "message": "could leave this as a local variable, as it isn\u0027t needed outside of the constructor",
+      "revId": "733a5437206c349ef23abd32b5e2709e34553aff",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7adcba80_d097f99e",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-30T19:02:15Z",
+      "side": 1,
+      "message": "fyi: don\u0027t have to populate these list fields",
+      "revId": "733a5437206c349ef23abd32b5e2709e34553aff",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
