@@ -125,6 +125,16 @@ public class XacmlState {
     }
 
     /**
+     * Updates the internal state to Terminated.
+     *
+     * @return the current PdpStatus with Terminated state
+     */
+    public PdpStatus terminatePdpMessage() {
+        status.setState(PdpState.TERMINATED);
+        return status;
+    }
+
+    /**
      * Makes a response to the given message, based on the current state.
      *
      * @param message message for which the response should be made
