@@ -46,6 +46,30 @@
       "revId": "ae76ba76e227e77700684929b891122822b66c5c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f5e31b9_13a1a7e0",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-04-30T21:00:46Z",
+      "side": 1,
+      "message": "PdpGroup \u0026 PdpSubgroup is needed to identify the group from which to remove the PdpInstance. And that\u0027s how the PAP heartbeat handling is designed. Also, currently there is no way in DB provider to find the PdpGroup based on PdpName.\nSo it\u0027s better if Pdp sends the current assignment information to PAP.",
+      "parentUuid": "bf2b3106_2dc42bb5",
+      "range": {
+        "startLine": 164,
+        "startChar": 4,
+        "endLine": 170,
+        "endChar": 5
+      },
+      "revId": "ae76ba76e227e77700684929b891122822b66c5c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
