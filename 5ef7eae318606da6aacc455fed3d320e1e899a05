@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "612a00d5_3dbcd63a",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-05-01T12:56:02Z",
+      "side": 1,
+      "message": "To ensure a new request id is generated:\n\n  return new PdpStatus(status);",
+      "revId": "5ef7eae318606da6aacc455fed3d320e1e899a05",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "523692d6_18f10e4a",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
         "patchSetId": 5
@@ -19,6 +36,47 @@
         "endLine": 145,
         "endChar": 56
       },
+      "revId": "5ef7eae318606da6aacc455fed3d320e1e899a05",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a41f4fcb_90039908",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-05-01T12:56:02Z",
+      "side": 1,
+      "message": "good point: in El Alto, we should probably ensure all PDPs properly set success/fail and then the response can leave out the lists of policy types \u0026 policies - PAP won\u0027t need to check them.  We can do that when we add support for add/delete policies.  Created POLICY-1719 for this work.\n\nnote: state change IS always successful, so only the update is in question here.",
+      "parentUuid": "523692d6_18f10e4a",
+      "range": {
+        "startLine": 145,
+        "startChar": 31,
+        "endLine": 145,
+        "endChar": 56
+      },
+      "revId": "5ef7eae318606da6aacc455fed3d320e1e899a05",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d431f11a_6f6c18b1",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-05-01T12:56:02Z",
+      "side": 1,
+      "message": "I guess all three of these could be \"final\"",
       "revId": "5ef7eae318606da6aacc455fed3d320e1e899a05",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
