@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "523692d6_18f10e4a",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-05-01T08:52:56Z",
+      "side": 1,
+      "message": "Looks like we are assuming that PdpUpdate/PdpStateChange operations will always be SUCCESS. Instead it should be decided based on the operation outcome.\n\nFor PAP, if it gets SUCCESS then it will also assume that the operation went fine and no further action is needed. And then there will be conflict between PAP DB data \u0026 Pdp Heartbeat data, which will result in sending another PdpUpdate/PdpStateChange messages.\nHence, it will end up in never ending loop.",
+      "range": {
+        "startLine": 145,
+        "startChar": 31,
+        "endLine": 145,
+        "endChar": 56
+      },
+      "revId": "5ef7eae318606da6aacc455fed3d320e1e899a05",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
