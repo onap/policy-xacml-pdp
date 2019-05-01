@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7573aa09_3f86a938",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-05-01T17:22:50Z",
+      "side": 1,
+      "message": "this line isn\u0027t needed - \"new PdpStatus(status)\" will create a clone of the status, but with a new request id \u0026 timestamp",
+      "revId": "f3432169ebcc7dd3dae66473b8e6c2f092afe989",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
