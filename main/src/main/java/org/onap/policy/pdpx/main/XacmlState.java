@@ -131,7 +131,7 @@ public class XacmlState {
      */
     public PdpStatus terminatePdpMessage() {
         status.setState(PdpState.TERMINATED);
-        return status;
+        return new PdpStatus(status);
     }
 
     /**

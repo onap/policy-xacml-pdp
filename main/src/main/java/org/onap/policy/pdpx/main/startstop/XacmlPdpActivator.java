@@ -22,7 +22,6 @@ package org.onap.policy.pdpx.main.startstop;
 
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Properties;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,11 +31,9 @@ import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
 import org.onap.policy.common.parameters.ParameterService;
-import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.common.utils.services.ServiceManagerContainer;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.enums.PdpMessageType;
-import org.onap.policy.models.pdp.enums.PdpState;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpRuntimeException;
 import org.onap.policy.pdpx.main.XacmlState;
 import org.onap.policy.pdpx.main.comm.XacmlPdpHearbeatPublisher;
@@ -91,8 +88,8 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
         TopicEndpoint.manager.addTopicSinks(topicProperties);
         TopicEndpoint.manager.addTopicSources(topicProperties);
 
-        XacmlPdpHearbeatPublisher heartbeat;
-        TopicSinkClient sinkClient;
+        final XacmlPdpHearbeatPublisher heartbeat;
+        final TopicSinkClient sinkClient;
         final XacmlState state;
 
         try {
