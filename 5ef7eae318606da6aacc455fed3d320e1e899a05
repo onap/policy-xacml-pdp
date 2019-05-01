@@ -66,6 +66,30 @@
     },
     {
       "key": {
+        "uuid": "6c33cca2_a926456a",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-05-01T13:02:54Z",
+      "side": 1,
+      "message": "It depends on Pdp, but state change can also fail. Lets say state change to PASSIVE is received by Pdp but the Pdp is busy performing some tasks or cannot move to PASSIVE and stop processing incoming events.",
+      "parentUuid": "a41f4fcb_90039908",
+      "range": {
+        "startLine": 145,
+        "startChar": 31,
+        "endLine": 145,
+        "endChar": 56
+      },
+      "revId": "5ef7eae318606da6aacc455fed3d320e1e899a05",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d431f11a_6f6c18b1",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
         "patchSetId": 5
