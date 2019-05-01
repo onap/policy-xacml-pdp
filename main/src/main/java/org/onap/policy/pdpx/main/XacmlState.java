@@ -21,6 +21,7 @@
 package org.onap.policy.pdpx.main;
 
 import java.util.Collections;
+import java.util.UUID;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.pdp.concepts.PdpMessage;
 import org.onap.policy.models.pdp.concepts.PdpResponseDetails;
@@ -131,7 +132,8 @@ public class XacmlState {
      */
     public PdpStatus terminatePdpMessage() {
         status.setState(PdpState.TERMINATED);
-        return status;
+        status.setRequestId(UUID.randomUUID().toString());
+        return new PdpStatus(status);
     }
 
     /**

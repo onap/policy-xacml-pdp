@@ -91,8 +91,8 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
         TopicEndpoint.manager.addTopicSinks(topicProperties);
         TopicEndpoint.manager.addTopicSources(topicProperties);
 
-        XacmlPdpHearbeatPublisher heartbeat;
-        TopicSinkClient sinkClient;
+        final XacmlPdpHearbeatPublisher heartbeat;
+        final TopicSinkClient sinkClient;
         final XacmlState state;
 
         try {
