@@ -90,6 +90,30 @@
     },
     {
       "key": {
+        "uuid": "96e85447_96164c70",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-05-01T13:16:13Z",
+      "side": 1,
+      "message": "All the XACML-PDP does when it gets a state change is to record the new state; this can never fail.",
+      "parentUuid": "6c33cca2_a926456a",
+      "range": {
+        "startLine": 145,
+        "startChar": 31,
+        "endLine": 145,
+        "endChar": 56
+      },
+      "revId": "5ef7eae318606da6aacc455fed3d320e1e899a05",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d431f11a_6f6c18b1",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
         "patchSetId": 5
