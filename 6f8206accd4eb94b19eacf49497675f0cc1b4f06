@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "036b1e27_638cbc45",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdCombinedPolicyResultsTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-05-03T18:03:32Z",
+      "side": 1,
+      "message": "Really shouldn\u0027t hit this - as we error out creating the policy if the metadata section is missing.",
+      "range": {
+        "startLine": 208,
+        "startChar": 24,
+        "endLine": 208,
+        "endChar": 100
+      },
+      "revId": "6f8206accd4eb94b19eacf49497675f0cc1b4f06",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "734ca12e_daa8e85d",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdCombinedPolicyResultsTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-05-03T18:03:32Z",
+      "side": 1,
+      "message": "see here",
+      "range": {
+        "startLine": 226,
+        "startChar": 1,
+        "endLine": 226,
+        "endChar": 107
+      },
+      "revId": "6f8206accd4eb94b19eacf49497675f0cc1b4f06",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
