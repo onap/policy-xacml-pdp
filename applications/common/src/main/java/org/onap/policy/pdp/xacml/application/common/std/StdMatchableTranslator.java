@@ -34,9 +34,9 @@ import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.annotations.RequestParser;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -67,6 +67,7 @@ import org.slf4j.LoggerFactory;
 public class StdMatchableTranslator implements ToscaPolicyTranslator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StdMatchableTranslator.class);
+    private static final String POLICY_ID = "policy-id";
 
     public StdMatchableTranslator() {
         super();
@@ -91,6 +92,10 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
         LOGGER.debug("Converting Response {}", xacmlResponse);
         DecisionResponse decisionResponse = new DecisionResponse();
         //
+        // Setup policies
+        //
+        decisionResponse.setPolicies(new HashMap<>());
+        //
         // Iterate through all the results
         //
         for (Result xacmlResult : xacmlResponse.getResults()) {
@@ -99,19 +104,9 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
             //
             if (xacmlResult.getDecision() == Decision.PERMIT) {
                 //
-                // Setup policies
-                //
-                decisionResponse.setPolicies(new ArrayList<>());
-                //
                 // Go through obligations
                 //
                 scanObligations(xacmlResult.getObligations(), decisionResponse);
-            }
-            if (xacmlResult.getDecision() == Decision.NOTAPPLICABLE) {
-                //
-                // There is no policy
-                //
-                decisionResponse.setPolicies(new ArrayList<>());
             }
             if (xacmlResult.getDecision() == Decision.DENY
                     || xacmlResult.getDecision() == Decision.INDETERMINATE) {
@@ -148,7 +143,16 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
                     Gson gson = new Gson();
                     @SuppressWarnings("unchecked")
                     Map<String, Object> result = gson.fromJson(stringContents.toString() ,Map.class);
-                    decisionResponse.getPolicies().add(result);
+                    //
+                    // Find the metadata section
+                    //
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> metadata = (Map<String, Object>) result.get("metadata");
+                    if (metadata != null) {
+                        decisionResponse.getPolicies().put(metadata.get(POLICY_ID).toString(), result);
+                    } else {
+                        LOGGER.error("Missing metadata section in policy contained in obligation.");
+                    }
                 }
             }
         }
@@ -160,7 +164,7 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
         //
         // Policy name should be at the root
         //
-        String policyName = toscaPolicy.getMetadata().get("policy-id");
+        String policyName = toscaPolicy.getMetadata().get(POLICY_ID);
         //
         // Set it as the policy ID
         //
@@ -223,7 +227,7 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
      */
     protected PolicyType fillMetadataSection(PolicyType policy,
             Map<String, String> map) throws ToscaPolicyConversionException {
-        if (! map.containsKey("policy-id")) {
+        if (! map.containsKey(POLICY_ID)) {
             throw new ToscaPolicyConversionException(policy.getPolicyId() + " missing metadata policy-id");
         } else {
             //
