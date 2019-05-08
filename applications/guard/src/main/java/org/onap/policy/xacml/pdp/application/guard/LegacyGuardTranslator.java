@@ -109,7 +109,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         // Check if we were able to create the rule
         //
         if (rule == null) {
-            LOGGER.warn("Failed to create rule");
+            LOGGER.error("Failed to create rule");
             return null;
         }
         //
@@ -124,7 +124,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
 
     @Override
     public Request convertRequest(DecisionRequest request) {
-        LOGGER.debug("Converting Request {}", request);
+        LOGGER.info("Converting Request {}", request);
         try {
             return RequestParser.parseRequest(LegacyGuardPolicyRequest.createInstance(request));
         } catch (IllegalArgumentException | IllegalAccessException | DataTypeException e) {
@@ -138,7 +138,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
 
     @Override
     public DecisionResponse convertResponse(Response xacmlResponse) {
-        LOGGER.debug("Converting Response {}", xacmlResponse);
+        LOGGER.info("Converting Response {}", xacmlResponse);
         DecisionResponse decisionResponse = new DecisionResponse();
         //
         // Iterate through all the results
@@ -280,7 +280,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         //
         Integer limit = parseInteger(properties.get("limit").toString());
         if (limit == null) {
-            LOGGER.debug("Must have a limit value for frequency guard policy to be created");
+            LOGGER.error("Must have a limit value for frequency guard policy to be created");
             return null;
         }
         //

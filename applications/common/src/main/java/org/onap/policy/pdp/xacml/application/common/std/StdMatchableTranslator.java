@@ -75,7 +75,7 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
 
     @Override
     public Request convertRequest(DecisionRequest request) {
-        LOGGER.debug("Converting Request {}", request);
+        LOGGER.info("Converting Request {}", request);
         try {
             return RequestParser.parseRequest(StdMatchablePolicyRequest.createInstance(request));
         } catch (IllegalArgumentException | IllegalAccessException | DataTypeException e) {
@@ -89,7 +89,7 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
 
     @Override
     public DecisionResponse convertResponse(Response xacmlResponse) {
-        LOGGER.debug("Converting Response {}", xacmlResponse);
+        LOGGER.info("Converting Response {}", xacmlResponse);
         DecisionResponse decisionResponse = new DecisionResponse();
         //
         // Setup policies
@@ -122,9 +122,9 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
 
     protected void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse) {
         for (Obligation obligation : obligations) {
-            LOGGER.debug("Obligation: {}", obligation);
+            LOGGER.info("Obligation: {}", obligation);
             for (AttributeAssignment assignment : obligation.getAttributeAssignments()) {
-                LOGGER.debug("Attribute Assignment: {}", assignment);
+                LOGGER.info("Attribute Assignment: {}", assignment);
                 //
                 // We care about the content attribute
                 //
@@ -134,8 +134,8 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
                     // The contents are in Json form
                     //
                     Object stringContents = assignment.getAttributeValue().getValue();
-                    if (LOGGER.isDebugEnabled()) {
-                        LOGGER.debug("Policy contents: {}{}", System.lineSeparator(), stringContents);
+                    if (LOGGER.isInfoEnabled()) {
+                        LOGGER.info("Policy contents: {}{}", System.lineSeparator(), stringContents);
                     }
                     //
                     // Let's parse it into a map using Gson
@@ -269,7 +269,7 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
             // Find policyScope and policyType
             //
             if (entrySet.getKey().equals("policyScope")) {
-                LOGGER.debug("Found policyScope: {}", entrySet.getValue());
+                LOGGER.info("Found policyScope: {}", entrySet.getValue());
                 if (entrySet.getValue() instanceof Collection) {
                     targetType.getAnyOf().add(generateMatches((Collection<Object>) entrySet.getValue(),
                             ToscaDictionary.ID_RESOURCE_POLICY_SCOPE_PROPERTY));
@@ -279,7 +279,7 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
                 }
             }
             if (entrySet.getKey().equals("policyType")) {
-                LOGGER.debug("Found policyType: {}", entrySet.getValue());
+                LOGGER.info("Found policyType: {}", entrySet.getValue());
                 if (entrySet.getValue() instanceof Collection) {
                     targetType.getAnyOf().add(generateMatches((Collection<Object>) entrySet.getValue(),
                             ToscaDictionary.ID_RESOURCE_POLICY_TYPE_PROPERTY));
@@ -320,8 +320,8 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
         //
         // Convert the YAML Policy to JSON Object
         //
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("JSON Optimization Policy {}{}", System.lineSeparator(), jsonPolicy);
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("JSON Optimization Policy {}{}", System.lineSeparator(), jsonPolicy);
         }
         //
         // Create an AttributeValue for it

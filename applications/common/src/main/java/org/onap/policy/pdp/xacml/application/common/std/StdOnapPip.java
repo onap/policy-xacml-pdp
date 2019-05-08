@@ -80,7 +80,7 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
     @Override
     public void configure(String id, Properties properties) throws PIPException {
         super.configure(id, properties);
-        logger.debug("Configuring historyDb PIP {}", properties);
+        logger.info("Configuring historyDb PIP {}", properties);
         this.properties = properties;
     }
 

@@ -91,7 +91,7 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
      */
     public OnapPolicyFinderFactory(Properties properties) {
         super(properties);
-        logger.debug("Constructed using properties {}", properties);
+        logger.info("Constructed using properties {}", properties);
         //
         // Save our properties
         //
@@ -220,7 +220,7 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
 
     protected synchronized void init() {
         if (this.needsInit) {
-            logger.debug("Initializing OnapPolicyFinderFactory Properties ");
+            logger.info("Initializing OnapPolicyFinderFactory Properties ");
 
             //
             // Check for property that combines root policies into one policyset
@@ -265,8 +265,8 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
                 this.rootPolicies       = this.getPolicyDefs(XACMLProperties.PROP_ROOTPOLICIES);
             }
             this.referencedPolicies = this.getPolicyDefs(XACMLProperties.PROP_REFERENCEDPOLICIES);
-            logger.debug("Root Policies: {}", this.rootPolicies.size());
-            logger.debug("Referenced Policies: {}", this.referencedPolicies.size());
+            logger.info("Root Policies: {}", this.rootPolicies.size());
+            logger.info("Referenced Policies: {}", this.referencedPolicies.size());
             this.needsInit  = false;
         }
     }

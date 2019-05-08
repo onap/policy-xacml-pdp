@@ -129,7 +129,7 @@ public class StdCombinedPolicyResultsTranslator implements ToscaPolicyTranslator
 
     @Override
     public Request convertRequest(DecisionRequest request) {
-        LOGGER.debug("Converting Request {}", request);
+        LOGGER.info("Converting Request {}", request);
         try {
             return RequestParser.parseRequest(StdCombinedPolicyRequest.createInstance(request));
         } catch (IllegalArgumentException | IllegalAccessException | DataTypeException e) {
@@ -176,9 +176,9 @@ public class StdCombinedPolicyResultsTranslator implements ToscaPolicyTranslator
 
     protected void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse) {
         for (Obligation obligation : obligations) {
-            LOGGER.debug("Obligation: {}", obligation);
+            LOGGER.info("Obligation: {}", obligation);
             for (AttributeAssignment assignment : obligation.getAttributeAssignments()) {
-                LOGGER.debug("Attribute Assignment: {}", assignment);
+                LOGGER.info("Attribute Assignment: {}", assignment);
                 //
                 // We care about the content attribute
                 //
@@ -188,8 +188,8 @@ public class StdCombinedPolicyResultsTranslator implements ToscaPolicyTranslator
                     // The contents are in Json form
                     //
                     Object stringContents = assignment.getAttributeValue().getValue();
-                    if (LOGGER.isDebugEnabled()) {
-                        LOGGER.debug("DCAE contents: {}{}", System.lineSeparator(), stringContents);
+                    if (LOGGER.isInfoEnabled()) {
+                        LOGGER.info("DCAE contents: {}{}", System.lineSeparator(), stringContents);
                     }
                     //
                     // Let's parse it into a map using Gson
@@ -299,8 +299,8 @@ public class StdCombinedPolicyResultsTranslator implements ToscaPolicyTranslator
         //
         // Convert the YAML Policy to JSON Object
         //
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("JSON DCAE Policy {}{}", System.lineSeparator(), jsonPolicy);
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("JSON DCAE Policy {}{}", System.lineSeparator(), jsonPolicy);
         }
         //
         // Create an AttributeValue for it

@@ -367,14 +367,14 @@ public class XacmlPolicyUtils {
      * @throws IOException If unable to read file
      */
     public static Properties loadXacmlProperties(Path propertyPath) throws IOException {
-        LOGGER.debug("Loading xacml properties {}", propertyPath);
+        LOGGER.info("Loading xacml properties {}", propertyPath);
         try (InputStream is = Files.newInputStream(propertyPath)) {
             Properties properties = new Properties();
             properties.load(is);
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Loaded xacml properties {} {}", System.lineSeparator(), properties);
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Loaded xacml properties {} {}", System.lineSeparator(), properties);
                 for (Entry<Object, Object> entrySet : properties.entrySet()) {
-                    LOGGER.debug("{} -> {}", entrySet.getKey(), entrySet.getValue());
+                    LOGGER.info("{} -> {}", entrySet.getKey(), entrySet.getValue());
                 }
             }
             return properties;
@@ -387,8 +387,8 @@ public class XacmlPolicyUtils {
      * @throws IOException If unable to store the file.
      */
     public static void storeXacmlProperties(Properties properties, Path propertyPath) throws IOException {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Storing xacml properties {} {} {}", properties, System.lineSeparator(), propertyPath);
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Storing xacml properties {} {} {}", properties, System.lineSeparator(), propertyPath);
         }
         try (OutputStream os = Files.newOutputStream(propertyPath)) {
             String strComments = "#";
@@ -443,7 +443,7 @@ public class XacmlPolicyUtils {
                 // Get a file
                 //
                 Path rootPath = Paths.get(properties.getProperty(root + DOT_FILE_SUFFIX));
-                LOGGER.debug("Root file {} {}", rootPath, rootPath.getFileName());
+                LOGGER.info("Root file {} {}", rootPath, rootPath.getFileName());
                 //
                 // Construct new path for the root policy
                 //
@@ -466,7 +466,7 @@ public class XacmlPolicyUtils {
                 // Get a file
                 //
                 Path refPath = Paths.get(properties.getProperty(referenced + DOT_FILE_SUFFIX));
-                LOGGER.debug("Referenced file {} {}", refPath, refPath.getFileName());
+                LOGGER.info("Referenced file {} {}", refPath, refPath.getFileName());
                 //
                 // Construct new path for the root policy
                 //

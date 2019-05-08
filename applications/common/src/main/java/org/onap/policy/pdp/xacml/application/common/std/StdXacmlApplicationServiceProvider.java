@@ -107,7 +107,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
         //
         try {
             pdpProperties = XacmlPolicyUtils.loadXacmlProperties(XacmlPolicyUtils.getPropertiesPath(pathForData));
-            LOGGER.debug("{}", pdpProperties);
+            LOGGER.info("{}", pdpProperties);
         } catch (IOException e) {
             throw new XacmlApplicationException("Failed to load xacml.propertis", e);
         }
@@ -151,8 +151,8 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             // Maybe check for an error
             //
             XACMLPolicyWriter.writePolicyFile(refPath, xacmlPolicy);
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Xacml Policy is {}{}", System.lineSeparator(), new String(Files.readAllBytes(refPath)));
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Xacml Policy is {}{}", System.lineSeparator(), new String(Files.readAllBytes(refPath)));
             }
             //
             // Add root policy to properties object
@@ -282,7 +282,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
      * @throws IOException If unable to read file
      */
     protected synchronized Properties loadXacmlProperties() throws IOException {
-        LOGGER.debug("Loading xacml properties {}", pathForData);
+        LOGGER.info("Loading xacml properties {}", pathForData);
         try (InputStream is = Files.newInputStream(pathForData)) {
             Properties properties = new Properties();
             properties.load(is);
