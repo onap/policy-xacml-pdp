@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d134a42b_eee17f6f",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/policy-pdpx.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-05-09T20:10:04Z",
+      "side": 1,
+      "message": "The directory here should be the same directory that you use in line 59 for config.json.\nBetter to quote the variable string too.",
+      "revId": "1e795bea4c10a77865c3804c6d17f8b45b4f2c0d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54070806_81541c4a",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/policy-pdpx.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-05-09T20:10:04Z",
+      "side": 1,
+      "message": "Add the \"$\" to XACML_FILE.",
+      "revId": "1e795bea4c10a77865c3804c6d17f8b45b4f2c0d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
