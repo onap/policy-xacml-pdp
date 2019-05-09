@@ -48,6 +48,11 @@ if [ -z "$PROP_FILE" ]
     PROP_FILE="$POLICY_PDPX_HOME/etc/topic.properties"
 fi
 
+XACML_FILE=$POLICY_PDPX_HOME/etc/xacml.properties
+if [ -f "XACML_FILE" ]; then
+	cp -f $XACML_FILE $POLICY_PDPX_HOME/apps/guard/
+fi
+
 echo "Policy Xacml PDP config file: $CONFIG_FILE"
 echo "Policy Xacml PDP topic properties file: $PROP_FILE"
 
