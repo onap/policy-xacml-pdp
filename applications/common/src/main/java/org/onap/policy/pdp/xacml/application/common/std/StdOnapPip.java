@@ -35,6 +35,7 @@ import com.att.research.xacml.std.pip.StdPIPRequest;
 import com.att.research.xacml.std.pip.engines.StdConfigurableEngine;
 
 import java.math.BigInteger;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -81,6 +82,11 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
     public void configure(String id, Properties properties) throws PIPException {
         super.configure(id, properties);
         logger.info("Configuring historyDb PIP {}", properties);
+
+        String decodedPassword = new String(Base64.getDecoder()
+                   .decode(properties.getProperty("javax.persistence.jdbc.password")));
+        properties.setProperty("javax.persistence.jdbc.password", decodedPassword);
+
         this.properties = properties;
     }
 
