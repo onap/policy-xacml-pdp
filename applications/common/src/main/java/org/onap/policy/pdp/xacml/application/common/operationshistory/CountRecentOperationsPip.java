@@ -33,6 +33,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Properties;
 
@@ -70,6 +71,14 @@ public class CountRecentOperationsPip extends StdOnapPip {
             //
             Properties emProperties = new Properties();
             emProperties.putAll(properties);
+            
+            //
+            // Need to decode the password before creating the EntityManager
+            //
+            String decodedPassword = new String(Base64.getDecoder()
+                    .decode(emProperties.getProperty("javax.persistence.jdbc.password")));
+            emProperties.setProperty("javax.persistence.jdbc.password", decodedPassword);
+            
             //
             // Create the entity manager factory
             //
