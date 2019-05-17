@@ -46,6 +46,7 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
     private static final String ONAP_MONITORING_CDAP = "onap.policies.monitoring.cdap.tca.hi.lo.app";
     private static final String ONAP_MONITORING_APPSERVER =
             "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server";
+    private static final String ONAP_MONITORING_SONHANDLER = "onap.policies.monitoring.docker.sonhandler.app";
     private static final String ONAP_MONITORING_DERIVED_POLICY_TYPE = "onap.policies.monitoring";
     private static final String VERSION_100 = "1.0.0";
 
@@ -62,6 +63,7 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
         supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_BASE_POLICY_TYPE, VERSION_100));
         supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_CDAP, VERSION_100));
         supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_APPSERVER, VERSION_100));
+        supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_SONHANDLER, VERSION_100));
     }
 
     @Override
@@ -89,6 +91,7 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
         return (policyTypeId.getName().equals(ONAP_MONITORING_BASE_POLICY_TYPE)
                 || policyTypeId.getName().equals(ONAP_MONITORING_CDAP)
                 || policyTypeId.getName().equals(ONAP_MONITORING_APPSERVER)
+                || policyTypeId.getName().equals(ONAP_MONITORING_SONHANDLER)
                 || policyTypeId.getName().startsWith(ONAP_MONITORING_DERIVED_POLICY_TYPE));
     }
 
