@@ -16,6 +16,24 @@
       "revId": "0869534a586cad3ca2d55b4c7e68b0cddbce8998",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9a6b183_e4d798bb",
+        "filename": "applications/monitoring/src/main/java/org/onap/policy/xacml/pdp/application/monitoring/MonitoringPdpApplication.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-05-17T13:36:23Z",
+      "side": 1,
+      "message": "Yes - let\u0027s ask them to lower case to follow convention.",
+      "parentUuid": "368d1b4f_4628d8a3",
+      "revId": "0869534a586cad3ca2d55b4c7e68b0cddbce8998",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
