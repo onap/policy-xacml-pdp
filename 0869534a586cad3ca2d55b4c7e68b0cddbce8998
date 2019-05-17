@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "368d1b4f_4628d8a3",
+        "filename": "applications/monitoring/src/main/java/org/onap/policy/xacml/pdp/application/monitoring/MonitoringPdpApplication.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-05-17T13:31:27Z",
+      "side": 1,
+      "message": "Note that lines 46 and 47 uses lower case \u0027m\u0027 in \"monitoring\".   Line 49 uses \u0027M\u0027 instead.   Should it be changed to use the same convention?",
+      "revId": "0869534a586cad3ca2d55b4c7e68b0cddbce8998",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
