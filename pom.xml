@@ -25,13 +25,13 @@
     <parent>
         <groupId>org.onap.policy.parent</groupId>
         <artifactId>integration</artifactId>
-        <version>2.1.0</version>
+        <version>3.0.0-SNAPSHOT</version>
         <relativePath />
     </parent>
 
     <groupId>org.onap.policy.xacml-pdp</groupId>
     <artifactId>policy-xacml-pdp</artifactId>
-    <version>2.0.2-SNAPSHOT</version>
+    <version>2.1.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -45,8 +45,8 @@
         <sonar.jacoco.itReportPath>${project.basedir}/../target/code-coverage/jacoco-it.exec</sonar.jacoco.itReportPath>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         
-        <policy.common.version>1.4.0</policy.common.version>
-        <policy.models.version>2.0.0</policy.models.version>
+        <policy.common.version>1.5.0-SNAPSHOT</policy.common.version>
+        <policy.models.version>2.1.0-SNAPSHOT</policy.models.version>
     </properties>
 
     <modules>
