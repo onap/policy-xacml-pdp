@@ -33,9 +33,9 @@ else
 fi
 
 if [ "$#" -ge 2 ]; then
-	PROP_FILE=$2
+    PROP_FILE=$2
 else
-	PROP_FILE=${PROP_FILE}
+    PROP_FILE=${PROP_FILE}
 fi
 
 if [ -z "$CONFIG_FILE" ]
@@ -51,6 +51,9 @@ fi
 if [[ -f ${POLICY_HOME}/etc/mounted/xacml.properties ]]; then
     cp -f "${POLICY_HOME}"/etc/mounted/xacml.properties  "${POLICY_HOME}"/apps/guard/
 fi
+
+# Create operationshistory table
+./create-guard-table.sh
 
 echo "Policy Xacml PDP config file: $CONFIG_FILE"
 echo "Policy Xacml PDP topic properties file: $PROP_FILE"
