@@ -16,6 +16,8 @@ COPY /maven/* /packages
 RUN tar xvfz /packages/policy-xacmlpdp.tar.gz --directory ${POLICY_HOME} && \
     rm /packages/policy-xacmlpdp.tar.gz
 
+RUN apk add mariadb-client
+
 WORKDIR ${POLICY_HOME}
 COPY policy-pdpx.sh  bin/.
 RUN chown -R policy:policy * && chmod +x bin/*.sh
