@@ -60,6 +60,24 @@
             <lineEnding>keep</lineEnding>
         </fileSet>
         <fileSet>
+            <directory>${project.basedir}/src/main/resources/mysql/bin
+            </directory>
+            <includes>
+                <include>*.sh</include>
+            </includes>
+            <outputDirectory>/mysql/bin</outputDirectory>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/mysql/sql
+            </directory>
+            <includes>
+                <include>*.sql</include>
+            </includes>
+            <outputDirectory>/mysql/sql</outputDirectory>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
+        <fileSet>
             <directory>${project.basedir}/src/main/resources/apps/guard
             </directory>
             <includes>
