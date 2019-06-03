@@ -9,12 +9,11 @@ ENV POLICY_LOGS ${POLICY_LOGS}
 ENV POLICY_HOME=/opt/app/policy/pdpx
 
 RUN mkdir -p ${POLICY_HOME} ${POLICY_LOGS} ${POLICY_HOME}/etc/ssl ${POLICY_HOME}/bin ${POLICY_HOME}/apps && \
-    chown -R policy:policy ${POLICY_HOME} ${POLICY_LOGS}
+    chown -R policy:policy ${POLICY_HOME} ${POLICY_LOGS} && mkdir /packages
 
-RUN mkdir /packages
 COPY /maven/* /packages
 RUN tar xvfz /packages/policy-xacmlpdp.tar.gz --directory ${POLICY_HOME} && \
-    rm /packages/policy-xacmlpdp.tar.gz
+    rm /packages/policy-xacmlpdp.tar.gz && apk add --no-cache mariadb-client
 
 WORKDIR ${POLICY_HOME}
 COPY policy-pdpx.sh  bin/.
