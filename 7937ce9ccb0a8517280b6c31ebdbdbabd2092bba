@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d7d1fd6_307c930f",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-06-04T14:32:07Z",
+      "side": 1,
+      "message": "Better to concatenate RUN command in line 11 and line 14 onto 1 RUN line with \u0026\u0026 to avoid one layer.",
+      "revId": "7937ce9ccb0a8517280b6c31ebdbdbabd2092bba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f2ae983_db190db8",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-06-04T14:32:07Z",
+      "side": 1,
+      "message": "Forgot to mention to add \"--no-cache\" to apk.\nBetter move line 19 together to line 10, see comment above.  It can be a standalone line or put it together with 11 (to avoid one layer in the image).   Better for clarity to put it standalone just for clarity separating OS installation operations, as we may want to move it out in the future.\n\nRUN apk add --no-cache mariadb-client",
+      "revId": "7937ce9ccb0a8517280b6c31ebdbdbabd2092bba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03143eb0_35dcb682",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/policy-pdpx.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-06-04T14:32:07Z",
+      "side": 1,
+      "message": "It may be better for maintenance in the future and evolution of the code to separate this into another script that can be placed in the bin/ directory of the application.    The script could be very simple and just look for sql files in a different location to start with. From here you can just invoke the script.   I am ok if you leave it here for the short term, but I believe it would be better to pull it out from the start.",
+      "revId": "7937ce9ccb0a8517280b6c31ebdbdbabd2092bba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
