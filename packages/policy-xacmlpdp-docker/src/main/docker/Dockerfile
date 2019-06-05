@@ -18,7 +18,7 @@ RUN tar xvfz /packages/policy-xacmlpdp.tar.gz --directory ${POLICY_HOME} && \
 
 WORKDIR ${POLICY_HOME}
 COPY policy-pdpx.sh  bin/.
-RUN chown -R policy:policy * && chmod +x bin/*.sh
+RUN chown -R policy:policy * && chmod 755 bin/*.sh
 
 USER policy
 WORKDIR ${POLICY_HOME}/bin
