@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "94c27845_4d18d5f4",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/create-guard-table.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-06-06T15:40:39Z",
+      "side": 1,
+      "message": "I don\u0027t think bash allows spaces around the \"\u003d\"",
+      "revId": "9fda5ad7b1b3ebdc2290578377f5cb7e333b47ab",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
