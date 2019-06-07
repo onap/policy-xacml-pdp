@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b05892b7_807a8b0c",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/Dockerfile",
+        "patchSetId": 6
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-06-07T15:02:11Z",
+      "side": 1,
+      "message": "I think it is a little better to move the apk-add to line 10 in its own line, to keep OS install separated from application install.   This is just a cosmetic comment, just for readability and organization.   No need to implement right now, but if you have a chance.",
+      "revId": "669cd8b2351c1342e0e3bd9d8c6030e481250440",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93f3f2af_bb10c568",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/create-guard-table.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-06-07T15:02:11Z",
+      "side": 1,
+      "message": "I guess the \"policydb\" , \"policy_user\" x 2 are variables, \"policydb\" applies to OOM installations.  Not sure if will break your CSITs?   Ideally, if this is provisioned in the config.json, you\u0027ll get it from there ..   The work could be postponed but would be necessary.",
+      "revId": "669cd8b2351c1342e0e3bd9d8c6030e481250440",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
