@@ -70,7 +70,7 @@ public class XacmlPdpRestServer implements Startable {
             //
             for (final HttpServletServer server : servers) {
                 if (server.isAaf()) {
-                    server.addFilterClass(null, XacmlPdpAafFilter.class.getCanonicalName());
+                    server.addFilterClass(null, XacmlPdpAafFilter.class.getName());
                 }
                 server.start();
             }
@@ -95,7 +95,7 @@ public class XacmlPdpRestServer implements Startable {
         props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".port",
                 Integer.toString(restServerParameters.getPort()));
         props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".restClasses",
-                XacmlPdpRestController.class.getCanonicalName());
+                XacmlPdpRestController.class.getName());
         props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".managed", "false");
         props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".swagger", "true");
         props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".userName",
