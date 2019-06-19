@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "64c24864_2de8046c",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/populate_operationshistory.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-06-19T16:26:56Z",
+      "side": 1,
+      "message": "Guard type is irrelevant - why is this even here? The operations history for adding operations to it regardless of any potential guard policy. I would remove all this.",
+      "range": {
+        "startLine": 26,
+        "startChar": 3,
+        "endLine": 26,
+        "endChar": 18
+      },
+      "revId": "4e1d4d33c079d4bc94eb35011595faa4b3c6fb9e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b3f03eda_6b8a0832",
         "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/populate_operationshistory.sh",
         "patchSetId": 2
