@@ -53,12 +53,15 @@ public class XacmlPdpStatisticsManager {
     }
 
     /**
-     * Method to update the xacml pdp total policies count.
+     * Method to set the xacml pdp total policies count. This
+     * doesn't really increment, it depends on the applications
+     * that are loaded. Which can be dynamic.
      *
      * @return the total
      */
-    public long updateTotalPoliciesCount() {
-        return ++totalPoliciesCount;
+    public long setTotalPolicyCount(long newCount) {
+        totalPoliciesCount = newCount;
+        return totalPoliciesCount;
     }
 
     /**

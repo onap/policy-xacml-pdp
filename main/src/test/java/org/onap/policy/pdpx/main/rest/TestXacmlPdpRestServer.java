@@ -44,6 +44,8 @@ public class TestXacmlPdpRestServer extends CommonRest {
     private static final String HEALTHCHECK_ENDPOINT = "healthcheck";
     private static final String STATISTICS_ENDPOINT = "statistics";
 
+    private int nupdates = 0;
+
     @Test
     public void testHealthCheckSuccess() throws Exception {
         LOGGER.info("***************************** Running testHealthCheckSuccess *****************************");
@@ -111,7 +113,9 @@ public class TestXacmlPdpRestServer extends CommonRest {
 
     private void updateXacmlPdpStatistics() {
         XacmlPdpStatisticsManager stats = XacmlPdpStatisticsManager.getCurrent();
-        stats.updateTotalPoliciesCount();
+        ++nupdates;
+        stats.setTotalPolicyCount(nupdates);
+        stats.setTotalPolicyTypesCount(nupdates);
         stats.updatePermitDecisionsCount();
         stats.updateDenyDecisionsCount();
         stats.updateIndeterminantDecisionsCount();
@@ -121,6 +125,7 @@ public class TestXacmlPdpRestServer extends CommonRest {
     private void validateStatisticsReport(final StatisticsReport report, final int count, final int code) {
         assertEquals(code, report.getCode());
         assertEquals(count, report.getTotalPoliciesCount());
+        assertEquals(count, report.getTotalPolicyTypesCount());
         assertEquals(count, report.getPermitDecisionsCount());
         assertEquals(count, report.getDenyDecisionsCount());
         assertEquals(count, report.getIndeterminantDecisionsCount());

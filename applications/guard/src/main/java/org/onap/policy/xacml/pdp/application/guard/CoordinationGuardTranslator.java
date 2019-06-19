@@ -72,6 +72,7 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
         Map<String, Object> policyProps = toscaPolicy.getProperties();
         LOGGER.debug("path = {}", coordinationFunctionPath);
         LOGGER.debug("props = {}", policyProps);
+        @SuppressWarnings("unchecked")
         List<String> controlLoop = (List<String>) policyProps.get("controlLoop");
         CoordinationDirective cd = new CoordinationDirective();
         cd.setCoordinationFunction(type);

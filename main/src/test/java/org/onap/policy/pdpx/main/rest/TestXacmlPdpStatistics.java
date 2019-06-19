@@ -37,6 +37,8 @@ public class TestXacmlPdpStatistics extends CommonRest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestXacmlPdpStatistics.class);
 
+    private int nupdates = 0;
+
     @Test
     public void testXacmlPdpStatistics_200() throws Exception {
         LOGGER.info("*************************** Running testXacmlPdpStatistics_200 ***************************");
@@ -64,7 +66,9 @@ public class TestXacmlPdpStatistics extends CommonRest {
     private void updateXacmlPdpStatistics() {
         XacmlPdpStatisticsManager stats = XacmlPdpStatisticsManager.getCurrent();
 
-        stats.updateTotalPoliciesCount();
+        ++nupdates;
+        stats.setTotalPolicyCount(nupdates);
+        stats.setTotalPolicyTypesCount(nupdates);
         stats.updatePermitDecisionsCount();
         stats.updateDenyDecisionsCount();
         stats.updateIndeterminantDecisionsCount();
@@ -74,6 +78,7 @@ public class TestXacmlPdpStatistics extends CommonRest {
     private void validateReport(final StatisticsReport report, final int count, final int code) {
         assertEquals(code, report.getCode());
         assertEquals(count, report.getTotalPoliciesCount());
+        assertEquals(count, report.getTotalPolicyTypesCount());
         assertEquals(count, report.getPermitDecisionsCount());
         assertEquals(count, report.getDenyDecisionsCount());
         assertEquals(count, report.getIndeterminantDecisionsCount());

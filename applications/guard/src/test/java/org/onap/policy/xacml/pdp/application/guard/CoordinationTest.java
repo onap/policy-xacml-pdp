@@ -70,6 +70,7 @@ public class CoordinationTest {
     private static File propertiesFile;
     private static XacmlApplicationServiceProvider service;
     private static DecisionRequest requestCl1Node1;
+    @SuppressWarnings("unused")
     private static DecisionRequest requestCl1Node2;
     private static DecisionRequest requestCl2Node1;
     private static DecisionRequest requestCl2Node2;

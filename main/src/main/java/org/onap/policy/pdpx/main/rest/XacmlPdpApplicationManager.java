@@ -212,6 +212,15 @@ public class XacmlPdpApplicationManager {
         return types;
     }
 
+    /**
+     * Gets the number of policies currently deployed.
+     *
+     * @return the number of policies currently deployed
+     */
+    public int getPolicyCount() {
+        return mapLoadedPolicies.size();
+    }
+
     private void initializeApplicationPath(Path basePath, XacmlApplicationServiceProvider application)
             throws XacmlApplicationException {
         //

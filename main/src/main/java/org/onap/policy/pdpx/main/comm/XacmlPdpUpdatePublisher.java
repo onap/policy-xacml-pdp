@@ -29,6 +29,7 @@ import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.pdpx.main.XacmlState;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
+import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,6 +79,12 @@ public class XacmlPdpUpdatePublisher {
             if (!deployedPolicies.contains(policy)) {
                 appManager.loadDeployedPolicy(policy);
             }
+        }
+
+        // update the policy count statistic
+        XacmlPdpStatisticsManager stats = XacmlPdpStatisticsManager.getCurrent();
+        if (stats != null) {
+            stats.setTotalPolicyCount(appManager.getPolicyCount());
         }
 
         sendPdpUpdate(state.updateInternalState(message));

@@ -766,6 +766,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         return theInt;
     }
 
+    @SuppressWarnings("unused")
     private static AdviceExpressionsType generateRequestIdAdvice() {
         AdviceExpressionType adviceExpression = new AdviceExpressionType();
         adviceExpression.setAppliesTo(EffectType.PERMIT);
