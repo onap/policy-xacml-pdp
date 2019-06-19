@@ -7,11 +7,10 @@ ARG POLICY_LOGS=/var/log/onap/policy/pdpx
 ENV POLICY_LOGS ${POLICY_LOGS}
 
 ENV POLICY_HOME=/opt/app/policy/pdpx
-
+RUN apk add --no-cache mariadb-client
 RUN mkdir -p ${POLICY_HOME} ${POLICY_LOGS} ${POLICY_HOME}/etc/ssl ${POLICY_HOME}/bin ${POLICY_HOME}/apps && \
-    chown -R policy:policy ${POLICY_HOME} ${POLICY_LOGS}
+    chown -R policy:policy ${POLICY_HOME} ${POLICY_LOGS} && mkdir /packages
 
-RUN mkdir /packages
 COPY /maven/* /packages
 RUN tar xvfz /packages/policy-xacmlpdp.tar.gz --directory ${POLICY_HOME} && \
     rm /packages/policy-xacmlpdp.tar.gz
