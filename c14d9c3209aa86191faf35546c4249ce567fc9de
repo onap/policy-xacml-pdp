@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "41618c06_f863ccdd",
+        "filename": "testsuites/guard-testing-utils/mysql/sql/vDNS.policy_guard_frequency.sql",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-06-20T17:45:54Z",
+      "side": 1,
+      "message": "I would still prefer to not tie anything to a use case or a type of policy. Can we just simply rename this example.sql?",
+      "revId": "c14d9c3209aa86191faf35546c4249ce567fc9de",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
