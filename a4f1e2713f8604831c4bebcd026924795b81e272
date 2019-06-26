@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6a4c7bbe_4daf3a00",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/policy-pdpx.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-06-26T14:03:00Z",
+      "side": 1,
+      "message": "Ignore this",
+      "parentUuid": "d995116b_3624322e",
+      "range": {
+        "startLine": 23,
+        "startChar": 10,
+        "endLine": 23,
+        "endChar": 24
+      },
+      "revId": "a4f1e2713f8604831c4bebcd026924795b81e272",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19982546_5b275e95",
         "filename": "packages/policy-xacmlpdp-docker/src/main/docker/policy-pdpx.sh",
         "patchSetId": 1
@@ -41,6 +65,53 @@
         "startChar": 12,
         "endLine": 25,
         "endChar": 26
+      },
+      "revId": "a4f1e2713f8604831c4bebcd026924795b81e272",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "339b26ef_92f77fb9",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/policy-pdpx.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-06-26T14:03:00Z",
+      "side": 1,
+      "message": "Ignore this",
+      "parentUuid": "19982546_5b275e95",
+      "range": {
+        "startLine": 25,
+        "startChar": 12,
+        "endLine": 25,
+        "endChar": 26
+      },
+      "revId": "a4f1e2713f8604831c4bebcd026924795b81e272",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6d3789f_378b605a",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/policy-pdpx.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-06-26T14:03:00Z",
+      "side": 1,
+      "message": "As a good practice, add curly braces in shell scripts.\nThe comment applies to multiple places below.",
+      "range": {
+        "startLine": 43,
+        "startChar": 17,
+        "endLine": 43,
+        "endChar": 29
       },
       "revId": "a4f1e2713f8604831c4bebcd026924795b81e272",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
