@@ -2,6 +2,7 @@
 #
 # ============LICENSE_START=======================================================
 #  Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+#  Modifications Copyright (C) 2019 Nordix Foundation.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,7 +20,6 @@
 # ============LICENSE_END=========================================================
 #
 JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk/
-POLICY_PDPX_HOME=/opt/app/policy/pdpx
 KEYSTORE="${POLICY_HOME}/etc/ssl/policy-keystore"
 KEYSTORE_PASSWD="Pol1cy_0nap"
 TRUSTSTORE="${POLICY_HOME}/etc/ssl/policy-truststore"
@@ -40,12 +40,12 @@ fi
 
 if [ -z "$CONFIG_FILE" ]
   then
-    CONFIG_FILE="$POLICY_PDPX_HOME/etc/defaultConfig.json"
+    CONFIG_FILE="$POLICY_HOME/etc/defaultConfig.json"
 fi
 
 if [ -z "$PROP_FILE" ]
   then
-    PROP_FILE="$POLICY_PDPX_HOME/etc/topic.properties"
+    PROP_FILE="$POLICY_HOME/etc/topic.properties"
 fi
 
 if [[ -f ${POLICY_HOME}/etc/mounted/xacml.properties ]]; then
@@ -58,4 +58,4 @@ ${POLICY_HOME}/mysql/bin/create-guard-table.sh
 echo "Policy Xacml PDP config file: $CONFIG_FILE"
 echo "Policy Xacml PDP topic properties file: $PROP_FILE"
 
-$JAVA_HOME/bin/java -cp "$POLICY_PDPX_HOME/etc:$POLICY_PDPX_HOME/lib/*" -Djavax.net.ssl.keyStore="$KEYSTORE" -Djavax.net.ssl.keyStorePassword="$KEYSTORE_PASSWD" -Djavax.net.ssl.trustStore="$TRUSTSTORE" -Djavax.net.ssl.trustStorePassword="$TRUSTSTORE_PASSWD" org.onap.policy.pdpx.main.startstop.Main -c $CONFIG_FILE -p $PROP_FILE
+$JAVA_HOME/bin/java -cp "$POLICY_HOME/etc:$POLICY_HOME/lib/*" -Djavax.net.ssl.keyStore="$KEYSTORE" -Djavax.net.ssl.keyStorePassword="$KEYSTORE_PASSWD" -Djavax.net.ssl.trustStore="$TRUSTSTORE" -Djavax.net.ssl.trustStorePassword="$TRUSTSTORE_PASSWD" org.onap.policy.pdpx.main.startstop.Main -c $CONFIG_FILE -p $PROP_FILE
