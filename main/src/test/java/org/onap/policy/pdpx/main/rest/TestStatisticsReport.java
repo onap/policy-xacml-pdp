@@ -29,7 +29,7 @@ import com.openpojo.validation.test.impl.GetterTester;
 import com.openpojo.validation.test.impl.SetterTester;
 
 import org.junit.Test;
-import org.onap.policy.common.utils.validation.ToStringTester;
+import org.onap.policy.common.utils.test.ToStringTester;
 import org.onap.policy.pdpx.main.rest.model.StatisticsReport;
 
 /**
