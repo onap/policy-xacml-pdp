@@ -32,7 +32,6 @@ import com.att.research.xacml.api.Result;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.annotations.RequestParser;
 import com.google.gson.Gson;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -143,7 +142,7 @@ public class StdCombinedPolicyResultsTranslator implements ToscaPolicyTranslator
 
     @Override
     public DecisionResponse convertResponse(Response xacmlResponse) {
-        LOGGER.debug("Converting Response {}", xacmlResponse);
+        LOGGER.info("Converting Response {}", xacmlResponse);
         DecisionResponse decisionResponse = new DecisionResponse();
         //
         // Setup policies

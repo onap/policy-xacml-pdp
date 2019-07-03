@@ -26,7 +26,6 @@ import com.att.research.xacml.std.annotations.XACMLAction;
 import com.att.research.xacml.std.annotations.XACMLRequest;
 import com.att.research.xacml.std.annotations.XACMLResource;
 import com.att.research.xacml.std.annotations.XACMLSubject;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -58,6 +57,9 @@ public class StdCombinedPolicyRequest {
 
     @XACMLResource(includeInResults = true)
     private Collection<String> resource = new ArrayList<>();
+
+    @XACMLResource(attributeId = "urn:org:onap:policy-type", includeInResults = true)
+    private Collection<String> resourcePolicyType = new ArrayList<>();
 
     public StdCombinedPolicyRequest() {
         super();
@@ -102,7 +104,7 @@ public class StdCombinedPolicyRequest {
                 if (entrySet.getValue() instanceof Collection) {
                     addPolicyTypes(request, (Collection) entrySet.getValue());
                 } else if (entrySet.getValue() instanceof String) {
-                    request.resource.add(entrySet.getValue().toString());
+                    request.resourcePolicyType.add(entrySet.getValue().toString());
                 }
             }
         }
@@ -118,7 +120,7 @@ public class StdCombinedPolicyRequest {
 
     private static StdCombinedPolicyRequest addPolicyTypes(StdCombinedPolicyRequest request, Collection<Object> types) {
         for (Object type : types) {
-            request.resource.add(type.toString());
+            request.resourcePolicyType.add(type.toString());
         }
         return request;
     }
