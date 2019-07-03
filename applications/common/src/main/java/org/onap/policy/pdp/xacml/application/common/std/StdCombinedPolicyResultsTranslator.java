@@ -32,23 +32,9 @@ import com.att.research.xacml.api.Result;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.annotations.RequestParser;
 import com.google.gson.Gson;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionsType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
-
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
@@ -60,6 +46,17 @@ import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionsType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 public class StdCombinedPolicyResultsTranslator implements ToscaPolicyTranslator {
 
@@ -143,7 +140,7 @@ public class StdCombinedPolicyResultsTranslator implements ToscaPolicyTranslator
 
     @Override
     public DecisionResponse convertResponse(Response xacmlResponse) {
-        LOGGER.debug("Converting Response {}", xacmlResponse);
+        LOGGER.info("Converting Response {}", xacmlResponse);
         DecisionResponse decisionResponse = new DecisionResponse();
         //
         // Setup policies

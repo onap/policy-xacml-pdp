@@ -23,16 +23,13 @@
 package org.onap.policy.xacml.pdp.application.monitoring;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import com.att.research.xacml.api.Response;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.ServiceLoader;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -62,6 +59,7 @@ public class MonitoringPdpApplicationTest {
     private static File propertiesFile;
     private static XacmlApplicationServiceProvider service;
     private static DecisionRequest requestSinglePolicy;
+    private static DecisionRequest requestPolicyType;
 
     private static StandardCoder gson = new StandardCoder();
 
@@ -82,6 +80,12 @@ public class MonitoringPdpApplicationTest {
                 TextFileUtils
                     .getTextFileAsString("../../main/src/test/resources/decisions/decision.single.input.json"),
                     DecisionRequest.class);
+        // Load Single Decision Request
+        //
+        requestPolicyType = gson.decode(
+                TextFileUtils
+                .getTextFileAsString("../../main/src/test/resources/decisions/decision.policytype.input.json"),
+                DecisionRequest.class);
         //
         // Setup our temporary folder
         //
@@ -164,7 +168,7 @@ public class MonitoringPdpApplicationTest {
         // into the PDP.
         //
         //
-        // Now load the optimization policies
+        // Now load the monitoring policies
         //
         final List<ToscaPolicy> loadedPolicies = TestUtils.loadPolicies("src/test/resources/vDNS.policy.input.yaml",
                 service);
@@ -180,10 +184,22 @@ public class MonitoringPdpApplicationTest {
         // Dump it out as Json
         //
         LOGGER.info(gson.encode(decision.getKey()));
-        LOGGER.info("Now testing unloading of policy");
+        //
+        // Ask for a decision based on policy-type
+        //
+        decision = service.makeDecision(requestPolicyType);
+        LOGGER.info("Decision {}", decision);
+
+        assertThat(decision.getKey()).isNotNull();
+        assertThat(decision.getKey().getPolicies().size()).isEqualTo(1);
+        //
+        // Dump it out as Json
+        //
+        LOGGER.info(gson.encode(decision.getKey()));
         //
         // Now unload it
         //
+        LOGGER.info("Now testing unloading of policy");
         for (ToscaPolicy policy : loadedPolicies) {
             assertThat(service.unloadPolicy(policy)).isTrue();
         }
