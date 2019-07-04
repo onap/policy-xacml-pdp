@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,12 +26,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import java.io.FileInputStream;
 import java.util.Properties;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.onap.policy.common.endpoints.utils.ParameterUtils;
 import org.onap.policy.pdpx.main.CommonRest;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
@@ -55,16 +56,11 @@ public class TestXacmlPdpActivator extends CommonRest {
     public static void setUpBeforeClass() throws Exception {
         CommonRest.setUpBeforeClass();
 
-        final String[] xacmlPdpConfigParameters =
-            {"-c", CommonRest.CONFIG_FILE, "-p", "parameters/topic.properties"};
+        final String[] xacmlPdpConfigParameters = {"-c", CommonRest.CONFIG_FILE};
         final XacmlPdpCommandLineArguments arguments = new XacmlPdpCommandLineArguments(xacmlPdpConfigParameters);
         parGroup = new XacmlPdpParameterHandler().getParameters(arguments);
 
-        props = new Properties();
-        String propFile = arguments.getFullPropertyFilePath();
-        try (FileInputStream stream = new FileInputStream(propFile)) {
-            props.load(stream);
-        }
+        props = ParameterUtils.getTopicProperties(parGroup.getTopicParameterGroup());
 
         // don't want the common "main" running
         CommonRest.stopMain();

@@ -4,5 +4,17 @@
         "port": 6969,
         "userName": "healthcheck",
         "password": "zb!XztG34"
+    },
+    "topicParameterGroup": {
+        "topicSources" : [{
+            "topic" : "POLICY-PDP-PAP",
+            "servers" : [ "anyserver" ],
+            "topicCommInfrastructure" : "noop"
+        }],
+        "topicSinks" : [{
+            "topic" : "POLICY-PDP-PAP",
+            "servers" : [ "anyserver" ],
+            "topicCommInfrastructure" : "noop"
+        }]
     }
 }

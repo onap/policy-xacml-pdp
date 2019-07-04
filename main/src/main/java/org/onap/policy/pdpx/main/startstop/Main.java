@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +21,10 @@
 
 package org.onap.policy.pdpx.main.startstop;
 
-import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.Properties;
 import lombok.Getter;
+import org.onap.policy.common.endpoints.utils.ParameterUtils;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterHandler;
@@ -71,15 +72,7 @@ public class Main {
         XacmlPdpParameterGroup parameterGroup = new XacmlPdpParameterHandler().getParameters(arguments);
 
         // Read the properties
-        Properties props = new Properties();
-        try {
-            String propFile = arguments.getFullPropertyFilePath();
-            try (FileInputStream stream = new FileInputStream(propFile)) {
-                props.load(stream);
-            }
-        } catch (final Exception e) {
-            throw new PolicyXacmlPdpException("cannot load property file", e);
-        }
+        Properties props = ParameterUtils.getTopicProperties(parameterGroup.getTopicParameterGroup());
 
         // Now, create the activator for the policy xacml pdp service
         activator = new XacmlPdpActivator(parameterGroup, props);

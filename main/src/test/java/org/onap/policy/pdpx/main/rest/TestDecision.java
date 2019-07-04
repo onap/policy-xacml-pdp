@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +26,6 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,12 +37,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -50,14 +48,15 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.endpoints.http.client.HttpClient;
+import org.onap.policy.common.endpoints.parameters.RestServerParameters;
+import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.errors.concepts.ErrorResponse;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
-import org.onap.policy.pdpx.main.parameters.RestServerBuilder;
-import org.onap.policy.pdpx.main.parameters.RestServerParameters;
+import org.onap.policy.pdpx.main.parameters.CommonTestData;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
 import org.onap.policy.pdpx.main.startstop.Main;
 import org.slf4j.Logger;
@@ -70,6 +69,7 @@ public class TestDecision {
     private static int port;
     private static Main main;
     private static HttpClient client;
+    private static CommonTestData testData = new CommonTestData();
 
     @ClassRule
     public static final TemporaryFolder appsFolder = new TemporaryFolder();
@@ -97,9 +97,12 @@ public class TestDecision {
         //
         // Get the parameters file correct.
         //
-        RestServerParameters rest = new RestServerParameters(new RestServerBuilder()
-                .setHost("0.0.0.0").setPort(port).setUserName("healthcheck").setPassword("zb!XztG34"));
-        XacmlPdpParameterGroup params = new XacmlPdpParameterGroup("XacmlPdpGroup", rest, apps.getAbsolutePath());
+        RestServerParameters rest =
+            testData.toObject(testData.getRestServerParametersMap(port), RestServerParameters.class);
+        TopicParameterGroup topicParameterGroup =
+            testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
+        XacmlPdpParameterGroup params =
+            new XacmlPdpParameterGroup("XacmlPdpGroup", rest, topicParameterGroup, apps.getAbsolutePath());
         final Gson gson = new GsonBuilder().create();
         File fileParams = appsFolder.newFile("params.json");
         String jsonParams = gson.toJson(params);
@@ -169,8 +172,7 @@ public class TestDecision {
     }
 
     private static Main startXacmlPdpService(File params) throws PolicyXacmlPdpException {
-        final String[] XacmlPdpConfigParameters = {"-c", params.getAbsolutePath(), "-p",
-            "parameters/topic.properties"};
+        final String[] XacmlPdpConfigParameters = {"-c", params.getAbsolutePath()};
         return new Main(XacmlPdpConfigParameters);
     }
 

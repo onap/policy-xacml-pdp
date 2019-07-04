@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +21,8 @@
 
 package org.onap.policy.pdpx.main.parameters;
 
+import org.onap.policy.common.endpoints.parameters.RestServerParameters;
+import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.onap.policy.common.parameters.GroupValidationResult;
 import org.onap.policy.common.parameters.ParameterGroup;
 import org.onap.policy.common.parameters.ValidationStatus;
@@ -31,9 +34,11 @@ import org.onap.policy.common.utils.validation.ParameterValidationUtils;
  */
 public class XacmlPdpParameterGroup implements ParameterGroup {
     private static final String PARAM_REST_SERVER = "restServerParameters";
+    private static final String PARAM_TOPIC_PARAMETER_GROUP = "topicParameterGroup";
     private static final String PARAM_APPLICATION_PATH = "applicationPath";
     private String name;
     private RestServerParameters restServerParameters;
+    private TopicParameterGroup topicParameterGroup;
     private String applicationPath;
 
     /**
@@ -42,9 +47,10 @@ public class XacmlPdpParameterGroup implements ParameterGroup {
      * @param name the parameter group name
      */
     public XacmlPdpParameterGroup(final String name, final RestServerParameters restServerParameters,
-            final String applicationPath) {
+            final TopicParameterGroup topicParameterGroup, final String applicationPath) {
         this.name = name;
         this.restServerParameters = restServerParameters;
+        this.topicParameterGroup = topicParameterGroup;
         this.applicationPath = applicationPath;
     }
 
@@ -78,6 +84,15 @@ public class XacmlPdpParameterGroup implements ParameterGroup {
     }
 
     /**
+     * Return the topicParameterGroup of this parameter group instance.
+     *
+     * @return the topicParameterGroup
+     */
+    public TopicParameterGroup getTopicParameterGroup() {
+        return topicParameterGroup;
+    }
+
+    /**
      * Returns the path where applications will store their data.
      *
      * @return String to the path
@@ -102,6 +117,12 @@ public class XacmlPdpParameterGroup implements ParameterGroup {
                     "must have restServerParameters to configure xacml pdp rest server");
         } else {
             validationResult.setResult(PARAM_REST_SERVER, restServerParameters.validate());
+        }
+        if (topicParameterGroup == null) {
+            validationResult.setResult(PARAM_TOPIC_PARAMETER_GROUP, ValidationStatus.INVALID,
+                    "must have topicParameterGroup to configure xacml pdp topic sink and source");
+        } else {
+            validationResult.setResult(PARAM_TOPIC_PARAMETER_GROUP, topicParameterGroup.validate());
         }
         //
         // Validate the application path directory
