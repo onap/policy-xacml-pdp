@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.Properties;
 import lombok.Getter;
 import lombok.Setter;
-import org.onap.policy.common.endpoints.event.comm.TopicEndpoint;
+import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
 import org.onap.policy.common.endpoints.event.comm.TopicSource;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
@@ -85,8 +85,8 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
     public XacmlPdpActivator(final XacmlPdpParameterGroup xacmlPdpParameterGroup, Properties topicProperties) {
         LOGGER.info("Activator initializing using {} and {}", xacmlPdpParameterGroup, topicProperties);
 
-        TopicEndpoint.manager.addTopicSinks(topicProperties);
-        TopicEndpoint.manager.addTopicSources(topicProperties);
+        TopicEndpointManager.getManager().addTopicSinks(topicProperties);
+        TopicEndpointManager.getManager().addTopicSources(topicProperties);
 
         final XacmlPdpHearbeatPublisher heartbeat;
         final TopicSinkClient sinkClient;
@@ -135,8 +135,8 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
             this::unregisterMsgDispatcher);
 
         addAction("topics",
-            TopicEndpoint.manager::start,
-            TopicEndpoint.manager::shutdown);
+            TopicEndpointManager.getManager()::start,
+            TopicEndpointManager.getManager()::shutdown);
 
         addAction("Terminate PDP",
             () -> { },
@@ -196,7 +196,7 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
      * Registers the dispatcher with the topic source(s).
      */
     private void registerMsgDispatcher() {
-        for (TopicSource source : TopicEndpoint.manager.getTopicSources(Arrays.asList(TOPIC))) {
+        for (TopicSource source : TopicEndpointManager.getManager().getTopicSources(Arrays.asList(TOPIC))) {
             source.register(msgDispatcher);
         }
     }
@@ -205,7 +205,7 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
      * Unregisters the dispatcher from the topic source(s).
      */
     private void unregisterMsgDispatcher() {
-        for (TopicSource source : TopicEndpoint.manager.getTopicSources(Arrays.asList(TOPIC))) {
+        for (TopicSource source : TopicEndpointManager.getManager().getTopicSources(Arrays.asList(TOPIC))) {
             source.unregister(msgDispatcher);
         }
     }

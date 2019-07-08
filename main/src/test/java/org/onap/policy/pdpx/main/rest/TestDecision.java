@@ -48,6 +48,8 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.endpoints.http.client.HttpClient;
+import org.onap.policy.common.endpoints.http.client.HttpClientConfigException;
+import org.onap.policy.common.endpoints.http.client.HttpClientFactoryInstance;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
@@ -200,9 +202,8 @@ public class TestDecision {
         return HttpClient.getBody(response, ErrorResponse.class);
     }
 
-    private static HttpClient getNoAuthHttpClient()
-            throws KeyManagementException, NoSuchAlgorithmException, ClassNotFoundException {
-        return HttpClient.factory.build(BusTopicParams.builder()
+    private static HttpClient getNoAuthHttpClient() throws HttpClientConfigException {
+        return HttpClientFactoryInstance.getClientFactory().build(BusTopicParams.builder()
                 .clientName("testDecisionClient")
                 .serializationProvider(GsonMessageBodyHandler.class.getName())
                 .useHttps(false).allowSelfSignedCerts(false).hostname("localhost").port(port)

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Properties;
 import org.onap.policy.common.capabilities.Startable;
 import org.onap.policy.common.endpoints.http.server.HttpServletServer;
+import org.onap.policy.common.endpoints.http.server.HttpServletServerFactoryInstance;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.slf4j.Logger;
@@ -65,7 +66,7 @@ public class XacmlPdpRestServer implements Startable {
             //
             // Get the server properties
             //
-            servers = HttpServletServer.factory.build(getServerProperties());
+            servers = HttpServletServerFactoryInstance.getServerFactory().build(getServerProperties());
             //
             // Start all the servers
             //
