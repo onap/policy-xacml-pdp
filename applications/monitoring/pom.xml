@@ -62,7 +62,6 @@
                             <includeTestResources>true</includeTestResources>
                             <excludes>
                             </excludes>
-                            <suppressionsLocation>${project.basedir}/checkstyle-suppressions.xml</suppressionsLocation>
                             <consoleOutput>true</consoleOutput>
                             <failOnViolation>true</failOnViolation>
                             <violationSeverity>warning</violationSeverity>
