@@ -17,6 +17,12 @@
   
   SPDX-License-Identifier: Apache-2.0
   ============LICENSE_END=========================================================
+  
+  
+  **** NOTE ****
+  This file is needed in case Cucumber-style tests are added, as they do not
+  follow the checkstyle conventions.
+  **************
 -->
  
 <!DOCTYPE suppressions PUBLIC
