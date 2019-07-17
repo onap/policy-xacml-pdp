@@ -29,6 +29,7 @@ import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
 import org.onap.policy.common.endpoints.event.comm.TopicSource;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
+import org.onap.policy.common.endpoints.http.server.RestServer;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
 import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.services.ServiceManagerContainer;
@@ -40,8 +41,9 @@ import org.onap.policy.pdpx.main.comm.XacmlPdpHearbeatPublisher;
 import org.onap.policy.pdpx.main.comm.listeners.XacmlPdpStateChangeListener;
 import org.onap.policy.pdpx.main.comm.listeners.XacmlPdpUpdateListener;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
+import org.onap.policy.pdpx.main.rest.XacmlPdpAafFilter;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
-import org.onap.policy.pdpx.main.rest.XacmlPdpRestServer;
+import org.onap.policy.pdpx.main.rest.XacmlPdpRestController;
 import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,11 +68,6 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
     private final XacmlPdpParameterGroup xacmlPdpParameterGroup;
 
     /**
-     * The XACML PDP REST API server.
-     */
-    private XacmlPdpRestServer restServer;
-
-    /**
      * Listens for messages on the topic, decodes them into a {@link PdpStatus} message, and then
      * dispatches them to appropriate listener.
      */
@@ -91,6 +88,7 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
         final XacmlPdpHearbeatPublisher heartbeat;
         final TopicSinkClient sinkClient;
         final XacmlState state;
+        final RestServer restServer;
 
         try {
             XacmlPdpApplicationManager appmgr =
@@ -119,6 +117,9 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
             msgDispatcher.register(PdpMessageType.PDP_UPDATE.name(),
                             new XacmlPdpUpdateListener(sinkClient, state, heartbeat, appmgr));
 
+            restServer = new RestServer(xacmlPdpParameterGroup.getRestServerParameters(), XacmlPdpAafFilter.class,
+                                XacmlPdpRestController.class);
+
         } catch (RuntimeException | TopicSinkClientException e) {
             throw new PolicyXacmlPdpRuntimeException(e.getMessage(), e);
         }
@@ -146,13 +147,9 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
             heartbeat::start,
             heartbeat::terminate);
 
-        addAction("Create REST server",
-            () -> restServer = new XacmlPdpRestServer(xacmlPdpParameterGroup.getRestServerParameters()),
-            () -> restServer = null);
-
         addAction("REST server",
-            () -> restServer.start(),
-            () -> restServer.stop());
+            restServer::start,
+            restServer::stop);
 
         // @formatter:on
     }
