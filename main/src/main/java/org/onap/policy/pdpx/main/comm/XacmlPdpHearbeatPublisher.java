@@ -22,6 +22,7 @@ package org.onap.policy.pdpx.main.comm;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import lombok.Getter;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.pdpx.main.XacmlState;
@@ -29,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class XacmlPdpHearbeatPublisher extends TimerTask {
+    public static final int DEFAULT_INTERVAL_MS = 60000;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpHearbeatPublisher.class);
 
@@ -42,7 +44,8 @@ public class XacmlPdpHearbeatPublisher extends TimerTask {
     /**
      * Current timer interval, in milliseconds.
      */
-    private long intervalMs = 60000;
+    @Getter
+    private long intervalMs = DEFAULT_INTERVAL_MS;
 
     private Timer timer = null;
 
@@ -99,8 +102,14 @@ public class XacmlPdpHearbeatPublisher extends TimerTask {
      */
     public synchronized void start() {
         if (timer == null) {
-            timer = new Timer(true);
+            timer = makeTimer();
             timer.scheduleAtFixedRate(this, 0, this.intervalMs);
         }
+    }
+
+    // these may be overridden by junit tests
+
+    protected Timer makeTimer() {
+        return new Timer(true);
     }
 }
