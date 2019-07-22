@@ -55,7 +55,7 @@ public class XacmlPdpUpdateListener extends ScoListener<PdpUpdate> {
         super(PdpUpdate.class);
         this.state = state;
         this.heartbeat = heartbeat;
-        this.publisher = new XacmlPdpUpdatePublisher(client, state, appManager);
+        this.publisher = makePublisher(client, state, appManager);
     }
 
     @Override
@@ -77,4 +77,10 @@ public class XacmlPdpUpdateListener extends ScoListener<PdpUpdate> {
 
     }
 
+    // these may be overridden by junit tests
+    protected XacmlPdpUpdatePublisher makePublisher(TopicSinkClient client, XacmlState state,
+                    XacmlPdpApplicationManager appManager) {
+
+        return new XacmlPdpUpdatePublisher(client, state, appManager);
+    }
 }
