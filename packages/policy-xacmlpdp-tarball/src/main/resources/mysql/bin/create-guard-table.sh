@@ -20,4 +20,4 @@
 #
 SQL_FILE="${POLICY_HOME}/mysql/sql/createguardtable.sql"
 
-mysql -upolicy_user -ppolicy_user < "${SQL_FILE}"
+mysql -upolicy_user -ppolicy_user -hpolicydb < "${SQL_FILE}"
