@@ -52,6 +52,9 @@ import org.slf4j.LoggerFactory;
 public class XacmlPolicyUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPolicyUtils.class);
+
+    public static final String XACML_PROPERTY_FILE = "xacml.properties";
+
     private static final String DOT_FILE_SUFFIX = ".file";
     private static final String NOT_FOUND_MESSAGE = "NOT FOUND";
 
@@ -403,7 +406,7 @@ public class XacmlPolicyUtils {
      * @return Path to rootPath/xacml.properties file
      */
     public static Path getPropertiesPath(Path rootPath) {
-        return Paths.get(rootPath.toAbsolutePath().toString(), "xacml.properties");
+        return Paths.get(rootPath.toAbsolutePath().toString(), XACML_PROPERTY_FILE);
     }
 
     @FunctionalInterface
@@ -434,7 +437,7 @@ public class XacmlPolicyUtils {
             //
             // Now we create a new xacml.properties in the temporary folder location
             //
-            File propertiesFile = creator.createAFile("xacml.properties");
+            File propertiesFile = creator.createAFile(XACML_PROPERTY_FILE);
             //
             // Iterate through any root policies defined
             //
