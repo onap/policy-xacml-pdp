@@ -20,4 +20,29 @@
 #
 SQL_FILE="${POLICY_HOME}/mysql/sql/createguardtable.sql"
 
-mysql -upolicy_user -ppolicy_user < "${SQL_FILE}"
+# Extract Maria DB Credential properties from xacml.properties file
+DB_HOSTNAME=$(awk -F[/:] '$1 == "javax.persistence.jdbc.url=jdbc" { print $3 $5 }' /home/mm117s/testing/xacml.properties)
+DB_USERNAME=$(awk -F= '$1 == "javax.persistence.jdbc.user" { print $2 }' /home/mm117s/testing/xacml.properties)
+DB_PASSWORD=`echo $(awk -F= '$1 == "javax.persistence.jdbc.password" { print $2 }' /home/mm117s/testing/xacml.properties) | base64 -d`
+
+if [ -z "$DB_HOSTNAME" ]
+  then
+    echo "No Mariadb host provided in xacml.properties."
+    exit 2
+fi
+
+if [ -z "$DB_USERNAME" ]
+  then
+    echo "No Mariadb username provided in xacml.properties."
+    exit 2
+fi
+
+if [ -z "$DB_PASSWORD" ]
+  then
+    echo "No Mariadb password provided in xacml.properties."
+    exit 2
+fi
+
+# Execute mysql command using sql file to create table
+mysql -u${DB_USERNAME} -p${DB_PASSWORD} -h${DB_HOSTNAME} < "${SQL_FILE}"
+
