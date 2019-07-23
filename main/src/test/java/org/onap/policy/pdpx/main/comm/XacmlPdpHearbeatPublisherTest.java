@@ -23,6 +23,8 @@ package org.onap.policy.pdpx.main.comm;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -32,7 +34,9 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Timer;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -54,15 +58,18 @@ public class XacmlPdpHearbeatPublisherTest {
     private XacmlState state;
 
     @Mock
-    private Timer timer1;
+    private ScheduledExecutorService executor;
 
     @Mock
-    private Timer timer2;
+    private ScheduledFuture<?> timer1;
+
+    @Mock
+    private ScheduledFuture<?> timer2;
 
     @Mock
     private PdpStatus status;
 
-    private Queue<Timer> timers;
+    private Queue<ScheduledFuture<?>> timers;
 
     private XacmlPdpHearbeatPublisher publisher;
 
@@ -77,6 +84,8 @@ public class XacmlPdpHearbeatPublisherTest {
         when(state.genHeartbeat()).thenReturn(status);
 
         timers = new LinkedList<>(Arrays.asList(timer1, timer2));
+
+        when(executor.scheduleWithFixedDelay(any(), anyLong(), anyLong(), any())).thenAnswer(args -> timers.remove());
 
         publisher = new MyPublisher(client, state);
     }
@@ -94,15 +103,10 @@ public class XacmlPdpHearbeatPublisherTest {
         // not yet started
         publisher.terminate();
 
-        verify(timer1, never()).cancel();
-        verify(timer2, never()).cancel();
-
 
         // now start it and then try again
         publisher.start();
         publisher.terminate();
-
-        verify(timer1).cancel();
 
         // timer2 should still be in the queue
         assertSame(timer2, timers.peek());
@@ -110,8 +114,6 @@ public class XacmlPdpHearbeatPublisherTest {
 
         // repeat - nothing more should happen
         publisher.terminate();
-
-        verify(timer1, times(1)).cancel();
 
         // timer2 should still be in the queue
         assertSame(timer2, timers.peek());
@@ -127,47 +129,49 @@ public class XacmlPdpHearbeatPublisherTest {
 
         // now start it
         publisher.start();
-        verify(timer1).scheduleAtFixedRate(publisher, 0, INTERVAL1);
+        verify(executor).scheduleWithFixedDelay(publisher, 0, INTERVAL1, TimeUnit.MILLISECONDS);
 
         // null interval - no changes
         publisher.restart(null);
-        verify(timer1, times(1)).scheduleAtFixedRate(any(), anyLong(), anyLong());
+        verify(executor, times(1)).scheduleWithFixedDelay(any(), anyInt(), anyLong(), any());
         assertSame(timer2, timers.peek());
 
         // same interval - no changes
         publisher.restart(INTERVAL1);
-        verify(timer1, times(1)).scheduleAtFixedRate(any(), anyLong(), anyLong());
+        verify(executor, times(1)).scheduleWithFixedDelay(any(), anyInt(), anyLong(), any());
         assertSame(timer2, timers.peek());
 
         // invalid interval - no changes
         publisher.restart(INTERVAL_INVALID);
-        verify(timer1, times(1)).scheduleAtFixedRate(any(), anyLong(), anyLong());
+        verify(executor, times(1)).scheduleWithFixedDelay(any(), anyInt(), anyLong(), any());
         assertSame(timer2, timers.peek());
 
         // new interval - old timer should be cancelled and new started
         publisher.restart(INTERVAL2);
-        verify(timer1).cancel();
-        verify(timer2).scheduleAtFixedRate(publisher, 0, INTERVAL2);
+        verify(timer1).cancel(anyBoolean());
+        verify(executor).scheduleWithFixedDelay(publisher, 0, INTERVAL2, TimeUnit.MILLISECONDS);
     }
 
     @Test
     public void testStart() {
         publisher.start();
 
-        verify(timer1).scheduleAtFixedRate(publisher, 0, XacmlPdpHearbeatPublisher.DEFAULT_INTERVAL_MS);
+        verify(executor).scheduleWithFixedDelay(publisher, 0, XacmlPdpHearbeatPublisher.DEFAULT_INTERVAL_MS,
+                        TimeUnit.MILLISECONDS);
 
         // repeat - nothing more should happen
         publisher.start();
-        verify(timer1, times(1)).scheduleAtFixedRate(any(), anyLong(), anyLong());
-        verify(timer1, never()).cancel();
+        verify(executor, times(1)).scheduleWithFixedDelay(any(), anyInt(), anyLong(), any());
+        verify(timer1, never()).cancel(anyBoolean());
     }
 
     @Test
-    public void testMakeTimer() {
+    public void testMakeTimerThread() {
         // create a plain listener to test the "real" makeTimer() method
         publisher = new XacmlPdpHearbeatPublisher(client, state);
 
         publisher.start();
+        publisher.restart(100L);
         publisher.terminate();
     }
 
@@ -178,8 +182,8 @@ public class XacmlPdpHearbeatPublisherTest {
         }
 
         @Override
-        protected Timer makeTimer() {
-            return timers.remove();
+        protected ScheduledExecutorService makeTimerThread() {
+            return executor;
         }
     }
 }

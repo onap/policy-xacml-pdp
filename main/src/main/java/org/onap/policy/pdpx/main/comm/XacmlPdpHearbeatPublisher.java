@@ -20,8 +20,10 @@
 
 package org.onap.policy.pdpx.main.comm;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
@@ -29,7 +31,7 @@ import org.onap.policy.pdpx.main.XacmlState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class XacmlPdpHearbeatPublisher extends TimerTask {
+public class XacmlPdpHearbeatPublisher implements Runnable {
     public static final int DEFAULT_INTERVAL_MS = 60000;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpHearbeatPublisher.class);
@@ -47,7 +49,9 @@ public class XacmlPdpHearbeatPublisher extends TimerTask {
     @Getter
     private long intervalMs = DEFAULT_INTERVAL_MS;
 
-    private Timer timer = null;
+    private ScheduledExecutorService timerThread;
+
+    private ScheduledFuture<?> timer;
 
 
     /**
@@ -73,9 +77,9 @@ public class XacmlPdpHearbeatPublisher extends TimerTask {
      * Method to terminate the heart beat.
      */
     public synchronized void terminate() {
-        if (timer != null) {
-            timer.cancel();
-            timer.purge();
+        if (timerThread != null) {
+            timerThread.shutdownNow();
+            timerThread = null;
             timer = null;
         }
     }
@@ -90,9 +94,9 @@ public class XacmlPdpHearbeatPublisher extends TimerTask {
         if (intervalMs != null && intervalMs > 0 && intervalMs != this.intervalMs) {
             this.intervalMs = intervalMs;
 
-            if (timer != null) {
-                terminate();
-                start();
+            if (timerThread != null) {
+                timer.cancel(false);
+                timer = timerThread.scheduleWithFixedDelay(this, 0, this.intervalMs, TimeUnit.MILLISECONDS);
             }
         }
     }
@@ -101,15 +105,15 @@ public class XacmlPdpHearbeatPublisher extends TimerTask {
      * Starts the timer.
      */
     public synchronized void start() {
-        if (timer == null) {
-            timer = makeTimer();
-            timer.scheduleAtFixedRate(this, 0, this.intervalMs);
+        if (timerThread == null) {
+            timerThread = makeTimerThread();
+            timer = timerThread.scheduleWithFixedDelay(this, 0, this.intervalMs, TimeUnit.MILLISECONDS);
         }
     }
 
     // these may be overridden by junit tests
 
-    protected Timer makeTimer() {
-        return new Timer(true);
+    protected ScheduledExecutorService makeTimerThread() {
+        return Executors.newScheduledThreadPool(1);
     }
 }
