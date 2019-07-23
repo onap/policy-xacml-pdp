@@ -43,6 +43,9 @@ import org.onap.policy.models.decisions.concepts.DecisionRequest;
 @XACMLRequest(ReturnPolicyIdList = true)
 public class StdCombinedPolicyRequest {
 
+    public static final String POLICY_TYPE_KEY = "policy-type";
+    public static final String POLICY_ID_KEY = "policy-id";
+
     @XACMLSubject(includeInResults = true)
     private String onapName;
 
@@ -92,7 +95,7 @@ public class StdCombinedPolicyRequest {
         //
         Map<String, Object> resources = decisionRequest.getResource();
         for (Entry<String, Object> entrySet : resources.entrySet()) {
-            if ("policy-id".equals(entrySet.getKey())) {
+            if (POLICY_ID_KEY.equals(entrySet.getKey())) {
                 if (entrySet.getValue() instanceof Collection) {
                     addPolicyIds(request, (Collection) entrySet.getValue());
                 } else if (entrySet.getValue() instanceof String) {
@@ -100,7 +103,7 @@ public class StdCombinedPolicyRequest {
                 }
                 continue;
             }
-            if ("policy-type".equals(entrySet.getKey())) {
+            if (POLICY_TYPE_KEY.equals(entrySet.getKey())) {
                 if (entrySet.getValue() instanceof Collection) {
                     addPolicyTypes(request, (Collection) entrySet.getValue());
                 } else if (entrySet.getValue() instanceof String) {

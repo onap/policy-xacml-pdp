@@ -44,6 +44,9 @@ import org.onap.policy.models.decisions.concepts.DecisionRequest;
 @XACMLRequest(ReturnPolicyIdList = true)
 public class StdMatchablePolicyRequest {
 
+    public static final String POLICY_TYPE_KEY = "policyType";
+    public static final String POLICY_SCOPE_KEY = "policyScope";
+
     @XACMLSubject(includeInResults = true)
     private String onapName;
 
@@ -103,7 +106,7 @@ public class StdMatchablePolicyRequest {
             // Its possible we may have to load the policy type model
             // and use that to find the fields that are matchable.
             //
-            if ("policyScope".equals(entrySet.getKey())) {
+            if (POLICY_SCOPE_KEY.equals(entrySet.getKey())) {
                 if (entrySet.getValue() instanceof Collection) {
                     addPolicyScopes(request, (Collection) entrySet.getValue());
                 } else if (entrySet.getValue() instanceof String) {
@@ -111,7 +114,7 @@ public class StdMatchablePolicyRequest {
                 }
                 continue;
             }
-            if ("policyType".equals(entrySet.getKey())) {
+            if (POLICY_TYPE_KEY.equals(entrySet.getKey())) {
                 if (entrySet.getValue() instanceof Collection) {
                     addPolicyTypes(request, (Collection) entrySet.getValue());
                 }
