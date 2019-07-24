@@ -29,21 +29,15 @@ import com.att.research.xacml.api.pdp.PDPEngineFactory;
 import com.att.research.xacml.api.pdp.PDPException;
 import com.att.research.xacml.util.FactoryException;
 import com.att.research.xacml.util.XACMLPolicyWriter;
-
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
@@ -87,29 +81,13 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
         this.pathForData = pathForData;
         LOGGER.info("New Path is {}", this.pathForData.toAbsolutePath());
         //
-        // Ensure properties exist
-        //
-        Path propertiesPath = XacmlPolicyUtils.getPropertiesPath(pathForData);
-        if (! propertiesPath.toFile().exists()) {
-            LOGGER.info("Copying src/main/resources/xacml.properties to path");
-            //
-            // Properties do not exist, by default we will copy ours over
-            // from src/main/resources
-            //
-            try {
-                Files.copy(Paths.get("src/main/resources/xacml.properties"), propertiesPath);
-            } catch (IOException e) {
-                throw new XacmlApplicationException("Failed to copy xacml.propertis", e);
-            }
-        }
-        //
         // Look for and load the properties object
         //
         try {
             pdpProperties = XacmlPolicyUtils.loadXacmlProperties(XacmlPolicyUtils.getPropertiesPath(pathForData));
             LOGGER.info("{}", pdpProperties);
         } catch (IOException e) {
-            throw new XacmlApplicationException("Failed to load xacml.propertis", e);
+            throw new XacmlApplicationException("Failed to load " + XacmlPolicyUtils.XACML_PROPERTY_FILE, e);
         }
         //
         // Create an engine
@@ -277,41 +255,6 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
     }
 
     /**
-     * Load properties from given file.
-     *
-     * @throws IOException If unable to read file
-     */
-    protected synchronized Properties loadXacmlProperties() throws IOException {
-        LOGGER.info("Loading xacml properties {}", pathForData);
-        try (InputStream is = Files.newInputStream(pathForData)) {
-            Properties properties = new Properties();
-            properties.load(is);
-            return properties;
-        }
-    }
-
-    /**
-     * Stores the XACML Properties to the given file location.
-     *
-     * @throws IOException If unable to store the file.
-     */
-    protected synchronized void storeXacmlProperties() throws IOException {
-        try (OutputStream os = Files.newOutputStream(pathForData)) {
-            String strComments = "#";
-            pdpProperties.store(os, strComments);
-        }
-    }
-
-    /**
-     * Appends 'xacml.properties' to a root Path object
-     *
-     * @return Path to rootPath/xacml.properties file
-     */
-    protected synchronized Path getPropertiesPath() {
-        return Paths.get(pathForData.toAbsolutePath().toString(), "xacml.properties");
-    }
-
-    /**
      * Creates an instance of PDP engine given the Properties object.
      */
     protected synchronized void createEngine(Properties properties) {
@@ -319,7 +262,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
         // Now initialize the XACML PDP Engine
         //
         try {
-            PDPEngineFactory factory = PDPEngineFactory.newInstance();
+            PDPEngineFactory factory = getPdpEngineFactory();
             PDPEngine engine = factory.newEngine(properties);
             if (engine != null) {
                 this.pdpEngine = engine;
@@ -358,4 +301,9 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
         return response;
     }
 
+    // these may be overridden by junit tests
+
+    protected PDPEngineFactory getPdpEngineFactory() throws FactoryException {
+        return PDPEngineFactory.newInstance();
+    }
 }

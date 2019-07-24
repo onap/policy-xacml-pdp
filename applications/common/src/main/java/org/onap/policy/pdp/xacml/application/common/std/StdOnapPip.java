@@ -22,6 +22,7 @@ package org.onap.policy.pdp.xacml.application.common.std;
 
 import com.att.research.xacml.api.Attribute;
 import com.att.research.xacml.api.AttributeValue;
+import com.att.research.xacml.api.DataTypeException;
 import com.att.research.xacml.api.Identifier;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.api.pip.PIPException;
@@ -104,16 +105,12 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
         try {
             pipResponse = pipFinder.getMatchingAttributes(pipRequest, this);
             if (pipResponse.getStatus() != null && !pipResponse.getStatus().isOk()) {
-                if (logger.isInfoEnabled()) {
-                    logger.info("get attribute error retrieving {}: {}", pipRequest.getAttributeId().stringValue(),
-                        pipResponse.getStatus());
-                }
+                logger.info("get attribute error retrieving {}: {}", pipRequest.getAttributeId().stringValue(),
+                                pipResponse.getStatus());
                 pipResponse = null;
             }
             if (pipResponse != null && pipResponse.getAttributes().isEmpty()) {
-                if (logger.isInfoEnabled()) {
-                    logger.info("No value for {}", pipRequest.getAttributeId().stringValue());
-                }
+                logger.info("No value for {}", pipRequest.getAttributeId().stringValue());
                 pipResponse = null;
             }
         } catch (PIPException ex) {
@@ -125,12 +122,10 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
     protected String findFirstAttributeValue(PIPResponse pipResponse) {
         for (Attribute attribute: pipResponse.getAttributes()) {
             Iterator<AttributeValue<String>> iterAttributeValues    = attribute.findValues(DataTypes.DT_STRING);
-            if (iterAttributeValues != null) {
-                while (iterAttributeValues.hasNext()) {
-                    String value   = iterAttributeValues.next().getValue();
-                    if (value != null) {
-                        return value;
-                    }
+            while (iterAttributeValues.hasNext()) {
+                String value   = iterAttributeValues.next().getValue();
+                if (value != null) {
+                    return value;
                 }
             }
         }
@@ -141,7 +136,7 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
             Identifier attributeId, int value, PIPRequest pipRequest) {
         AttributeValue<BigInteger> attributeValue   = null;
         try {
-            attributeValue  = DataTypes.DT_INTEGER.createAttributeValue(value);
+            attributeValue  = makeInteger(value);
         } catch (Exception e) {
             logger.error("Failed to convert {} to integer {}", value, e);
         }
@@ -155,7 +150,7 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
             Identifier attributeId, long value, PIPRequest pipRequest) {
         AttributeValue<BigInteger> attributeValue   = null;
         try {
-            attributeValue  = DataTypes.DT_INTEGER.createAttributeValue(value);
+            attributeValue  = makeLong(value);
         } catch (Exception e) {
             logger.error("Failed to convert {} to long {}", value, e);
         }
@@ -169,7 +164,7 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
             String value, PIPRequest pipRequest) {
         AttributeValue<String> attributeValue = null;
         try {
-            attributeValue = DataTypes.DT_STRING.createAttributeValue(value);
+            attributeValue = makeString(value);
         } catch (Exception ex) {
             logger.error("Failed to convert {} to an AttributeValue<String>", value, ex);
         }
@@ -177,6 +172,20 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
             stdPipResponse.addAttribute(new StdMutableAttribute(category, attributeId, attributeValue,
                     pipRequest.getIssuer(), false));
         }
+    }
+
+    // these may be overridden by junit tests
+
+    protected AttributeValue<BigInteger> makeInteger(int value) throws DataTypeException {
+        return DataTypes.DT_INTEGER.createAttributeValue(value);
+    }
+
+    protected AttributeValue<BigInteger> makeLong(long value) throws DataTypeException {
+        return DataTypes.DT_INTEGER.createAttributeValue(value);
+    }
+
+    protected AttributeValue<String> makeString(String value) throws DataTypeException {
+        return DataTypes.DT_STRING.createAttributeValue(value);
     }
 
 }
