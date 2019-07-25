@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d43278d6_a509a8d0",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-25T19:08:10Z",
+      "side": 1,
+      "message": "seems like Jorge had a simpler way to extract these",
+      "revId": "d9970c5c0e6bb14da7e177c421aa90865af2c9ee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
