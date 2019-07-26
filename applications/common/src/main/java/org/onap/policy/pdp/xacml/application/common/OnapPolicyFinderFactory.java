@@ -75,17 +75,7 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
     private Properties properties;
 
     /**
-     * Empty private constructor. We do not want to create
-     * an instance of this without giving Properties object.
-     *
-     * @throws OnapPolicyFinderFactoryException Exception will be thrown
-     */
-    public OnapPolicyFinderFactory() throws OnapPolicyFinderFactoryException {
-        throw new OnapPolicyFinderFactoryException("Please use the constructor with Properties object.");
-    }
-
-    /**
-     * Constructor with properties passed. This will be preferred.
+     * Constructs this object.
      *
      * @param properties Properties object
      */
@@ -284,4 +274,11 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
         return new StdPolicyFinder(this.rootPolicies, this.referencedPolicies, properties);
     }
 
+    protected int getRootPolicyCount() {
+        return this.rootPolicies.size();
+    }
+
+    protected int getReferencedPolicyCount() {
+        return this.referencedPolicies.size();
+    }
 }
