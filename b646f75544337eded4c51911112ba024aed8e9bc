@@ -50,6 +50,57 @@
       "revId": "b646f75544337eded4c51911112ba024aed8e9bc",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "110dccaf_839df5b7",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-07-26T18:08:08Z",
+      "side": 1,
+      "message": "could do exit 1 to denote error",
+      "revId": "b646f75544337eded4c51911112ba024aed8e9bc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e39740bb_8303ee07",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-07-26T18:08:08Z",
+      "side": 1,
+      "message": "could do exit 2 to denote a different error",
+      "revId": "b646f75544337eded4c51911112ba024aed8e9bc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "908da597_7fe704fa",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-07-26T18:08:08Z",
+      "side": 1,
+      "message": "could do exit 3 to denote a yet different error",
+      "revId": "b646f75544337eded4c51911112ba024aed8e9bc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
