@@ -16,6 +16,74 @@
       "revId": "d9970c5c0e6bb14da7e177c421aa90865af2c9ee",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "78fe9852_8ca7913d",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-07-26T13:28:00Z",
+      "side": 1,
+      "message": "do you need \"echo\" ?",
+      "revId": "d9970c5c0e6bb14da7e177c421aa90865af2c9ee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8897eff2_d730dfd6",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-07-26T13:28:00Z",
+      "side": 1,
+      "message": "do you need echo?",
+      "revId": "d9970c5c0e6bb14da7e177c421aa90865af2c9ee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9d5e1ac9_c98aec3c",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-07-26T13:28:00Z",
+      "side": 1,
+      "message": "do you need echo?",
+      "revId": "d9970c5c0e6bb14da7e177c421aa90865af2c9ee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "40e3a224_e911170d",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-07-26T13:28:00Z",
+      "side": 1,
+      "message": "Optionally: do a \"-z\" in each variable, and as a minimum print a warning so we know.   You could exit the shell script if such condition occurs and not run the command.",
+      "revId": "d9970c5c0e6bb14da7e177c421aa90865af2c9ee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
