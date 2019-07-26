@@ -70,6 +70,24 @@
     },
     {
       "key": {
+        "uuid": "bb8e0d7f_32461368",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-26T18:11:46Z",
+      "side": 1,
+      "message": "good point - should always exit non-zero for errors",
+      "parentUuid": "110dccaf_839df5b7",
+      "revId": "b646f75544337eded4c51911112ba024aed8e9bc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e39740bb_8303ee07",
         "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
         "patchSetId": 5
@@ -81,6 +99,24 @@
       "writtenOn": "2019-07-26T18:08:08Z",
       "side": 1,
       "message": "could do exit 2 to denote a different error",
+      "revId": "b646f75544337eded4c51911112ba024aed8e9bc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6f53ab_6d991972",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-26T18:11:46Z",
+      "side": 1,
+      "message": "typically use the same exit code to indicate the same types of errors (e.g., all missing arguments exit 1, all missing properties exit 2, etc.)",
+      "parentUuid": "e39740bb_8303ee07",
       "revId": "b646f75544337eded4c51911112ba024aed8e9bc",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
