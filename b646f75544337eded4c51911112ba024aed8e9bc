@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "45813395_20d6acd3",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-26T18:06:39Z",
+      "side": 1,
+      "message": "BTW: here\u0027s another way to extract a property value:\n\n  awk -F\u003d \u0027$1 \u003d\u003d \"javax.persistence.jdbc.user\" { print $2 }\u0027 \\\n    \"${POLICY_HOME}\"/apps/guard/xacml.properties",
+      "revId": "b646f75544337eded4c51911112ba024aed8e9bc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "65af3065_baf1b382",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-26T18:06:39Z",
+      "side": 1,
+      "message": "remove extra echo",
+      "revId": "b646f75544337eded4c51911112ba024aed8e9bc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59bf4750_b1846651",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-26T18:06:39Z",
+      "side": 1,
+      "message": "remove extra echo",
+      "revId": "b646f75544337eded4c51911112ba024aed8e9bc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
