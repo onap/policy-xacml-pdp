@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ae9cd26d_7ba05f0e",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-07-29T23:04:50Z",
+      "side": 1,
+      "message": "Add the ATT license header",
+      "revId": "5187557600d09b5db11282d1a85b5d54dbcb081e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "11c3f7f0_58c883c0",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-07-29T23:04:50Z",
+      "side": 1,
+      "message": "Better place the file under /tmp, ie. /tmp/temp.properties.       Better call it /tmp/xacml.properties.temp to have a meaningful name",
+      "revId": "5187557600d09b5db11282d1a85b5d54dbcb081e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c76de160_5d6808a5",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-07-29T23:04:50Z",
+      "side": 1,
+      "message": "probably better is to move this \"if\" above line 24 and exit if the file is not there, if there is no file, awk will not do the right thing, and no point in continuing, so exit, if the file does not exist.",
+      "revId": "5187557600d09b5db11282d1a85b5d54dbcb081e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff2b93b0_97aa707d",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-07-29T23:04:50Z",
+      "side": 1,
+      "message": "if you touch this file, say \"guard xacml.properties\" since there are several of them (general comment).",
+      "revId": "5187557600d09b5db11282d1a85b5d54dbcb081e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
