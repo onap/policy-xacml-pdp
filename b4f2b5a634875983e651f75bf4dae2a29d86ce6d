@@ -16,6 +16,23 @@
       "revId": "b4f2b5a634875983e651f75bf4dae2a29d86ce6d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3b7e784_1f5af129",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 7
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-29T17:55:00Z",
+      "side": 1,
+      "message": "I believe you can remove the back-ticks and the \"echo\" if you put base64 inside of the $():\n\n  $(awk ... | base64 ...)",
+      "revId": "b4f2b5a634875983e651f75bf4dae2a29d86ce6d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
