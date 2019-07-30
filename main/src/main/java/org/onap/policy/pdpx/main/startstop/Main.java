@@ -22,9 +22,7 @@
 package org.onap.policy.pdpx.main.startstop;
 
 import java.util.Arrays;
-import java.util.Properties;
 import lombok.Getter;
-import org.onap.policy.common.endpoints.utils.ParameterUtils;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterHandler;
@@ -71,11 +69,8 @@ public class Main {
         // Read the parameters
         XacmlPdpParameterGroup parameterGroup = new XacmlPdpParameterHandler().getParameters(arguments);
 
-        // Read the properties
-        Properties props = ParameterUtils.getTopicProperties(parameterGroup.getTopicParameterGroup());
-
         // Now, create the activator for the policy xacml pdp service
-        activator = new XacmlPdpActivator(parameterGroup, props);
+        activator = new XacmlPdpActivator(parameterGroup);
         XacmlPdpActivator.setCurrent(activator);
 
         // Start the activator
