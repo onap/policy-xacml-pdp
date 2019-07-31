@@ -26,12 +26,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Properties;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.onap.policy.common.endpoints.utils.ParameterUtils;
 import org.onap.policy.pdpx.main.CommonRest;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
@@ -45,7 +43,6 @@ import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterHandler;
  */
 public class TestXacmlPdpActivator extends CommonRest {
     private static XacmlPdpParameterGroup parGroup;
-    private static Properties props;
 
     private XacmlPdpActivator activator = null;
 
@@ -60,8 +57,6 @@ public class TestXacmlPdpActivator extends CommonRest {
         final XacmlPdpCommandLineArguments arguments = new XacmlPdpCommandLineArguments(xacmlPdpConfigParameters);
         parGroup = new XacmlPdpParameterHandler().getParameters(arguments);
 
-        props = ParameterUtils.getTopicProperties(parGroup.getTopicParameterGroup());
-
         // don't want the common "main" running
         CommonRest.stopMain();
     }
@@ -71,7 +66,7 @@ public class TestXacmlPdpActivator extends CommonRest {
      */
     @Before
     public void setUp() {
-        activator = new XacmlPdpActivator(parGroup, props);
+        activator = new XacmlPdpActivator(parGroup);
     }
 
     @Test

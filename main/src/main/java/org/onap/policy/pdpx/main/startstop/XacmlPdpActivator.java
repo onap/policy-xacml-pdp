@@ -22,7 +22,6 @@ package org.onap.policy.pdpx.main.startstop;
 
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Properties;
 import lombok.Getter;
 import lombok.Setter;
 import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
@@ -77,13 +76,11 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
      * Instantiate the activator for policy xacml pdp as a complete service.
      *
      * @param xacmlPdpParameterGroup the parameters for the xacml pdp service
-     * @param topicProperties properties used to configure the topics
      */
-    public XacmlPdpActivator(final XacmlPdpParameterGroup xacmlPdpParameterGroup, Properties topicProperties) {
-        LOGGER.info("Activator initializing using {} and {}", xacmlPdpParameterGroup, topicProperties);
+    public XacmlPdpActivator(final XacmlPdpParameterGroup xacmlPdpParameterGroup) {
+        LOGGER.info("Activator initializing using {}", xacmlPdpParameterGroup);
 
-        TopicEndpointManager.getManager().addTopicSinks(topicProperties);
-        TopicEndpointManager.getManager().addTopicSources(topicProperties);
+        TopicEndpointManager.getManager().addTopics(xacmlPdpParameterGroup.getTopicParameterGroup());
 
         final XacmlPdpHearbeatPublisher heartbeat;
         final TopicSinkClient sinkClient;
