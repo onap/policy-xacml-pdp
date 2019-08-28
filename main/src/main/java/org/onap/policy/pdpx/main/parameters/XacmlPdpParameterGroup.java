@@ -21,6 +21,8 @@
 
 package org.onap.policy.pdpx.main.parameters;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.onap.policy.common.parameters.GroupValidationResult;
@@ -32,12 +34,18 @@ import org.onap.policy.common.utils.validation.ParameterValidationUtils;
  * Class to hold all parameters needed for xacml pdp component.
  *
  */
+@Getter
 public class XacmlPdpParameterGroup implements ParameterGroup {
     private static final String PARAM_REST_SERVER = "restServerParameters";
+    private static final String PARAM_POLICY_API = "policyApiParameters";
     private static final String PARAM_TOPIC_PARAMETER_GROUP = "topicParameterGroup";
     private static final String PARAM_APPLICATION_PATH = "applicationPath";
+
+    @Setter
     private String name;
+
     private RestServerParameters restServerParameters;
+    private RestServerParameters policyApiParameters;
     private TopicParameterGroup topicParameterGroup;
     private String applicationPath;
 
@@ -47,58 +55,13 @@ public class XacmlPdpParameterGroup implements ParameterGroup {
      * @param name the parameter group name
      */
     public XacmlPdpParameterGroup(final String name, final RestServerParameters restServerParameters,
-            final TopicParameterGroup topicParameterGroup, final String applicationPath) {
+                    final RestServerParameters policyApiParameters, final TopicParameterGroup topicParameterGroup,
+                    final String applicationPath) {
         this.name = name;
         this.restServerParameters = restServerParameters;
+        this.policyApiParameters = policyApiParameters;
         this.topicParameterGroup = topicParameterGroup;
         this.applicationPath = applicationPath;
-    }
-
-    /**
-     * Return the name of this parameter group instance.
-     *
-     * @return name the parameter group name
-     */
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Set the name of this parameter group instance.
-     *
-     * @param name the parameter group name
-     */
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Return the restServerParameters of this parameter group instance.
-     *
-     * @return the restServerParameters
-     */
-    public RestServerParameters getRestServerParameters() {
-        return restServerParameters;
-    }
-
-    /**
-     * Return the topicParameterGroup of this parameter group instance.
-     *
-     * @return the topicParameterGroup
-     */
-    public TopicParameterGroup getTopicParameterGroup() {
-        return topicParameterGroup;
-    }
-
-    /**
-     * Returns the path where applications will store their data.
-     *
-     * @return String to the path
-     */
-    public String getApplicationPath() {
-        return applicationPath;
     }
 
     /**
@@ -117,6 +80,14 @@ public class XacmlPdpParameterGroup implements ParameterGroup {
                     "must have restServerParameters to configure xacml pdp rest server");
         } else {
             validationResult.setResult(PARAM_REST_SERVER, restServerParameters.validate());
+        }
+        if (policyApiParameters == null) {
+            validationResult.setResult(PARAM_POLICY_API, ValidationStatus.INVALID,
+                    "must have policyApiParameters to configure xacml pdp rest server");
+        } else {
+            // set the name - this only really matters for validation messages
+            policyApiParameters.setName(PARAM_POLICY_API);
+            validationResult.setResult(PARAM_POLICY_API, policyApiParameters.validate());
         }
         if (topicParameterGroup == null) {
             validationResult.setResult(PARAM_TOPIC_PARAMETER_GROUP, ValidationStatus.INVALID,
