@@ -22,9 +22,11 @@
 package org.onap.policy.pdpx.main.parameters;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
 import org.onap.policy.common.parameters.ParameterGroup;
 import org.onap.policy.common.utils.coder.Coder;
@@ -37,14 +39,29 @@ import org.onap.policy.common.utils.coder.StandardCoder;
  */
 public class CommonTestData {
 
-    private static final String REST_SERVER_PASSWORD = "zb!XztG34";
+    private static final String PASS_KEY = "password";
+    private static final String USER_KEY = "userName";
+    private static final String PORT_KEY = "port";
+    private static final String HOST_KEY = "host";
+    private static final String AAF_KEY = "aaf";
+    private static final String HTTPS_KEY = "https";
+
+    private static final String REST_SERVER_PASS = "zb!XztG34";
     private static final String REST_SERVER_USER = "healthcheck";
     private static final int REST_SERVER_PORT = 6969;
     private static final String REST_SERVER_HOST = "0.0.0.0";
     private static final boolean REST_SERVER_HTTPS = false;
     private static final boolean REST_SERVER_AAF = false;
+
+    private static final String POLICY_API_PASS = "zb!XztG34";
+    private static final String POLICY_API_USER = "healthcheck";
+    private static final int POLICY_API_PORT = 6970;
+    private static final String POLICY_API_HOST = "0.0.0.0";
+    private static final boolean POLICY_API_HTTPS = false;
+
     public static final String PDPX_GROUP_NAME = "XacmlPdpGroup";
-    public static final List<TopicParameters> TOPIC_PARAMS = Arrays.asList(getTopicParams());
+    public static final List<TopicParameters> TOPIC_PARAMS =
+                    Collections.unmodifiableList(Arrays.asList(getTopicParams()));
 
     public static final Coder coder = new StandardCoder();
 
@@ -69,14 +86,14 @@ public class CommonTestData {
      */
     public Map<String, Object> getRestServerParametersMap(final boolean isEmpty) {
         final Map<String, Object> map = new TreeMap<>();
-        map.put("https", REST_SERVER_HTTPS);
-        map.put("aaf", REST_SERVER_AAF);
+        map.put(HTTPS_KEY, REST_SERVER_HTTPS);
+        map.put(AAF_KEY, REST_SERVER_AAF);
 
         if (!isEmpty) {
-            map.put("host", REST_SERVER_HOST);
-            map.put("port", REST_SERVER_PORT);
-            map.put("userName", REST_SERVER_USER);
-            map.put("password", REST_SERVER_PASSWORD);
+            map.put(HOST_KEY, REST_SERVER_HOST);
+            map.put(PORT_KEY, REST_SERVER_PORT);
+            map.put(USER_KEY, REST_SERVER_USER);
+            map.put(PASS_KEY, REST_SERVER_PASS);
         }
 
         return map;
@@ -90,12 +107,12 @@ public class CommonTestData {
      */
     public Map<String, Object> getRestServerParametersMap(final int port) {
         final Map<String, Object> map = new TreeMap<>();
-        map.put("https", REST_SERVER_HTTPS);
-        map.put("aaf", REST_SERVER_AAF);
-        map.put("host", REST_SERVER_HOST);
-        map.put("port", port);
-        map.put("userName", REST_SERVER_USER);
-        map.put("password", REST_SERVER_PASSWORD);
+        map.put(HTTPS_KEY, REST_SERVER_HTTPS);
+        map.put(AAF_KEY, REST_SERVER_AAF);
+        map.put(HOST_KEY, REST_SERVER_HOST);
+        map.put(PORT_KEY, port);
+        map.put(USER_KEY, REST_SERVER_USER);
+        map.put(PASS_KEY, REST_SERVER_PASS);
 
         return map;
     }
@@ -114,6 +131,22 @@ public class CommonTestData {
         } catch (final CoderException e) {
             throw new RuntimeException("cannot create " + clazz.getName() + " from map", e);
         }
+    }
+
+    /**
+     * Returns a BusTopicParams to be used by the PolicyApi class for test cases.
+     *
+     * @return parameters suitable for constructing a PolicyApi object
+     */
+    public BusTopicParams getPolicyApiParameters() {
+        BusTopicParams params = new BusTopicParams();
+        params.setUseHttps(POLICY_API_HTTPS);
+        params.setHostname(POLICY_API_HOST);
+        params.setPort(POLICY_API_PORT);
+        params.setUserName(POLICY_API_USER);
+        params.setPassword(POLICY_API_PASS);
+
+        return params;
     }
 
     /**
