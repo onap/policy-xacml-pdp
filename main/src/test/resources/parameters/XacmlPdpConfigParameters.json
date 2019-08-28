@@ -6,6 +6,12 @@
         "userName": "healthcheck",
         "password": "zb!XztG34"
     },
+    "policyApiParameters": {
+        "host": "0.0.0.0",
+        "port": 6970,
+        "userName": "healthcheck",
+        "password": "zb!XztG34"
+    },
     "applicationPath": "src/test/resources/apps",
     "topicParameterGroup": {
         "topicSources" : [{
