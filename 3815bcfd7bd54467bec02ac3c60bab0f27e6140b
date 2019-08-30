@@ -86,6 +86,23 @@
       "revId": "3815bcfd7bd54467bec02ac3c60bab0f27e6140b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e2d5952_9b55e494",
+        "filename": "applications/optimization/src/test/java/org/onap/policy/xacml/pdp/application/optimization/OptimizationPdpApplicationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-30T20:49:24Z",
+      "side": 1,
+      "message": "if it doesn\u0027t need a real port, then just use a constant, such as 6969",
+      "revId": "3815bcfd7bd54467bec02ac3c60bab0f27e6140b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
