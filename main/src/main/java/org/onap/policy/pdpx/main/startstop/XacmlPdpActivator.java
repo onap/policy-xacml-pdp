@@ -89,7 +89,8 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
 
         try {
             XacmlPdpApplicationManager appmgr =
-                            new XacmlPdpApplicationManager(Paths.get(xacmlPdpParameterGroup.getApplicationPath()));
+                            new XacmlPdpApplicationManager(Paths.get(xacmlPdpParameterGroup.getApplicationPath()),
+                                    xacmlPdpParameterGroup.getPolicyApiParameters());
             XacmlPdpApplicationManager.setCurrent(appmgr);
 
             XacmlPdpStatisticsManager stats = new XacmlPdpStatisticsManager();

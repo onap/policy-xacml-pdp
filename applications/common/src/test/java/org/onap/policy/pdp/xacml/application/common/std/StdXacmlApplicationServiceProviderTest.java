@@ -54,6 +54,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -76,6 +77,7 @@ public class StdXacmlApplicationServiceProviderTest {
     private static final String POLICY_NAME = "my-name";
     private static final String POLICY_VERSION = "1.2.3";
     private static final String POLICY_TYPE = "my-type";
+    private static final RestServerParameters apiRestParameters = new RestServerParameters();
 
     @Mock
     private ToscaPolicyTranslator trans;
@@ -162,7 +164,7 @@ public class StdXacmlApplicationServiceProviderTest {
 
     @Test
     public void testInitialize_testGetXxx() throws XacmlApplicationException {
-        prov.initialize(TEMP_PATH);
+        prov.initialize(TEMP_PATH, apiRestParameters);
 
         assertEquals(TEMP_PATH, prov.getDataPath());
         assertNotNull(prov.getEngine());
@@ -173,7 +175,7 @@ public class StdXacmlApplicationServiceProviderTest {
 
     @Test
     public void testInitialize_Ex() throws XacmlApplicationException {
-        assertThatThrownBy(() -> prov.initialize(new File(TEMP_DIR_NAME + "-nonExistent").toPath()))
+        assertThatThrownBy(() -> prov.initialize(new File(TEMP_DIR_NAME + "-nonExistent").toPath(), apiRestParameters))
                         .isInstanceOf(XacmlApplicationException.class).hasMessage("Failed to load xacml.properties");
     }
 
@@ -196,7 +198,7 @@ public class StdXacmlApplicationServiceProviderTest {
 
     @Test
     public void testLoadPolicy_testUnloadPolicy() throws Exception {
-        prov.initialize(TEMP_PATH);
+        prov.initialize(TEMP_PATH, apiRestParameters);
         PROP_FILE.delete();
 
         final Set<String> set = XACMLProperties.getRootPolicyIDs(prov.getProperties());
@@ -243,7 +245,7 @@ public class StdXacmlApplicationServiceProviderTest {
 
     @Test
     public void testUnloadPolicy_NotDeployed() throws Exception {
-        prov.initialize(TEMP_PATH);
+        prov.initialize(TEMP_PATH, apiRestParameters);
 
         assertFalse(prov.unloadPolicy(policy));
 
@@ -309,7 +311,7 @@ public class StdXacmlApplicationServiceProviderTest {
         engineFactory = null;
 
         prov = new MyProv();
-        prov.initialize(TEMP_PATH);
+        prov.initialize(TEMP_PATH, apiRestParameters);
 
         assertNotNull(prov.getEngine());
     }

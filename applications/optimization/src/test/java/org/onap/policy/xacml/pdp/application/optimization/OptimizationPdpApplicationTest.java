@@ -23,16 +23,18 @@
 package org.onap.policy.xacml.pdp.application.optimization;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.att.research.xacml.api.Response;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.ServiceLoader;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -40,6 +42,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
+import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
@@ -62,6 +65,11 @@ public class OptimizationPdpApplicationTest {
     private static XacmlApplicationServiceProvider service;
     private static StandardCoder gson = new StandardCoder();
     private static DecisionRequest requestAffinity;
+    private static RestServerParameters clientParams;
+    private static String[] listPolicyTypeFiles = { "onap.policies.Optimization",
+            "onap.policies.optimization.AffinityPolicy",
+            "onap.policies.optimization.DistancePolicy",
+            "onap.policies.optimization.SubscriberPolicy"};
 
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
@@ -73,6 +81,9 @@ public class OptimizationPdpApplicationTest {
      */
     @BeforeClass
     public static void setUp() throws Exception {
+        clientParams = mock(RestServerParameters.class);
+        when(clientParams.getHost()).thenReturn("localhost");
+        when(clientParams.getPort()).thenReturn(6969);
         //
         // Load Single Decision Request
         //
@@ -87,6 +98,13 @@ public class OptimizationPdpApplicationTest {
         XacmlPolicyUtils.FileCreator myCreator = (String filename) -> policyFolder.newFile(filename);
         propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties",
                 properties, myCreator);
+        //
+        // Copy the test policy types into data area
+        //
+        for (String policy : listPolicyTypeFiles) {
+            Files.copy(Paths.get("src", "test", "resources", policy + "-1.0.0.yaml"),
+                    Paths.get(policyFolder.getRoot().getAbsolutePath(), policy + "-1.0.0.yaml"));
+        }
         //
         // Load service
         //
@@ -121,7 +139,7 @@ public class OptimizationPdpApplicationTest {
         // Tell it to initialize based on the properties file
         // we just built for it.
         //
-        service.initialize(propertiesFile.toPath().getParent());
+        service.initialize(propertiesFile.toPath().getParent(), clientParams);
     }
 
     @Test

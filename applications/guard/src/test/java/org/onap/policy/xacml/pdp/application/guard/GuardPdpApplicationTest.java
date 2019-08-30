@@ -50,6 +50,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
+import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
@@ -71,6 +72,7 @@ public class GuardPdpApplicationTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(GuardPdpApplicationTest.class);
     private static Properties properties = new Properties();
     private static File propertiesFile;
+    private static RestServerParameters clientParams = new RestServerParameters();
     private static XacmlApplicationServiceProvider service;
     private static DecisionRequest requestVfCount1;
     private static DecisionRequest requestVfCount3;
@@ -129,7 +131,7 @@ public class GuardPdpApplicationTest {
         // Tell it to initialize based on the properties file
         // we just built for it.
         //
-        service.initialize(propertiesFile.toPath().getParent());
+        service.initialize(propertiesFile.toPath().getParent(), clientParams);
         //
         // Load Decision Requests
         //
