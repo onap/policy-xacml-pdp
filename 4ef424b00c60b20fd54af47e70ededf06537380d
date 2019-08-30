@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "ceb56027_8123aa6e",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/PolicyApi.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-08-30T15:28:06Z",
+      "side": 1,
+      "message": "I\u0027m going to be using the code, so I\u0027m fine with PolicyApi or PolicyApiCaller.",
+      "parentUuid": "5717dfe0_5e08e350",
+      "range": {
+        "startLine": 37,
+        "startChar": 13,
+        "endLine": 37,
+        "endChar": 22
+      },
+      "revId": "4ef424b00c60b20fd54af47e70ededf06537380d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "89c96686_61f68b0b",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/PolicyApi.java",
         "patchSetId": 2
@@ -131,6 +155,30 @@
       "side": 1,
       "message": "the version in ToscaPolicyTypeIdentifier is not optional.  If it is \"\", then policy-api will return \"not found\"",
       "parentUuid": "1121b02f_249f3f9f",
+      "range": {
+        "startLine": 70,
+        "startChar": 94,
+        "endLine": 70,
+        "endChar": 111
+      },
+      "revId": "4ef424b00c60b20fd54af47e70ededf06537380d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5c8d6ae_beac36de",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/PolicyApi.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-08-30T15:28:06Z",
+      "side": 1,
+      "message": "My code would need to provide the version, that\u0027s the reasoning for creating this code. I anticipate teams wanting to change the Policy Type post-release during production runtime.",
+      "parentUuid": "e6e34854_2a0bf45b",
       "range": {
         "startLine": 70,
         "startChar": 94,
