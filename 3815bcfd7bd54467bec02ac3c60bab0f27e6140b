@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d399efb_6bced049",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-08-30T19:25:46Z",
+      "side": 1,
+      "message": "The Junit fails because this returns a null pointer. The derivedFrom and typeVersion fields are null.",
+      "range": {
+        "startLine": 180,
+        "startChar": 70,
+        "endLine": 180,
+        "endChar": 99
+      },
+      "revId": "3815bcfd7bd54467bec02ac3c60bab0f27e6140b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7a4ec32_d5dc7e7c",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-08-30T19:25:46Z",
+      "side": 1,
+      "message": "This is a concern - policy types that derive from other policy types should somehow indicate that version. Not in the TOSCA Specification.",
+      "range": {
+        "startLine": 414,
+        "startChar": 1,
+        "endLine": 418,
+        "endChar": 1
+      },
+      "revId": "3815bcfd7bd54467bec02ac3c60bab0f27e6140b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
