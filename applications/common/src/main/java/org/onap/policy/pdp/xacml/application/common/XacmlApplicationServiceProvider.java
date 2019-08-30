@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -60,10 +61,13 @@ public interface XacmlApplicationServiceProvider {
     /**
      * Initializes the application and gives it a Path for storing its
      * data. The Path may be already populated with previous data.
+     * Also gives api rest parameters if needed.
      *
      * @param pathForData Local Path
+     * @param policyApiParameters API rest parameters
      */
-    void             initialize(Path pathForData) throws XacmlApplicationException;
+    void             initialize(Path pathForData, RestServerParameters policyApiParameters)
+            throws XacmlApplicationException;
 
     /**
      * Returns a list of supported Tosca Policy Types.

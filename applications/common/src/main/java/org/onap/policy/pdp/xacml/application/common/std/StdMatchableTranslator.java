@@ -31,15 +31,24 @@ import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
 import com.att.research.xacml.api.XACML3;
+import com.att.research.xacml.std.IdentifierImpl;
 import com.att.research.xacml.std.annotations.RequestParser;
+import com.att.research.xacml.util.XACMLPolicyWriter;
 import com.google.gson.Gson;
-
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
+import lombok.Setter;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
@@ -51,23 +60,45 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
-
+import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
+import org.onap.policy.pdp.xacml.application.common.PolicyApiCaller;
+import org.onap.policy.pdp.xacml.application.common.PolicyApiException;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
 
+/**
+ * This standard matchable translator uses Policy Types that contain "matchable" field in order
+ * to translate policies.
+ *
+ * @author pameladragosh
+ *
+ */
 public class StdMatchableTranslator implements ToscaPolicyTranslator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StdMatchableTranslator.class);
     private static final String POLICY_ID = "policy-id";
+    private static final StandardCoder standardCoder = new StandardCoder();
+
+    private final Map<ToscaPolicyTypeIdentifier, ToscaPolicyType> matchablePolicyTypes = new HashMap<>();
+    @Setter
+    private RestServerParameters apiRestParameters;
+    @Setter
+    private Path pathForData;
 
     public StdMatchableTranslator() {
         super();
@@ -162,6 +193,18 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
     @Override
     public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
         //
+        // Get the TOSCA Policy Type for this policy
+        //
+        Collection<ToscaPolicyType> policyTypes = this.getPolicyTypes(toscaPolicy.getTypeIdentifier());
+        //
+        // If we don't have any policy types, then we cannot know
+        // which properties are matchable.
+        //
+        if (policyTypes.isEmpty()) {
+            throw new ToscaPolicyConversionException(
+                    "Cannot retrieve Policy Type definition for policy " + toscaPolicy.getName());
+        }
+        //
         // Policy name should be at the root
         //
         String policyName = toscaPolicy.getMetadata().get(POLICY_ID);
@@ -185,7 +228,7 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
         //
         // Generate the TargetType
         //
-        newPolicyType.setTarget(generateTargetType(toscaPolicy.getProperties()));
+        newPolicyType.setTarget(generateTargetType(toscaPolicy.getProperties(), policyTypes));
         //
         // Now create the Permit Rule
         // No target since the policy has a target
@@ -214,6 +257,12 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
         //
         // Return our new policy
         //
+        try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+            XACMLPolicyWriter.writePolicyFile(os, newPolicyType);
+            LOGGER.info("{}", os);
+        } catch (IOException e) {
+            LOGGER.error("{}", e);
+        }
         return newPolicyType;
     }
 
@@ -246,51 +295,53 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
     }
 
     /**
-     * For generating target type, we are making an assumption that the
-     * policyScope and policyType are the fields that OOF wants to match on.
-     *
-     * <P>In the future, we would need to receive the Policy Type specification
-     * from the PAP so we can dynamically see which fields are matchable.
-     *
-     * <P>Note: I am making an assumption that the matchable fields are what
-     * the OOF wants to query a policy on.
+     * For generating target type, we are scan for matchable properties
+     * and use those to build the policy.
      *
      * @param properties Properties section of policy
+     * @param policyTypes Collection of policy Type to find matchable metadata
      * @return TargetType object
      */
     @SuppressWarnings("unchecked")
-    protected TargetType generateTargetType(Map<String, Object> properties) {
+    protected TargetType generateTargetType(Map<String, Object> properties, Collection<ToscaPolicyType> policyTypes) {
         TargetType targetType = new TargetType();
         //
         // Iterate the properties
         //
         for (Entry<String, Object> entrySet : properties.entrySet()) {
             //
-            // Find policyScope and policyType
+            // Find matchable properties
             //
-            if (entrySet.getKey().equals("policyScope")) {
-                LOGGER.info("Found policyScope: {}", entrySet.getValue());
+            if (isMatchable(entrySet.getKey(), policyTypes)) {
+                LOGGER.info("Found matchable property {}", entrySet.getValue());
                 if (entrySet.getValue() instanceof Collection) {
                     targetType.getAnyOf().add(generateMatches((Collection<Object>) entrySet.getValue(),
-                            ToscaDictionary.ID_RESOURCE_POLICY_SCOPE_PROPERTY));
-                } else if (entrySet.getValue() instanceof String) {
+                            new IdentifierImpl(ToscaDictionary.ID_RESOURCE_MATCHABLE + entrySet.getKey())));
+                } else {
                     targetType.getAnyOf().add(generateMatches(Arrays.asList(entrySet.getValue()),
-                            ToscaDictionary.ID_RESOURCE_POLICY_SCOPE_PROPERTY));
-                }
-            }
-            if (entrySet.getKey().equals("policyType")) {
-                LOGGER.info("Found policyType: {}", entrySet.getValue());
-                if (entrySet.getValue() instanceof Collection) {
-                    targetType.getAnyOf().add(generateMatches((Collection<Object>) entrySet.getValue(),
-                            ToscaDictionary.ID_RESOURCE_POLICY_TYPE_PROPERTY));
-                } else if (entrySet.getValue() instanceof String) {
-                    targetType.getAnyOf().add(generateMatches(Arrays.asList(entrySet.getValue()),
-                            ToscaDictionary.ID_RESOURCE_POLICY_TYPE_PROPERTY));
+                            new IdentifierImpl(ToscaDictionary.ID_RESOURCE_MATCHABLE + entrySet.getKey())));
                 }
             }
         }
 
         return targetType;
+    }
+
+    protected boolean isMatchable(String propertyName, Collection<ToscaPolicyType> policyTypes) {
+        for (ToscaPolicyType policyType : policyTypes) {
+            for (Entry<String, ToscaProperty> propertiesEntry : policyType.getProperties().entrySet()) {
+                if (! propertiesEntry.getKey().equals(propertyName)
+                        || propertiesEntry.getValue().getMetadata() == null) {
+                    continue;
+                }
+                for (Entry<String, String> entrySet : propertiesEntry.getValue().getMetadata().entrySet()) {
+                    if (entrySet.getKey().equals("matchable") && entrySet.getValue().equals("true")) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     protected AnyOfType generateMatches(Collection<Object> matchables, Identifier attributeId) {
@@ -300,12 +351,33 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
         AnyOfType anyOf = new AnyOfType();
         for (Object matchable : matchables) {
             //
+            // Default to string
+            //
+            Identifier idFunction = XACML3.ID_FUNCTION_STRING_EQUAL;
+            Identifier idDatatype = XACML3.ID_DATATYPE_STRING;
+            //
+            // See if we are another datatype
+            //
+            // TODO We should add datetime support. But to do that we need
+            // probably more metadata to describe how that would be translated.
+            //
+            if (matchable instanceof Integer) {
+                idFunction = XACML3.ID_FUNCTION_INTEGER_EQUAL;
+                idDatatype = XACML3.ID_DATATYPE_INTEGER;
+            } else if (matchable instanceof Double) {
+                idFunction = XACML3.ID_FUNCTION_DOUBLE_EQUAL;
+                idDatatype = XACML3.ID_DATATYPE_DOUBLE;
+            } else if (matchable instanceof Boolean) {
+                idFunction = XACML3.ID_FUNCTION_BOOLEAN_EQUAL;
+                idDatatype = XACML3.ID_DATATYPE_BOOLEAN;
+            }
+            //
             // Create a match for this
             //
             MatchType match = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
-                    XACML3.ID_FUNCTION_STRING_EQUAL,
+                    idFunction,
                     matchable.toString(),
-                    XACML3.ID_DATATYPE_STRING,
+                    idDatatype,
                     attributeId,
                     XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
             //
@@ -353,4 +425,199 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
         return rule;
     }
 
+
+    /**
+     * Get Policy Type definitions. This could be previously loaded, or could be
+     * stored in application path, or may need to be pulled from the API.
+     *
+     *
+     * @param policyTypeId Policy Type Id
+     * @return A list of PolicyTypes
+     */
+    private List<ToscaPolicyType> getPolicyTypes(ToscaPolicyTypeIdentifier policyTypeId) {
+        //
+        // Create identifier from the policy
+        //
+        ToscaPolicyTypeIdentifier typeId = new ToscaPolicyTypeIdentifier(policyTypeId);
+        //
+        // Find the Policy Type
+        //
+        ToscaPolicyType policyType = findPolicyType(typeId);
+        if (policyType == null)  {
+            return Collections.emptyList();
+        }
+        //
+        // Create our return object
+        //
+        List<ToscaPolicyType> listTypes = Arrays.asList(policyType);
+        //
+        // Look for parent policy types that could also contain matchable properties
+        //
+        ToscaPolicyType childPolicyType = policyType;
+        while (! childPolicyType.getDerivedFrom().startsWith("tosca.policies.Root")) {
+            //
+            // Create parent policy type id.
+            //
+            // We will have to assume the same version between child and the
+            // parent policy type it derives from.
+            //
+            // Or do we assume 1.0.0?
+            //
+            ToscaPolicyTypeIdentifier parentId = new ToscaPolicyTypeIdentifier(childPolicyType.getDerivedFrom(),
+                    "1.0.0");
+            //
+            // Find the policy type
+            //
+            ToscaPolicyType parentPolicyType = findPolicyType(parentId);
+            if (parentPolicyType == null) {
+                //
+                // Probably would be best to throw an exception and
+                // return nothing back.
+                //
+                // But instead we will log a warning
+                //
+                LOGGER.warn("Missing parent policy type - proceeding anyway {}", parentId);
+                //
+                // Break the loop
+                //
+                break;
+            }
+            //
+            // Great save it
+            //
+            listTypes.add(parentPolicyType);
+            //
+            // Move to the next parent
+            //
+            childPolicyType = parentPolicyType;
+        }
+
+
+        return listTypes;
+    }
+
+    private ToscaPolicyType findPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
+        //
+        // Is it loaded in memory?
+        //
+        ToscaPolicyType policyType = this.matchablePolicyTypes.get(policyTypeId);
+        if (policyType == null)  {
+            //
+            // Load the policy
+            //
+            policyType = this.loadPolicyType(policyTypeId);
+        }
+        //
+        // Yep return it
+        //
+        return policyType;
+    }
+
+    private ToscaPolicyType loadPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
+        //
+        // Construct what the file name should be
+        //
+        Path policyTypePath = this.constructLocalFilePath(policyTypeId);
+        //
+        // See if it exists
+        //
+        byte[] bytes;
+        try {
+            //
+            // It exists locally, read the bytes in
+            //
+            bytes = Files.readAllBytes(policyTypePath);
+        } catch (IOException e) {
+            //
+            // Not pulled yet
+            //
+            LOGGER.info("PolicyType not found in data area yet {}", policyTypePath);
+            //
+            // So let's pull it from API REST call and save it locally
+            //
+            return this.pullPolicyType(policyTypeId, policyTypePath);
+        }
+        LOGGER.info("Read in local policy type {}", policyTypePath.toAbsolutePath());
+        //
+        // Convert it into yaml
+        //
+        Yaml yaml = new Yaml();
+        Object yamlObject = yaml.load(new String(bytes, StandardCharsets.UTF_8));
+        String yamlAsJsonString;
+        try {
+            yamlAsJsonString = standardCoder.encode(yamlObject);
+        } catch (CoderException e) {
+            LOGGER.error("Failed to encode local policy type into yaml {}", e);
+            return null;
+        }
+        try {
+            ToscaServiceTemplate serviceTemplate = standardCoder.decode(yamlAsJsonString, ToscaServiceTemplate.class);
+            JpaToscaServiceTemplate jtst = new JpaToscaServiceTemplate();
+            jtst.fromAuthorative(serviceTemplate);
+            ToscaServiceTemplate completedJtst = jtst.toAuthorative();
+            //
+            // Search for our Policy Type, there really only should be one but
+            // this is returned as a map.
+            //
+            for ( Entry<String, ToscaPolicyType> entrySet : completedJtst.getPolicyTypes().entrySet()) {
+                ToscaPolicyType entryPolicyType = entrySet.getValue();
+                if (policyTypeId.getName().equals(entryPolicyType.getName())
+                        && policyTypeId.getVersion().equals(entryPolicyType.getVersion())) {
+                    LOGGER.info("Found existing local policy type {} {}", entryPolicyType.getName(),
+                            entryPolicyType.getVersion());
+                    //
+                    // Just simply return the policy type right here
+                    //
+                    return entryPolicyType;
+                } else {
+                    LOGGER.warn("local policy type contains different name version {} {}", entryPolicyType.getName(),
+                            entryPolicyType.getVersion());
+                }
+            }
+            //
+            // This would be an error, if the file stored does not match what its supposed to be
+            //
+            LOGGER.error("Existing policy type file does not contain right name and version");
+        } catch (CoderException e) {
+            LOGGER.error("Failed to decode tosca template {}", e);
+        }
+        //
+        // Hopefully we never get here
+        //
+        LOGGER.error("Failed to find/load policy type {}", policyTypeId);
+        return null;
+    }
+
+    private ToscaPolicyType pullPolicyType(ToscaPolicyTypeIdentifier policyTypeId, Path policyTypePath) {
+        //
+        // This is what we return
+        //
+        ToscaPolicyType policyType = null;
+        try {
+            PolicyApiCaller api = new PolicyApiCaller(this.apiRestParameters);
+
+            policyType = api.getPolicyType(policyTypeId);
+        } catch (PolicyApiException e) {
+            LOGGER.error("Failed to make API call {}", e);
+            LOGGER.error("parameters: {} ", this.apiRestParameters);
+            return null;
+        }
+        //
+        // Store it locally
+        //
+        try {
+            standardCoder.encode(policyTypePath.toFile(), policyType);
+        } catch (CoderException e) {
+            LOGGER.error("Failed to store {} locally to {}", policyTypeId, policyTypePath);
+        }
+        //
+        // Done return the policy type
+        //
+        return policyType;
+    }
+
+    private Path constructLocalFilePath(ToscaPolicyTypeIdentifier policyTypeId) {
+        return Paths.get(this.pathForData.toAbsolutePath().toString(), policyTypeId.getName() + "-"
+                + policyTypeId.getVersion() + ".yaml");
+    }
 }

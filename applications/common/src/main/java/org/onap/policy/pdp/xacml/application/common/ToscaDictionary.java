@@ -58,14 +58,10 @@ public final class ToscaDictionary {
             new IdentifierImpl(ID_URN_ONAP, "onap-instance");
 
     /*
-     * These 2 ID's are for Optimization policies
+     * These ID's are for Matchable Attributes
      */
 
-    public static final Identifier ID_RESOURCE_POLICY_SCOPE_PROPERTY =
-            new IdentifierImpl(ID_URN_ONAP, "policy-scope-property");
-
-    public static final Identifier ID_RESOURCE_POLICY_TYPE_PROPERTY =
-            new IdentifierImpl(ID_URN_ONAP, "policy-type-property");
+    public static final String ID_RESOURCE_MATCHABLE = URN_ONAP + ":matachable:";
 
     /*
      * These ID's are for Legacy Guard Policies

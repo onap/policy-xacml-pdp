@@ -94,6 +94,8 @@
         <appender-ref ref="AsyncNetworkOut" />
     </logger>
 
+    <logger name="org.eclipse.jetty" level="ERROR" />
+
     <root level="INFO">
         <appender-ref ref="AsyncDebugOut" />
         <appender-ref ref="AsyncErrorOut" />
