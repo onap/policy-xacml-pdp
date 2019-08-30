@@ -22,13 +22,15 @@
 
 package org.onap.policy.xacml.pdp.application.optimization;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
+import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
+import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.std.StdMatchableTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServiceProvider;
 import org.slf4j.Logger;
@@ -77,6 +79,19 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
     }
 
     @Override
+    public void initialize(Path pathForData, RestServerParameters policyApiParameters)
+            throws XacmlApplicationException {
+        //
+        // Store our API parameters
+        //
+        this.translator.setApiRestParameters(policyApiParameters);
+        //
+        // Let our super class do its thing
+        //
+        super.initialize(pathForData, policyApiParameters);
+    }
+
+    @Override
     public synchronized List<ToscaPolicyTypeIdentifier> supportedPolicyTypes() {
         return Collections.unmodifiableList(supportedPolicyTypes);
     }
@@ -102,6 +117,9 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
 
     @Override
     protected ToscaPolicyTranslator getTranslator(String type) {
+        //
+        // Return translator
+        //
         return translator;
     }
 
