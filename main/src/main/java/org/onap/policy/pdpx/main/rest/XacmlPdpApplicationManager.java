@@ -32,6 +32,7 @@ import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
+import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
@@ -57,9 +58,9 @@ public class XacmlPdpApplicationManager {
     /**
      * One time to initialize the applications upon startup.
      */
-    public XacmlPdpApplicationManager(Path applicationPath) {
+    public XacmlPdpApplicationManager(Path applicationPath, RestServerParameters policyApiParameters) {
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Initialization applications {}", applicationPath.toAbsolutePath());
+            LOGGER.info("Initialization applications {} {}", applicationPath.toAbsolutePath(), policyApiParameters);
         }
         //
         // Load service
@@ -82,7 +83,7 @@ public class XacmlPdpApplicationManager {
             // Have it initialize at a path
             //
             try {
-                initializeApplicationPath(applicationPath, application);
+                initializeApplicationPath(applicationPath, application, policyApiParameters);
                 //
                 // We are initialized
                 //
@@ -221,8 +222,8 @@ public class XacmlPdpApplicationManager {
         return mapLoadedPolicies.size();
     }
 
-    private void initializeApplicationPath(Path basePath, XacmlApplicationServiceProvider application)
-            throws XacmlApplicationException {
+    private void initializeApplicationPath(Path basePath, XacmlApplicationServiceProvider application,
+            RestServerParameters policyApiParameters) throws XacmlApplicationException {
         //
         // Making an assumption that all application names are unique, and
         // they can result in a valid directory being created.
@@ -250,6 +251,6 @@ public class XacmlPdpApplicationManager {
         //
         // Have the application initialize
         //
-        application.initialize(path);
+        application.initialize(path, policyApiParameters);
     }
 }

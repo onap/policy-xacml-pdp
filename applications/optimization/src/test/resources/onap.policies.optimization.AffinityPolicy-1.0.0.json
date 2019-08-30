@@ -1,0 +1,54 @@
+{
+    "tosca_definitions_version": "tosca_simple_yaml_1_0_0",
+    "policy_types": {
+        "onap.policies.optimization.AffinityPolicy": {
+            "derived_from": "onap.policies.Optimization",
+            "version": "1.0.0",
+            "type_version": "1.0.0",
+            "properties": {
+                "applicableResources": {
+                    "type": "list",
+                    "required": true,
+                    "entry_schema": {
+                        "type": "string",
+                        "constraints": [
+                            {
+                                "valid_values": [
+                                    "any",
+                                    "all"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "affinityProperties": {
+                    "type": "policy.data.affinityProperties_properties",
+                    "required": true
+                }
+            }
+        }
+    },
+    "data_types": {
+        "policy.data.affinityProperties_properties": {
+            "derived_from": "tosca.nodes.Root",
+            "version": "1.0.0",
+            "properties": {
+                "qualifier": {
+                    "type": "string",
+                    "constraints": [
+                        {
+                            "valid_values": [
+                                "same",
+                                "different"
+                            ]
+                        }
+                    ]
+                },
+                "category": {
+                    "type": "string",
+                    "required": true
+                }
+            }
+        }
+    }
+}

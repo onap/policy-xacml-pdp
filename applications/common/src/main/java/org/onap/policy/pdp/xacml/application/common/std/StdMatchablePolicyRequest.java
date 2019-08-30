@@ -22,21 +22,33 @@
 
 package org.onap.policy.pdp.xacml.application.common.std;
 
+import com.att.research.xacml.api.AttributeValue;
+import com.att.research.xacml.api.DataType;
+import com.att.research.xacml.api.DataTypeException;
+import com.att.research.xacml.api.DataTypeFactory;
+import com.att.research.xacml.api.Request;
+import com.att.research.xacml.api.XACML3;
+import com.att.research.xacml.std.IdentifierImpl;
+import com.att.research.xacml.std.StdMutableAttribute;
+import com.att.research.xacml.std.StdMutableRequest;
+import com.att.research.xacml.std.StdMutableRequestAttributes;
+import com.att.research.xacml.std.annotations.RequestParser;
 import com.att.research.xacml.std.annotations.XACMLAction;
 import com.att.research.xacml.std.annotations.XACMLRequest;
-import com.att.research.xacml.std.annotations.XACMLResource;
 import com.att.research.xacml.std.annotations.XACMLSubject;
-
+import com.att.research.xacml.util.FactoryException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Getter
 @Setter
@@ -44,8 +56,7 @@ import org.onap.policy.models.decisions.concepts.DecisionRequest;
 @XACMLRequest(ReturnPolicyIdList = true)
 public class StdMatchablePolicyRequest {
 
-    public static final String POLICY_TYPE_KEY = "policyType";
-    public static final String POLICY_SCOPE_KEY = "policyScope";
+    private static final Logger LOGGER = LoggerFactory.getLogger(StdMatchablePolicyRequest.class);
 
     @XACMLSubject(includeInResults = true)
     private String onapName;
@@ -59,29 +70,38 @@ public class StdMatchablePolicyRequest {
     @XACMLAction()
     private String action;
 
-    //
-    // Unfortunately the annotations won't take an object.toString()
-    // So I could not use the ToscaDictionary class to put these id's
-    // into the annotations.
-    //
-    @XACMLResource(attributeId = "urn:org:onap:policy-scope-property", includeInResults = true)
-    Collection<String> policyScopes = new ArrayList<>();
-
-    @XACMLResource(attributeId = "urn:org:onap:policy-type-property", includeInResults = true)
-    Collection<String> policyTypes = new ArrayList<>();
-
     public StdMatchablePolicyRequest() {
         super();
+    }
+
+    protected static DataTypeFactory dataTypeFactory        = null;
+
+    protected static synchronized DataTypeFactory getDataTypeFactory() {
+        try {
+            if (dataTypeFactory != null) {
+                return dataTypeFactory;
+            }
+            dataTypeFactory = DataTypeFactory.newInstance();
+            if (dataTypeFactory == null) {
+                LOGGER.error("Could not create data type factory");
+            }
+        } catch (FactoryException e) {
+            LOGGER.error("Can't get Data type Factory: {}", e);
+        }
+        return dataTypeFactory;
     }
 
     /**
      * Parses the DecisionRequest into a MonitoringRequest.
      *
      * @param decisionRequest Input DecisionRequest
-     * @return MonitoringRequest
+     * @return Request XACML Request object
+     * @throws DataTypeException DataType exception
+     * @throws IllegalAccessException  Illegal access exception
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static StdMatchablePolicyRequest createInstance(DecisionRequest decisionRequest) {
+    public static Request createInstance(DecisionRequest decisionRequest) throws IllegalAccessException,
+        DataTypeException {
         //
         // Create our request object
         //
@@ -97,48 +117,58 @@ public class StdMatchablePolicyRequest {
         //
         request.action = decisionRequest.getAction();
         //
+        // Parse the request - we use the annotations to create a
+        // basic XACML request.
+        //
+        Request xacmlRequest = RequestParser.parseRequest(request);
+        //
+        // Create an object we can add to
+        //
+        StdMutableRequest mutableRequest = new StdMutableRequest(xacmlRequest);
+        StdMutableRequestAttributes resourceAttributes = new StdMutableRequestAttributes();
+        resourceAttributes.setCategory(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
+        //
         // Add the resource attributes
         //
         Map<String, Object> resources = decisionRequest.getResource();
         for (Entry<String, Object> entrySet : resources.entrySet()) {
             //
-            // Making an assumption that these two fields are matchable.
+            // Making an assumption that these fields are matchable.
             // Its possible we may have to load the policy type model
-            // and use that to find the fields that are matchable.
+            // and use that to validate the fields that are matchable.
             //
-            if (POLICY_SCOPE_KEY.equals(entrySet.getKey())) {
-                if (entrySet.getValue() instanceof Collection) {
-                    addPolicyScopes(request, (Collection) entrySet.getValue());
-                } else if (entrySet.getValue() instanceof String) {
-                    request.policyScopes.add(entrySet.getValue().toString());
-                }
-                continue;
-            }
-            if (POLICY_TYPE_KEY.equals(entrySet.getKey())) {
-                if (entrySet.getValue() instanceof Collection) {
-                    addPolicyTypes(request, (Collection) entrySet.getValue());
-                }
-                if (entrySet.getValue() instanceof String) {
-                    request.policyTypes.add(entrySet.getValue().toString());
-                }
+            if (entrySet.getValue() instanceof Collection) {
+                addResources(resourceAttributes, (Collection) entrySet.getValue(), entrySet.getKey());
+            } else {
+                addResources(resourceAttributes, Arrays.asList(entrySet.getValue().toString()), entrySet.getKey());
             }
         }
-        return request;
+        mutableRequest.add(resourceAttributes);
+        return mutableRequest;
     }
 
-    private static StdMatchablePolicyRequest addPolicyScopes(StdMatchablePolicyRequest request,
-            Collection<Object> scopes) {
-        for (Object scope : scopes) {
-            request.policyScopes.add(scope.toString());
+    private static StdMutableRequestAttributes addResources(StdMutableRequestAttributes attributes,
+            Collection<Object> values, String id) throws DataTypeException {
+
+        DataTypeFactory factory = getDataTypeFactory();
+        if (factory == null) {
+            return null;
         }
-        return request;
+        for (Object value : values) {
+            StdMutableAttribute mutableAttribute    = new StdMutableAttribute();
+            mutableAttribute.setCategory(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
+            mutableAttribute.setAttributeId(new IdentifierImpl(ToscaDictionary.ID_RESOURCE_MATCHABLE + id));
+            mutableAttribute.setIncludeInResults(true);
+
+            DataType<?> dataTypeExtended    = factory.getDataType(XACML3.ID_DATATYPE_STRING);
+            AttributeValue<?> attributeValue = dataTypeExtended.createAttributeValue(value);
+            Collection<AttributeValue<?>> attributeValues = new ArrayList<>();
+            attributeValues.add(attributeValue);
+            mutableAttribute.setValues(attributeValues);
+
+            attributes.add(mutableAttribute);
+        }
+        return attributes;
     }
 
-    private static StdMatchablePolicyRequest addPolicyTypes(StdMatchablePolicyRequest request,
-            Collection<Object> types) {
-        for (Object type : types) {
-            request.policyTypes.add(type.toString());
-        }
-        return request;
-    }
 }

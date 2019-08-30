@@ -20,14 +20,17 @@
 
 package org.onap.policy.pdp.xacml.application.common.std;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-import java.util.Collection;
-import java.util.Collections;
+import com.att.research.xacml.api.DataTypeException;
+import com.att.research.xacml.api.Request;
+import com.att.research.xacml.api.RequestAttributes;
+import com.att.research.xacml.api.XACML3;
+import com.att.research.xacml.std.IdentifierImpl;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 import org.junit.Before;
@@ -35,21 +38,24 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 
 public class StdMatchablePolicyRequestTest {
     private static final String ACTION = "my-action";
     private static final String ONAP_NAME = "my-name";
     private static final String ONAP_INSTANCE = "my-instance";
     private static final String ONAP_COMPONENT = "my-component";
-    private static final String POLICY_SCOPE = "my-scope";
-    private static final String POLICY_TYPE = "my-type";
+    private static final String RESOURCE1 = "my-scope";
+    private static final String RESOURCE2 = "my-service";
+    private static final String RESOURCE3 = "my-geography1";
+    private static final String RESOURCE4 = "my-geography2";
 
     @Mock
     private DecisionRequest decreq;
 
     private Map<String, Object> resources;
 
-    private StdMatchablePolicyRequest stdreq;
+    private Request stdreq;
 
     /**
      * Initializes objects.
@@ -68,23 +74,29 @@ public class StdMatchablePolicyRequestTest {
     }
 
     @Test
-    public void testCreateInstance() {
-        resources.put(StdMatchablePolicyRequest.POLICY_SCOPE_KEY, 100);
-        resources.put(StdMatchablePolicyRequest.POLICY_TYPE_KEY, 101);
+    public void testCreateInstance() throws IllegalAccessException, DataTypeException {
+        resources.put("resource1", RESOURCE1);
+        resources.put("resource2", RESOURCE2);
+        resources.put("resource3", Arrays.asList(RESOURCE3, RESOURCE4));
 
         stdreq = StdMatchablePolicyRequest.createInstance(decreq);
 
         assertNotNull(stdreq);
 
-        assertEquals(ACTION, stdreq.getAction());
-        assertEquals(ONAP_COMPONENT, stdreq.getOnapComponent());
-        assertEquals(ONAP_INSTANCE, stdreq.getOnapInstance());
-        assertEquals(ONAP_NAME, stdreq.getOnapName());
+        assertTrue(stdreq.getRequestAttributes(XACML3.ID_ATTRIBUTE_CATEGORY_ACTION).hasNext());
+        assertTrue(stdreq.getRequestAttributes(XACML3.ID_SUBJECT_CATEGORY_ACCESS_SUBJECT).hasNext());
 
-        assertTrue(stdreq.getPolicyScopes().isEmpty());
-        assertTrue(stdreq.getPolicyTypes().isEmpty());
+
+        Iterator<RequestAttributes> iterResources = stdreq.getRequestAttributes(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
+        assertTrue(iterResources.hasNext());
+        while (iterResources.hasNext()) {
+            RequestAttributes attrs = iterResources.next();
+            assertTrue(attrs.hasAttributes(new IdentifierImpl(ToscaDictionary.ID_RESOURCE_MATCHABLE + "resource1")));
+        }
+
     }
 
+    /*
     @Test
     public void testCreateInstance_StringValues() {
         resources.put(StdMatchablePolicyRequest.POLICY_SCOPE_KEY, POLICY_SCOPE);
@@ -117,5 +129,6 @@ public class StdMatchablePolicyRequestTest {
         assertFalse(res.isEmpty());
         assertEquals(POLICY_TYPE, res.iterator().next());
     }
+*/
 
 }
