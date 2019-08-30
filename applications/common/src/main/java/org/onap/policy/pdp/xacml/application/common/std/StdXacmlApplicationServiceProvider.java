@@ -37,8 +37,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import lombok.Getter;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import org.apache.commons.lang3.tuple.Pair;
+import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -55,6 +57,8 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StdXacmlApplicationServiceProvider.class);
     private Path pathForData = null;
+    @Getter
+    private RestServerParameters policyApiParameters;
     private Properties pdpProperties = null;
     private PDPEngine pdpEngine = null;
     private Map<ToscaPolicy, Path> mapLoadedPolicies = new HashMap<>();
@@ -74,12 +78,17 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
     }
 
     @Override
-    public void initialize(Path pathForData) throws XacmlApplicationException {
+    public void initialize(Path pathForData, RestServerParameters policyApiParameters)
+            throws XacmlApplicationException {
         //
         // Save our path
         //
         this.pathForData = pathForData;
         LOGGER.info("New Path is {}", this.pathForData.toAbsolutePath());
+        //
+        // Save our params
+        //
+        this.policyApiParameters = policyApiParameters;
         //
         // Look for and load the properties object
         //

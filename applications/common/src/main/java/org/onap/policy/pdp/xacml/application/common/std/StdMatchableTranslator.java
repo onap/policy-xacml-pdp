@@ -33,13 +33,14 @@ import com.att.research.xacml.api.Result;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.annotations.RequestParser;
 import com.google.gson.Gson;
-
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
+import lombok.Setter;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
@@ -51,12 +52,14 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
-
+import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
@@ -64,10 +67,20 @@ import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This standard matchable translator uses Policy Types that contain "matchable" field in order
+ * to translate policies.
+ *
+ * @author pameladragosh
+ *
+ */
 public class StdMatchableTranslator implements ToscaPolicyTranslator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StdMatchableTranslator.class);
     private static final String POLICY_ID = "policy-id";
+    private final Map<ToscaPolicyTypeIdentifier, ToscaPolicyType> matchablePolicyTypes = new HashMap<>();
+    @Setter
+    private RestServerParameters apiRestParameters;
 
     public StdMatchableTranslator() {
         super();
@@ -161,6 +174,18 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
 
     @Override
     public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
+        //
+        // Get the TOSCA Policy Type for this policy
+        //
+        Collection<ToscaPolicyType> policyTypes = this.getPolicyTypes(toscaPolicy.getTypeIdentifier());
+        //
+        // If we don't have any policy types, then we cannot know
+        // which properties are matchable.
+        //
+        if (policyTypes.isEmpty()) {
+            throw new ToscaPolicyConversionException(
+                    "Cannot retrieve Policy Type definition for policy " + toscaPolicy.getIdentifier());
+        }
         //
         // Policy name should be at the root
         //
@@ -353,4 +378,99 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
         return rule;
     }
 
+
+    /**
+     * Get Policy Type definitions. This could be previously loaded, or could be
+     * stored in application path, or may need to be pulled from the API.
+     *
+     *
+     * @param policyTypeId Policy Type Id
+     * @return A list of PolicyTypes
+     */
+    private List<ToscaPolicyType> getPolicyTypes(ToscaPolicyTypeIdentifier policyTypeId) {
+        //
+        // Create identifier from the policy
+        //
+        ToscaPolicyTypeIdentifier typeId = new ToscaPolicyTypeIdentifier(policyTypeId);
+        //
+        // Find the Policy Type
+        //
+        ToscaPolicyType policyType = findPolicyType(typeId);
+        if (policyType == null)  {
+            return Collections.emptyList();
+        }
+        //
+        // Create our return object
+        //
+        List<ToscaPolicyType> listTypes = Arrays.asList(policyType);
+        //
+        // Look for parent policy types that could also contain matchable properties
+        //
+        ToscaPolicyType childPolicyType = policyType;
+        while (! childPolicyType.getDerivedFrom().equalsIgnoreCase("tosca.policies.Root")) {
+            //
+            // Create parent policy type id.
+            //
+            // We will have to assume the same version between child and the
+            // parent policy type it derives from.
+            //
+            // Or do we assume 1.0.0?
+            //
+            ToscaPolicyTypeIdentifier parentId = new ToscaPolicyTypeIdentifier(childPolicyType.getDerivedFrom(),
+                    "1.0.0");
+            //
+            // Find the policy type
+            //
+            ToscaPolicyType parentPolicyType = findPolicyType(parentId);
+            if (parentPolicyType == null) {
+                //
+                // Probably would be best to throw an exception and
+                // return nothing back.
+                //
+                // But instead we will log a warning
+                //
+                LOGGER.warn("Missing parent policy type - proceeding anyway {}", parentId);
+                //
+                // Break the loop
+                //
+                break;
+            }
+            //
+            // Great save it
+            //
+            listTypes.add(parentPolicyType);
+            //
+            // Move to the next parent
+            //
+            childPolicyType = parentPolicyType;
+        }
+
+
+        return listTypes;
+    }
+
+    private ToscaPolicyType findPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
+        //
+        // Is it loaded in memory?
+        //
+        ToscaPolicyType policyType = this.matchablePolicyTypes.get(policyTypeId);
+        if (policyType == null)  {
+            //
+            // Load the policy
+            //
+            policyType = this.loadPolicyType(policyTypeId);
+        }
+        //
+        // Yep return it
+        //
+        return policyType;
+    }
+
+    private ToscaPolicyType loadPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
+        //
+        // Yes this needs to be filled in
+        //
+
+        return null;
+    }
 }

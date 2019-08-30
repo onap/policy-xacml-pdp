@@ -23,6 +23,9 @@
 package org.onap.policy.xacml.pdp.application.optimization;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 
 import com.att.research.xacml.api.Response;
 
@@ -40,8 +43,10 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
+import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
@@ -62,6 +67,8 @@ public class OptimizationPdpApplicationTest {
     private static XacmlApplicationServiceProvider service;
     private static StandardCoder gson = new StandardCoder();
     private static DecisionRequest requestAffinity;
+    private static int port;
+    private static RestServerParameters clientParams;
 
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
@@ -73,6 +80,11 @@ public class OptimizationPdpApplicationTest {
      */
     @BeforeClass
     public static void setUp() throws Exception {
+        port = NetworkUtil.allocPort();
+
+        clientParams = mock(RestServerParameters.class);
+        when(clientParams.getHost()).thenReturn("localhost");
+        when(clientParams.getPort()).thenReturn(port);
         //
         // Load Single Decision Request
         //
@@ -121,7 +133,7 @@ public class OptimizationPdpApplicationTest {
         // Tell it to initialize based on the properties file
         // we just built for it.
         //
-        service.initialize(propertiesFile.toPath().getParent());
+        service.initialize(propertiesFile.toPath().getParent(), clientParams);
     }
 
     @Test

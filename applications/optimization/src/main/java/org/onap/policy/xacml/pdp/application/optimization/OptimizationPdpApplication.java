@@ -102,6 +102,15 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
 
     @Override
     protected ToscaPolicyTranslator getTranslator(String type) {
+        //
+        // Make sure translator has Rest parameters.
+        // Probably a better way to do this than every time
+        // it is requested. Perhaps override initialize.
+        //
+        this.translator.setApiRestParameters(this.getPolicyApiParameters());
+        //
+        // Return translator
+        //
         return translator;
     }
 
