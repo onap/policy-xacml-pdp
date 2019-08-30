@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5717dfe0_5e08e350",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/PolicyApi.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-30T14:26:07Z",
+      "side": 1,
+      "message": "It is a proxy object for the policy-api, thus PolicyApi makes sense to me.  Don\u0027t really like these: \"Controller\" has other connotations in drools-pdp, and \"RestClient\" implies a particular implementation, which the invoker doesn\u0027t need to know or care about.\n\nNevertheless, if PolicyApi is not acceptable, then I would probably go with PolicyApiManager; even though it doesn\u0027t manage policy-api, it does manage communication with policy-api, and that is often what \"Manager\" means in class names.",
+      "parentUuid": "a59c6574_eab976fd",
+      "range": {
+        "startLine": 37,
+        "startChar": 13,
+        "endLine": 37,
+        "endChar": 22
+      },
+      "revId": "4ef424b00c60b20fd54af47e70ededf06537380d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "89c96686_61f68b0b",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/PolicyApi.java",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2019-08-30T13:20:19Z",
       "side": 1,
       "message": "Isn\u0027t it better to do this:\nHttpClientFactoryInstance.getClientFactory().build(params);",
+      "range": {
+        "startLine": 53,
+        "startChar": 29,
+        "endLine": 53,
+        "endChar": 41
+      },
+      "revId": "4ef424b00c60b20fd54af47e70ededf06537380d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2b7b757_dc0540be",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/PolicyApi.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-30T14:26:07Z",
+      "side": 1,
+      "message": "Good idea - thx!",
+      "parentUuid": "89c96686_61f68b0b",
       "range": {
         "startLine": 53,
         "startChar": 29,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "e6e34854_2a0bf45b",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/PolicyApi.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-30T14:26:07Z",
+      "side": 1,
+      "message": "the version in ToscaPolicyTypeIdentifier is not optional.  If it is \"\", then policy-api will return \"not found\"",
+      "parentUuid": "1121b02f_249f3f9f",
+      "range": {
+        "startLine": 70,
+        "startChar": 94,
+        "endLine": 70,
+        "endChar": 111
+      },
+      "revId": "4ef424b00c60b20fd54af47e70ededf06537380d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "be5812d5_f8cb204d",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/PolicyApi.java",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2019-08-30T13:20:19Z",
       "side": 1,
       "message": "I am ok with this but Sonar will complain.\nsquid:S1301 - \"switch\" statements should have at least 3 \"case\" clauses",
+      "range": {
+        "startLine": 72,
+        "startChar": 12,
+        "endLine": 72,
+        "endChar": 18
+      },
+      "revId": "4ef424b00c60b20fd54af47e70ededf06537380d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41b59946_eba2d7a0",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/PolicyApi.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-30T14:26:07Z",
+      "side": 1,
+      "message": "this isn\u0027t showing up in my sonar-lint; maybe that particular squid isn\u0027t active in the onap sonar rules?  If it is in, then I can change to \"if\" statements later",
+      "parentUuid": "be5812d5_f8cb204d",
       "range": {
         "startLine": 72,
         "startChar": 12,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "2b5f5f85_3a75b0c6",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/PolicyApiException.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-30T14:26:07Z",
+      "side": 1,
+      "message": "Good point - I\u0027ll remove it",
+      "parentUuid": "25e165cd_4c3e400f",
+      "range": {
+        "startLine": 29,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 5
+      },
+      "revId": "4ef424b00c60b20fd54af47e70ededf06537380d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2b49c487_b6991cdc",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/XacmlPdpParameterGroup.java",
         "patchSetId": 2
@@ -128,6 +248,30 @@
       "writtenOn": "2019-08-30T13:20:19Z",
       "side": 1,
       "message": "Should we have RestServerParameters here?",
+      "range": {
+        "startLine": 49,
+        "startChar": 12,
+        "endLine": 49,
+        "endChar": 26
+      },
+      "revId": "4ef424b00c60b20fd54af47e70ededf06537380d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bdc0fc6_120c5ed1",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/XacmlPdpParameterGroup.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-30T14:26:07Z",
+      "side": 1,
+      "message": "I had originally thought to do that, but ran into the fact that the client constructor requires BusTopicParams, which would thus require some translation code to convert from RestServerParameters to BusTopicParams.  For configuring topics, we simply chose to derive TopicParams from BusTopicParams, so did the same here, but skipped the empty derivation.  Nevertheless, since you also suggested using RestServerParameters, I think I\u0027ll go ahead and use that, even though some translation code would be needed, as it\u0027s clearer.",
+      "parentUuid": "2b49c487_b6991cdc",
       "range": {
         "startLine": 49,
         "startChar": 12,
