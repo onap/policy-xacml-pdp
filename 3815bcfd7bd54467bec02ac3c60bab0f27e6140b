@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1c21960c_e477cc4f",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-30T20:28:33Z",
+      "side": 1,
+      "message": "typeVersion is null because type_version is missing from the yaml.\n\nStill investigating the null name issue - could be related to the copyTo changes I made.  I\u0027m not sure how the name is supposed be set in the ToscaPolicy since the field doesn\u0027t come from the yaml/json directly - it\u0027s the map key to the policy.",
+      "parentUuid": "9d399efb_6bced049",
+      "range": {
+        "startLine": 180,
+        "startChar": 70,
+        "endLine": 180,
+        "endChar": 99
+      },
+      "revId": "3815bcfd7bd54467bec02ac3c60bab0f27e6140b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a7a4ec32_d5dc7e7c",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
         "patchSetId": 1
