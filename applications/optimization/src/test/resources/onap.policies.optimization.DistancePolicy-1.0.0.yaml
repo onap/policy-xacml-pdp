@@ -1,0 +1,55 @@
+tosca_definitions_version: tosca_simple_yaml_1_0_0
+policy_types:
+    onap.policies.optimization.DistancePolicy:
+        derived_from: onap.policies.Optimization
+        properties:
+            applicableResources:
+                type: list
+                required: true
+                entry_schema:
+                    type: string
+                    constraints:
+                    -   valid_values:
+                        - any
+                        - all
+            distanceProperties:
+                type: policy.data.distanceProperties_properties
+                required: true
+data_types:
+    policy.data.distanceProperties_properties:
+        derived_from: tosca.nodes.Root
+        properties:
+            locationInfo:
+                type: string
+                required: true
+            distance:
+                type: policy.data.distance_properties
+                required: true
+                entry_schema:
+                    type: policy.data.distance_properties
+    policy.data.distance_properties:
+        derived_from: tosca.nodes.Root
+        properties:
+            value:
+                type: string
+                required: true
+            operator:
+                type: list
+                required: true
+                entry_schema:
+                    type: string
+                    constraints:
+                    -   valid_values:
+                        - <
+                        - <=
+                        - >
+                        - '>='
+                        - =
+            unit:
+                type: list
+                required: true
+                entry_schema:
+                    type: string
+                    constraints:
+                    -   valid_values:
+                        - km

@@ -31,6 +31,7 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -64,11 +65,20 @@ public class TestUtils {
         Yaml yaml = new Yaml();
         Object yamlObject = yaml.load(policyYaml);
         String yamlAsJsonString = standardCoder.encode(yamlObject);
+        //
+        // Serialize it into a class
+        //
         ToscaServiceTemplate serviceTemplate = standardCoder.decode(yamlAsJsonString, ToscaServiceTemplate.class);
+        //
+        // Make sure all the fields are setup properly
+        //
+        JpaToscaServiceTemplate jtst = new JpaToscaServiceTemplate();
+        jtst.fromAuthorative(serviceTemplate);
+        ToscaServiceTemplate completedJtst = jtst.toAuthorative();
         //
         // Get the policies
         //
-        for (Map<String, ToscaPolicy> policies : serviceTemplate.getToscaTopologyTemplate().getPolicies()) {
+        for (Map<String, ToscaPolicy> policies : completedJtst.getToscaTopologyTemplate().getPolicies()) {
             for (ToscaPolicy policy : policies.values()) {
                 if (service.loadPolicy(policy)) {
                     loadedPolicies.add(policy);
