@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a59c6574_eab976fd",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/PolicyApi.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-08-30T13:20:19Z",
+      "side": 1,
+      "message": "Not too convinced with the name.\nMay be PolicyApiCaller, PolicyApiManager, PolicyApiController, PolicyApiRestClient etc. Just to explicitly tell that it is calling policy/api rest services.",
+      "range": {
+        "startLine": 37,
+        "startChar": 13,
+        "endLine": 37,
+        "endChar": 22
+      },
+      "revId": "4ef424b00c60b20fd54af47e70ededf06537380d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "89c96686_61f68b0b",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/PolicyApi.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-08-30T13:20:19Z",
+      "side": 1,
+      "message": "Isn\u0027t it better to do this:\nHttpClientFactoryInstance.getClientFactory().build(params);",
+      "range": {
+        "startLine": 53,
+        "startChar": 29,
+        "endLine": 53,
+        "endChar": 41
+      },
+      "revId": "4ef424b00c60b20fd54af47e70ededf06537380d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1121b02f_249f3f9f",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/PolicyApi.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-08-30T13:20:19Z",
+      "side": 1,
+      "message": "I hope type version is always provided. We don\u0027t want case where version is not provided and we fetch the latest from DB.",
+      "range": {
+        "startLine": 70,
+        "startChar": 94,
+        "endLine": 70,
+        "endChar": 111
+      },
+      "revId": "4ef424b00c60b20fd54af47e70ededf06537380d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "be5812d5_f8cb204d",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/PolicyApi.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-08-30T13:20:19Z",
+      "side": 1,
+      "message": "I am ok with this but Sonar will complain.\nsquid:S1301 - \"switch\" statements should have at least 3 \"case\" clauses",
+      "range": {
+        "startLine": 72,
+        "startChar": 12,
+        "endLine": 72,
+        "endChar": 18
+      },
+      "revId": "4ef424b00c60b20fd54af47e70ededf06537380d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25e165cd_4c3e400f",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/PolicyApiException.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-08-30T13:20:19Z",
+      "side": 1,
+      "message": "Do we need this?",
+      "range": {
+        "startLine": 29,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 5
+      },
+      "revId": "4ef424b00c60b20fd54af47e70ededf06537380d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b49c487_b6991cdc",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/XacmlPdpParameterGroup.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-08-30T13:20:19Z",
+      "side": 1,
+      "message": "Should we have RestServerParameters here?",
+      "range": {
+        "startLine": 49,
+        "startChar": 12,
+        "endLine": 49,
+        "endChar": 26
+      },
+      "revId": "4ef424b00c60b20fd54af47e70ededf06537380d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
