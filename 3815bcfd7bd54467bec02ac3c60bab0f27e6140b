@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "e83c542e_79ef5beb",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-30T21:14:00Z",
+      "side": 1,
+      "message": "Not related to the copyTo changes.  Must either use the policy-id from the policy properties, or the \"name\" field must be added to the policy yaml (for each policy).\n\nCan fix the test as follows:\n1) add type_version to each policy in the yaml\n2) add this line to TestUtil.loadPolicies():\n\n  policy.setName(policy.getMetadata().get(\"policy-id\").toString());\n\nNote: after making the above changes, the test will fail in the assert at line 186.",
+      "parentUuid": "1c21960c_e477cc4f",
+      "range": {
+        "startLine": 180,
+        "startChar": 70,
+        "endLine": 180,
+        "endChar": 99
+      },
+      "revId": "3815bcfd7bd54467bec02ac3c60bab0f27e6140b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a7a4ec32_d5dc7e7c",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
         "patchSetId": 1
