@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b41b1aa4_3c3d717d",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-03T14:22:46Z",
+      "side": 1,
+      "message": "if use a regular for-each loop (instead of functional), then can easily record/return the matching item.  Otherwise, would have to use an AtomicReference which can be updated within the lambda expression.\n\nor could get fancy and use streams/filter/Optional, though in this case, that would be much less clear",
+      "revId": "9fc24d2a6156ff30542621c9e2443f43135c8ebd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3030fd17_1a9037d7",
+        "filename": "applications/optimization/src/test/resources/onap.policies.Optimization-1.0.0.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-03T14:22:46Z",
+      "side": 1,
+      "message": "per an external discussion, may need to add \"name\" to each policy_type, policy, and data_type object in these yaml files",
+      "revId": "9fc24d2a6156ff30542621c9e2443f43135c8ebd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
