@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7c2a8aea_c105ef24",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-04T18:01:55Z",
+      "side": 1,
+      "message": "shouldn\u0027t make a difference",
+      "parentUuid": "77de8ac9_fa7a97d8",
+      "range": {
+        "startLine": 508,
+        "startChar": 0,
+        "endLine": 513,
+        "endChar": 0
+      },
+      "revId": "dc2996fe7c4464d7f07855ba204b7610c17ababb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "594e336d_5484875d",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
         "patchSetId": 4
