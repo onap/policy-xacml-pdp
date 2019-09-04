@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77de8ac9_fa7a97d8",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-04T17:43:29Z",
+      "side": 1,
+      "message": "Wondering if I should be using a JSON version?? I wouldn\u0027t think that would make a difference.",
+      "range": {
+        "startLine": 508,
+        "startChar": 0,
+        "endLine": 513,
+        "endChar": 0
+      },
+      "revId": "dc2996fe7c4464d7f07855ba204b7610c17ababb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "594e336d_5484875d",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-04T17:43:29Z",
+      "side": 1,
+      "message": "Here both name and the version is null.",
+      "range": {
+        "startLine": 525,
+        "startChar": 1,
+        "endLine": 527,
+        "endChar": 0
+      },
+      "revId": "dc2996fe7c4464d7f07855ba204b7610c17ababb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
