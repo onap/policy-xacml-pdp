@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bebad7dd_596fca68",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-06T18:47:27Z",
+      "side": 1,
+      "message": "might want to consider making lines 511-524 into a public static method so it can be used in the two places within the junit tests, too",
+      "revId": "54d5fc6a0ab229894054bd2769b3698861636efa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66f6a334_fc10a5f3",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-06T18:47:27Z",
+      "side": 1,
+      "message": "as often as we have this scattered through the repos, I wonder if we should modify the ToscaPolicyXxxIdentifier.toString() methods to just return \"\u003cname\u003e \u003cversion\u003e\" (or \"name\u003d\u003cname\u003e version\u003d\u003cversion\u003e\")",
+      "revId": "54d5fc6a0ab229894054bd2769b3698861636efa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab7ee10e_a2dc8daa",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 567,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-06T18:47:27Z",
+      "side": 1,
+      "message": "fyi: there\u0027s a exceptionsubclass you can catch, too, which indicates not-found, but this is fine.",
+      "revId": "54d5fc6a0ab229894054bd2769b3698861636efa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d66fb84_442c710c",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-06T18:47:27Z",
+      "side": 1,
+      "message": "any need to worry about race condition?  if so, could put this in a synchronized block",
+      "revId": "54d5fc6a0ab229894054bd2769b3698861636efa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc288aed_49f19c0e",
+        "filename": "applications/common/src/test/resources/matchable/onap.policies.Test-1.0.0.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-06T18:47:27Z",
+      "side": 1,
+      "message": "trailing space\n\nsame comment in subsequent files",
+      "revId": "54d5fc6a0ab229894054bd2769b3698861636efa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68d0441d_06fc1778",
+        "filename": "applications/optimization/src/test/resources/onap.policies.optimization.AffinityPolicy-1.0.0.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-06T18:47:27Z",
+      "side": 1,
+      "message": "is this file and the next file still needed?  could get from models now?",
+      "revId": "54d5fc6a0ab229894054bd2769b3698861636efa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
