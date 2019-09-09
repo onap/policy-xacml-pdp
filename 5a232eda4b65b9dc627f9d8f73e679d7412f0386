@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a532d7d0_0c6662a6",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/ToscaDictionary.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-09T19:12:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b87703b_1f073078",
+      "revId": "5a232eda4b65b9dc627f9d8f73e679d7412f0386",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a3d1358_ef04ea03",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2019-09-09T13:36:12Z",
       "side": 1,
       "message": "should probably add an additional \"e\" to make sonar happy, as the first one is gobbled up by the \"{}\" place-holder (not that this exception will ever be thrown)",
+      "revId": "5a232eda4b65b9dc627f9d8f73e679d7412f0386",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae6d1731_ae4e77ea",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-09T19:12:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a3d1358_ef04ea03",
       "revId": "5a232eda4b65b9dc627f9d8f73e679d7412f0386",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "2046ed1f_3e933101",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-09T19:12:25Z",
+      "side": 1,
+      "message": "not sure - best to add the synchronized.",
+      "parentUuid": "5e6e1a11_200d580c",
+      "revId": "5a232eda4b65b9dc627f9d8f73e679d7412f0386",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "504f75c3_0d588414",
         "filename": "applications/common/src/test/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslatorTest.java",
         "patchSetId": 6
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "39d720e8_dea41d05",
+        "filename": "applications/common/src/test/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslatorTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-09T19:12:25Z",
+      "side": 1,
+      "message": "Ok - I\u0027m going to remove this section when policy/models gets merged.",
+      "parentUuid": "504f75c3_0d588414",
+      "revId": "5a232eda4b65b9dc627f9d8f73e679d7412f0386",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c3ed10a_0fb5fa15",
         "filename": "applications/common/src/test/resources/matchable/onap.policies.Test-1.0.0.yaml",
         "patchSetId": 6
@@ -81,6 +153,24 @@
       "writtenOn": "2019-09-09T13:36:12Z",
       "side": 1,
       "message": "same comment as before: trailing space\n\napplies to subsequent files, too",
+      "revId": "5a232eda4b65b9dc627f9d8f73e679d7412f0386",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb3b657f_876670c0",
+        "filename": "applications/common/src/test/resources/matchable/onap.policies.Test-1.0.0.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-09T19:12:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c3ed10a_0fb5fa15",
       "revId": "5a232eda4b65b9dc627f9d8f73e679d7412f0386",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
