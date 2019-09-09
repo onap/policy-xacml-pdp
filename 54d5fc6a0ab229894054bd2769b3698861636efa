@@ -101,6 +101,24 @@
       "revId": "54d5fc6a0ab229894054bd2769b3698861636efa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33e29bcd_27bb0aed",
+        "filename": "applications/optimization/src/test/resources/onap.policies.optimization.AffinityPolicy-1.0.0.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-09T19:12:25Z",
+      "side": 1,
+      "message": "For the moment yes - I am going to move them to JSON. I could change the tests later to copy them over: I would have to read them in as YAML, save as JSON. I can fix this in a subsequent review.",
+      "parentUuid": "68d0441d_06fc1778",
+      "revId": "54d5fc6a0ab229894054bd2769b3698861636efa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
