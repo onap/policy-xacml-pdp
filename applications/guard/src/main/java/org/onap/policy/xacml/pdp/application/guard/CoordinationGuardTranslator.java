@@ -43,6 +43,8 @@ import java.util.stream.Stream;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 import org.apache.commons.io.IOUtils;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -50,8 +52,6 @@ import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionExcepti
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
 
 public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
 
@@ -117,11 +117,10 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
             //
             // Read the yaml into our Java Object
             //
-            Yaml yaml = new Yaml(new Constructor(CoordinationDirective.class));
-            Object obj = yaml.load(contents);
+            CoordinationDirective obj = new StandardYamlCoder().decode(contents, CoordinationDirective.class);
             LOGGER.debug(contents);
-            return (CoordinationDirective) obj;
-        } catch (IOException e) {
+            return obj;
+        } catch (IOException | CoderException e) {
             LOGGER.error("Error while loading YAML coordination directive", e);
         }
         return null;

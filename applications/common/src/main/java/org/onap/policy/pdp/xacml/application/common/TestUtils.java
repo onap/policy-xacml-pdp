@@ -27,18 +27,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
 
 public class TestUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestUtils.class);
-    private static final StandardCoder standardCoder = new StandardCoder();
+    private static final StandardYamlCoder yamlCoder = new StandardYamlCoder();
 
     private TestUtils() {
         super();
@@ -62,13 +61,10 @@ public class TestUtils {
         // Decode it
         //
         String policyYaml = ResourceUtils.getResourceAsString(resourceFile);
-        Yaml yaml = new Yaml();
-        Object yamlObject = yaml.load(policyYaml);
-        String yamlAsJsonString = standardCoder.encode(yamlObject);
         //
         // Serialize it into a class
         //
-        ToscaServiceTemplate serviceTemplate = standardCoder.decode(yamlAsJsonString, ToscaServiceTemplate.class);
+        ToscaServiceTemplate serviceTemplate = yamlCoder.decode(policyYaml, ToscaServiceTemplate.class);
         //
         // Make sure all the fields are setup properly
         //

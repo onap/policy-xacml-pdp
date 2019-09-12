@@ -32,7 +32,6 @@ import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.IdentifierImpl;
-import com.att.research.xacml.std.annotations.RequestParser;
 import com.att.research.xacml.util.XACMLPolicyWriter;
 import com.google.gson.Gson;
 import java.io.ByteArrayOutputStream;

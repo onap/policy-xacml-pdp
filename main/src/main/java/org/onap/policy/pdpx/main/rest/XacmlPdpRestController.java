@@ -62,14 +62,15 @@ import org.onap.policy.pdpx.main.rest.provider.StatisticsProvider;
  */
 @Path("/policy/pdpx/v1")
 @Api
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+@Produces({MediaType.APPLICATION_JSON, XacmlPdpRestController.APPLICATION_YAML})
+@Consumes({MediaType.APPLICATION_JSON, XacmlPdpRestController.APPLICATION_YAML})
 @SwaggerDefinition(info = @Info(description = "Policy Xacml PDP Service", version = "1.0.0", title = "Policy Xacml PDP",
         extensions = {@Extension(properties = {@ExtensionProperty(name = "planned-retirement-date", value = "tbd"),
                 @ExtensionProperty(name = "component", value = "Policy Framework")})}),
         schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
         securityDefinition = @SecurityDefinition(basicAuthDefinitions = {@BasicAuthDefinition(key = "basicAuth")}))
 public class XacmlPdpRestController {
+    public static final String APPLICATION_YAML = "application/yaml";
 
     @GET
     @Path("/healthcheck")

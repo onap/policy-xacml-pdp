@@ -49,7 +49,7 @@ import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.properties.PolicyEndPointProperties;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -59,13 +59,12 @@ import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
 
 public class StdMatchableTranslatorTest {
 
     private static final Logger logger = LoggerFactory.getLogger(StdMatchableTranslatorTest.class);
     private static final String CLIENT_NAME = "policy-api";
-    private static final StandardCoder standardCoder = new StandardCoder();
+    private static final StandardYamlCoder yamlCoder = new StandardYamlCoder();
     private static int port;
     private static RestServerParameters clientParams;
     private static ToscaPolicyType testPolicyType;
@@ -116,13 +115,10 @@ public class StdMatchableTranslatorTest {
         // Load our test policy type
         //
         String policyYaml = ResourceUtils.getResourceAsString("matchable/onap.policies.Test-1.0.0.yaml");
-        Yaml yaml = new Yaml();
-        Object yamlObject = yaml.load(policyYaml);
-        String yamlAsJsonString = standardCoder.encode(yamlObject);
         //
         // Serialize it into a class
         //
-        ToscaServiceTemplate serviceTemplate = standardCoder.decode(yamlAsJsonString, ToscaServiceTemplate.class);
+        ToscaServiceTemplate serviceTemplate = yamlCoder.decode(policyYaml, ToscaServiceTemplate.class);
         //
         // Make sure all the fields are setup properly
         //
@@ -160,13 +156,10 @@ public class StdMatchableTranslatorTest {
         //
         String policyYaml = ResourceUtils.getResourceAsString(
                 "src/test/resources/matchable/test.policies.input.tosca.yaml");
-        Yaml yaml = new Yaml();
-        Object yamlObject = yaml.load(policyYaml);
-        String yamlAsJsonString = standardCoder.encode(yamlObject);
         //
         // Serialize it into a class
         //
-        ToscaServiceTemplate serviceTemplate = standardCoder.decode(yamlAsJsonString, ToscaServiceTemplate.class);
+        ToscaServiceTemplate serviceTemplate = yamlCoder.decode(policyYaml, ToscaServiceTemplate.class);
         //
         // Make sure all the fields are setup properly
         //
