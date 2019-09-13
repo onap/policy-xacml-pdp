@@ -56,7 +56,6 @@ public class DecisionProvider {
         try {
             decision = application.makeDecision(request);
         } catch (Exception e) {
-            LOGGER.error("makeDecision failed", e);
             throw e;
         }
         //
