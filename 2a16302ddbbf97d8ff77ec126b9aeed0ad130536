@@ -46,6 +46,30 @@
       "revId": "2a16302ddbbf97d8ff77ec126b9aeed0ad130536",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "145c72b5_4d82ead8",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-13T18:01:29Z",
+      "side": 1,
+      "message": "Well if we have to wrap, we have to. Using .toString() raises another sonar, don\u0027t use toString(). I\u0027ll play with it.",
+      "parentUuid": "261e0277_d8e078d6",
+      "range": {
+        "startLine": 167,
+        "startChar": 0,
+        "endLine": 169,
+        "endChar": 0
+      },
+      "revId": "2a16302ddbbf97d8ff77ec126b9aeed0ad130536",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
