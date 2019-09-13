@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "35a0be3d_2d7bd893",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-13T16:26:37Z",
+      "side": 1,
+      "message": "BTW - I\u0027m looking at these hacks I had to put in to remove sonar squid rule.\n\"Preconditions\" and logging arguments should not require evaluation (squid:S2629)\n\nHere is an example in another file that particular sonar was raised:\n               logger.info(\"get attribute error retrieving {}: {}\", pipRequest.getAttributeId().stringValue(),\n                                pipResponse.getStatus());\n\nand another example:\n                logger.info(\"No value for {}\", pipRequest.getAttributeId().stringValue());",
+      "range": {
+        "startLine": 167,
+        "startChar": 0,
+        "endLine": 169,
+        "endChar": 0
+      },
+      "revId": "2a16302ddbbf97d8ff77ec126b9aeed0ad130536",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
