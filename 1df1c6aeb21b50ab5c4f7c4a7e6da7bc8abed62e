@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c0e95c18_db582124",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/XacmlPdpParameterHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-13T18:38:14Z",
+      "side": 0,
+      "message": "Oh, just change it to (i.e., leave off the \",e\"):\n\n  LOGGER.error(\"{}\", errorMessage);\n\nSince \"e\" is already passed in the re-thrown exception, sonar doesn\u0027t want you to log it here, figuring it will be logged by whatever catches the re-thrown exception.\n\nHowever, simply removing the LOGGER line as you did, works too, since the message will likely by logged by the catcher anyway.",
+      "parentUuid": "a2628f28_d44a4dd7",
+      "range": {
+        "startLine": 60,
+        "startChar": 1,
+        "endLine": 60,
+        "endChar": 42
+      },
+      "revId": "1df1c6aeb21b50ab5c4f7c4a7e6da7bc8abed62e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "aac51615_7276599d",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
         "patchSetId": 4
