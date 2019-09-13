@@ -105,12 +105,12 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
         try {
             pipResponse = pipFinder.getMatchingAttributes(pipRequest, this);
             if (pipResponse.getStatus() != null && !pipResponse.getStatus().isOk()) {
-                logger.info("get attribute error retrieving {}: {}", pipRequest.getAttributeId().stringValue(),
+                logger.info("get attribute error retrieving {}: {}", pipRequest.getAttributeId(),
                                 pipResponse.getStatus());
                 pipResponse = null;
             }
             if (pipResponse != null && pipResponse.getAttributes().isEmpty()) {
-                logger.info("No value for {}", pipRequest.getAttributeId().stringValue());
+                logger.info("No value for {}", pipRequest.getAttributeId());
                 pipResponse = null;
             }
         } catch (PIPException ex) {

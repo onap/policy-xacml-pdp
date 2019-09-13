@@ -68,6 +68,8 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
     private static final String FIELD_GUARD_ACTIVE_START = "guardActiveStart";
     private static final String FIELD_GUARD_ACTIVE_END = "guardActiveEnd";
     private static final String FIELD_TARGET = "targets";
+    private static final String DESC_DEFAULT = "Default is to PERMIT if the policy matches.";
+    private static final String ID_RULE = ":rule";
 
     public LegacyGuardTranslator() {
         super();
@@ -193,7 +195,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
             //
             // Add in the Policy Version
             //
-            policy.setVersion(map.get("policy-version").toString());
+            policy.setVersion(map.get("policy-version"));
         }
         return policy;
     }
@@ -209,10 +211,8 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         if (properties.containsKey("recipe")) {
             addMatch(allOf, properties.get("recipe"), ToscaDictionary.ID_RESOURCE_GUARD_RECIPE);
         }
-        if (addTargets) {
-            if (properties.containsKey("targets")) {
-                addMatch(allOf, properties.get("targets"), ToscaDictionary.ID_RESOURCE_GUARD_TARGETID);
-            }
+        if (addTargets && properties.containsKey(FIELD_TARGET)) {
+            addMatch(allOf, properties.get(FIELD_TARGET), ToscaDictionary.ID_RESOURCE_GUARD_TARGETID);
         }
         if (properties.containsKey("clname")) {
             addMatch(allOf, properties.get("clname"), ToscaDictionary.ID_RESOURCE_GUARD_CLNAME);
@@ -333,8 +333,8 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         // Now we can create our rule
         //
         RuleType permit = new RuleType();
-        permit.setDescription("Default is to PERMIT if the policy matches.");
-        permit.setRuleId(policyName + ":rule");
+        permit.setDescription(DESC_DEFAULT);
+        permit.setRuleId(policyName + ID_RULE);
         permit.setEffect(EffectType.PERMIT);
         permit.setTarget(new TargetType());
         //
@@ -344,7 +344,7 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         //
         // TODO Add the advice - Is the request id needed to be returned?
         //
-        // permit.setAdviceExpressions(adviceExpressions);
+        // permit . setAdviceExpressions (adviceExpressions)
         //
         // Done
         //
@@ -391,13 +391,25 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         // Create our rule
         //
         RuleType permit = new RuleType();
-        permit.setDescription("Default is to PERMIT if the policy matches.");
-        permit.setRuleId(policyName + ":rule");
+        permit.setDescription(DESC_DEFAULT);
+        permit.setRuleId(policyName + ID_RULE);
         permit.setEffect(EffectType.PERMIT);
         permit.setTarget(new TargetType());
         //
-        // Create our condition
+        // Create the condition
         //
+        permit.setCondition(createCondition(timeRange, minApply, maxApply));
+        //
+        // TODO Add the advice - Is the request id needed to be returned?
+        //
+        // permit . setAdviceExpressions (adviceExpressions)
+        //
+        // Done
+        //
+        return permit;
+    }
+
+    private static ConditionType createCondition(ApplyType timeRange, ApplyType minApply, ApplyType maxApply) {
         final ConditionType condition = new ConditionType();
         //
         // Check if we have all the fields (this can be a little
@@ -419,63 +431,53 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
             // Add into the condition
             //
             condition.setExpression(factory.createApply(applyAnd));
-        } else {
-            //
-            // At least one of these applies is null. We need at least
-            // two to require the And apply. Otherwise there is no need
-            // for an outer And apply as the single condition can work
-            // on its own.
-            //
-            if (timeRange != null && minApply == null && maxApply == null) {
-                //
-                // Only the time range check is necessary
-                //
-                condition.setExpression(factory.createApply(timeRange));
-            } else if (timeRange == null && minApply != null && maxApply == null) {
-                //
-                // Only the min check is necessary
-                //
-                condition.setExpression(factory.createApply(minApply));
-            } else if (timeRange == null && minApply == null) {
-                //
-                // Only the max check is necessary
-                //
-                condition.setExpression(factory.createApply(maxApply));
-            } else {
-                //
-                // Ok we will need an outer And and have at least the
-                // time range and either min or max check
-                //
-                ApplyType applyAnd = new ApplyType();
-                applyAnd.setDescription("return true if all the apply's are true.");
-                applyAnd.setFunctionId(XACML3.ID_FUNCTION_AND.stringValue());
-                if (timeRange != null) {
-                    applyAnd.getExpression().add(factory.createApply(timeRange));
-                }
-                if (minApply != null) {
-                    applyAnd.getExpression().add(factory.createApply(minApply));
-                }
-                if (maxApply != null) {
-                    applyAnd.getExpression().add(factory.createApply(maxApply));
-                }
-                //
-                // Add into the condition
-                //
-                condition.setExpression(factory.createApply(applyAnd));
-            }
+
+            return condition;
         }
         //
-        // Add the condition
+        // At least one of these applies is null. We need at least
+        // two to require the And apply. Otherwise there is no need
+        // for an outer And apply as the single condition can work
+        // on its own.
         //
-        permit.setCondition(condition);
-        //
-        // TODO Add the advice - Is the request id needed to be returned?
-        //
-        // permit.setAdviceExpressions(adviceExpressions);
-        //
-        // Done
-        //
-        return permit;
+        if (timeRange != null && minApply == null && maxApply == null) {
+            //
+            // Only the time range check is necessary
+            //
+            condition.setExpression(factory.createApply(timeRange));
+        } else if (timeRange == null && minApply != null && maxApply == null) {
+            //
+            // Only the min check is necessary
+            //
+            condition.setExpression(factory.createApply(minApply));
+        } else if (timeRange == null && minApply == null) {
+            //
+            // Only the max check is necessary
+            //
+            condition.setExpression(factory.createApply(maxApply));
+        } else {
+            //
+            // Ok we will need an outer And and have at least the
+            // time range and either min or max check
+            //
+            ApplyType applyAnd = new ApplyType();
+            applyAnd.setDescription("return true if all the apply's are true.");
+            applyAnd.setFunctionId(XACML3.ID_FUNCTION_AND.stringValue());
+            if (timeRange != null) {
+                applyAnd.getExpression().add(factory.createApply(timeRange));
+            }
+            if (minApply != null) {
+                applyAnd.getExpression().add(factory.createApply(minApply));
+            }
+            if (maxApply != null) {
+                applyAnd.getExpression().add(factory.createApply(maxApply));
+            }
+            //
+            // Add into the condition
+            //
+            condition.setExpression(factory.createApply(applyAnd));
+        }
+        return condition;
     }
 
     private static RuleType generateBlacklistPermit(String policyName, Map<String, Object> properties) {
@@ -506,8 +508,8 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         // Create our rule
         //
         RuleType permit = new RuleType();
-        permit.setDescription("Default is to PERMIT if the policy matches.");
-        permit.setRuleId(policyName + ":rule");
+        permit.setDescription(DESC_DEFAULT);
+        permit.setRuleId(policyName + ID_RULE);
         permit.setEffect(EffectType.PERMIT);
         permit.setTarget(new TargetType());
         //

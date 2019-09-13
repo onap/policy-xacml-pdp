@@ -57,7 +57,7 @@ public class XacmlPdpParameterHandler {
         } catch (final Exception e) {
             final String errorMessage = "error reading parameters from \"" + arguments.getConfigurationFilePath()
                     + "\"\n" + "(" + e.getClass().getSimpleName() + "):" + e.getMessage();
-            LOGGER.error(errorMessage, e);
+            LOGGER.error(errorMessage);
             throw new PolicyXacmlPdpException(errorMessage, e);
         }
 

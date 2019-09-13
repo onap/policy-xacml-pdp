@@ -52,13 +52,7 @@ public class DecisionProvider {
         //
         // Found application for action
         //
-        Pair<DecisionResponse, Response> decision;
-        try {
-            decision = application.makeDecision(request);
-        } catch (Exception e) {
-            LOGGER.error("makeDecision failed", e);
-            throw e;
-        }
+        Pair<DecisionResponse, Response> decision = application.makeDecision(request);
         //
         // Calculate statistics
         //
