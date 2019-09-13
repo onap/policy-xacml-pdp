@@ -22,6 +22,30 @@
       "revId": "2a16302ddbbf97d8ff77ec126b9aeed0ad130536",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "261e0277_d8e078d6",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-13T17:40:22Z",
+      "side": 1,
+      "message": "yes, sometimes you just have to wrap it in an \"if\".  MIGHT be able to fix some of them by adding a toString() method, to the attribute-id, that simply invokes stringValue()",
+      "parentUuid": "35a0be3d_2d7bd893",
+      "range": {
+        "startLine": 167,
+        "startChar": 0,
+        "endLine": 169,
+        "endChar": 0
+      },
+      "revId": "2a16302ddbbf97d8ff77ec126b9aeed0ad130536",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
