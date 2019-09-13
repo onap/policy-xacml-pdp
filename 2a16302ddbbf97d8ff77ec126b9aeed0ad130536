@@ -70,6 +70,30 @@
       "revId": "2a16302ddbbf97d8ff77ec126b9aeed0ad130536",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "07629b06_0c010982",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-13T18:06:07Z",
+      "side": 1,
+      "message": "you wouldn\u0027t use toString() in the logger statement, you\u0027d just use:\n\n  logger.info(\"get attribute error retrieving {}: {}\",\n    pipRequest.getAttributeId(), pipResponse.getStatus());\n\nAs long as attribute-id\u0027s toString() returns the same thing as stringValue(), then it should work AND satisfy sonar.",
+      "parentUuid": "145c72b5_4d82ead8",
+      "range": {
+        "startLine": 167,
+        "startChar": 0,
+        "endLine": 169,
+        "endChar": 0
+      },
+      "revId": "2a16302ddbbf97d8ff77ec126b9aeed0ad130536",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
