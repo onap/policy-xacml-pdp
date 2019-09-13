@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "a2628f28_d44a4dd7",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/XacmlPdpParameterHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-13T18:32:45Z",
+      "side": 0,
+      "message": "Now I get a different sonar: either log or rethrow this exception.",
+      "range": {
+        "startLine": 60,
+        "startChar": 1,
+        "endLine": 60,
+        "endChar": 42
+      },
+      "revId": "1df1c6aeb21b50ab5c4f7c4a7e6da7bc8abed62e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "aac51615_7276599d",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
         "patchSetId": 4
