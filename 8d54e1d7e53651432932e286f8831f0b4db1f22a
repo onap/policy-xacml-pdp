@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f15dbe6e_7f611110",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-13T21:50:50Z",
+      "side": 1,
+      "message": "You could choose to catch RuntimeException, if you think makeDecision() might throw one",
+      "revId": "8d54e1d7e53651432932e286f8831f0b4db1f22a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
