@@ -469,14 +469,8 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
             //
             // Or do we assume 1.0.0?
             //
-            String strDerivedFrom = childPolicyType.getDerivedFrom();
-            //
-            // Hack that fixes policy/models appending 0.0.0 to the derivedFrom name
-            //
-            if (strDerivedFrom.endsWith("0.0.0")) {
-                strDerivedFrom = strDerivedFrom.substring(0, strDerivedFrom.length() - "0.0.0".length() - 1);
-            }
-            ToscaPolicyTypeIdentifier parentId = new ToscaPolicyTypeIdentifier(strDerivedFrom, "1.0.0");
+            ToscaPolicyTypeIdentifier parentId = new ToscaPolicyTypeIdentifier(childPolicyType.getDerivedFrom(),
+                    "1.0.0");
             //
             // Find the policy type
             //

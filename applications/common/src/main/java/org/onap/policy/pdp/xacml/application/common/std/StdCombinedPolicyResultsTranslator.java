@@ -112,7 +112,6 @@ public class StdCombinedPolicyResultsTranslator implements ToscaPolicyTranslator
         try {
             jsonPolicy = coder.encode(toscaPolicy);
         } catch (CoderException e) {
-            LOGGER.error("Failed to encode policy to json", e);
             throw new ToscaPolicyConversionException(e);
         }
         addObligation(rule, jsonPolicy);
