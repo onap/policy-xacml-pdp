@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aac51615_7276599d",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-13T18:24:14Z",
+      "side": 0,
+      "message": "Hold on - this creates a new sonar issue.",
+      "range": {
+        "startLine": 59,
+        "startChar": 7,
+        "endLine": 60,
+        "endChar": 20
+      },
+      "revId": "1df1c6aeb21b50ab5c4f7c4a7e6da7bc8abed62e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
