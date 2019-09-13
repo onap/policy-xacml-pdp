@@ -69,6 +69,30 @@
       "revId": "1df1c6aeb21b50ab5c4f7c4a7e6da7bc8abed62e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d382ae9_b71e87dc",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-13T22:03:11Z",
+      "side": 0,
+      "message": "What\u0027s interesting is sonarlint identifies this as \"either log or rethrow\", but sonar.onap.org doesn\u0027t flag it all.\nWondering if I should just leave it.",
+      "parentUuid": "aac51615_7276599d",
+      "range": {
+        "startLine": 59,
+        "startChar": 7,
+        "endLine": 60,
+        "endChar": 20
+      },
+      "revId": "1df1c6aeb21b50ab5c4f7c4a7e6da7bc8abed62e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
