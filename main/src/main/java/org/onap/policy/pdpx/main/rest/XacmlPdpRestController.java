@@ -55,6 +55,8 @@ import org.onap.policy.pdpx.main.rest.model.StatisticsReport;
 import org.onap.policy.pdpx.main.rest.provider.DecisionProvider;
 import org.onap.policy.pdpx.main.rest.provider.HealthCheckProvider;
 import org.onap.policy.pdpx.main.rest.provider.StatisticsProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to provide xacml pdp REST services.
@@ -70,7 +72,9 @@ import org.onap.policy.pdpx.main.rest.provider.StatisticsProvider;
         schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
         securityDefinition = @SecurityDefinition(basicAuthDefinitions = {@BasicAuthDefinition(key = "basicAuth")}))
 public class XacmlPdpRestController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpRestController.class);
     public static final String APPLICATION_YAML = "application/yaml";
+
 
     @GET
     @Path("/healthcheck")
@@ -176,6 +180,7 @@ public class XacmlPdpRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(new DecisionProvider().fetchDecision(body)).build();
         } catch (DecisionException e) {
+            LOGGER.error("Decision exception", e);
             XacmlPdpStatisticsManager.getCurrent().updateErrorCount();
             return addLoggingHeaders(
                     addVersionControlHeaders(Response.status((e.getErrorResponse().getResponseCode()))), requestId)

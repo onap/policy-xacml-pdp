@@ -219,56 +219,61 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
     }
 
     protected synchronized void init() {
-        if (this.needsInit) {
-            logger.info("Initializing OnapPolicyFinderFactory Properties ");
-
-            //
-            // Check for property that combines root policies into one policyset
-            //
-            String combiningAlgorithm = properties.getProperty(
-                    ATTPDPProperties.PROP_POLICYFINDERFACTORY_COMBINEROOTPOLICIES);
-            if (combiningAlgorithm != null) {
-                try {
-                    logger.info("Combining root policies with {}", combiningAlgorithm);
-                    //
-                    // Find the combining algorithm
-                    //
-                    CombiningAlgorithm<PolicySetChild> algorithm = CombiningAlgorithmFactory.newInstance()
-                            .getPolicyCombiningAlgorithm(new IdentifierImpl(combiningAlgorithm));
-                    //
-                    // Create our root policy
-                    //
-                    PolicySet root = new PolicySet();
-                    root.setIdentifier(new IdentifierImpl(UUID.randomUUID().toString()));
-                    root.setVersion(StdVersion.newInstance("1.0"));
-                    root.setTarget(new Target());
-                    //
-                    // Set the algorithm
-                    //
-                    root.setPolicyCombiningAlgorithm(algorithm);
-                    //
-                    // Load all our root policies
-                    //
-                    for (PolicyDef policy : this.getPolicyDefs(XACMLProperties.PROP_ROOTPOLICIES)) {
-                        root.addChild(policy);
-                    }
-                    //
-                    // Set this policy as the root
-                    //
-                    this.rootPolicies = new ArrayList<>();
-                    this.rootPolicies.add(root);
-                } catch (Exception e) {
-                    logger.error("Failed to load Combining Algorithm Factory: {}", e.getLocalizedMessage());
-                }
-            } else {
-                logger.info("Loading root policies");
-                this.rootPolicies       = this.getPolicyDefs(XACMLProperties.PROP_ROOTPOLICIES);
-            }
-            this.referencedPolicies = this.getPolicyDefs(XACMLProperties.PROP_REFERENCEDPOLICIES);
-            logger.info("Root Policies: {}", this.rootPolicies.size());
-            logger.info("Referenced Policies: {}", this.referencedPolicies.size());
-            this.needsInit  = false;
+        if (! this.needsInit) {
+            logger.info("Does not need initialization");
+            return;
         }
+        logger.info("Initializing OnapPolicyFinderFactory Properties ");
+
+        //
+        // Check for property that combines root policies into one policyset
+        //
+        String combiningAlgorithm = properties.getProperty(
+                ATTPDPProperties.PROP_POLICYFINDERFACTORY_COMBINEROOTPOLICIES);
+        if (combiningAlgorithm != null) {
+            try {
+                logger.info("Combining root policies with {}", combiningAlgorithm);
+                //
+                // Find the combining algorithm
+                //
+                CombiningAlgorithm<PolicySetChild> algorithm = CombiningAlgorithmFactory.newInstance()
+                        .getPolicyCombiningAlgorithm(new IdentifierImpl(combiningAlgorithm));
+                //
+                // Create our root policy
+                //
+                PolicySet root = new PolicySet();
+                root.setIdentifier(new IdentifierImpl(UUID.randomUUID().toString()));
+                root.setVersion(StdVersion.newInstance("1.0"));
+                root.setTarget(new Target());
+                //
+                // Set the algorithm
+                //
+                root.setPolicyCombiningAlgorithm(algorithm);
+                //
+                // Load all our root policies
+                //
+                for (PolicyDef policy : this.getPolicyDefs(XACMLProperties.PROP_ROOTPOLICIES)) {
+                    root.addChild(policy);
+                }
+                //
+                // Set this policy as the root
+                //
+                this.rootPolicies = new ArrayList<>();
+                this.rootPolicies.add(root);
+            } catch (Exception e) {
+                logger.error("Failed to load Combining Algorithm Factory", e);
+            }
+        } else {
+            logger.info("Loading root policies");
+            this.rootPolicies       = this.getPolicyDefs(XACMLProperties.PROP_ROOTPOLICIES);
+        }
+        this.referencedPolicies = this.getPolicyDefs(XACMLProperties.PROP_REFERENCEDPOLICIES);
+        logger.info("Root Policies: {}", this.rootPolicies.size());
+        logger.info("Referenced Policies: {}", this.referencedPolicies.size());
+        //
+        // Make sure we set that we don't need initialization
+        //
+        this.needsInit  = false;
     }
 
     @Override
