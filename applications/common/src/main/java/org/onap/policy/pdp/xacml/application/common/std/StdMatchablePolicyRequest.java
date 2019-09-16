@@ -47,6 +47,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
+import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,11 +71,11 @@ public class StdMatchablePolicyRequest {
     @XACMLAction()
     private String action;
 
+    protected static DataTypeFactory dataTypeFactory        = null;
+
     public StdMatchablePolicyRequest() {
         super();
     }
-
-    protected static DataTypeFactory dataTypeFactory        = null;
 
     protected static synchronized DataTypeFactory getDataTypeFactory() {
         try {
@@ -82,9 +83,6 @@ public class StdMatchablePolicyRequest {
                 return dataTypeFactory;
             }
             dataTypeFactory = DataTypeFactory.newInstance();
-            if (dataTypeFactory == null) {
-                LOGGER.error("Could not create data type factory");
-            }
         } catch (FactoryException e) {
             LOGGER.error("Can't get Data type Factory: {}", e);
         }
@@ -96,12 +94,10 @@ public class StdMatchablePolicyRequest {
      *
      * @param decisionRequest Input DecisionRequest
      * @return Request XACML Request object
-     * @throws DataTypeException DataType exception
-     * @throws IllegalAccessException  Illegal access exception
+     * @throws XacmlApplicationException Exception occurred parsing or creating request
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static Request createInstance(DecisionRequest decisionRequest) throws IllegalAccessException,
-        DataTypeException {
+    public static Request createInstance(DecisionRequest decisionRequest) throws XacmlApplicationException {
         //
         // Create our request object
         //
@@ -120,7 +116,12 @@ public class StdMatchablePolicyRequest {
         // Parse the request - we use the annotations to create a
         // basic XACML request.
         //
-        Request xacmlRequest = RequestParser.parseRequest(request);
+        Request xacmlRequest;
+        try {
+            xacmlRequest = RequestParser.parseRequest(request);
+        } catch (IllegalAccessException | DataTypeException e) {
+            throw new XacmlApplicationException("Could not parse request " + e.getLocalizedMessage());
+        }
         //
         // Create an object we can add to
         //
@@ -137,10 +138,14 @@ public class StdMatchablePolicyRequest {
             // Its possible we may have to load the policy type model
             // and use that to validate the fields that are matchable.
             //
-            if (entrySet.getValue() instanceof Collection) {
-                addResources(resourceAttributes, (Collection) entrySet.getValue(), entrySet.getKey());
-            } else {
-                addResources(resourceAttributes, Arrays.asList(entrySet.getValue().toString()), entrySet.getKey());
+            try {
+                if (entrySet.getValue() instanceof Collection) {
+                    addResources(resourceAttributes, (Collection) entrySet.getValue(), entrySet.getKey());
+                } else {
+                    addResources(resourceAttributes, Arrays.asList(entrySet.getValue().toString()), entrySet.getKey());
+                }
+            } catch (DataTypeException e) {
+                throw new XacmlApplicationException("Failed to add resource " + e.getLocalizedMessage());
             }
         }
         mutableRequest.add(resourceAttributes);
