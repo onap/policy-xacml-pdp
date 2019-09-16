@@ -23,7 +23,6 @@
 package org.onap.policy.pdp.xacml.application.common.std;
 
 import com.att.research.xacml.api.AttributeAssignment;
-import com.att.research.xacml.api.DataTypeException;
 import com.att.research.xacml.api.Decision;
 import com.att.research.xacml.api.Identifier;
 import com.att.research.xacml.api.Obligation;
@@ -77,6 +76,7 @@ import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
+import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,7 +108,7 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
         LOGGER.info("Converting Request {}", request);
         try {
             return StdMatchablePolicyRequest.createInstance(request);
-        } catch (IllegalArgumentException | IllegalAccessException | DataTypeException e) {
+        } catch (XacmlApplicationException e) {
             LOGGER.error("Failed to convert DecisionRequest: {}", e);
         }
         //
@@ -158,31 +158,35 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
                 //
                 // We care about the content attribute
                 //
-                if (ToscaDictionary.ID_OBLIGATION_POLICY_MONITORING_CONTENTS
+                if (! ToscaDictionary.ID_OBLIGATION_POLICY_MONITORING_CONTENTS
                         .equals(assignment.getAttributeId())) {
                     //
-                    // The contents are in Json form
+                    // If its not there, move on
                     //
-                    Object stringContents = assignment.getAttributeValue().getValue();
-                    if (LOGGER.isInfoEnabled()) {
-                        LOGGER.info("Policy contents: {}{}", System.lineSeparator(), stringContents);
-                    }
-                    //
-                    // Let's parse it into a map using Gson
-                    //
-                    Gson gson = new Gson();
-                    @SuppressWarnings("unchecked")
-                    Map<String, Object> result = gson.fromJson(stringContents.toString() ,Map.class);
-                    //
-                    // Find the metadata section
-                    //
-                    @SuppressWarnings("unchecked")
-                    Map<String, Object> metadata = (Map<String, Object>) result.get("metadata");
-                    if (metadata != null) {
-                        decisionResponse.getPolicies().put(metadata.get(POLICY_ID).toString(), result);
-                    } else {
-                        LOGGER.error("Missing metadata section in policy contained in obligation.");
-                    }
+                    continue;
+                }
+                //
+                // The contents are in Json form
+                //
+                Object stringContents = assignment.getAttributeValue().getValue();
+                if (LOGGER.isInfoEnabled()) {
+                    LOGGER.info("Policy contents: {}{}", System.lineSeparator(), stringContents);
+                }
+                //
+                // Let's parse it into a map using Gson
+                //
+                Gson gson = new Gson();
+                @SuppressWarnings("unchecked")
+                Map<String, Object> result = gson.fromJson(stringContents.toString() ,Map.class);
+                //
+                // Find the metadata section
+                //
+                @SuppressWarnings("unchecked")
+                Map<String, Object> metadata = (Map<String, Object>) result.get("metadata");
+                if (metadata != null) {
+                    decisionResponse.getPolicies().put(metadata.get(POLICY_ID).toString(), result);
+                } else {
+                    LOGGER.error("Missing metadata section in policy contained in obligation.");
                 }
             }
         }
@@ -340,7 +344,7 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
                     continue;
                 }
                 for (Entry<String, String> entrySet : propertiesEntry.getValue().getMetadata().entrySet()) {
-                    if (entrySet.getKey().equals("matchable") && entrySet.getValue().equals("true")) {
+                    if ("matchable".equals(entrySet.getKey()) && "true".equals(entrySet.getValue())) {
                         return true;
                     }
                 }

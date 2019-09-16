@@ -48,11 +48,10 @@ public class TestUtils {
      *
      * @param resourceFile resource file
      * @param service XacmlApplicationServiceProvider
-     * @throws CoderException exception if it cannot be decoded
      * @throws XacmlApplicationException If the application cannot load the policy
      */
     public static List<ToscaPolicy> loadPolicies(String resourceFile, XacmlApplicationServiceProvider service)
-            throws CoderException, XacmlApplicationException {
+            throws XacmlApplicationException {
         //
         // Our return object
         //
@@ -64,7 +63,13 @@ public class TestUtils {
         //
         // Serialize it into a class
         //
-        ToscaServiceTemplate serviceTemplate = yamlCoder.decode(policyYaml, ToscaServiceTemplate.class);
+        ToscaServiceTemplate serviceTemplate;
+        try {
+            serviceTemplate = yamlCoder.decode(policyYaml, ToscaServiceTemplate.class);
+        } catch (CoderException e) {
+            throw new XacmlApplicationException("Failed to decode policy from resource file "
+                + e.getLocalizedMessage());
+        }
         //
         // Make sure all the fields are setup properly
         //

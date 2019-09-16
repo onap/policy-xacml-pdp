@@ -24,7 +24,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-import com.att.research.xacml.api.DataTypeException;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.RequestAttributes;
 import com.att.research.xacml.api.XACML3;
@@ -39,6 +38,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
+import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 
 public class StdMatchablePolicyRequestTest {
     private static final String ACTION = "my-action";
@@ -74,7 +74,7 @@ public class StdMatchablePolicyRequestTest {
     }
 
     @Test
-    public void testCreateInstance() throws IllegalAccessException, DataTypeException {
+    public void testCreateInstance() throws XacmlApplicationException {
         resources.put("resource1", RESOURCE1);
         resources.put("resource2", RESOURCE2);
         resources.put("resource3", Arrays.asList(RESOURCE3, RESOURCE4));
