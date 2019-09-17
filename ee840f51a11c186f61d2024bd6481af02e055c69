@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "a991e59d_7db7f22d",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchablePolicyRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-17T13:10:22Z",
+      "side": 1,
+      "message": "note: this is just a suggestion",
+      "parentUuid": "7c02f672_9d9fd270",
+      "revId": "ee840f51a11c186f61d2024bd6481af02e055c69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "486d12e1_c81bd4ab",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchablePolicyRequest.java",
         "patchSetId": 1
@@ -65,6 +83,24 @@
       "writtenOn": "2019-09-17T13:08:22Z",
       "side": 1,
       "message": "the null test is unnecessary",
+      "revId": "ee840f51a11c186f61d2024bd6481af02e055c69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dd988f3e_e50c2e20",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchablePolicyRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-17T13:10:22Z",
+      "side": 1,
+      "message": "note: this is just a suggestion",
+      "parentUuid": "486d12e1_c81bd4ab",
       "revId": "ee840f51a11c186f61d2024bd6481af02e055c69",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
