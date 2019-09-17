@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "b0198c3b_b5f78993",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/TestUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-17T13:32:01Z",
+      "side": 1,
+      "message": "the other alternative is to log \"e\" here.  That will satisfy sonar, and then it would be up to you whether to append this in the new exception:\n\n  e.getLocalizedMessage()",
+      "parentUuid": "9fed986e_d4492ef9",
+      "revId": "ee840f51a11c186f61d2024bd6481af02e055c69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c02f672_9d9fd270",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchablePolicyRequest.java",
         "patchSetId": 1
