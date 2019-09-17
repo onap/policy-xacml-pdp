@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "9fed986e_d4492ef9",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/TestUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-17T13:25:57Z",
+      "side": 1,
+      "message": "I\u0027m trying to fix sonar complaints - here specifically they don\u0027t want multiple exception types to be thrown. So I\u0027m consolidating into just XacmlApplicationException.\nSonar wants you to either log or re-throw the exception so I thought this would clear all of them as the caller should be catching and logging the exception.\nI will need to create a constructor to add in the e.",
+      "parentUuid": "6ccce079_8445ea0e",
+      "revId": "ee840f51a11c186f61d2024bd6481af02e055c69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c02f672_9d9fd270",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchablePolicyRequest.java",
         "patchSetId": 1
@@ -101,6 +119,24 @@
       "side": 1,
       "message": "note: this is just a suggestion",
       "parentUuid": "486d12e1_c81bd4ab",
+      "revId": "ee840f51a11c186f61d2024bd6481af02e055c69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f8329089_c9cae87c",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchablePolicyRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-17T13:25:57Z",
+      "side": 1,
+      "message": "Yeah probably overkill - I only need the factory for String. So I don\u0027t need to worry about what was declared in the xacml.properties. Side effect on how the xacml was designed to initialize itself.",
+      "parentUuid": "dd988f3e_e50c2e20",
       "revId": "ee840f51a11c186f61d2024bd6481af02e055c69",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
