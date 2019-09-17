@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a10722f7_c415639b",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/TestUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-09-17T12:51:10Z",
+      "side": 1,
+      "message": "throw new XacmlApplicationException(\"Failed to decode policy from resource file \"+ e.getLocalizedMessage(), e);\n\nto capture original exception, and stack trace ?",
+      "revId": "ee840f51a11c186f61d2024bd6481af02e055c69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
