@@ -62,6 +62,12 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.onap.policy.common</groupId>
+            <artifactId>utils-test</artifactId>
+            <version>${policy.common.version}</version>	
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.onap.policy.xacml-pdp.applications</groupId>
             <artifactId>monitoring</artifactId>
             <version>${project.version}</version>

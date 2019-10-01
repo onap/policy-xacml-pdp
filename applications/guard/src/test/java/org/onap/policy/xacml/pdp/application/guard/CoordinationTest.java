@@ -54,12 +54,12 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
-import org.onap.policy.pdp.xacml.application.common.TestUtils;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.onap.policy.pdp.xacml.application.common.operationshistory.CountRecentOperationsPip;
 import org.onap.policy.pdp.xacml.application.common.operationshistory.Dbao;
+import org.onap.policy.pdp.xacml.xacmltest.TestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
