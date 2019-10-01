@@ -20,7 +20,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.pdp.xacml.application.common;
+package org.onap.policy.pdp.xacml.xacmltest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +32,8 @@ import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
+import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
+import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

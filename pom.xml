@@ -53,6 +53,7 @@
         <module>applications</module>
         <module>packages</module>
         <module>testsuites</module>
+        <module>xacml-test</module>
     </modules>
 
     <dependencies>
