@@ -16,6 +16,24 @@
       "revId": "66785e99e8e2741f3b36c5bdc5743f761c34fd90",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "218c0823_f9dca827",
+        "filename": "xacml-test/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-10-02T16:05:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a6d87b6_8b39d5fc",
+      "revId": "66785e99e8e2741f3b36c5bdc5743f761c34fd90",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
