@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a6d87b6_8b39d5fc",
+        "filename": "xacml-test/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-10-02T15:56:28Z",
+      "side": 1,
+      "message": "If touching this file .. correct whitespace",
+      "revId": "66785e99e8e2741f3b36c5bdc5743f761c34fd90",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
