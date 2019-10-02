@@ -44,8 +44,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-        	<groupId>org.onap.policy.xacml-pdp</groupId>
-        	<artifactId>xacml-test</artifactId>
+            <groupId>org.onap.policy.xacml-pdp</groupId>
+            <artifactId>xacml-test</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

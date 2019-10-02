@@ -33,7 +33,7 @@
     <artifactId>xacml-test</artifactId>
 
     <dependencies>
-    	<dependency>
+        <dependency>
             <groupId>org.onap.policy.xacml-pdp.applications</groupId>
             <artifactId>common</artifactId>
             <version>${project.version}</version>
