@@ -108,6 +108,24 @@
     },
     {
       "key": {
+        "uuid": "e656407d_14437d1a",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchablePolicyRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-09T16:01:42Z",
+      "side": 1,
+      "message": "Because the exception needs to be captured - I think its just easier to leave it.",
+      "parentUuid": "a991e59d_7db7f22d",
+      "revId": "ee840f51a11c186f61d2024bd6481af02e055c69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "486d12e1_c81bd4ab",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchablePolicyRequest.java",
         "patchSetId": 1
@@ -155,6 +173,24 @@
       "side": 1,
       "message": "Yeah probably overkill - I only need the factory for String. So I don\u0027t need to worry about what was declared in the xacml.properties. Side effect on how the xacml was designed to initialize itself.",
       "parentUuid": "dd988f3e_e50c2e20",
+      "revId": "ee840f51a11c186f61d2024bd6481af02e055c69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a00bedc_b87a51db",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchablePolicyRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-09T16:01:42Z",
+      "side": 1,
+      "message": "Will remove this.",
+      "parentUuid": "f8329089_c9cae87c",
       "revId": "ee840f51a11c186f61d2024bd6481af02e055c69",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
