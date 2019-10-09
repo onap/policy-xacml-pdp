@@ -126,6 +126,24 @@
     },
     {
       "key": {
+        "uuid": "3b4217cc_2216e848",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchablePolicyRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-09T16:57:24Z",
+      "side": 1,
+      "message": "FYI: I think the exception can still be captured",
+      "parentUuid": "e656407d_14437d1a",
+      "revId": "ee840f51a11c186f61d2024bd6481af02e055c69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "486d12e1_c81bd4ab",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchablePolicyRequest.java",
         "patchSetId": 1
