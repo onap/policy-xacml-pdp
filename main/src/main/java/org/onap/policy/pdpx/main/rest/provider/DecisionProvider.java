@@ -22,7 +22,9 @@ package org.onap.policy.pdpx.main.rest.provider;
 
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
-
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.models.decisions.concepts.DecisionException;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
@@ -36,6 +38,14 @@ import org.slf4j.LoggerFactory;
 
 public class DecisionProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(DecisionProvider.class);
+
+    private boolean abbreviateResults = false;
+
+    public DecisionProvider() {}
+
+    public DecisionProvider(Map<String, String[]> queryParams) {
+        checkQueryParams(queryParams);
+    }
 
     /**
      * Retrieves the policy decision for the specified parameters.
@@ -58,9 +68,39 @@ public class DecisionProvider {
         //
         this.calculateStatistic(decision.getValue());
         //
+        // Abbreviate results if needed
+        //
+        if (abbreviateResults && decision.getKey().getPolicies() != null
+                && !decision.getKey().getPolicies().isEmpty()) {
+            LOGGER.info("Abbreviating decision results {}", decision);
+            for (Entry<String, Object> entry : decision.getKey().getPolicies().entrySet()) {
+                if (entry.getValue() instanceof Map) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> policy = (Map<String, Object>) entry.getValue();
+                    policy.remove("properties");
+                    policy.remove("name");
+                    policy.remove("version");
+                }
+            }
+        }
+        //
         // Return the decision
         //
         return decision.getKey();
+    }
+
+    /**
+     * Checks the query parameters to determine what option(s) were specified in the request.
+     *
+     * @param decisionQueryParams - http request query parameters
+     */
+    private void checkQueryParams(Map<String, String[]> decisionQueryParams) {
+        // Check if query params contains "abbrev" flag
+        if (decisionQueryParams.containsKey("abbrev")) {
+            this.abbreviateResults = Arrays.asList(decisionQueryParams.get("abbrev")).contains("true");
+        } else {
+            LOGGER.error("Invalid query param - no matches: {}", decisionQueryParams.toString());
+        }
     }
 
     private XacmlApplicationServiceProvider findApplication(DecisionRequest request) {
