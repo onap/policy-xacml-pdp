@@ -1,0 +1,7 @@
+validation error(s) on parameters from "parameters/XacmlPdpConfigParameters_InvalidRestServerParameters.json"
+parameter group "XacmlPdpGroup" type "org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup" INVALID, parameter group has status INVALID
+  parameter group "null" type "org.onap.policy.pdpx.main.parameters.RestServerParameters" INVALID, parameter group has status INVALID
+    field "host" type "java.lang.String" value "" INVALID, must be a non-blank string containing hostname/ipaddress of the xacml pdp rest server
+    field "port" type "int" value "-1" INVALID, must be a positive integer containing port of the xacml pdp rest server
+    field "userName" type "java.lang.String" value "" INVALID, must be a non-blank string containing userName for xacml pdp rest server credentials
+    field "password" type "java.lang.String" value "" INVALID, must be a non-blank string containing password for xacml pdp rest server credentials
