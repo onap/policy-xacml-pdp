@@ -33,19 +33,18 @@ import io.swagger.annotations.Info;
 import io.swagger.annotations.ResponseHeader;
 import io.swagger.annotations.SecurityDefinition;
 import io.swagger.annotations.SwaggerDefinition;
-
 import java.util.UUID;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
-
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.models.decisions.concepts.DecisionException;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
@@ -171,10 +170,17 @@ public class XacmlPdpRestController {
             @ApiResponse(code = 403, message = "Authorization Error"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response decision(DecisionRequest body,
-            @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
+            @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
+            @Context HttpServletRequest request) {
         try {
+            DecisionProvider decisionProvider;
+            if (!(request.getParameterMap().isEmpty())) {
+                decisionProvider = new DecisionProvider(request.getParameterMap());
+            } else {
+                decisionProvider = new DecisionProvider();
+            }
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(new DecisionProvider().fetchDecision(body)).build();
+                    .entity(decisionProvider.fetchDecision(body)).build();
         } catch (DecisionException e) {
             XacmlPdpStatisticsManager.getCurrent().updateErrorCount();
             return addLoggingHeaders(

@@ -1,0 +1,29 @@
+{
+    "name":"XacmlPdpGroup",
+    "restServerParameters":{
+        "host":"0.0.0.0",
+        "port":${port},
+        "userName":"healthcheck",
+        "password":"zb!XztG34",
+        "https":true
+    },
+    "policyApiParameters": {
+        "host": "0.0.0.0",
+        "port": 6970,
+        "userName": "healthcheck",
+        "password": "zb!XztG34"
+    },
+    "applicationPath": "src/test/resources/apps",
+    "topicParameterGroup": {
+        "topicSources" : [{
+            "topic" : "POLICY-PDP-PAP",
+            "servers" : [ "anyserver" ],
+            "topicCommInfrastructure" : "noop"
+        }],
+        "topicSinks" : [{
+            "topic" : "POLICY-PDP-PAP",
+            "servers" : [ "anyserver" ],
+            "topicCommInfrastructure" : "noop"
+        }]
+    }
+}
