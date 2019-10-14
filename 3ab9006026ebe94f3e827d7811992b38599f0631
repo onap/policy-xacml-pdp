@@ -159,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "04a57271_70e39516",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestAbbreviateDecisionResults.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-10-14T16:32:59Z",
+      "side": 1,
+      "message": "TestDecision.java breaks if I add this to it - I believe due to the Pdp service being initialized with a different HttpClient instance.",
+      "parentUuid": "845094cd_d41ece37",
+      "revId": "3ab9006026ebe94f3e827d7811992b38599f0631",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7da32003_a9a4b6ef",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestAbbreviateDecisionResults.java",
         "patchSetId": 1
@@ -182,6 +200,30 @@
     },
     {
       "key": {
+        "uuid": "085977b7_336a55e5",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestAbbreviateDecisionResults.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-10-14T16:32:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7da32003_a9a4b6ef",
+      "range": {
+        "startLine": 4,
+        "startChar": 1,
+        "endLine": 5,
+        "endChar": 1
+      },
+      "revId": "3ab9006026ebe94f3e827d7811992b38599f0631",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "51840b33_b067f29d",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestAbbreviateDecisionResults.java",
         "patchSetId": 1
@@ -199,6 +241,24 @@
     },
     {
       "key": {
+        "uuid": "1b1352bb_080070ca",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestAbbreviateDecisionResults.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-10-14T16:32:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "51840b33_b067f29d",
+      "revId": "3ab9006026ebe94f3e827d7811992b38599f0631",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "99bc7075_325f114f",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestAbbreviateDecisionResults.java",
         "patchSetId": 1
@@ -210,6 +270,24 @@
       "writtenOn": "2019-10-14T13:49:41Z",
       "side": 1,
       "message": "can use a \"for\" loop instead of an iterator",
+      "revId": "3ab9006026ebe94f3e827d7811992b38599f0631",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c1cf240_37a06bb4",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestAbbreviateDecisionResults.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-10-14T16:32:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99bc7075_325f114f",
       "revId": "3ab9006026ebe94f3e827d7811992b38599f0631",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
