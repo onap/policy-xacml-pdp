@@ -69,6 +69,24 @@
       "revId": "2c21f90963748ad96ee5f37254894f50bd389752",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14e18471_7653bdf6",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T18:34:22Z",
+      "side": 1,
+      "message": "if this is truly an error, then should it throw an exception?",
+      "parentUuid": "c2e9d79a_0bfacdb2",
+      "revId": "2c21f90963748ad96ee5f37254894f50bd389752",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
