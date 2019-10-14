@@ -22,10 +22,9 @@
 package org.onap.policy.pdp.xacml.application.common;
 
 import com.att.research.xacml.api.Response;
-
 import java.nio.file.Path;
 import java.util.List;
-
+import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
@@ -103,8 +102,10 @@ public interface XacmlApplicationServiceProvider {
      * Makes a decision given the incoming request and returns a response.
      *
      * @param request Incoming DecisionRequest object
+     * @param requestQueryParameters Http request query parameters
      * @return response Responding DecisionResponse object
      */
-    Pair<DecisionResponse, Response>       makeDecision(DecisionRequest request);
+    Pair<DecisionResponse, Response>       makeDecision(DecisionRequest request,
+            Map<String, String[]> requestQueryParameters);
 
 }

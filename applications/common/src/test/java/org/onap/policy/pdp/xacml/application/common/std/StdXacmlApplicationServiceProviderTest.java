@@ -263,7 +263,7 @@ public class StdXacmlApplicationServiceProviderTest {
         DecisionResponse decresp = mock(DecisionResponse.class);
         when(trans.convertResponse(resp)).thenReturn(decresp);
 
-        Pair<DecisionResponse, Response> result = prov.makeDecision(decreq);
+        Pair<DecisionResponse, Response> result = prov.makeDecision(decreq, any());
         assertSame(decresp, result.getKey());
         assertSame(resp, result.getValue());
 

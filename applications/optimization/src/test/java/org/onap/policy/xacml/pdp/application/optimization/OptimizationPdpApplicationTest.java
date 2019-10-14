@@ -168,7 +168,7 @@ public class OptimizationPdpApplicationTest {
         //
         // Ask for a decision
         //
-        Pair<DecisionResponse, Response> decision = service.makeDecision(requestAffinity);
+        Pair<DecisionResponse, Response> decision = service.makeDecision(requestAffinity, null);
         LOGGER.info("Decision {}", decision.getKey());
 
         assertThat(decision.getKey()).isNotNull();
@@ -185,7 +185,7 @@ public class OptimizationPdpApplicationTest {
         //
         // Ask for a decision
         //
-        Pair<DecisionResponse, Response> decision = service.makeDecision(requestAffinity);
+        Pair<DecisionResponse, Response> decision = service.makeDecision(requestAffinity, null);
         LOGGER.info("Decision {}", decision.getKey());
 
         assertThat(decision.getKey()).isNotNull();
