@@ -25,7 +25,6 @@ package org.onap.policy.xacml.pdp.application.guard;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.att.research.xacml.api.Response;
-
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
@@ -35,10 +34,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.UUID;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -202,7 +199,7 @@ public class CoordinationTest {
         //
         // Ask for a decision
         //
-        Pair<DecisionResponse, Response> decision = service.makeDecision(request);
+        Pair<DecisionResponse, Response> decision = service.makeDecision(request, null);
         //
         // Check decision
         //
