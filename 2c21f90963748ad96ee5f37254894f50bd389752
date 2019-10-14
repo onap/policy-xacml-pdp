@@ -87,6 +87,24 @@
       "revId": "2c21f90963748ad96ee5f37254894f50bd389752",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eaf28f17_c1ed3d35",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-10-14T18:44:21Z",
+      "side": 1,
+      "message": "Well it doesn\u0027t impact the decision from being returned, it only affects the length of the response (the response will just contain all of the fields instead of being abbreviated). So, I don\u0027t think an exception is needed and in that case yes it should just be logged to info",
+      "parentUuid": "14e18471_7653bdf6",
+      "revId": "2c21f90963748ad96ee5f37254894f50bd389752",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
