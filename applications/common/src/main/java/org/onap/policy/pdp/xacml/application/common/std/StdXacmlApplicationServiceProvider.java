@@ -228,7 +228,8 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
     }
 
     @Override
-    public Pair<DecisionResponse, Response> makeDecision(DecisionRequest request) {
+    public Pair<DecisionResponse, Response> makeDecision(DecisionRequest request,
+            Map<String, String[]> requestQueryParams) {
         //
         // Convert to a XacmlRequest
         //

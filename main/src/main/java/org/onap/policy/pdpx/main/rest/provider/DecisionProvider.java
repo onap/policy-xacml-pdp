@@ -22,7 +22,7 @@ package org.onap.policy.pdpx.main.rest.provider;
 
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
-
+import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.models.decisions.concepts.DecisionException;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
@@ -43,16 +43,16 @@ public class DecisionProvider {
      *
      * @return the Decision object
      */
-    public DecisionResponse fetchDecision(DecisionRequest request) {
+    public DecisionResponse fetchDecision(DecisionRequest request, Map<String, String[]> queryParams) {
         LOGGER.debug("Fetching decision {}", request);
         //
         // Find application for this decision
         //
         XacmlApplicationServiceProvider application = findApplication(request);
         //
-        // Found application for action
+        //  Found application for action
         //
-        Pair<DecisionResponse, Response> decision = application.makeDecision(request);
+        Pair<DecisionResponse, Response> decision = application.makeDecision(request, queryParams);
         //
         // Calculate statistics
         //

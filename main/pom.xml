@@ -88,6 +88,12 @@
             <version>${policy.models.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.onap.policy.xacml-pdp</groupId>
+            <artifactId>xacml-test</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
             <scope>test</scope>

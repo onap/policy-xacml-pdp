@@ -131,6 +131,7 @@ public class TestDecision {
     @AfterClass
     public static void after() throws PolicyXacmlPdpException {
         stopXacmlPdpService(main);
+        client.shutdown();
     }
 
     @Test

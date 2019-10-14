@@ -156,7 +156,7 @@ public class MonitoringPdpApplicationTest {
         //
         // Ask for a decision
         //
-        Pair<DecisionResponse, Response> decision = service.makeDecision(requestSinglePolicy);
+        Pair<DecisionResponse, Response> decision = service.makeDecision(requestSinglePolicy, null);
         LOGGER.info("Decision {}", decision);
 
         assertThat(decision.getKey()).isNotNull();
@@ -178,7 +178,7 @@ public class MonitoringPdpApplicationTest {
         //
         // Ask for a decision
         //
-        Pair<DecisionResponse, Response> decision = service.makeDecision(requestSinglePolicy);
+        Pair<DecisionResponse, Response> decision = service.makeDecision(requestSinglePolicy, null);
         LOGGER.info("Decision {}", decision);
 
         assertThat(decision.getKey()).isNotNull();
@@ -190,7 +190,7 @@ public class MonitoringPdpApplicationTest {
         //
         // Ask for a decision based on policy-type
         //
-        decision = service.makeDecision(requestPolicyType);
+        decision = service.makeDecision(requestPolicyType, null);
         LOGGER.info("Decision {}", decision);
 
         assertThat(decision.getKey()).isNotNull();
@@ -209,7 +209,7 @@ public class MonitoringPdpApplicationTest {
         //
         // Ask for a decision
         //
-        decision = service.makeDecision(requestSinglePolicy);
+        decision = service.makeDecision(requestSinglePolicy, null);
         LOGGER.info("Decision {}", decision.getKey());
 
         assertThat(decision.getKey()).isNotNull();

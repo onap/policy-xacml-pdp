@@ -22,14 +22,22 @@
 
 package org.onap.policy.xacml.pdp.application.monitoring;
 
+import com.att.research.xacml.api.Request;
+import com.att.research.xacml.api.Response;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.Map;
+import java.util.Map.Entry;
+import org.apache.commons.lang3.tuple.Pair;
+import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdCombinedPolicyResultsTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServiceProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is the engine class that manages the instance of the XACML PDP engine.
@@ -41,6 +49,7 @@ import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServi
  *
  */
 public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringPdpApplication.class);
 
     private static final String ONAP_MONITORING_BASE_POLICY_TYPE = "onap.Monitoring";
     private static final String ONAP_MONITORING_CDAP = "onap.policies.monitoring.cdap.tca.hi.lo.app";
@@ -96,8 +105,61 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
     }
 
     @Override
+    public Pair<DecisionResponse, Response> makeDecision(DecisionRequest request,
+            Map<String, String[]> requestQueryParams) {
+        //
+        // Convert to a XacmlRequest
+        //
+        Request xacmlRequest = this.getTranslator().convertRequest(request);
+        //
+        // Now get a decision
+        //
+        Response xacmlResponse = this.xacmlDecision(xacmlRequest);
+        //
+        // Convert to a DecisionResponse
+        //
+        DecisionResponse decisionResponse = this.getTranslator().convertResponse(xacmlResponse);
+        //
+        // Abbreviate results if needed
+        //
+        if (checkAbbreviateResults(requestQueryParams) && decisionResponse.getPolicies() != null
+                && !decisionResponse.getPolicies().isEmpty()) {
+            LOGGER.info("Abbreviating decision results {}", decisionResponse);
+            for (Entry<String, Object> entry : decisionResponse.getPolicies().entrySet()) {
+                if (entry.getValue() instanceof Map) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> policy = (Map<String, Object>) entry.getValue();
+                    policy.remove("properties");
+                    policy.remove("name");
+                    policy.remove("version");
+                }
+            }
+        }
+        return Pair.of(decisionResponse, xacmlResponse);
+    }
+
+    @Override
     protected ToscaPolicyTranslator getTranslator(String type) {
         return translator;
     }
 
+    /**
+     * Checks the query parameters to determine whether the decision results should be abbreviated.
+     *
+     * @param queryParams - http request query parameters
+     */
+    private boolean checkAbbreviateResults(Map<String, String[]> queryParams) {
+        if (queryParams != null && !queryParams.isEmpty()) {
+            // Check if query params contains "abbrev" flag
+            if (queryParams.containsKey("abbrev")
+                    && Arrays.asList(queryParams.get("abbrev")).contains("true")) {
+                return true;
+            } else {
+                LOGGER.info("Invalid query param: {}", queryParams.toString());
+                return false;
+            }
+        }
+        LOGGER.info("Query parameters empty");
+        return false;
+    }
 }
