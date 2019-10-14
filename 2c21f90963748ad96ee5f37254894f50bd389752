@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f4e1952_531db1d3",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T17:51:26Z",
+      "side": 1,
+      "message": "maybe reverse the test, eliminating the need for \"!\"",
+      "revId": "2c21f90963748ad96ee5f37254894f50bd389752",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b365068_68f9d0ee",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-14T17:51:26Z",
+      "side": 1,
+      "message": "this should probably be info() - client may pass other parameters without passing abbrev; no need to treat that as an error.\nLeave off \".toString()\" - logger does that automatically.",
+      "revId": "2c21f90963748ad96ee5f37254894f50bd389752",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
