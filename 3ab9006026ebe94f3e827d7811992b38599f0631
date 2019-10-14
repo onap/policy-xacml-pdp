@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7eed311a_9ed7d377",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-10-14T15:06:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3826a69_c2329559",
+      "revId": "3ab9006026ebe94f3e827d7811992b38599f0631",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba6377b1_31e0f79f",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2019-10-14T13:49:41Z",
       "side": 1,
       "message": "at this point, it doesn\u0027t look like this needs to be saved",
+      "revId": "3ab9006026ebe94f3e827d7811992b38599f0631",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04ea9b35_784e4f30",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-10-14T15:06:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba6377b1_31e0f79f",
       "revId": "3ab9006026ebe94f3e827d7811992b38599f0631",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "489c3f2f_724eeff4",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-10-14T15:06:46Z",
+      "side": 1,
+      "message": "oops, thought I removed this. Sorry for the suspense :)",
+      "parentUuid": "2971ec61_e0a51cd8",
+      "revId": "3ab9006026ebe94f3e827d7811992b38599f0631",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "35b6b90a_f83c4132",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2019-10-14T13:49:41Z",
       "side": 1,
       "message": "if \"abbrev\" is missing, will decisionQueryParams.get() return an empty list?  Or will it return null?",
+      "revId": "3ab9006026ebe94f3e827d7811992b38599f0631",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9ebd7ec_7279015c",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-10-14T15:06:46Z",
+      "side": 1,
+      "message": "You\u0027re right, it will return null. Will fix",
+      "parentUuid": "35b6b90a_f83c4132",
       "revId": "3ab9006026ebe94f3e827d7811992b38599f0631",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
