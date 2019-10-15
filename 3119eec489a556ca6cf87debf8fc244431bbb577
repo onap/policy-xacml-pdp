@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0eff3b2f_af9fea3d",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-10-15T01:17:54Z",
+      "side": 1,
+      "message": "Provided that you only use \"abbrev\", I think the following will be best:\n\n@DefaultValue(\"false\") @QueryParam(\"abbrev\") boolean abbrev",
+      "revId": "3119eec489a556ca6cf87debf8fc244431bbb577",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "89e87b07_a99a1367",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-10-15T01:17:54Z",
+      "side": 1,
+      "message": "The if statement can be removed and this will be:\n\n DecisionProvider decisionProvider \u003d new DecisionProvider(abrev);\n\nor you could create directly the decisionProvide in line 184 inline, and make it one-liner.",
+      "revId": "3119eec489a556ca6cf87debf8fc244431bbb577",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b927ec78_d7780a17",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-10-15T01:17:54Z",
+      "side": 1,
+      "message": "this method, I think is unnecessary based on my previous comment",
+      "revId": "3119eec489a556ca6cf87debf8fc244431bbb577",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
