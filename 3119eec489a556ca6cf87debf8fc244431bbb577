@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "9f4e1024_26e15766",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-15T13:29:03Z",
+      "side": 1,
+      "message": "Right.  The parameters that are relevant are dependent on the application that actually provides the decision, thus the whole map must be passed down.",
+      "parentUuid": "d4148bab_e6ca1417",
+      "revId": "3119eec489a556ca6cf87debf8fc244431bbb577",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "89e87b07_a99a1367",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
         "patchSetId": 1
