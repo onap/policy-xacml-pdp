@@ -113,6 +113,30 @@
     },
     {
       "key": {
+        "uuid": "982e4665_2ae69152",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-10-15T19:55:07Z",
+      "side": 1,
+      "message": "So a little confused now.. kind of going back to solution #1 that we discussed last week, if passing the request params into the applicationServiceProvider, unless we abbreviate the decision results in the applicationServiceProvider itself, we\u0027d have to keep passing it (or just the \"abbrev\" parameter) down to the translator in order to modify the decision results from where it gets populated (StdCombinedPolicyResultsTranslator.scanObligations())..",
+      "parentUuid": "e093bb0b_fd15944b",
+      "range": {
+        "startLine": 65,
+        "startChar": 52,
+        "endLine": 65,
+        "endChar": 86
+      },
+      "revId": "3119eec489a556ca6cf87debf8fc244431bbb577",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b927ec78_d7780a17",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
         "patchSetId": 1
