@@ -37,12 +37,23 @@ if [ -z "$CONFIG_FILE" ]
     CONFIG_FILE="${POLICY_HOME}/etc/defaultConfig.json"
 fi
 
-if [[ -f ${POLICY_HOME}/etc/mounted/xacml.properties ]]; then
+if [[ -f "${POLICY_HOME}"/etc/mounted/policy-truststore ]]; then
+    echo "overriding policy-truststore"
+    cp -f "${POLICY_HOME}"/etc/mounted/policy-truststore  "${POLICY_HOME}"/etc/ssl/
+fi
+
+if [[ -f "${POLICY_HOME}"/etc/mounted/policy-keystore ]]; then
+    echo "overriding policy-keystore"
+    cp -f "${POLICY_HOME}"/etc/mounted/policy-keystore  "${POLICY_HOME}"/etc/ssl/
+fi
+
+if [[ -f "${POLICY_HOME}"/etc/mounted/xacml.properties ]]; then
+    echo "overriding xacml.properties in guards application"
     cp -f "${POLICY_HOME}"/etc/mounted/xacml.properties  "${POLICY_HOME}"/apps/guard/
 fi
 
 # Create operationshistory table
-${POLICY_HOME}/mysql/bin/create-guard-table.sh
+"${POLICY_HOME}"/mysql/bin/create-guard-table.sh
 
 echo "Policy Xacml PDP config file: $CONFIG_FILE"
 
