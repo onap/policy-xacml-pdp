@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b8483e58_1d88a12b",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/policy-pdpx.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-16T18:30:10Z",
+      "side": 1,
+      "message": "if quotes are needed here, then they\u0027re probably needed on lines 40, 44, and 48, too",
+      "revId": "95a3f322e97d9c611df18f14c692a052d0b902e3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
