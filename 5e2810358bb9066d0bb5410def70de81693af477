@@ -16,6 +16,24 @@
       "revId": "5e2810358bb9066d0bb5410def70de81693af477",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f3fcdfd_ec73555b",
+        "filename": "applications/monitoring/src/main/java/org/onap/policy/xacml/pdp/application/monitoring/MonitoringPdpApplication.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-17T22:30:56Z",
+      "side": 1,
+      "message": "If you can change it to \"unsupported query param for Monitoring application\". If \"abbrev\" exists, but is set to false then it is supported.",
+      "parentUuid": "052da99e_c0715b19",
+      "revId": "5e2810358bb9066d0bb5410def70de81693af477",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
