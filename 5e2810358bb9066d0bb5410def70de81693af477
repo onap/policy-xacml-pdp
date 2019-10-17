@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "052da99e_c0715b19",
+        "filename": "applications/monitoring/src/main/java/org/onap/policy/xacml/pdp/application/monitoring/MonitoringPdpApplication.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-17T21:44:37Z",
+      "side": 1,
+      "message": "remove \".toString()\" - LOGGER will do that automatically",
+      "revId": "5e2810358bb9066d0bb5410def70de81693af477",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
