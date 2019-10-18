@@ -34,6 +34,24 @@
       "revId": "5e2810358bb9066d0bb5410def70de81693af477",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a5bb630_3d1e3739",
+        "filename": "applications/monitoring/src/main/java/org/onap/policy/xacml/pdp/application/monitoring/MonitoringPdpApplication.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-10-18T12:58:10Z",
+      "side": 1,
+      "message": "Thanks, Jim!\n\nGot it, I\u0027ll modify the if statement then bc if \"abbrev\" exists but is set to false then this else clause will be executed \n(ex. Invalid query param: {abbrev\u003d[false]})",
+      "parentUuid": "7f3fcdfd_ec73555b",
+      "revId": "5e2810358bb9066d0bb5410def70de81693af477",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
