@@ -62,6 +62,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -91,7 +92,7 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StdMatchableTranslator.class);
     private static final String POLICY_ID = "policy-id";
-    private static final StandardCoder standardCoder = new StandardCoder();
+    private static final StandardYamlCoder standardYamlCoder = new StandardYamlCoder();
 
     private final Map<ToscaPolicyTypeIdentifier, ToscaPolicyType> matchablePolicyTypes = new HashMap<>();
     @Setter
@@ -549,7 +550,7 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
         }
         LOGGER.info("Read in local policy type {}", policyTypePath.toAbsolutePath());
         try {
-            ToscaServiceTemplate serviceTemplate = standardCoder.decode(new String(bytes, StandardCharsets.UTF_8),
+            ToscaServiceTemplate serviceTemplate = standardYamlCoder.decode(new String(bytes, StandardCharsets.UTF_8),
                     ToscaServiceTemplate.class);
             JpaToscaServiceTemplate jtst = new JpaToscaServiceTemplate();
             jtst.fromAuthorative(serviceTemplate);
@@ -605,7 +606,7 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
         // Store it locally
         //
         try {
-            standardCoder.encode(policyTypePath.toFile(), policyType);
+            standardYamlCoder.encode(policyTypePath.toFile(), policyType);
         } catch (CoderException e) {
             LOGGER.error("Failed to store {} locally to {}", policyTypeId, policyTypePath, e);
         }
@@ -617,6 +618,6 @@ public class StdMatchableTranslator implements ToscaPolicyTranslator {
 
     private Path constructLocalFilePath(ToscaPolicyTypeIdentifier policyTypeId) {
         return Paths.get(this.pathForData.toAbsolutePath().toString(), policyTypeId.getName() + "-"
-                + policyTypeId.getVersion() + ".json");
+                + policyTypeId.getVersion() + ".yaml");
     }
 }

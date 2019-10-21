@@ -244,7 +244,7 @@ public class TestAbbreviateDecisionResults {
     }
 
     /**
-     * Initializes the Monitoring application service
+     * Initializes the Monitoring application service.
      *
      * @param apps - the path to xacml.properties file
      */

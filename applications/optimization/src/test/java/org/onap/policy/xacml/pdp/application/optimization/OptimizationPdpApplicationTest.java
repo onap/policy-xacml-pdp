@@ -45,6 +45,7 @@ import org.junit.runners.MethodSorters;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
@@ -66,10 +67,17 @@ public class OptimizationPdpApplicationTest {
     private static StandardCoder gson = new StandardCoder();
     private static DecisionRequest requestAffinity;
     private static RestServerParameters clientParams;
-    private static String[] listPolicyTypeFiles = { "onap.policies.Optimization",
+    private static String[] listPolicyTypeFiles = {
+        "onap.policies.Optimization",
         "onap.policies.optimization.AffinityPolicy",
         "onap.policies.optimization.DistancePolicy",
-        "onap.policies.optimization.SubscriberPolicy"};
+        "onap.policies.optimization.HpaPolicy",
+        "onap.policies.optimization.OptimizationPolicy",
+        "onap.policies.optimization.PciPolicy",
+        "onap.policies.optimization.QueryPolicy",
+        "onap.policies.optimization.SubscriberPolicy",
+        "onap.policies.optimization.Vim_fit",
+        "onap.policies.optimization.VnfPolicy"};
 
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
@@ -102,8 +110,10 @@ public class OptimizationPdpApplicationTest {
         // Copy the test policy types into data area
         //
         for (String policy : listPolicyTypeFiles) {
-            Files.copy(Paths.get("src/test/resources", policy + "-1.0.0.json"),
-                    Paths.get(policyFolder.getRoot().getAbsolutePath(), policy + "-1.0.0.json"));
+            String policyType = ResourceUtils.getResourceAsString("policytypes/" + policy + ".yaml");
+            LOGGER.info("Copying {}", policyType);
+            Files.write(Paths.get(policyFolder.getRoot().getAbsolutePath(), policy + "-1.0.0.yaml"),
+                    policyType.getBytes());
         }
         //
         // Load service
@@ -135,6 +145,7 @@ public class OptimizationPdpApplicationTest {
             strDump.append(System.lineSeparator());
         }
         LOGGER.debug("{}", strDump);
+        assertThat(service).isNotNull();
         //
         // Tell it to initialize based on the properties file
         // we just built for it.
