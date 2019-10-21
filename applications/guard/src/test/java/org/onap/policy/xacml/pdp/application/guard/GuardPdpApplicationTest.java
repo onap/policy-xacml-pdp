@@ -25,7 +25,6 @@ package org.onap.policy.xacml.pdp.application.guard;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.att.research.xacml.api.Response;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -37,10 +36,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.UUID;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -196,7 +193,7 @@ public class GuardPdpApplicationTest {
         //
         // Ask for a decision
         //
-        Pair<DecisionResponse, Response> decision = service.makeDecision(request);
+        Pair<DecisionResponse, Response> decision = service.makeDecision(request, null);
         //
         // Check decision
         //
@@ -344,7 +341,7 @@ public class GuardPdpApplicationTest {
         //
         // Ask for a decision - should get permit
         //
-        Pair<DecisionResponse, Response> decision = service.makeDecision(request);
+        Pair<DecisionResponse, Response> decision = service.makeDecision(request, null);
         LOGGER.info("Looking for Permit Decision {}", decision.getKey());
         assertThat(decision.getKey()).isNotNull();
         assertThat(decision.getKey().getStatus()).isNotNull();
@@ -355,7 +352,7 @@ public class GuardPdpApplicationTest {
         guard.put("vfCount", "10");
         resource.put("guard", guard);
         request.setResource(resource);
-        decision = service.makeDecision(request);
+        decision = service.makeDecision(request, null);
         LOGGER.info("Looking for Deny Decision {}", decision.getKey());
         assertThat(decision.getKey()).isNotNull();
         assertThat(decision.getKey().getStatus()).isNotNull();
