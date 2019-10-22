@@ -50,6 +50,7 @@ import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
+import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -153,7 +154,7 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
             return stream.map(s -> s.replaceAll("UNIQUE_ID", uniqueId))
                 .map(s -> s.replaceAll("CONTROL_LOOP_ONE", cLOne))
                 .map(s -> s.replaceAll("CONTROL_LOOP_TWO", cLTwo))
-                .collect(Collectors.joining(System.lineSeparator()));
+                .collect(Collectors.joining(XacmlPolicyUtils.LINE_SEPARATOR));
         } catch (IOException e) {
             throw new
                 ToscaPolicyConversionException("Error while generating XACML policy for coordination directive", e);

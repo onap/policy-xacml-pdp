@@ -222,7 +222,7 @@ public class XacmlPolicyUtilsTest {
             //
             try (OutputStream os = new ByteArrayOutputStream()) {
                 XACMLPolicyWriter.writePolicyFile(os, rootPolicy);
-                LOGGER.debug("New Root Policy:{}{}", System.lineSeparator(), os.toString());
+                LOGGER.debug("New Root Policy:{}{}", XacmlPolicyUtils.LINE_SEPARATOR, os);
             }
             //
             // Just update root and PolicySet
@@ -230,7 +230,7 @@ public class XacmlPolicyUtilsTest {
             XacmlPolicyUtils.addPolicySetsToXacmlRootPolicy(rootPolicy, policySet5);
             try (OutputStream os = new ByteArrayOutputStream()) {
                 XACMLPolicyWriter.writePolicyFile(os, rootPolicy);
-                LOGGER.debug("New Root Policy:{}{}", System.lineSeparator(), os.toString());
+                LOGGER.debug("New Root Policy:{}{}", XacmlPolicyUtils.LINE_SEPARATOR, os);
             }
         }).doesNotThrowAnyException();
     }
