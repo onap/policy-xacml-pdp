@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "086709aa_9af5e1a4",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/XacmlPolicyUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-22T23:48:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d7b5553_c1daa324",
+      "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ac30fb22_ec58b8ad",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
         "patchSetId": 1
@@ -88,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "7196e855_252bddc2",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-22T23:48:58Z",
+      "side": 1,
+      "message": "I\u0027d rather not - I have to trap an exception that most likely will never happen since the policy wouldn\u0027t have been created if there was something wrong with the Json. Code coverage will be tough. And initially, it doesn\u0027t work. It throws a class cast exception. All I want to do is move the code, not re-write everything.",
+      "parentUuid": "608a4ca4_6cafa140",
+      "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ae459370_b593cb68",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
         "patchSetId": 1
@@ -105,6 +141,24 @@
     },
     {
       "key": {
+        "uuid": "12e4f095_4958995b",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-22T23:48:58Z",
+      "side": 1,
+      "message": "The policy wouldn\u0027t have been created in the first place if any of those were missing.",
+      "parentUuid": "ae459370_b593cb68",
+      "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "49ccb459_7e861e54",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
         "patchSetId": 1
@@ -116,6 +170,24 @@
       "writtenOn": "2019-10-22T18:45:37Z",
       "side": 1,
       "message": "isn\u0027t this too much nesting?",
+      "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a164854_9c2dcf9d",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-22T23:48:58Z",
+      "side": 1,
+      "message": "No so far its fine.",
+      "parentUuid": "49ccb459_7e861e54",
       "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -156,6 +228,24 @@
     },
     {
       "key": {
+        "uuid": "af1f69c7_6e7ff70f",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdXacmlApplicationServiceProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-22T23:48:58Z",
+      "side": 1,
+      "message": "Yeah the sonar is back.",
+      "parentUuid": "0eb60c2a_58648b81",
+      "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b9c20bd3_efd118d0",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdXacmlApplicationServiceProvider.java",
         "patchSetId": 1
@@ -167,6 +257,24 @@
       "writtenOn": "2019-10-22T18:45:37Z",
       "side": 1,
       "message": "add UTF-8 parameter",
+      "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "506573f0_e6aac4b4",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdXacmlApplicationServiceProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-22T23:48:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9c20bd3_efd118d0",
       "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
