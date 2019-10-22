@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "18214d1e_521abd40",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-22T18:12:26Z",
+      "side": 1,
+      "message": "put \"else\" here\n\nMay marginally improve performance by avoiding another comparison.",
+      "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
