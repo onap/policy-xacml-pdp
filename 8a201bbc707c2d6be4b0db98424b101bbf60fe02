@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "0d7b5553_c1daa324",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/XacmlPolicyUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-22T18:45:37Z",
+      "side": 1,
+      "message": "since this logs a bunch of stuff, this is one case where I would probably check isInfoEnabled() - return if not",
+      "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ac30fb22_ec58b8ad",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-22T18:45:37Z",
+      "side": 1,
+      "message": "thanks for extracting this class!  All of this common code has bothered me since stumbling upon it a month or two ago.",
+      "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "18214d1e_521abd40",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
         "patchSetId": 1
@@ -31,6 +65,125 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "18214d1e_521abd40",
+      "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "608a4ca4_6cafa140",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-22T18:45:37Z",
+      "side": 1,
+      "message": "use a StandardCoder - it\u0027s lighter weight than a full Gson",
+      "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae459370_b593cb68",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-22T18:45:37Z",
+      "side": 1,
+      "message": "not sure if these need to be checked:\n- metadata may not be a map (ClassCastEx)\n- metadata may not contain policy-id (NullPointerEx)",
+      "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "49ccb459_7e861e54",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-22T18:45:37Z",
+      "side": 1,
+      "message": "isn\u0027t this too much nesting?",
+      "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64bdd38b_0dcd49ea",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-22T18:45:37Z",
+      "side": 1,
+      "message": "just delete the \"else\" - can keep the comment",
+      "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0eb60c2a_58648b81",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdXacmlApplicationServiceProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-22T18:45:37Z",
+      "side": 1,
+      "message": "I\u0027d test isInfoEnabled() here",
+      "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9c20bd3_efd118d0",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdXacmlApplicationServiceProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-22T18:45:37Z",
+      "side": 1,
+      "message": "add UTF-8 parameter",
+      "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b7fd59d_eb6e7e7a",
+        "filename": "applications/common/src/test/java/org/onap/policy/pdp/xacml/application/common/XacmlPolicyUtilsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-22T18:45:37Z",
+      "side": 1,
+      "message": "remove .toString()\n\nsame comment below",
       "revId": "8a201bbc707c2d6be4b0db98424b101bbf60fe02",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
