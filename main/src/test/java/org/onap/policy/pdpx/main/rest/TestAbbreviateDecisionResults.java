@@ -268,7 +268,7 @@ public class TestAbbreviateDecisionResults {
         //
         // Look for our class instance and save it
         //
-        StringBuilder strDump = new StringBuilder("Loaded applications:" + System.lineSeparator());
+        StringBuilder strDump = new StringBuilder("Loaded applications:" + XacmlPolicyUtils.LINE_SEPARATOR);
         for (XacmlApplicationServiceProvider application : applicationLoader) {
             //
             // Is it our service?
@@ -283,7 +283,7 @@ public class TestAbbreviateDecisionResults {
             strDump.append(application.applicationName());
             strDump.append(" supports ");
             strDump.append(application.supportedPolicyTypes());
-            strDump.append(System.lineSeparator());
+            strDump.append(XacmlPolicyUtils.LINE_SEPARATOR);
         }
         LOGGER.debug("{}", strDump);
         //

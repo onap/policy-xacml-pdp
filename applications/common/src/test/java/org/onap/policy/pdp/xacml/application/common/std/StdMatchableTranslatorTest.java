@@ -57,6 +57,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
+import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,7 +132,7 @@ public class StdMatchableTranslatorTest {
         assertEquals(1, completedJtst.getPolicyTypes().size());
         testPolicyType = completedJtst.getPolicyTypes().get("onap.policies.Test");
         assertNotNull(testPolicyType);
-        logger.info("Test Policy Type {}{}", System.lineSeparator(), testPolicyType);
+        logger.info("Test Policy Type {}{}", XacmlPolicyUtils.LINE_SEPARATOR, testPolicyType);
     }
 
     @AfterClass
@@ -173,7 +174,7 @@ public class StdMatchableTranslatorTest {
             for (ToscaPolicy policy : policies.values()) {
                 PolicyType translatedPolicy = translator.convertPolicy(policy);
                 assertNotNull(translatedPolicy);
-                logger.info("Translated policy {} {}", System.lineSeparator(), translatedPolicy);
+                logger.info("Translated policy {} {}", XacmlPolicyUtils.LINE_SEPARATOR, translatedPolicy);
             }
         }
     }

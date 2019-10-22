@@ -138,9 +138,8 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             // Maybe check for an error
             //
             XACMLPolicyWriter.writePolicyFile(refPath, xacmlPolicy);
-            if (LOGGER.isInfoEnabled()) {
-                LOGGER.info("Xacml Policy is {}{}", System.lineSeparator(), new String(Files.readAllBytes(refPath)));
-            }
+            LOGGER.info("Xacml Policy is {}{}", XacmlPolicyUtils.LINE_SEPARATOR,
+                    new String(Files.readAllBytes(refPath)));
             //
             // Add root policy to properties object
             //
