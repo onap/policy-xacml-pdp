@@ -54,6 +54,7 @@ public class XacmlPolicyUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPolicyUtils.class);
 
     public static final String XACML_PROPERTY_FILE = "xacml.properties";
+    public static final String LINE_SEPARATOR = System.lineSeparator();
 
     private static final String DOT_FILE_SUFFIX = ".file";
     private static final String NOT_FOUND_MESSAGE = "NOT FOUND";
@@ -374,11 +375,9 @@ public class XacmlPolicyUtils {
         try (InputStream is = Files.newInputStream(propertyPath)) {
             Properties properties = new Properties();
             properties.load(is);
-            if (LOGGER.isInfoEnabled()) {
-                LOGGER.info("Loaded xacml properties {} {}", System.lineSeparator(), properties);
-                for (Entry<Object, Object> entrySet : properties.entrySet()) {
-                    LOGGER.info("{} -> {}", entrySet.getKey(), entrySet.getValue());
-                }
+            LOGGER.info("Loaded xacml properties {} {}", XacmlPolicyUtils.LINE_SEPARATOR, properties);
+            for (Entry<Object, Object> entrySet : properties.entrySet()) {
+                LOGGER.info("{} -> {}", entrySet.getKey(), entrySet.getValue());
             }
             return properties;
         }
@@ -390,9 +389,7 @@ public class XacmlPolicyUtils {
      * @throws IOException If unable to store the file.
      */
     public static void storeXacmlProperties(Properties properties, Path propertyPath) throws IOException {
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Storing xacml properties {} {} {}", properties, System.lineSeparator(), propertyPath);
-        }
+        LOGGER.info("Storing xacml properties {} {} {}", properties, XacmlPolicyUtils.LINE_SEPARATOR, propertyPath);
         try (OutputStream os = Files.newOutputStream(propertyPath)) {
             String strComments = "#";
             properties.store(os, strComments);
