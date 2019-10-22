@@ -125,7 +125,7 @@ public class OptimizationPdpApplicationTest {
         // the optimization service. Save it for use throughout
         // all the Junit tests.
         //
-        StringBuilder strDump = new StringBuilder("Loaded applications:" + System.lineSeparator());
+        StringBuilder strDump = new StringBuilder("Loaded applications:" + XacmlPolicyUtils.LINE_SEPARATOR);
         Iterator<XacmlApplicationServiceProvider> iterator = applicationLoader.iterator();
         while (iterator.hasNext()) {
             XacmlApplicationServiceProvider application = iterator.next();
@@ -142,7 +142,7 @@ public class OptimizationPdpApplicationTest {
             strDump.append(application.applicationName());
             strDump.append(" supports ");
             strDump.append(application.supportedPolicyTypes());
-            strDump.append(System.lineSeparator());
+            strDump.append(XacmlPolicyUtils.LINE_SEPARATOR);
         }
         LOGGER.debug("{}", strDump);
         assertThat(service).isNotNull();

@@ -342,10 +342,6 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         //
         permit.setCondition(condition);
         //
-        // TODO Add the advice - Is the request id needed to be returned?
-        //
-        // permit . setAdviceExpressions (adviceExpressions)
-        //
         // Done
         //
         return permit;
@@ -399,10 +395,6 @@ public class LegacyGuardTranslator implements ToscaPolicyTranslator {
         // Create the condition
         //
         permit.setCondition(createCondition(timeRange, minApply, maxApply));
-        //
-        // TODO Add the advice - Is the request id needed to be returned?
-        //
-        // permit . setAdviceExpressions (adviceExpressions)
         //
         // Done
         //

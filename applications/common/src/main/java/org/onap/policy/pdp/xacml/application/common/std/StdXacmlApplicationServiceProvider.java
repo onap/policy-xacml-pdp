@@ -30,6 +30,7 @@ import com.att.research.xacml.api.pdp.PDPException;
 import com.att.research.xacml.util.FactoryException;
 import com.att.research.xacml.util.XACMLPolicyWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -139,7 +140,8 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             //
             XACMLPolicyWriter.writePolicyFile(refPath, xacmlPolicy);
             if (LOGGER.isInfoEnabled()) {
-                LOGGER.info("Xacml Policy is {}{}", System.lineSeparator(), new String(Files.readAllBytes(refPath)));
+                LOGGER.info("Xacml Policy is {}{}", XacmlPolicyUtils.LINE_SEPARATOR,
+                    new String(Files.readAllBytes(refPath), StandardCharsets.UTF_8));
             }
             //
             // Add root policy to properties object
