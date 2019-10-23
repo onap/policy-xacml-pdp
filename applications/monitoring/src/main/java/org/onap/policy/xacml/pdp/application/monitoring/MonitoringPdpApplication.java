@@ -129,6 +129,7 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
                 if (entry.getValue() instanceof Map) {
                     @SuppressWarnings("unchecked")
                     Map<String, Object> policy = (Map<String, Object>) entry.getValue();
+                    policy.remove("type_version");
                     policy.remove("properties");
                     policy.remove("name");
                     policy.remove("version");
