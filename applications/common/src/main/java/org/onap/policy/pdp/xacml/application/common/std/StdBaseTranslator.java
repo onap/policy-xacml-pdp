@@ -55,6 +55,7 @@ public class StdBaseTranslator implements ToscaPolicyTranslator {
     private static Gson gson = new Gson();
 
     public static final String POLICY_ID = "policy-id";
+    public static final String POLICY_VERSION = "policy-version";
 
     @Override
     public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
@@ -98,37 +99,41 @@ public class StdBaseTranslator implements ToscaPolicyTranslator {
         return decisionResponse;
     }
 
-    @SuppressWarnings("unchecked")
     protected void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse) {
         for (Obligation obligation : obligations) {
             LOGGER.info("Obligation: {}", obligation);
             for (AttributeAssignment assignment : obligation.getAttributeAssignments()) {
                 LOGGER.info("Attribute Assignment: {}", assignment);
-                //
-                // We care about the content attribute
-                //
-                if (ToscaDictionary.ID_OBLIGATION_POLICY_MONITORING_CONTENTS
-                        .equals(assignment.getAttributeId())) {
-                    //
-                    // The contents are in Json form
-                    //
-                    Object stringContents = assignment.getAttributeValue().getValue();
-                    LOGGER.info("DCAE contents: {}{}", XacmlPolicyUtils.LINE_SEPARATOR, stringContents);
-                    //
-                    // Let's parse it into a map using Gson
-                    //
-                    Map<String, Object> result;
-                    result = gson.fromJson(stringContents.toString(), Map.class);
-                    //
-                    // Find the metadata section
-                    //
-                    Map<String, Object> metadata = (Map<String, Object>) result.get("metadata");
-                    if (metadata != null) {
-                        decisionResponse.getPolicies().put(metadata.get(POLICY_ID).toString(), result);
-                    } else {
-                        LOGGER.error("Missing metadata section in policy contained in obligation.");
-                    }
-                }
+                processObligationAttribute(assignment, decisionResponse);
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    protected void processObligationAttribute(AttributeAssignment assignment, DecisionResponse decisionResponse) {
+        //
+        // We care about the content attribute
+        //
+        if (ToscaDictionary.ID_OBLIGATION_POLICY_MONITORING_CONTENTS
+                .equals(assignment.getAttributeId())) {
+            //
+            // The contents are in Json form
+            //
+            Object stringContents = assignment.getAttributeValue().getValue();
+            LOGGER.info("DCAE contents: {}{}", XacmlPolicyUtils.LINE_SEPARATOR, stringContents);
+            //
+            // Let's parse it into a map using Gson
+            //
+            Map<String, Object> result;
+            result = gson.fromJson(stringContents.toString(), Map.class);
+            //
+            // Find the metadata section
+            //
+            Map<String, Object> metadata = (Map<String, Object>) result.get("metadata");
+            if (metadata != null) {
+                decisionResponse.getPolicies().put(metadata.get(POLICY_ID).toString(), result);
+            } else {
+                LOGGER.error("Missing metadata section in policy contained in obligation.");
             }
         }
     }
@@ -148,18 +153,19 @@ public class StdBaseTranslator implements ToscaPolicyTranslator {
         // is saved in the TOSCA Policy Name field.
         //
         if (! map.containsKey(POLICY_ID)) {
-            throw new ToscaPolicyConversionException(policy.getPolicyId() + " missing metadata policy-id");
+            throw new ToscaPolicyConversionException(policy.getPolicyId() + " missing metadata " + POLICY_ID);
         }
         //
         // Ensure the policy-version exists
         //
-        if (! map.containsKey("policy-version")) {
-            throw new ToscaPolicyConversionException(policy.getPolicyId() + " missing metadata policy-version");
+        if (! map.containsKey(POLICY_VERSION)) {
+            throw new ToscaPolicyConversionException(policy.getPolicyId() + " missing metadata "
+                    + POLICY_VERSION);
         }
         //
         // Add in the Policy Version
         //
-        policy.setVersion(map.get("policy-version"));
+        policy.setVersion(map.get(POLICY_VERSION));
         return policy;
     }
 
