@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "f05e93c6_722ff4c5",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-28T18:04:32Z",
+      "side": 1,
+      "message": "still need to remove this",
+      "revId": "1749721aee6f9d319edf66045291b6714ad11f28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4c45aa9_5a33426e",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchablePolicyRequest.java",
         "patchSetId": 4
