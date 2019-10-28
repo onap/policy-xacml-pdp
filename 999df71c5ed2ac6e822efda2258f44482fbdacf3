@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3d33c2a4_bc9f9d5d",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-28T16:10:47Z",
+      "side": 1,
+      "message": "hmm.  kind of makes you wonder if these could all implement a common interface and then use \"T extends XxxInterface\", eliminating the need for the instanceof tests.",
+      "revId": "999df71c5ed2ac6e822efda2258f44482fbdacf3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a1b1512_d884710c",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-28T16:10:47Z",
+      "side": 1,
+      "message": "\"its\" \u003d\u003e \"it\u0027s\"",
+      "revId": "999df71c5ed2ac6e822efda2258f44482fbdacf3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e024d8f_91cd9aac",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-28T16:10:47Z",
+      "side": 1,
+      "message": "hmm. kind of feels like we could use some more helper functions.  For example:\n  generateGreaterThan(leftExpr, rightExpr)\n  generateEquals(leftExpr, rightExpr)\n  generateExtractValue(sourceExpr, attributeName)\n  ...",
+      "revId": "999df71c5ed2ac6e822efda2258f44482fbdacf3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7347fd0_34ecde4c",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-28T16:10:47Z",
+      "side": 1,
+      "message": "where is this used?",
+      "revId": "999df71c5ed2ac6e822efda2258f44482fbdacf3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2174d24b_0e39d7be",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-28T16:10:47Z",
+      "side": 1,
+      "message": "really want an \"or\" here?  don\u0027t we want to apply \"\u003e\u003d\" AND \"in\"?",
+      "revId": "999df71c5ed2ac6e822efda2258f44482fbdacf3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d55b3f9d_4fc8a968",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-28T16:10:47Z",
+      "side": 1,
+      "message": "\"Give\" \u003d\u003e \"Given\"",
+      "revId": "999df71c5ed2ac6e822efda2258f44482fbdacf3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9c3e48b_a5b9dd25",
+        "filename": "applications/optimization/src/test/java/org/onap/policy/xacml/pdp/application/optimization/OptimizationPdpApplicationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-10-28T16:10:47Z",
+      "side": 1,
+      "message": "do any of these tests check both PERMIT and DENY cases?  Or do we not care about that at this level?",
+      "revId": "999df71c5ed2ac6e822efda2258f44482fbdacf3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
