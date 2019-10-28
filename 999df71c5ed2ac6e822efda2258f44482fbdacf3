@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5ff6dfa2_0838c5e0",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-28T16:35:05Z",
+      "side": 1,
+      "message": "The classes around were generated from XML specification. I don\u0027t plan on extending them. I actually might remove this from the method and let the caller add the obligation.",
+      "parentUuid": "3d33c2a4_bc9f9d5d",
+      "revId": "999df71c5ed2ac6e822efda2258f44482fbdacf3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a1b1512_d884710c",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2019-10-28T16:10:47Z",
       "side": 1,
       "message": "\"its\" \u003d\u003e \"it\u0027s\"",
+      "revId": "999df71c5ed2ac6e822efda2258f44482fbdacf3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea3cca77_74384bec",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-28T16:35:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a1b1512_d884710c",
       "revId": "999df71c5ed2ac6e822efda2258f44482fbdacf3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "a2aaafcb_b57f8afd",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-28T16:35:05Z",
+      "side": 1,
+      "message": "Possibly - when I go back through the Sonar XACML code coverage JIRA I can clean these up. At this point, I am only addressing the Optimization application in this JIRA and doing minor cleanup here and there.",
+      "parentUuid": "3e024d8f_91cd9aac",
+      "revId": "999df71c5ed2ac6e822efda2258f44482fbdacf3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e7347fd0_34ecde4c",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2019-10-28T16:10:47Z",
       "side": 1,
       "message": "where is this used?",
+      "revId": "999df71c5ed2ac6e822efda2258f44482fbdacf3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aadb8a97_38340e59",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-28T16:35:05Z",
+      "side": 1,
+      "message": "Forgot to remove it.",
+      "parentUuid": "e7347fd0_34ecde4c",
       "revId": "999df71c5ed2ac6e822efda2258f44482fbdacf3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "f3cb7b82_05807b73",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-28T16:35:05Z",
+      "side": 1,
+      "message": "No you do not - if no one passes the policy-type parameter then it should not be returned at all. Callers can without any scope, resources, services, or geography properties and ask for policy-types. If they call with any of those values the first rule will apply.",
+      "parentUuid": "2174d24b_0e39d7be",
+      "revId": "999df71c5ed2ac6e822efda2258f44482fbdacf3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d55b3f9d_4fc8a968",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
         "patchSetId": 3
@@ -104,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "53d241fd_3066760a",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-28T16:35:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d55b3f9d_4fc8a968",
+      "revId": "999df71c5ed2ac6e822efda2258f44482fbdacf3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9c3e48b_a5b9dd25",
         "filename": "applications/optimization/src/test/java/org/onap/policy/xacml/pdp/application/optimization/OptimizationPdpApplicationTest.java",
         "patchSetId": 3
@@ -115,6 +223,24 @@
       "writtenOn": "2019-10-28T16:10:47Z",
       "side": 1,
       "message": "do any of these tests check both PERMIT and DENY cases?  Or do we not care about that at this level?",
+      "revId": "999df71c5ed2ac6e822efda2258f44482fbdacf3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2714496_8e993b0f",
+        "filename": "applications/optimization/src/test/java/org/onap/policy/xacml/pdp/application/optimization/OptimizationPdpApplicationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-28T16:35:05Z",
+      "side": 1,
+      "message": "Not at this point - really should never get a DENY. Not applicable is possible - if there are no policies that apply. In which that is fine.",
+      "parentUuid": "d9c3e48b_a5b9dd25",
       "revId": "999df71c5ed2ac6e822efda2258f44482fbdacf3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
