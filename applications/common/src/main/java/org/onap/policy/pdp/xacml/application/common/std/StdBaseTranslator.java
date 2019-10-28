@@ -28,16 +28,23 @@ import com.att.research.xacml.api.Obligation;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
+import com.att.research.xacml.api.XACML3;
 import com.google.gson.Gson;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.ConditionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionsType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
@@ -46,6 +53,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
+import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,6 +107,13 @@ public class StdBaseTranslator implements ToscaPolicyTranslator {
         return decisionResponse;
     }
 
+    /**
+     * scanObligations - scans the list of obligations and make appropriate method calls to process
+     * obligations.
+     *
+     * @param obligations Collection of obligation objects
+     * @param decisionResponse DecisionResponse object used to store any results from obligations.
+     */
     protected void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse) {
         for (Obligation obligation : obligations) {
             LOGGER.info("Obligation: {}", obligation);
@@ -109,6 +124,12 @@ public class StdBaseTranslator implements ToscaPolicyTranslator {
         }
     }
 
+    /**
+     * processObligationAttribute - processes an individual obligation attribute assignment object.
+     *
+     * @param assignment AttributeAssignment object
+     * @param decisionResponse DecisionResponse object used to store any results from attribute assignment.
+     */
     @SuppressWarnings("unchecked")
     protected void processObligationAttribute(AttributeAssignment assignment, DecisionResponse decisionResponse) {
         //
@@ -169,11 +190,21 @@ public class StdBaseTranslator implements ToscaPolicyTranslator {
         return policy;
     }
 
-    protected RuleType addObligation(RuleType rule, String jsonPolicy) {
+    /**
+     * addObligation - general code to add a json policy as an obligation. Probably could just
+     * return the obligation only instead of adding it directly to a rule/policy/policyset.
+     * But this is fine for now.
+     *
+     * @param <T> RuleType, PolicyType, PolicySetType object
+     * @param ruleOrPolicy Incoming RuleType, PolicyType, PolicySetType object
+     * @param jsonPolicy JSON String representation of policy.
+     * @return Return the Incoming RuleType, PolicyType, PolicySetType object for convenience.
+     */
+    protected <T> T addObligation(T ruleOrPolicy, String jsonPolicy) {
         //
-        // Convert the YAML Policy to JSON Object
+        // Creating obligation for returning policy
         //
-        LOGGER.info("JSON Optimization Policy {}{}", XacmlPolicyUtils.LINE_SEPARATOR, jsonPolicy);
+        LOGGER.info("Obligation Policy {}{}", XacmlPolicyUtils.LINE_SEPARATOR, jsonPolicy);
         //
         // Create an AttributeValue for it
         //
@@ -196,12 +227,129 @@ public class StdBaseTranslator implements ToscaPolicyTranslator {
         obligation.setObligationId(ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue());
         obligation.getAttributeAssignmentExpression().add(expressionType);
         //
-        // Now we can add it into the rule
+        // Now we can add it into the rule/policy/policyset
         //
         ObligationExpressionsType obligations = new ObligationExpressionsType();
         obligations.getObligationExpression().add(obligation);
-        rule.setObligationExpressions(obligations);
-        return rule;
+        if (ruleOrPolicy instanceof RuleType) {
+            ((RuleType) ruleOrPolicy).setObligationExpressions(obligations);
+        } else if (ruleOrPolicy instanceof PolicyType) {
+            ((PolicyType) ruleOrPolicy).setObligationExpressions(obligations);
+        } else if (ruleOrPolicy instanceof PolicySetType) {
+            ((PolicySetType) ruleOrPolicy).setObligationExpressions(obligations);
+        }
+        //
+        // Return as a convenience
+        //
+        return ruleOrPolicy;
+    }
+
+    /**
+     * generateAnyOfForPolicyType - Creates a specific AnyOfType that includes the check
+     * to match on a specific TOSCA Policy Type.
+     *
+     * @param type String represenatation of TOSCA Policy Type (eg. "onap.policies.Foo")
+     * @return AnyOfType object
+     */
+    protected AnyOfType generateAnyOfForPolicyType(String type) {
+        //
+        // Create the match for the policy type
+        //
+        MatchType match = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
+                XACML3.ID_FUNCTION_STRING_EQUAL,
+                type,
+                XACML3.ID_DATATYPE_STRING,
+                ToscaDictionary.ID_RESOURCE_POLICY_TYPE,
+                XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
+        //
+        // Add it to an AnyOfType object
+        //
+        AnyOfType anyOf = new AnyOfType();
+        anyOf.getAllOf().add(ToscaPolicyTranslatorUtils.buildAllOf(match));
+        //
+        // Return new AnyOfType
+        //
+        return anyOf;
+    }
+
+    /**
+     * generateConditionForPolicyType - create a ConditionType XACML object
+     * that is able to determine if a request specifies a specific policy type
+     * that the policy is created from, only then is the rule applied. If the
+     * request doesn't even care about the policy type (eg it is missing) then
+     * return the rule should not apply.
+     *
+     * @param type PolicyType (eg. onap.policies.Foo
+     * @return ConditionType object
+     */
+    protected ConditionType generateConditionForPolicyType(String type) {
+        //
+        // Create an ApplyType that checks if the request contains the
+        // policy-type attribute
+        //
+        AttributeDesignatorType designator = new AttributeDesignatorType();
+        designator.setAttributeId(ToscaDictionary.ID_RESOURCE_POLICY_TYPE.stringValue());
+        designator.setCategory(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue());
+        designator.setDataType(XACML3.ID_DATATYPE_STRING.stringValue());
+
+        ApplyType applyBagSize = new ApplyType();
+        applyBagSize.setDescription("Get the size of policy-type attributes");
+        applyBagSize.setFunctionId(XACML3.ID_FUNCTION_STRING_BAG_SIZE.stringValue());
+
+        AttributeValueType valueZero = new AttributeValueType();
+        valueZero.setDataType(XACML3.ID_DATATYPE_INTEGER.stringValue());
+        valueZero.getContent().add("0");    // Yes really - represent as a string
+
+        ObjectFactory factory = new ObjectFactory();
+        applyBagSize.getExpression().add(factory.createAttributeDesignator(designator));
+
+        ApplyType applyGreaterThan = new ApplyType();
+        applyGreaterThan.setDescription("Does the policy-type attribute exist?");
+        applyGreaterThan.setFunctionId(XACML3.ID_FUNCTION_INTEGER_EQUAL.stringValue());
+
+        applyGreaterThan.getExpression().add(factory.createApply(applyBagSize));
+        applyGreaterThan.getExpression().add(factory.createAttributeValue(valueZero));
+
+        //
+        // Create an apply type that checks the actual value
+        //
+        ApplyType unBag = new ApplyType();
+        unBag.setDescription("Unbag the attribute");
+        unBag.setFunctionId(XACML3.ID_FUNCTION_STRING_ONE_AND_ONLY.stringValue());
+        unBag.getExpression().add(factory.createAttributeDesignator(designator));
+
+        AttributeValueType value = new AttributeValueType();
+        value.setDataType(XACML3.ID_DATATYPE_STRING.stringValue());
+        value.getContent().add(type);
+
+        //
+        // Create string-is-in apply - which determines if the policy-type
+        // is in the request bag of resources for policy-type
+        //
+        ApplyType applyIsIn = new ApplyType();
+        applyIsIn.setDescription("Is this policy-type in the list?");
+        applyIsIn.setFunctionId(XACML3.ID_FUNCTION_STRING_IS_IN.stringValue());
+        applyIsIn.getExpression().add(factory.createAttributeValue(value));
+        applyIsIn.getExpression().add(factory.createAttributeDesignator(designator));
+
+        //
+        // Create our outer apply
+        //
+        ApplyType applyOr = new ApplyType();
+        applyOr.setDescription("IF exists and is equal");
+        applyOr.setFunctionId(XACML3.ID_FUNCTION_OR.stringValue());
+
+        applyOr.getExpression().add(factory.createApply(applyGreaterThan));
+        applyOr.getExpression().add(factory.createApply(applyIsIn));
+
+        //
+        // Finally create the condition
+        //
+        ConditionType condition = new ConditionType();
+
+        condition.setExpression(factory.createApply(applyOr));
+
+        return condition;
     }
 
 }
