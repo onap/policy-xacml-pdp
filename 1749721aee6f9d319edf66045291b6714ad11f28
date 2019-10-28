@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f6bfb33b_f276f955",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-28T18:07:46Z",
+      "side": 1,
+      "message": "oopsy",
+      "parentUuid": "f05e93c6_722ff4c5",
+      "revId": "1749721aee6f9d319edf66045291b6714ad11f28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4c45aa9_5a33426e",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchablePolicyRequest.java",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2019-10-28T18:03:52Z",
       "side": 1,
       "message": "oh, good catch!",
+      "revId": "1749721aee6f9d319edf66045291b6714ad11f28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "035af14b_031b452f",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchablePolicyRequest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-28T18:07:46Z",
+      "side": 1,
+      "message": "I have been trying to fix this sonar issue for awhile now. Can\u0027t wait to see what it says.",
+      "parentUuid": "e4c45aa9_5a33426e",
       "revId": "1749721aee6f9d319edf66045291b6714ad11f28",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
