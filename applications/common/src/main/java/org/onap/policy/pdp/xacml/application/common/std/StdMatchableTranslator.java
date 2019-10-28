@@ -109,12 +109,12 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         //
         // Get the TOSCA Policy Type for this policy
         //
-        Collection<ToscaPolicyType> policyTypes = this.getPolicyTypes(toscaPolicy.getTypeIdentifier());
+        Collection<ToscaPolicyType> toscaPolicyTypes = this.getPolicyTypes(toscaPolicy.getTypeIdentifier());
         //
-        // If we don't have any policy types, then we cannot know
+        // If we don't have any TOSCA policy types, then we cannot know
         // which properties are matchable.
         //
-        if (policyTypes.isEmpty()) {
+        if (toscaPolicyTypes.isEmpty()) {
             throw new ToscaPolicyConversionException(
                     "Cannot retrieve Policy Type definition for policy " + toscaPolicy.getName());
         }
@@ -134,7 +134,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         //
         // There should be a metadata section
         //
-        this.fillMetadataSection(newPolicyType, toscaPolicy.getMetadata());
+        fillMetadataSection(newPolicyType, toscaPolicy.getMetadata());
         //
         // Set the combining rule
         //
@@ -142,17 +142,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         //
         // Generate the TargetType
         //
-        newPolicyType.setTarget(generateTargetType(toscaPolicy.getProperties(), policyTypes));
-        //
-        // Now create the Permit Rule
-        // No target since the policy has a target
-        // With obligations.
-        //
-        RuleType rule = new RuleType();
-        rule.setDescription("Default is to PERMIT if the policy matches.");
-        rule.setRuleId(policyName + ":rule");
-        rule.setEffect(EffectType.PERMIT);
-        rule.setTarget(new TargetType());
+        newPolicyType.setTarget(new TargetType());
         //
         // Now represent the policy as Json
         //
@@ -163,13 +153,41 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         } catch (CoderException e) {
             throw new ToscaPolicyConversionException("Failed to encode policy to json", e);
         }
-        addObligation(rule, jsonPolicy);
+        //
+        // Add it as an obligation
+        //
+        addObligation(newPolicyType, jsonPolicy);
+        //
+        // Now create the Permit Rule for all the
+        // matchable properties.
+        //
+        RuleType rule = new RuleType();
+        rule.setDescription("Default is to PERMIT if the policy matches.");
+        rule.setRuleId(policyName + ":rule");
+        rule.setEffect(EffectType.PERMIT);
+        rule.setTarget(generateTargetType(toscaPolicy.getProperties(), toscaPolicyTypes));
+        rule.setCondition(generateConditionForPolicyType(toscaPolicy.getType()));
         //
         // Add the rule to the policy
         //
         newPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
         //
-        // Return our new policy
+        // If a Decision is for a specific policy-type, make sure
+        // there is a rule for it.
+        //
+        rule = new RuleType();
+        rule.setDescription("Match on policy-type " + toscaPolicy.getType());
+        rule.setRuleId(policyName + ":rule:policy-type");
+        rule.setEffect(EffectType.PERMIT);
+        TargetType target = new TargetType();
+        target.getAnyOf().add(this.generateAnyOfForPolicyType(toscaPolicy.getType()));
+        rule.setTarget(target);
+        //
+        // Add the rule to the policy
+        //
+        newPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
+        //
+        // Log output of the policy
         //
         try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
             XACMLPolicyWriter.writePolicyFile(os, newPolicyType);
@@ -177,18 +195,20 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         } catch (IOException e) {
             LOGGER.error("Failed to create byte array stream", e);
         }
+        //
+        // Done
+        //
         return newPolicyType;
     }
 
     /**
-     * For generating target type, we are scan for matchable properties
+     * For generating target type, we scan for matchable properties
      * and use those to build the policy.
      *
      * @param properties Properties section of policy
      * @param policyTypes Collection of policy Type to find matchable metadata
      * @return TargetType object
      */
-    @SuppressWarnings("unchecked")
     protected TargetType generateTargetType(Map<String, Object> properties, Collection<ToscaPolicyType> policyTypes) {
         TargetType targetType = new TargetType();
         //
@@ -200,19 +220,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
             //
             if (isMatchable(entrySet.getKey(), policyTypes)) {
                 LOGGER.info("Found matchable property {}", entrySet.getValue());
-                if (entrySet.getValue() instanceof Collection) {
-                    AnyOfType anyOf = generateMatches((Collection<Object>) entrySet.getValue(),
-                            new IdentifierImpl(ToscaDictionary.ID_RESOURCE_MATCHABLE + entrySet.getKey()));
-                    if (! anyOf.getAllOf().isEmpty()) {
-                        targetType.getAnyOf().add(anyOf);
-                    }
-                } else {
-                    AnyOfType anyOf = generateMatches(Arrays.asList(entrySet.getValue()),
-                            new IdentifierImpl(ToscaDictionary.ID_RESOURCE_MATCHABLE + entrySet.getKey()));
-                    if (! anyOf.getAllOf().isEmpty()) {
-                        targetType.getAnyOf().add(anyOf);
-                    }
-                }
+                generateMatchable(targetType, entrySet.getKey(), entrySet.getValue());
             }
         }
 
@@ -234,6 +242,24 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
             }
         }
         return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected TargetType generateMatchable(TargetType targetType, String key, Object value) {
+        if (value instanceof Collection) {
+            AnyOfType anyOf = generateMatches((Collection<Object>) value,
+                    new IdentifierImpl(ToscaDictionary.ID_RESOURCE_MATCHABLE + key));
+            if (! anyOf.getAllOf().isEmpty()) {
+                targetType.getAnyOf().add(anyOf);
+            }
+        } else {
+            AnyOfType anyOf = generateMatches(Arrays.asList(value),
+                    new IdentifierImpl(ToscaDictionary.ID_RESOURCE_MATCHABLE + key));
+            if (! anyOf.getAllOf().isEmpty()) {
+                targetType.getAnyOf().add(anyOf);
+            }
+        }
+        return targetType;
     }
 
     protected AnyOfType generateMatches(Collection<Object> matchables, Identifier attributeId) {
