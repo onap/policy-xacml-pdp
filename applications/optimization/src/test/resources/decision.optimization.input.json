@@ -5,8 +5,8 @@
   "action": "optimize",
   "resource": {
       "scope": [],
-      "services": ["vCPE"],
+      "services": [],
       "resources": [],
-      "geography": ["US"]
+      "geography": []
   }
 }
