@@ -59,6 +59,8 @@ public class StdMatchablePolicyRequest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StdMatchablePolicyRequest.class);
 
+    public static final String POLICY_TYPE_KEY = "policy-type";
+
     @XACMLSubject(includeInResults = true)
     private String onapName;
 
@@ -120,7 +122,7 @@ public class StdMatchablePolicyRequest {
         try {
             xacmlRequest = RequestParser.parseRequest(request);
         } catch (IllegalAccessException | DataTypeException e) {
-            throw new XacmlApplicationException("Could not parse request " + e.getLocalizedMessage());
+            throw new XacmlApplicationException("Could not parse request ", e);
         }
         //
         // Create an object we can add to
@@ -134,18 +136,27 @@ public class StdMatchablePolicyRequest {
         Map<String, Object> resources = decisionRequest.getResource();
         for (Entry<String, Object> entrySet : resources.entrySet()) {
             //
+            // Check for special policy-type
+            //
+            String attributeId;
+            if (POLICY_TYPE_KEY.equals(entrySet.getKey())) {
+                attributeId = ToscaDictionary.ID_RESOURCE_POLICY_TYPE.stringValue();
+            } else {
+                attributeId = ToscaDictionary.ID_RESOURCE_MATCHABLE + entrySet.getKey();
+            }
+            //
             // Making an assumption that these fields are matchable.
             // Its possible we may have to load the policy type model
             // and use that to validate the fields that are matchable.
             //
             try {
                 if (entrySet.getValue() instanceof Collection) {
-                    addResources(resourceAttributes, (Collection) entrySet.getValue(), entrySet.getKey());
+                    addResources(resourceAttributes, (Collection) entrySet.getValue(), attributeId);
                 } else {
-                    addResources(resourceAttributes, Arrays.asList(entrySet.getValue().toString()), entrySet.getKey());
+                    addResources(resourceAttributes, Arrays.asList(entrySet.getValue().toString()), attributeId);
                 }
             } catch (DataTypeException e) {
-                throw new XacmlApplicationException("Failed to add resource " + e.getLocalizedMessage());
+                throw new XacmlApplicationException("Failed to add resource ", e);
             }
         }
         mutableRequest.add(resourceAttributes);
@@ -162,7 +173,7 @@ public class StdMatchablePolicyRequest {
         for (Object value : values) {
             StdMutableAttribute mutableAttribute    = new StdMutableAttribute();
             mutableAttribute.setCategory(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
-            mutableAttribute.setAttributeId(new IdentifierImpl(ToscaDictionary.ID_RESOURCE_MATCHABLE + id));
+            mutableAttribute.setAttributeId(new IdentifierImpl(id));
             mutableAttribute.setIncludeInResults(true);
 
             DataType<?> dataTypeExtended    = factory.getDataType(XACML3.ID_DATATYPE_STRING);
@@ -175,5 +186,4 @@ public class StdMatchablePolicyRequest {
         }
         return attributes;
     }
-
 }
