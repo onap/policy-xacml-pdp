@@ -13,6 +13,24 @@ topology_template:
                 scope: []
                 services: []
                 resources: []
+                geography: []
+                identity: affinity_vCPE
+                applicableResources: any
+                affinityProperties:
+                    qualifier: same
+                    category: complex
+    -
+        OSDF_CASABLANCA.Affinity_Default_US:
+            type: onap.policies.optimization.AffinityPolicy
+            version: 1.0.0
+            type_version: 1.0.0
+            metadata:
+                policy-id: OSDF_CASABLANCA.Affinity_Default_US
+                policy-version: 1
+            properties:
+                scope: []
+                services: []
+                resources: []
                 geography: [US]
                 identity: affinity_vCPE
                 applicableResources: any
@@ -20,12 +38,12 @@ topology_template:
                     qualifier: same
                     category: complex
     -
-        OSDF_CASABLANCA.Affinity_vCPE_0:
+        OSDF_CASABLANCA.Affinity_Default_vCPE_0:
             type: onap.policies.optimization.AffinityPolicy
             version: 1.0.0
             type_version: 1.0.0
             metadata:
-                policy-id: OSDF_CASABLANCA.Affinity_vCPE_0
+                policy-id: OSDF_CASABLANCA.Affinity_Default_vCPE_0
                 policy-version: 1
             properties:
                 scope: []
