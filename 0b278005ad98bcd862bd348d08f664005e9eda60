@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "86680d13_a8d0ca75",
+        "filename": "applications/optimization/src/test/java/org/onap/policy/xacml/pdp/application/optimization/OptimizationPdpApplicationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-11-01T12:05:29Z",
+      "side": 0,
+      "message": "@Pam Please check this. I got a compile error on this when I upped the Jersey versions. Looking at the code, it seems that the correct import is the Guava Lists class and not the Jersey one. Anyway, the tests pass with the Guava lists.",
+      "range": {
+        "startLine": 42,
+        "startChar": 7,
+        "endLine": 42,
+        "endChar": 57
+      },
+      "revId": "0b278005ad98bcd862bd348d08f664005e9eda60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
