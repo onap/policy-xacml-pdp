@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e8a5cb64_3ff353e9",
+        "filename": "applications/optimization/src/test/java/org/onap/policy/xacml/pdp/application/optimization/OptimizationPdpApplicationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-01T12:52:48Z",
+      "side": 1,
+      "message": "could just use java.util.Collections singleton() instead, but this is fine, too",
+      "revId": "3c1ae81a9c05ee9bfbb76bb23a2d2d75013d37ae",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
