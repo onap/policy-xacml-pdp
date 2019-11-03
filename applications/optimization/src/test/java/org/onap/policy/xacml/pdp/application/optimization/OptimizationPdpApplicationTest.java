@@ -29,7 +29,6 @@ import static org.mockito.Mockito.when;
 
 import com.att.research.xacml.api.Response;
 import com.google.common.collect.Lists;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -183,10 +182,11 @@ public class OptimizationPdpApplicationTest {
     }
 
     @Test
-    public void test02NoPolicies() {
+    public void test02NoPolicies() throws CoderException {
         //
         // Ask for a decision when there are no policies loaded
         //
+        LOGGER.info("Request {}", gson.encode(baseRequest));
         Pair<DecisionResponse, Response> decision = service.makeDecision(baseRequest, null);
         LOGGER.info("Decision {}", decision.getKey());
 
@@ -202,26 +202,50 @@ public class OptimizationPdpApplicationTest {
         //
         TestUtils.loadPolicies("src/test/resources/vCPE.policies.optimization.input.tosca.yaml", service);
         //
-        // Ask for a decision for default
+        // Ask for a decision for available default policies
         //
-        Pair<DecisionResponse, Response> decision = service.makeDecision(baseRequest, null);
-        LOGGER.info("Decision {}", decision.getKey());
+        DecisionResponse response = makeDecision();
 
-        assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies().size()).isEqualTo(1);
-        //
-        // Double check that the contents are what we expect
-        //
-        LOGGER.info(gson.encode(decision.getKey()));
+        assertThat(response).isNotNull();
+        assertThat(response.getPolicies().size()).isEqualTo(2);
         //
         // Validate it
         //
-        validateDecision(decision.getKey(), baseRequest);
+        validateDecision(response, baseRequest);
     }
 
     @SuppressWarnings("unchecked")
     @Test
-    public void test04OptimizationDefaultGeography() throws CoderException {
+    public void test04OptimizationDefaultHpa() throws CoderException, FileNotFoundException, IOException,
+        XacmlApplicationException {
+        //
+        // Add in policy type
+        //
+        List<String> policyTypes = Lists.newArrayList("onap.policies.optimization.HpaPolicy");
+        baseRequest.getResource().put("policy-type", policyTypes);
+        //
+        // Ask for a decision for default HPA policy
+        //
+        DecisionResponse response = makeDecision();
+
+        assertThat(response).isNotNull();
+        assertThat(response.getPolicies().size()).isEqualTo(1);
+        response.getPolicies().forEach((key, value) -> {
+            assertThat(((Map<String, Object>) value).get("type")).isEqualTo(("onap.policies.optimization.HpaPolicy"));
+        });
+        //
+        // Validate it
+        //
+        validateDecision(response, baseRequest);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void test05OptimizationDefaultGeography() throws CoderException {
+        //
+        // Remove all the policy-type resources from the request
+        //
+        cleanOutResources();
         //
         // Add US to the geography list
         //
@@ -229,24 +253,18 @@ public class OptimizationPdpApplicationTest {
         //
         // Ask for a decision for default US Policy
         //
-        Pair<DecisionResponse, Response> decision = service.makeDecision(baseRequest, null);
-        LOGGER.info("Decision {}", decision.getKey());
-
-        assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies().size()).isEqualTo(2);
-        //
-        // Double check that the contents are what we expect
-        //
-        LOGGER.info(gson.encode(decision.getKey()));
+        DecisionResponse response = makeDecision();
+        assertThat(response).isNotNull();
+        assertThat(response.getPolicies().size()).isEqualTo(3); // Should be 1
         //
         // Validate it
         //
-        validateDecision(decision.getKey(), baseRequest);
+        validateDecision(response, baseRequest);
     }
 
     @SuppressWarnings("unchecked")
     @Test
-    public void test05OptimizationDefaultGeographyAndService() throws CoderException {
+    public void test06OptimizationDefaultGeographyAndService() throws CoderException {
         //
         // Add vCPE to the service list
         //
@@ -254,24 +272,19 @@ public class OptimizationPdpApplicationTest {
         //
         // Ask for a decision for default US policy for vCPE service
         //
-        Pair<DecisionResponse, Response> decision = service.makeDecision(baseRequest, null);
-        LOGGER.info("Decision {}", decision.getKey());
+        DecisionResponse response = makeDecision();
 
-        assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies().size()).isEqualTo(5);
-        //
-        // Double check that the contents are what we expect
-        //
-        LOGGER.info(gson.encode(decision.getKey()));
+        assertThat(response).isNotNull();
+        assertThat(response.getPolicies().size()).isEqualTo(6); // should be 1
         //
         // Validate it
         //
-        validateDecision(decision.getKey(), baseRequest);
+        validateDecision(response, baseRequest);
     }
 
     @SuppressWarnings("unchecked")
     @Test
-    public void test06OptimizationDefaultGeographyAndServiceAndResource() throws CoderException {
+    public void test07OptimizationDefaultGeographyAndServiceAndResource() throws CoderException {
         //
         // Add vCPE to the service list
         //
@@ -279,24 +292,19 @@ public class OptimizationPdpApplicationTest {
         //
         // Ask for a decision for default US service vCPE resource vG policy
         //
-        Pair<DecisionResponse, Response> decision = service.makeDecision(baseRequest, null);
-        LOGGER.info("Decision {}", decision.getKey());
+        DecisionResponse response = makeDecision();
 
-        assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies().size()).isEqualTo(9);
-        //
-        // Double check that the contents are what we expect
-        //
-        LOGGER.info(gson.encode(decision.getKey()));
+        assertThat(response).isNotNull();
+        assertThat(response.getPolicies().size()).isEqualTo(11); // should be 4
         //
         // Validate it
         //
-        validateDecision(decision.getKey(), baseRequest);
+        validateDecision(response, baseRequest);
     }
 
     @SuppressWarnings("unchecked")
     @Test
-    public void test07OptimizationGeographyAndServiceAndResourceAndScope() throws CoderException {
+    public void test08OptimizationGeographyAndServiceAndResourceAndScope() throws CoderException {
         //
         // Add gold as a scope
         //
@@ -304,24 +312,19 @@ public class OptimizationPdpApplicationTest {
         //
         // Ask for a decision for specific US vCPE vG gold
         //
-        Pair<DecisionResponse, Response> decision = service.makeDecision(baseRequest, null);
-        LOGGER.info("Decision {}", decision.getKey());
+        DecisionResponse response = makeDecision();
 
-        assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies().size()).isEqualTo(10);
-        //
-        // Double check that the contents are what we expect
-        //
-        LOGGER.info(gson.encode(decision.getKey()));
+        assertThat(response).isNotNull();
+        assertThat(response.getPolicies().size()).isEqualTo(12); // should be 1
         //
         // Validate it
         //
-        validateDecision(decision.getKey(), baseRequest);
+        validateDecision(response, baseRequest);
     }
 
     @SuppressWarnings("unchecked")
     @Test
-    public void test08OptimizationGeographyAndServiceAndResourceAndScopeIsGoldOrPlatinum() throws CoderException {
+    public void test09OptimizationGeographyAndServiceAndResourceAndScopeIsGoldOrPlatinum() throws CoderException {
         //
         // Add platinum to the scope list: this is now gold OR platinum
         //
@@ -329,24 +332,19 @@ public class OptimizationPdpApplicationTest {
         //
         // Ask for a decision for specific US vCPE vG (gold or platinum)
         //
-        Pair<DecisionResponse, Response> decision = service.makeDecision(baseRequest, null);
-        LOGGER.info("Decision {}", decision.getKey());
+        DecisionResponse response = makeDecision();
 
-        assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies().size()).isEqualTo(11);
-        //
-        // Double check that the contents are what we expect
-        //
-        LOGGER.info(gson.encode(decision.getKey()));
+        assertThat(response).isNotNull();
+        assertThat(response.getPolicies().size()).isEqualTo(14); // should be 3
         //
         // Validate it
         //
-        validateDecision(decision.getKey(), baseRequest);
+        validateDecision(response, baseRequest);
     }
 
     @SuppressWarnings("unchecked")
     @Test
-    public void test09OptimizationGeographyAndServiceAndResourceAndScopeNotGold() throws CoderException {
+    public void test10OptimizationGeographyAndServiceAndResourceAndScopeNotGold() throws CoderException {
         //
         // Add gold as a scope
         //
@@ -354,27 +352,18 @@ public class OptimizationPdpApplicationTest {
         //
         // Ask for a decision for specific US vCPE vG gold
         //
-        Pair<DecisionResponse, Response> decision = service.makeDecision(baseRequest, null);
-        LOGGER.info("Decision {}", decision.getKey());
+        DecisionResponse response = makeDecision();
 
-        assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies().size()).isEqualTo(11);
-        //
-        // Double check that the contents are what we expect
-        //
-        LOGGER.info(gson.encode(decision.getKey()));
+        assertThat(response).isNotNull();
+        assertThat(response.getPolicies().size()).isEqualTo(13); // should be 2
         //
         // Validate it
         //
-        validateDecision(decision.getKey(), baseRequest);
+        validateDecision(response, baseRequest);
     }
 
     @Test
-    public void test10OptimizationPolicyTypeDefault() throws CoderException {
-        //
-        // Remove all the other resources from the request
-        //
-        cleanOutResources();
+    public void test11OptimizationPolicyTypeDefault() throws CoderException {
         //
         // Add in policy type
         //
@@ -383,40 +372,44 @@ public class OptimizationPdpApplicationTest {
         //
         // Ask for a decision for default
         //
-        Pair<DecisionResponse, Response> decision = service.makeDecision(baseRequest, null);
-        LOGGER.info("Decision {}", decision.getKey());
+        DecisionResponse response = makeDecision();
 
-        assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies().size()).isEqualTo(4);
+        assertThat(response).isNotNull();
+        assertThat(response.getPolicies().size()).isEqualTo(4); // should be 1
         //
-        // Double check that the contents are what we expect
+        // Validate it
         //
-        LOGGER.info(gson.encode(decision.getKey()));
+        validateDecision(response, baseRequest);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
-    public void test20OptimizationPolicyTypeDefault() throws CoderException {
+    public void test12OptimizationPolicyTypeDefault() throws CoderException {
         //
-        // Remove all the other resources from the request
+        // Add in another policy type
         //
-        cleanOutResources();
-        //
-        // Add in policy type
-        //
-        List<String> policyTypes = Lists.newArrayList("onap.policies.optimization.HpaPolicy");
-        baseRequest.getResource().put("policy-type", policyTypes);
+        ((List<String>) baseRequest.getResource().get("policy-type")).add("onap.policies.optimization.HpaPolicy");
         //
         // Ask for a decision for default
         //
-        Pair<DecisionResponse, Response> decision = service.makeDecision(baseRequest, null);
-        LOGGER.info("Decision {}", decision.getKey());
+        DecisionResponse response = makeDecision();
 
-        assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies().size()).isEqualTo(1);
+        assertThat(response).isNotNull();
+        assertThat(response.getPolicies().size()).isEqualTo(6); // should be 2
         //
-        // Double check that the contents are what we expect
+        // Validate it
         //
-        LOGGER.info(gson.encode(decision.getKey()));
+        validateDecision(response, baseRequest);
+    }
+
+    private DecisionResponse makeDecision() {
+        Pair<DecisionResponse, Response> decision = service.makeDecision(baseRequest, null);
+        LOGGER.info("Request Resources {}", baseRequest.getResource());
+        LOGGER.info("Decision {}", decision.getKey());
+        for (Entry<String, Object> entrySet : decision.getKey().getPolicies().entrySet()) {
+            LOGGER.info("Policy {}", entrySet.getKey());
+        }
+        return decision.getKey();
     }
 
     @SuppressWarnings("unchecked")
@@ -465,5 +458,8 @@ public class OptimizationPdpApplicationTest {
         ((List<String>)baseRequest.getResource().get("services")).clear();
         ((List<String>)baseRequest.getResource().get("resources")).clear();
         ((List<String>)baseRequest.getResource().get("geography")).clear();
+        if (((List<String>)baseRequest.getResource().get("policy-type")) != null) {
+            baseRequest.getResource().remove("policy-type");
+        }
     }
 }
