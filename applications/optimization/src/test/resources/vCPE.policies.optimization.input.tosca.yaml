@@ -38,12 +38,12 @@ topology_template:
                     qualifier: same
                     category: complex
     -
-        OSDF_CASABLANCA.Affinity_Default_vCPE_0:
+        OSDF_CASABLANCA.Affinity_Default_vCPE_US_0:
             type: onap.policies.optimization.AffinityPolicy
             version: 1.0.0
             type_version: 1.0.0
             metadata:
-                policy-id: OSDF_CASABLANCA.Affinity_Default_vCPE_0
+                policy-id: OSDF_CASABLANCA.Affinity_Default_vCPE_US_0
                 policy-version: 1
             properties:
                 scope: []
@@ -56,7 +56,7 @@ topology_template:
                     qualifier: different
                     category: complex
     -
-        OSDF_CASABLANCA.Affinity_vCPE_1:
+        OSDF_CASABLANCA.Affinity_vCPE_US_Gold_1:
             type: onap.policies.optimization.AffinityPolicy
             version: 1.0.0
             type_version: 1.0.0
@@ -64,7 +64,7 @@ topology_template:
                 policy-id: OSDF_CASABLANCA.Affinity_vCPE_1
                 policy-version: 1
             properties:
-                scope: [gold, platinum]
+                scope: [gold]
                 services: [vCPE]
                 resources: [vGMuxInfra, vG]
                 geography: [US, INTERNATIONAL]
@@ -72,6 +72,24 @@ topology_template:
                 applicableResources: any
                 affinityProperties:
                     qualifier: same
+                    category: availabilityZone
+    -
+        OSDF_CASABLANCA.Affinity_vCPE_US_Platinum_1:
+            type: onap.policies.optimization.AffinityPolicy
+            version: 1.0.0
+            type_version: 1.0.0
+            metadata:
+                policy-id: OSDF_CASABLANCA.Affinity_vCPE_1
+                policy-version: 1
+            properties:
+                scope: [platinum]
+                services: [vCPE]
+                resources: [vGMuxInfra, vG]
+                geography: [US, INTERNATIONAL]
+                identity: affinity_vCPE
+                applicableResources: any
+                affinityProperties:
+                    qualifier: different
                     category: availabilityZone
     -
         OSDF_CASABLANCA.Capacity_vG_1:
@@ -91,6 +109,24 @@ topology_template:
                 capacityProperty:
                    controller: multicloud
                    request: "{\"vCPU\": 10, \"Memory\": {\"quantity\": {\"get_param\": \"REQUIRED_MEM\"}, \"unit\": \"GB\"}, \"Storage\": {\"quantity\": {\"get_param\": \"REQUIRED_DISK\"}, \"unit\": \"GB\"}}"
+    -
+        OSDF_CASABLANCA.Capacity_vG_2:
+            type: onap.policies.optimization.Vim_fit
+            version: 1.0.0
+            type_version: 1.0.0
+            metadata:
+                policy-id: OSDF_CASABLANCA.Capacity_vG_2
+                policy-version: 1
+            properties:
+                scope: []
+                services: [vCPE]
+                resources: [vG]
+                geography: [US, INTERNATIONAL]
+                identity: capacity_vG
+                applicableResources: any
+                capacityProperty:
+                   controller: multicloud
+                   request: "{\"vCPU\": 15, \"Memory\": {\"quantity\": {\"get_param\": \"REQUIRED_MEM\"}, \"unit\": \"MB\"}, \"Storage\": {\"quantity\": {\"get_param\": \"REQUIRED_DISK\"}, \"unit\": \"GB\"}}"
     -
         OSDF_CASABLANCA.Distance_vG_1:
             type: onap.policies.optimization.DistancePolicy
@@ -113,6 +149,54 @@ topology_template:
                         operator: "<"
                         unit: km
     -
+        OSDF_CASABLANCA.hpa_policy_Default:
+            type: onap.policies.optimization.HpaPolicy
+            version: 1.0.0
+            type_version: 1.0.0
+            metadata:
+                policy-id: OSDF_CASABLANCA.hpa_policy_Default
+                policy-version: 1
+            properties:
+                scope: []
+                services: []
+                resources: []
+                geography: []
+                identity: hpa-vG
+                flavorFeatures:
+                    -
+                         id: vg_1
+                         type: vnfc
+                         directives:
+                             -    type: flavor_directives
+                                  attributes:
+                                      -    attribute_name: flavor_label_vm_01
+                                           attribute_value: ""
+                         flavorProperties:
+                             -
+                                  hpa-feature: basicCapabilities
+                                  mandatory: True
+                                  architecture: generic
+                                  directives: []
+                                  hpa-feature-attributes:
+                                      -    hpa-attribute-key: numVirtualCpu
+                                           hpa-attribute-value: 8
+                                           operator: ['>=']
+                                           unit: ""
+                                      -    hpa-attribute-key: virtualMemSize
+                                           hpa-attribute-value: 6
+                                           operator: ['<=']
+                                           unit: ""
+                             -
+                                  hpa-feature: ovsDpdk
+                                  mandatory: False
+                                  architecture: generic
+                                  directives: []
+                                  hpa-feature-attributes:
+                                      -    hpa-attribute-key: dataProcessingAccelerationLibrary
+                                           hpa-attribute-value: ovsDpdk_version
+                                           operator: [=]
+                                           unit: ""
+    -
         OSDF_CASABLANCA.hpa_policy_vG_1:
             type: onap.policies.optimization.HpaPolicy
             version: 1.0.0
@@ -122,7 +206,7 @@ topology_template:
                 policy-version: 1
             properties:
                 scope: []
-                services: [vCPE]
+                services: [vCPE, vOtherService]
                 resources: [vG]
                 geography: []
                 identity: hpa-vG

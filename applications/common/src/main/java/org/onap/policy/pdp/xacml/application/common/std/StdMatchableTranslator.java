@@ -142,7 +142,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         //
         // Generate the TargetType
         //
-        newPolicyType.setTarget(new TargetType());
+        newPolicyType.setTarget(generateTargetType(toscaPolicy.getProperties(), toscaPolicyTypes));
         //
         // Now represent the policy as Json
         //
@@ -165,23 +165,8 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         rule.setDescription("Default is to PERMIT if the policy matches.");
         rule.setRuleId(policyName + ":rule");
         rule.setEffect(EffectType.PERMIT);
-        rule.setTarget(generateTargetType(toscaPolicy.getProperties(), toscaPolicyTypes));
+        rule.setTarget(new TargetType());
         rule.setCondition(generateConditionForPolicyType(toscaPolicy.getType()));
-        //
-        // Add the rule to the policy
-        //
-        newPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
-        //
-        // If a Decision is for a specific policy-type, make sure
-        // there is a rule for it.
-        //
-        rule = new RuleType();
-        rule.setDescription("Match on policy-type " + toscaPolicy.getType());
-        rule.setRuleId(policyName + ":rule:policy-type");
-        rule.setEffect(EffectType.PERMIT);
-        TargetType target = new TargetType();
-        target.getAnyOf().add(this.generateAnyOfForPolicyType(toscaPolicy.getType()));
-        rule.setTarget(target);
         //
         // Add the rule to the policy
         //
@@ -219,7 +204,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
             // Find matchable properties
             //
             if (isMatchable(entrySet.getKey(), policyTypes)) {
-                LOGGER.info("Found matchable property {}", entrySet.getValue());
+                LOGGER.info("Found matchable property {}", entrySet.getKey());
                 generateMatchable(targetType, entrySet.getKey(), entrySet.getValue());
             }
         }
@@ -238,15 +223,31 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
     protected boolean isMatchable(String propertyName, Collection<ToscaPolicyType> policyTypes) {
         for (ToscaPolicyType policyType : policyTypes) {
             for (Entry<String, ToscaProperty> propertiesEntry : policyType.getProperties().entrySet()) {
-                if (! propertiesEntry.getKey().equals(propertyName)
-                        || propertiesEntry.getValue().getMetadata() == null) {
-                    continue;
+                if (checkIsMatchableProperty(propertyName, propertiesEntry)) {
+                    return true;
                 }
-                for (Entry<String, String> entrySet : propertiesEntry.getValue().getMetadata().entrySet()) {
-                    if ("matchable".equals(entrySet.getKey()) && "true".equals(entrySet.getValue())) {
-                        return true;
-                    }
-                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * checkIsMatchableProperty - checks the policy contents for matchable field. If the metadata doesn't exist,
+     * then definitely not. If the property doesn't exist, then definitely not. Otherwise need to have a metadata
+     * section with the matchable property set to true.
+     *
+     * @param propertyName String value of property
+     * @param propertiesEntry Section of the TOSCA Policy Type where properties and metadata sections are held
+     * @return true if matchable
+     */
+    protected boolean checkIsMatchableProperty(String propertyName, Entry<String, ToscaProperty> propertiesEntry) {
+        if (! propertiesEntry.getKey().equals(propertyName)
+                || propertiesEntry.getValue().getMetadata() == null) {
+            return false;
+        }
+        for (Entry<String, String> entrySet : propertiesEntry.getValue().getMetadata().entrySet()) {
+            if ("matchable".equals(entrySet.getKey()) && "true".equals(entrySet.getValue())) {
+                return true;
             }
         }
         return false;
@@ -268,6 +269,11 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
                     new IdentifierImpl(ToscaDictionary.ID_RESOURCE_MATCHABLE + key));
             if (! anyOf.getAllOf().isEmpty()) {
                 targetType.getAnyOf().add(anyOf);
+            } else {
+                //
+                // If this is empty, then we won't match it
+                //
+
             }
         } else {
             AnyOfType anyOf = generateMatches(Arrays.asList(value),
