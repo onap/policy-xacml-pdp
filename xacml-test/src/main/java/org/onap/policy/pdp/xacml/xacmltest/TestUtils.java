@@ -69,8 +69,7 @@ public class TestUtils {
         try {
             serviceTemplate = yamlCoder.decode(policyYaml, ToscaServiceTemplate.class);
         } catch (CoderException e) {
-            throw new XacmlApplicationException("Failed to decode policy from resource file "
-                + e.getLocalizedMessage());
+            throw new XacmlApplicationException("Failed to decode policy from resource file " + e);
         }
         //
         // Make sure all the fields are setup properly
