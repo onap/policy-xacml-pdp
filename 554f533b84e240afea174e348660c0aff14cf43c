@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9dc9d19_bb8b55ae",
+        "filename": "xacml-test/src/main/java/org/onap/policy/pdp/xacml/xacmltest/TestUtils.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-04T13:25:49Z",
+      "side": 1,
+      "message": "no longer need trailing space inside quotes",
+      "revId": "554f533b84e240afea174e348660c0aff14cf43c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
