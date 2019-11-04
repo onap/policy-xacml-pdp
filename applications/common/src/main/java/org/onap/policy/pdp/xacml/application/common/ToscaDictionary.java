@@ -112,20 +112,41 @@ public final class ToscaDictionary {
     public static final Identifier ID_OBLIGATION_REST_BODY =
             new IdentifierImpl(ID_URN_ONAP, "rest:body");
 
-    public static final Identifier ID_OBLIGATION_POLICY_MONITORING =
-            new IdentifierImpl(ID_URN_ONAP, ":obligation:monitoring");
+    public static final Identifier ID_OBLIGATION_POLICY_CONTENT =
+            new IdentifierImpl(ID_URN_ONAP, ":obligation:policycontent");
 
-    public static final Identifier ID_OBLIGATION_POLICY_MONITORING_CONTENTS =
-            new IdentifierImpl(ID_URN_ONAP, ":obligation:monitoring:contents");
-
-    public static final Identifier ID_OBLIGATION_POLICY_MONITORING_CATEGORY =
+    public static final Identifier ID_OBLIGATION_POLICY_CONTENT_CATEGORY =
             XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE;
 
-    public static final Identifier ID_OBLIGATION_POLICY_MONITORING_DATATYPE =
+    public static final Identifier ID_OBLIGATION_POLICY_CONTENT_DATATYPE =
             XACML3.ID_DATATYPE_STRING;
 
-    public static final Identifier ID_OBLIGATION_MONITORING_ISSUER =
-            new IdentifierImpl(ID_URN_ONAP, "issuer:monitoring");
+    public static final Identifier ID_OBLIGATION_POLICY_ID =
+            new IdentifierImpl(ID_URN_ONAP, ":obligation:policyid");
+
+    public static final Identifier ID_OBLIGATION_POLICY_ID_CATEGORY =
+            XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE;
+
+    public static final Identifier ID_OBLIGATION_POLICY_ID_DATATYPE =
+            XACML3.ID_DATATYPE_STRING;
+
+    public static final Identifier ID_OBLIGATION_POLICY_WEIGHT =
+            new IdentifierImpl(ID_URN_ONAP, ":obligation:weight");
+
+    public static final Identifier ID_OBLIGATION_POLICY_WEIGHT_CATEGORY =
+            XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE;
+
+    public static final Identifier ID_OBLIGATION_POLICY_WEIGHT_DATATYPE =
+            XACML3.ID_DATATYPE_INTEGER;
+
+    public static final Identifier ID_OBLIGATION_POLICY_TYPE =
+            new IdentifierImpl(ID_URN_ONAP, ":obligation:policytype");
+
+    public static final Identifier ID_OBLIGATION_POLICY_TYPE_CATEGORY =
+            XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE;
+
+    public static final Identifier ID_OBLIGATION_POLICY_TYPE_DATATYPE =
+            XACML3.ID_DATATYPE_STRING;
 
 
 
