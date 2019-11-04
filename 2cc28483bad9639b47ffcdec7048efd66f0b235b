@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "379d7375_9d8f8036",
+        "filename": "applications/optimization/src/test/java/org/onap/policy/xacml/pdp/application/optimization/OptimizationPdpApplicationTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-04T13:42:12Z",
+      "side": 1,
+      "message": "But unfortunately that returns a fixed size list - which is not what I need.",
+      "parentUuid": "3363b10d_0b3bcac1",
+      "revId": "2cc28483bad9639b47ffcdec7048efd66f0b235b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ef3914c5_b92d863c",
         "filename": "xacml-test/src/main/java/org/onap/policy/pdp/xacml/xacmltest/TestUtils.java",
         "patchSetId": 4
