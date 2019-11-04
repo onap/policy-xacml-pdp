@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4c00e91f_c709cd0a",
+        "filename": "applications/optimization/src/test/java/org/onap/policy/xacml/pdp/application/optimization/OptimizationPdpApplicationTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-04T13:16:51Z",
+      "side": 1,
+      "message": "we typically use java.util.Arrays.asList()",
+      "revId": "2cc28483bad9639b47ffcdec7048efd66f0b235b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef3914c5_b92d863c",
+        "filename": "xacml-test/src/main/java/org/onap/policy/pdp/xacml/xacmltest/TestUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-04T13:16:51Z",
+      "side": 1,
+      "message": "maybe use \", e\" instead?",
+      "revId": "2cc28483bad9639b47ffcdec7048efd66f0b235b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
