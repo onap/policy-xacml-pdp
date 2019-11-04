@@ -22,19 +22,26 @@
 
 package org.onap.policy.pdp.xacml.application.common.std;
 
+import com.att.research.xacml.api.AttributeAssignment;
 import com.att.research.xacml.api.DataTypeException;
+import com.att.research.xacml.api.Identifier;
+import com.att.research.xacml.api.Obligation;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.annotations.RequestParser;
+import java.util.Collection;
+import java.util.Map;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
@@ -95,7 +102,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         } catch (CoderException e) {
             throw new ToscaPolicyConversionException(e);
         }
-        addObligation(rule, jsonPolicy);
+        addObligation(rule, jsonPolicy, null, toscaPolicy.getType());
         //
         // Add the rule to the policy
         //
@@ -118,6 +125,28 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         // TODO throw exception
         //
         return null;
+    }
+
+    /**
+     * scanObligations - scans the list of obligations and make appropriate method calls to process
+     * obligations.
+     *
+     * @param obligations Collection of obligation objects
+     * @param decisionResponse DecisionResponse object used to store any results from obligations.
+     */
+    @Override
+    protected void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse) {
+        for (Obligation obligation : obligations) {
+            LOGGER.info("Obligation: {}", obligation);
+            for (AttributeAssignment assignment : obligation.getAttributeAssignments()) {
+                LOGGER.info("Attribute Assignment: {}", assignment);
+                Pair<Identifier, Object> pair = scanObligationAttribute(assignment);
+                if (pair.getLeft().equals(ToscaDictionary.ID_OBLIGATION_POLICY_MONITORING_CONTENTS)) {
+                    Pair<String, Map<String, Object>> policyInfo = (Pair<String, Map<String, Object>>) pair.getRight();
+                    decisionResponse.getPolicies().put(policyInfo.getKey(), policyInfo.getValue());
+                }
+            }
+        }
     }
 
     protected TargetType generateTargetType(String policyId, String policyType, String policyTypeVersion) {

@@ -27,10 +27,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import com.att.research.xacml.api.Obligation;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import org.junit.Test;
+import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 
@@ -38,7 +41,7 @@ public class StdBaseTranslatorTest {
 
     @Test
     public void test() {
-        StdBaseTranslator translator = new StdBaseTranslator();
+        StdBaseTranslator translator = new MyStdBaseTranslator();
         assertNotNull(translator);
         assertThatThrownBy(() -> translator.convertPolicy(null)).isInstanceOf(ToscaPolicyConversionException.class);
         assertNull(translator.convertRequest(null));
@@ -65,8 +68,24 @@ public class StdBaseTranslatorTest {
 
     }
 
-    public class TestTranslator extends StdBaseTranslator {
+    private class MyStdBaseTranslator extends StdBaseTranslator {
+
+        @Override
+        protected void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse) {
+            // TODO Auto-generated method stub
+
+        }
+
+    }
+
+    private class TestTranslator extends StdBaseTranslator {
         public Map<String, String> metadata = new HashMap<>();
+
+        @Override
+        protected void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse) {
+            // TODO Auto-generated method stub
+
+        }
 
         @Override
         public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {

@@ -127,6 +127,24 @@ public final class ToscaDictionary {
     public static final Identifier ID_OBLIGATION_MONITORING_ISSUER =
             new IdentifierImpl(ID_URN_ONAP, "issuer:monitoring");
 
+    public static final Identifier ID_OBLIGATION_POLICY_WEIGHT =
+            new IdentifierImpl(ID_URN_ONAP, ":obligation:weight");
+
+    public static final Identifier ID_OBLIGATION_POLICY_WEIGHT_CATEGORY =
+            XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE;
+
+    public static final Identifier ID_OBLIGATION_POLICY_WEIGHT_DATATYPE =
+            XACML3.ID_DATATYPE_INTEGER;
+
+    public static final Identifier ID_OBLIGATION_POLICY_TYPE =
+            new IdentifierImpl(ID_URN_ONAP, ":obligation:policytype");
+
+    public static final Identifier ID_OBLIGATION_POLICY_TYPE_CATEGORY =
+            XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE;
+
+    public static final Identifier ID_OBLIGATION_POLICY_TYPE_DATATYPE =
+            XACML3.ID_DATATYPE_STRING;
+
 
 
     private ToscaDictionary() {
