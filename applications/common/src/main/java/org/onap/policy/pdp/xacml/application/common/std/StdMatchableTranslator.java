@@ -22,7 +22,9 @@
 
 package org.onap.policy.pdp.xacml.application.common.std;
 
+import com.att.research.xacml.api.AttributeAssignment;
 import com.att.research.xacml.api.Identifier;
+import com.att.research.xacml.api.Obligation;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.IdentifierImpl;
@@ -38,6 +40,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -48,11 +52,13 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
@@ -104,6 +110,141 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         return null;
     }
 
+    /**
+     * scanObligations - scans the list of obligations and make appropriate method calls to process
+     * obligations.
+     *
+     * @param obligations Collection of obligation objects
+     * @param decisionResponse DecisionResponse object used to store any results from obligations.
+     */
+    @Override
+    protected void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse) {
+        //
+        // Implementing a crude "closest match" on the results, which means we will strip out
+        // any policies that has the lower weight than any of the others.
+        //
+        // Most likely these are "default" policies with a weight of zero, but not always.
+        //
+        // It is possible to have multiple policies with an equal weight, that is desired.
+        //
+        // So we need to track each policy type separately and the weights for each policy.
+        //
+        // policy-type -> weight -> List({policy-id, policy-content}, {policy-id, policy-content})
+        //
+        Map<String, Map<Integer, List<Pair<String, Map<String, Object>>>>> closestMatches = new LinkedHashMap<>();
+        //
+        // Now scan the list of obligations
+        //
+        for (Obligation obligation : obligations) {
+            Identifier obligationId = obligation.getId();
+            LOGGER.info("Obligation: {}", obligationId);
+            if (obligationId.equals(ToscaDictionary.ID_OBLIGATION_REST_BODY)) {
+                scanClosestMatchObligation(closestMatches, obligation);
+            } else {
+                LOGGER.warn("Unsupported Obligation Id {}", obligation.getId());
+            }
+        }
+        //
+        // Now add all the policies to the DecisionResponse
+        //
+        closestMatches.forEach((thePolicyType, weightMap) ->
+            weightMap.forEach((weight, policies) ->
+                policies.forEach(policy -> {
+                    LOGGER.info("Policy {}", policy);
+                    decisionResponse.getPolicies().put(policy.getLeft(), policy.getRight());
+                })
+            )
+        );
+    }
+
+    /**
+     * scanClosestMatchObligation - scans for the obligation specifically holding policy
+     * contents and their details.
+     *
+     * @param closestMatches Map holding the current set of highest weight policy types
+     * @param Obligation Obligation object
+     */
+    @SuppressWarnings("unchecked")
+    protected void scanClosestMatchObligation(
+            Map<String, Map<Integer, List<Pair<String, Map<String, Object>>>>> closestMatches, Obligation obligation) {
+        //
+        // We are looking for these 4 attribute assignments
+        //
+        String policyId = null;
+        Map<String, Object> policyContents = null;
+        Integer policyWeight = null;
+        String policyType = null;
+        //
+        // Scan through the obligations for them
+        //
+        for (AttributeAssignment assignment : obligation.getAttributeAssignments()) {
+            LOGGER.info("Attribute Assignment: {}", assignment);
+            Pair<Identifier, Object> pair = scanObligationAttribute(assignment);
+            if (pair.getLeft().equals(ToscaDictionary.ID_OBLIGATION_POLICY_ID)) {
+                policyId = pair.getRight().toString();
+            } else if (pair.getLeft().equals(ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT)) {
+                policyContents = (Map<String, Object>) pair.getRight();
+            } else if (pair.getLeft().equals(ToscaDictionary.ID_OBLIGATION_POLICY_WEIGHT)) {
+                policyWeight = Integer.decode(pair.getRight().toString());
+            } else if (pair.getLeft().equals(ToscaDictionary.ID_OBLIGATION_POLICY_TYPE)) {
+                policyType = pair.getRight().toString();
+            } else {
+                LOGGER.warn("Unsupported attribute assignment for this obligation {}", pair.getLeft());
+            }
+        }
+        //
+        // All 4 *should* be there
+        //
+        if (policyId == null || policyContents == null || policyWeight == null || policyType == null) {
+            LOGGER.error("Missing an expected obligation.");
+            return;
+        }
+        //
+        // If the Policy Type exists, get the weight map.
+        //
+        Map<Integer, List<Pair<String, Map<String, Object>>>> weightMap = closestMatches.get(policyType);
+        if (weightMap != null) {
+            //
+            // Only need to check first one - as we will ensure there is only one weight
+            //
+            Entry<Integer, List<Pair<String, Map<String, Object>>>> firstEntry =
+                    weightMap.entrySet().iterator().next();
+            if (policyWeight < firstEntry.getKey()) {
+                //
+                // Existing policies have a greater weight, so we will not add it
+                //
+                LOGGER.info("{} is lesser weight {} than current policies, will not return it", policyWeight,
+                        firstEntry.getKey());
+            } else if (firstEntry.getKey().equals(policyWeight)) {
+                //
+                // Same weight - we will add it
+                //
+                LOGGER.info("Same weight {}, adding policy", policyWeight);
+                firstEntry.getValue().add(Pair.of(policyId, policyContents));
+            } else {
+                //
+                // The weight is greater, so we need to remove the other policies
+                // and point to this one.
+                //
+                LOGGER.info("New policy has greater weight {}, replacing {}", policyWeight, firstEntry.getKey());
+                List<Pair<String, Map<String, Object>>> listPolicies = new LinkedList<>();
+                listPolicies.add(Pair.of(policyId, policyContents));
+                weightMap.clear();
+                weightMap.put(policyWeight, listPolicies);
+            }
+        } else {
+            //
+            // Create a new entry
+            //
+            LOGGER.info("New entry {} weight {}", policyType, policyWeight);
+            List<Pair<String, Map<String, Object>>> listPolicies = new LinkedList<>();
+            listPolicies.add(Pair.of(policyId, policyContents));
+            Map<Integer, List<Pair<String, Map<String, Object>>>> newWeightMap = new LinkedHashMap<>();
+            newWeightMap.put(policyWeight, listPolicies);
+            closestMatches.put(policyType, newWeightMap);
+        }
+    }
+
     @Override
     public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
         //
@@ -143,7 +284,8 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         // Generate the TargetType - the policy should not be evaluated
         // unless all the matchable properties it cares about are matched.
         //
-        newPolicyType.setTarget(generateTargetType(toscaPolicy.getProperties(), toscaPolicyTypes));
+        Pair<TargetType, Integer> pairGenerated = generateTargetType(toscaPolicy.getProperties(), toscaPolicyTypes);
+        newPolicyType.setTarget(pairGenerated.getLeft());
         //
         // Now represent the policy as Json
         //
@@ -157,7 +299,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         //
         // Add it as an obligation
         //
-        addObligation(newPolicyType, jsonPolicy);
+        addObligation(newPolicyType, policyName, jsonPolicy, pairGenerated.getRight(), toscaPolicy.getType());
         //
         // Now create the Permit Rule.
         //
@@ -196,24 +338,28 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
      *
      * @param properties Properties section of policy
      * @param policyTypes Collection of policy Type to find matchable metadata
-     * @return TargetType object
+     * @return {@code Pair<TargetType, Integer>} Returns a TargetType and a Total Weight of matchables.
      */
-    protected TargetType generateTargetType(Map<String, Object> properties, Collection<ToscaPolicyType> policyTypes) {
+    protected Pair<TargetType, Integer> generateTargetType(Map<String, Object> properties,
+            Collection<ToscaPolicyType> policyTypes) {
         TargetType targetType = new TargetType();
         //
         // Iterate the properties
         //
+        int totalWeight = 0;
         for (Entry<String, Object> entrySet : properties.entrySet()) {
             //
             // Find matchable properties
             //
             if (isMatchable(entrySet.getKey(), policyTypes)) {
                 LOGGER.info("Found matchable property {}", entrySet.getKey());
-                generateMatchable(targetType, entrySet.getKey(), entrySet.getValue());
+                int weight = generateMatchable(targetType, entrySet.getKey(), entrySet.getValue());
+                LOGGER.info("Weight is {}", weight);
+                totalWeight += weight;
             }
         }
-
-        return targetType;
+        LOGGER.info("Total weight is {}", totalWeight);
+        return Pair.of(targetType, totalWeight);
     }
 
     /**
@@ -259,29 +405,33 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
 
     /**
      * generateMatchable - Given the object, generates list of MatchType objects and add them
-     * to the TargetType object.
+     * to the TargetType object. Returns a weight which is the number of AnyOf's generated. The
+     * weight can be used to further filter the results for "closest match".
      *
      * @param targetType TargetType object to add matches to
      * @param key Property key
      * @param value Object is the value - which can be a Collection or single Object
-     * @return TargetType incoming TargetType returned as a convenience
+     * @return int Weight of the match.
      */
     @SuppressWarnings("unchecked")
-    protected TargetType generateMatchable(TargetType targetType, String key, Object value) {
+    protected int generateMatchable(TargetType targetType, String key, Object value) {
+        int weight = 0;
         if (value instanceof Collection) {
             AnyOfType anyOf = generateMatches((Collection<Object>) value,
                     new IdentifierImpl(ToscaDictionary.ID_RESOURCE_MATCHABLE + key));
             if (! anyOf.getAllOf().isEmpty()) {
                 targetType.getAnyOf().add(anyOf);
+                weight = 1;
             }
         } else {
             AnyOfType anyOf = generateMatches(Arrays.asList(value),
                     new IdentifierImpl(ToscaDictionary.ID_RESOURCE_MATCHABLE + key));
             if (! anyOf.getAllOf().isEmpty()) {
                 targetType.getAnyOf().add(anyOf);
+                weight = 1;
             }
         }
-        return targetType;
+        return weight;
     }
 
     /**

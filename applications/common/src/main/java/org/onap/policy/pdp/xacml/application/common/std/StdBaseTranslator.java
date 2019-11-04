@@ -24,6 +24,7 @@ package org.onap.policy.pdp.xacml.application.common.std;
 
 import com.att.research.xacml.api.AttributeAssignment;
 import com.att.research.xacml.api.Decision;
+import com.att.research.xacml.api.Identifier;
 import com.att.research.xacml.api.Obligation;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
@@ -47,6 +48,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
+import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -58,16 +60,17 @@ import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class StdBaseTranslator implements ToscaPolicyTranslator {
+public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
     private static final Logger LOGGER = LoggerFactory.getLogger(StdBaseTranslator.class);
     private static Gson gson = new Gson();
+    private final ObjectFactory factory = new ObjectFactory();
 
     public static final String POLICY_ID = "policy-id";
     public static final String POLICY_VERSION = "policy-version";
 
     @Override
     public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
-        throw new ToscaPolicyConversionException("Please override converPolicy");
+        throw new ToscaPolicyConversionException("Please override convertPolicy");
     }
 
     @Override
@@ -95,8 +98,7 @@ public class StdBaseTranslator implements ToscaPolicyTranslator {
                 // Go through obligations
                 //
                 scanObligations(xacmlResult.getObligations(), decisionResponse);
-            } else if (xacmlResult.getDecision() == Decision.DENY
-                    || xacmlResult.getDecision() == Decision.INDETERMINATE) {
+            } else {
                 //
                 // TODO we have to return an ErrorResponse object instead
                 //
@@ -109,54 +111,120 @@ public class StdBaseTranslator implements ToscaPolicyTranslator {
 
     /**
      * scanObligations - scans the list of obligations and make appropriate method calls to process
-     * obligations.
+     * obligations. This method must be overridden and be implemented for the specific application.
      *
      * @param obligations Collection of obligation objects
      * @param decisionResponse DecisionResponse object used to store any results from obligations.
      */
-    protected void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse) {
-        for (Obligation obligation : obligations) {
-            LOGGER.info("Obligation: {}", obligation);
-            for (AttributeAssignment assignment : obligation.getAttributeAssignments()) {
-                LOGGER.info("Attribute Assignment: {}", assignment);
-                processObligationAttribute(assignment, decisionResponse);
-            }
-        }
-    }
+    protected abstract void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse);
 
     /**
-     * processObligationAttribute - processes an individual obligation attribute assignment object.
+     * scanObligationAttribute - processes an individual obligation attribute assignment object.
      *
      * @param assignment AttributeAssignment object
-     * @param decisionResponse DecisionResponse object used to store any results from attribute assignment.
+     * @return {@code Pair<Identifier, Object>} The XACML Id of the obligation and its value object.
      */
-    @SuppressWarnings("unchecked")
-    protected void processObligationAttribute(AttributeAssignment assignment, DecisionResponse decisionResponse) {
+    protected Pair<Identifier, Object> scanObligationAttribute(AttributeAssignment assignment) {
+        //
+        // We care about the id attribute
+        //
+        if (ToscaDictionary.ID_OBLIGATION_POLICY_ID.equals(assignment.getAttributeId())) {
+            return Pair.of(ToscaDictionary.ID_OBLIGATION_POLICY_ID,
+                    scanPolicyIdObligationAttribute(assignment));
+        }
         //
         // We care about the content attribute
         //
-        if (ToscaDictionary.ID_OBLIGATION_POLICY_MONITORING_CONTENTS
-                .equals(assignment.getAttributeId())) {
-            //
-            // The contents are in Json form
-            //
-            Object stringContents = assignment.getAttributeValue().getValue();
-            LOGGER.info("DCAE contents: {}{}", XacmlPolicyUtils.LINE_SEPARATOR, stringContents);
-            //
-            // Let's parse it into a map using Gson
-            //
-            Map<String, Object> result;
-            result = gson.fromJson(stringContents.toString(), Map.class);
-            //
-            // Find the metadata section
-            //
-            Map<String, Object> metadata = (Map<String, Object>) result.get("metadata");
-            if (metadata != null) {
-                decisionResponse.getPolicies().put(metadata.get(POLICY_ID).toString(), result);
-            } else {
-                LOGGER.error("Missing metadata section in policy contained in obligation.");
-            }
+        if (ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT.equals(assignment.getAttributeId())) {
+            return Pair.of(ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT,
+                    scanPolicyContentObligationAttribute(assignment));
         }
+        //
+        // We care about the weight attribute
+        //
+        if (ToscaDictionary.ID_OBLIGATION_POLICY_WEIGHT.equals(assignment.getAttributeId())) {
+            return Pair.of(ToscaDictionary.ID_OBLIGATION_POLICY_WEIGHT,
+                    scanWeightObligationAttribute(assignment));
+        }
+        //
+        // We care about the policy type attribute
+        //
+        if (ToscaDictionary.ID_OBLIGATION_POLICY_TYPE.equals(assignment.getAttributeId())) {
+            return Pair.of(ToscaDictionary.ID_OBLIGATION_POLICY_TYPE,
+                    scanPolicyTypeObligationAttribute(assignment));
+        }
+        LOGGER.warn("Scanning for an unknown obligation attribute {}", assignment.getAttributeId());
+        return null;
+    }
+
+    /**
+     * scanPolicyIdObligationAttribute - processes an individual obligation attribute assignment object.
+     *
+     * @param assignment AttributeAssignment object
+     * @return String policy-id as String
+     */
+    protected String scanPolicyIdObligationAttribute(AttributeAssignment assignment) {
+        //
+        // Get the policy type value
+        //
+        Object policyId = assignment.getAttributeValue().getValue();
+        LOGGER.info("Policy Id: {}", policyId);
+
+        return policyId.toString();
+    }
+
+    /**
+     * scanPolicyContentObligationAttribute - processes an individual obligation attribute assignment object.
+     *
+     * @param assignment AttributeAssignment object
+     * @return {@code Pair<String, Map<String, Object>>} policy-id as String and policy content as JSON map.
+     */
+    @SuppressWarnings("unchecked")
+    protected Map<String, Object> scanPolicyContentObligationAttribute(AttributeAssignment assignment) {
+        //
+        // The contents are in Json form
+        //
+        Object stringContents = assignment.getAttributeValue().getValue();
+        LOGGER.info("Policy contents: {}{}", XacmlPolicyUtils.LINE_SEPARATOR, stringContents);
+        //
+        // Let's parse it into a map using Gson
+        //
+        return gson.fromJson(stringContents.toString(), Map.class);
+    }
+
+    /**
+     * scanWeightObligationAttribute - processes an individual obligation attribute assignment object.
+     *
+     * @param assignment AttributeAssignment object
+     * @return Integer weight
+     */
+    protected Integer scanWeightObligationAttribute(AttributeAssignment assignment) {
+        //
+        // Get the weight value
+        //
+        Object weight = assignment.getAttributeValue().getValue();
+        LOGGER.info("Weight: {}", weight);
+        //
+        // Comes back as a BigInteger according to XACML
+        // easier to just decode it.
+        //
+        return Integer.decode(weight.toString());
+    }
+
+    /**
+     * scanPolicyTypeObligationAttribute - processes an individual obligation attribute assignment object.
+     *
+     * @param assignment AttributeAssignment object
+     * @return String the policy type
+     */
+    protected String scanPolicyTypeObligationAttribute(AttributeAssignment assignment) {
+        //
+        // Get the policy type value
+        //
+        Object policyType = assignment.getAttributeValue().getValue();
+        LOGGER.info("Policy Type: {}", policyType);
+
+        return policyType.toString();
     }
 
     /**
@@ -196,36 +264,59 @@ public class StdBaseTranslator implements ToscaPolicyTranslator {
      * But this is fine for now.
      *
      * @param <T> RuleType, PolicyType, PolicySetType object
+     * @Param policyId The policy-id
      * @param ruleOrPolicy Incoming RuleType, PolicyType, PolicySetType object
      * @param jsonPolicy JSON String representation of policy.
+     * @param weight Weighting for the policy (optional)
      * @return Return the Incoming RuleType, PolicyType, PolicySetType object for convenience.
      */
-    protected <T> T addObligation(T ruleOrPolicy, String jsonPolicy) {
+    protected <T> T addObligation(T ruleOrPolicy, String policyId, String jsonPolicy, Integer weight,
+            String policyType) {
         //
         // Creating obligation for returning policy
         //
-        LOGGER.info("Obligation Policy {}{}", XacmlPolicyUtils.LINE_SEPARATOR, jsonPolicy);
+        LOGGER.info("Obligation Policy {}{}{}{}{}", policyId, policyType, weight,
+                XacmlPolicyUtils.LINE_SEPARATOR, jsonPolicy);
         //
-        // Create an AttributeValue for it
-        //
-        AttributeValueType value = new AttributeValueType();
-        value.setDataType(ToscaDictionary.ID_OBLIGATION_POLICY_MONITORING_DATATYPE.stringValue());
-        value.getContent().add(jsonPolicy);
-        //
-        // Create our AttributeAssignmentExpression where we will
-        // store the contents of the policy in JSON format.
-        //
-        AttributeAssignmentExpressionType expressionType = new AttributeAssignmentExpressionType();
-        expressionType.setAttributeId(ToscaDictionary.ID_OBLIGATION_POLICY_MONITORING_CONTENTS.stringValue());
-        ObjectFactory factory = new ObjectFactory();
-        expressionType.setExpression(factory.createAttributeValue(value));
-        //
-        // Create an ObligationExpression for it
+        // Create an ObligationExpression
         //
         ObligationExpressionType obligation = new ObligationExpressionType();
         obligation.setFulfillOn(EffectType.PERMIT);
         obligation.setObligationId(ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue());
-        obligation.getAttributeAssignmentExpression().add(expressionType);
+        //
+        // Add policy-id
+        //
+        addOptionalAttributeToObligation(obligation, ToscaDictionary.ID_OBLIGATION_POLICY_ID,
+                ToscaDictionary.ID_OBLIGATION_POLICY_ID_DATATYPE,
+                ToscaDictionary.ID_OBLIGATION_POLICY_ID_CATEGORY,
+                policyId);
+        //
+        // Add policy contents
+        //
+        addOptionalAttributeToObligation(obligation, ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT,
+                ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT_DATATYPE,
+                ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT_CATEGORY,
+                jsonPolicy);
+        //
+        // Add the weight
+        //
+        addOptionalAttributeToObligation(obligation, ToscaDictionary.ID_OBLIGATION_POLICY_WEIGHT,
+                ToscaDictionary.ID_OBLIGATION_POLICY_WEIGHT_DATATYPE,
+                ToscaDictionary.ID_OBLIGATION_POLICY_WEIGHT_CATEGORY,
+                weight);
+        //
+        // Add the policy type
+        //
+        addOptionalAttributeToObligation(obligation, ToscaDictionary.ID_OBLIGATION_POLICY_TYPE,
+                ToscaDictionary.ID_OBLIGATION_POLICY_TYPE_DATATYPE,
+                ToscaDictionary.ID_OBLIGATION_POLICY_TYPE_CATEGORY,
+                policyType);
+        //
+        // Sanity check
+        //
+        if (obligation.getAttributeAssignmentExpression().isEmpty()) {
+            LOGGER.warn("Creating an empty obligation");
+        }
         //
         // Now we can add it into the rule/policy/policyset
         //
@@ -237,11 +328,55 @@ public class StdBaseTranslator implements ToscaPolicyTranslator {
             ((PolicyType) ruleOrPolicy).setObligationExpressions(obligations);
         } else if (ruleOrPolicy instanceof PolicySetType) {
             ((PolicySetType) ruleOrPolicy).setObligationExpressions(obligations);
+        } else {
+            LOGGER.error("Unsupported class for adding obligation {}", ruleOrPolicy.getClass());
         }
         //
         // Return as a convenience
         //
         return ruleOrPolicy;
+    }
+
+    /**
+     * Creates the necessary objects to insert into the obligation, if the value object is not null.
+     *
+     * @param obligation Incoming Obligation
+     * @param id Attribute Id
+     * @param datatype Attribute's Data type
+     * @param category Attributes Category
+     * @param theValue Attribute value
+     * @return obligation Incoming obligation
+     */
+    protected ObligationExpressionType addOptionalAttributeToObligation(ObligationExpressionType obligation,
+            Identifier id, Identifier datatype, Identifier category, Object theValue) {
+        //
+        // Simple check for null
+        //
+        if (theValue == null) {
+            return obligation;
+        }
+        //
+        // Create an AttributeValue for it
+        //
+        AttributeValueType value = new AttributeValueType();
+        value.setDataType(datatype.stringValue());
+        value.getContent().add(theValue.toString());
+        //
+        // Create our AttributeAssignmentExpression where we will
+        // store the contents of the policy id.
+        //
+        AttributeAssignmentExpressionType expressionType = new AttributeAssignmentExpressionType();
+        expressionType.setAttributeId(id.stringValue());
+        expressionType.setCategory(category.stringValue());
+        expressionType.setExpression(factory.createAttributeValue(value));
+        //
+        // Add it to the obligation
+        //
+        obligation.getAttributeAssignmentExpression().add(expressionType);
+        //
+        // Return as convenience
+        //
+        return obligation;
     }
 
     /**
@@ -300,7 +435,6 @@ public class StdBaseTranslator implements ToscaPolicyTranslator {
         valueZero.setDataType(XACML3.ID_DATATYPE_INTEGER.stringValue());
         valueZero.getContent().add("0");    // Yes really - represent as a string
 
-        ObjectFactory factory = new ObjectFactory();
         applyBagSize.getExpression().add(factory.createAttributeDesignator(designator));
 
         ApplyType applyGreaterThan = new ApplyType();
