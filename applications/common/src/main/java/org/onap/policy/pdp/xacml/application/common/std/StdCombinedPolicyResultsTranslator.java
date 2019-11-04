@@ -23,9 +23,14 @@
 package org.onap.policy.pdp.xacml.application.common.std;
 
 import com.att.research.xacml.api.DataTypeException;
+import com.att.research.xacml.api.Identifier;
+import com.att.research.xacml.api.Obligation;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.annotations.RequestParser;
+import com.google.common.base.Strings;
+import java.util.Collection;
+import java.util.Map;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
@@ -35,7 +40,9 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
+import org.onap.policy.pdp.xacml.application.common.OnapObligation;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
@@ -53,10 +60,23 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
     @Override
     public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
         //
+        // Sanity checks
+        //
+        if (toscaPolicy == null) {
+            throw new ToscaPolicyConversionException("Cannot convert a NULL policy");
+        }
+        if (toscaPolicy.getMetadata() == null) {
+            throw new ToscaPolicyConversionException("Cannot convert a policy with missing metadata section");
+        }
+        //
+        // Get the policy Id
+        //
+        String policyId = toscaPolicy.getMetadata().get(POLICY_ID);
+        //
         // Set it as the policy ID
         //
         PolicyType newPolicyType = new PolicyType();
-        newPolicyType.setPolicyId(toscaPolicy.getMetadata().get(POLICY_ID));
+        newPolicyType.setPolicyId(policyId);
         //
         // Optional description
         //
@@ -72,8 +92,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         //
         // Generate the TargetType
         //
-        TargetType target = this.generateTargetType(toscaPolicy.getMetadata().get(POLICY_ID),
-                toscaPolicy.getType(), toscaPolicy.getVersion());
+        TargetType target = this.generateTargetType(policyId, toscaPolicy.getType(), toscaPolicy.getVersion());
         newPolicyType.setTarget(target);
         //
         // Now create the Permit Rule
@@ -82,7 +101,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         //
         RuleType rule = new RuleType();
         rule.setDescription("Default is to PERMIT if the policy matches.");
-        rule.setRuleId(toscaPolicy.getMetadata().get(POLICY_ID) + ":rule");
+        rule.setRuleId(policyId + ":rule");
         rule.setEffect(EffectType.PERMIT);
         rule.setTarget(new TargetType());
         //
@@ -95,7 +114,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         } catch (CoderException e) {
             throw new ToscaPolicyConversionException(e);
         }
-        addObligation(rule, jsonPolicy);
+        addObligation(rule, policyId, jsonPolicy, null, toscaPolicy.getType());
         //
         // Add the rule to the policy
         //
@@ -120,6 +139,60 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         return null;
     }
 
+    /**
+     * scanObligations - scans the list of obligations and make appropriate method calls to process
+     * obligations.
+     *
+     * @param obligations Collection of obligation objects
+     * @param decisionResponse DecisionResponse object used to store any results from obligations.
+     */
+    @Override
+    protected void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse) {
+        for (Obligation obligation : obligations) {
+            Identifier obligationId = obligation.getId();
+            LOGGER.info("Obligation: {}", obligationId);
+            if (ToscaDictionary.ID_OBLIGATION_REST_BODY.equals(obligationId)) {
+                scanContentObligation(obligation, decisionResponse);
+            }
+        }
+    }
+
+    /**
+     * scanContentObligation - scans the specific obligation for policy-id and policy-content.
+     *
+     * @param obligation Obligation incoming obligation object
+     * @param decisionResponse DecisionResponse object
+     */
+    protected void scanContentObligation(Obligation obligation, DecisionResponse decisionResponse) {
+        //
+        // Create our OnapObligation which will scan for attributes
+        //
+        OnapObligation onapObligation = new OnapObligation(obligation);
+        //
+        // Get the attributes we care about
+        //
+        String policyId = onapObligation.getPolicyId();
+        Map<String, Object> policyContent = onapObligation.getPolicyContentAsMap();
+        //
+        // Sanity check that we got the attributes we care about. NOTE: This translator
+        // ensures that these are set when convertPolicy is called.
+        //
+        if (! Strings.isNullOrEmpty(policyId) && policyContent != null) {
+            decisionResponse.getPolicies().put(policyId, policyContent);
+        } else {
+            LOGGER.error("Missing obligation policyId {} or policyContent {}", policyId,
+                    policyContent == null ? "null" : policyContent.size());
+        }
+    }
+
+    /**
+     * generateTargetType - Generates a TargetType object for the policy-id and policy-type.
+     *
+     * @param policyId String policy-id
+     * @param policyType String policy type
+     * @param policyTypeVersion String policy type version
+     * @return TargetType object
+     */
     protected TargetType generateTargetType(String policyId, String policyType, String policyTypeVersion) {
         //
         // Create all the match's that are possible
