@@ -255,7 +255,7 @@ public class OptimizationPdpApplicationTest {
         //
         DecisionResponse response = makeDecision();
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(3); // Should be 1
+        assertThat(response.getPolicies().size()).isEqualTo(2);
         //
         // Validate it
         //
@@ -275,7 +275,7 @@ public class OptimizationPdpApplicationTest {
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(6); // should be 1
+        assertThat(response.getPolicies().size()).isEqualTo(4);
         //
         // Validate it
         //
@@ -286,7 +286,7 @@ public class OptimizationPdpApplicationTest {
     @Test
     public void test07OptimizationDefaultGeographyAndServiceAndResource() throws CoderException {
         //
-        // Add vCPE to the service list
+        // Add vG to the resource list
         //
         ((List<String>)baseRequest.getResource().get("resources")).add("vG");
         //
@@ -295,7 +295,7 @@ public class OptimizationPdpApplicationTest {
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(11); // should be 4
+        assertThat(response.getPolicies().size()).isEqualTo(8);
         //
         // Validate it
         //
@@ -315,7 +315,7 @@ public class OptimizationPdpApplicationTest {
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(12); // should be 1
+        assertThat(response.getPolicies().size()).isEqualTo(8);
         //
         // Validate it
         //
@@ -335,7 +335,7 @@ public class OptimizationPdpApplicationTest {
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(14); // should be 3
+        assertThat(response.getPolicies().size()).isEqualTo(10);
         //
         // Validate it
         //
@@ -355,7 +355,7 @@ public class OptimizationPdpApplicationTest {
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(13); // should be 2
+        assertThat(response.getPolicies().size()).isEqualTo(9);
         //
         // Validate it
         //
@@ -375,7 +375,7 @@ public class OptimizationPdpApplicationTest {
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(4); // should be 1
+        assertThat(response.getPolicies().size()).isEqualTo(1);
         //
         // Validate it
         //
@@ -395,7 +395,7 @@ public class OptimizationPdpApplicationTest {
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(6); // should be 2
+        assertThat(response.getPolicies().size()).isEqualTo(2);
         //
         // Validate it
         //
