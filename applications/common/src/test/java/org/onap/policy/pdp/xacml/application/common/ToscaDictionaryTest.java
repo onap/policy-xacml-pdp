@@ -23,7 +23,6 @@
 package org.onap.policy.pdp.xacml.application.common;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Constructor;
@@ -47,10 +46,6 @@ public class ToscaDictionaryTest {
             constructor.setAccessible(true);
             constructor.newInstance();
         }).doesNotThrowAnyException();
-        //
-        // Probably don't need these as these ID's are used by other components
-        //
-        assertNotNull(ToscaDictionary.ID_OBLIGATION_MONITORING_ISSUER);
     }
 
 }
