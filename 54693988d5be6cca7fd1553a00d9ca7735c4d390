@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9f9acc8a_12ddcdff",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-05T15:17:42Z",
+      "side": 1,
+      "message": "Done :)",
+      "parentUuid": "cd16c024_7391abea",
+      "revId": "54693988d5be6cca7fd1553a00d9ca7735c4d390",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12a466f2_a545429f",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/XacmlStateTest.java",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2019-11-05T14:43:24Z",
       "side": 1,
       "message": "verify that rest server was started",
+      "revId": "54693988d5be6cca7fd1553a00d9ca7735c4d390",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c624218b_95027a61",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/XacmlStateTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-05T15:17:42Z",
+      "side": 1,
+      "message": "The rest server won\u0027t start at this point because the engine is not running during this test. This test mocks the Activator and XacmlPdpApplicationManager",
+      "parentUuid": "12a466f2_a545429f",
       "revId": "54693988d5be6cca7fd1553a00d9ca7735c4d390",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
