@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "59e2614b_5321e813",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-05T19:41:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d190acb4_8f04d7a1",
+      "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0f7646af_910bf00a",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
         "patchSetId": 2
@@ -72,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "a457ed5a_1a510b4a",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-05T19:41:21Z",
+      "side": 1,
+      "message": "Right, PdpState.ACTIVE is an enum and getState() also returns a PdpState enum.\nOk done!",
+      "parentUuid": "0f7646af_910bf00a",
+      "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "155ef19d_97769dd4",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
         "patchSetId": 2
@@ -89,6 +125,24 @@
     },
     {
       "key": {
+        "uuid": "6ad66bcc_cb95d393",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-05T19:41:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "155ef19d_97769dd4",
+      "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ce5d6b36_189ed3dc",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
         "patchSetId": 2
@@ -100,6 +154,24 @@
       "writtenOn": "2019-11-05T18:32:02Z",
       "side": 1,
       "message": "\"WARN\" better so it goes in the error log and is noticed",
+      "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b948ef77_2d75c5cf",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-05T19:41:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ce5d6b36_189ed3dc",
       "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -141,6 +213,24 @@
     },
     {
       "key": {
+        "uuid": "d02b1eb4_676f6e64",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-05T19:41:21Z",
+      "side": 1,
+      "message": "Just double checked, start(), stop() and isAlive() are defined as synchronized methods (in onap.policy.common.utils.services.ServiceManager)",
+      "parentUuid": "8852e769_d5c3425e",
+      "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c7e52084_d698a884",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
         "patchSetId": 2
@@ -158,6 +248,24 @@
     },
     {
       "key": {
+        "uuid": "244b3a3a_ad0edfde",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-05T19:41:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7e52084_d698a884",
+      "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "380f12f4_bc2f0a67",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
         "patchSetId": 2
@@ -169,6 +277,30 @@
       "writtenOn": "2019-11-05T17:49:07Z",
       "side": 1,
       "message": "This is really only used by JUnits - could use it in the above 2 methods. But that\u0027s ok - I\u0027m good with it.",
+      "range": {
+        "startLine": 226,
+        "startChar": 19,
+        "endLine": 226,
+        "endChar": 45
+      },
+      "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "112fc467_3c86c4fe",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-05T19:41:21Z",
+      "side": 1,
+      "message": "Done!",
+      "parentUuid": "380f12f4_bc2f0a67",
       "range": {
         "startLine": 226,
         "startChar": 19,
