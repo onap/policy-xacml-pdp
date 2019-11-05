@@ -2,6 +2,108 @@
   "comments": [
     {
       "key": {
+        "uuid": "e1179ecf_9fe907ff",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-11-05T18:32:02Z",
+      "side": 1,
+      "message": "synchronized ?",
+      "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f7646af_910bf00a",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-11-05T18:32:02Z",
+      "side": 1,
+      "message": "If PdpState.ACTIVE is a string, we usually reverse it, PdpState.ACTIVE.equals(state.getState())",
+      "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "155ef19d_97769dd4",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-11-05T18:32:02Z",
+      "side": 1,
+      "message": "same",
+      "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce5d6b36_189ed3dc",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-11-05T18:32:02Z",
+      "side": 1,
+      "message": "\"WARN\" better so it goes in the error log and is noticed",
+      "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e13ae64a_33dc363f",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-11-05T18:32:02Z",
+      "side": 1,
+      "message": "seems to me it should be synchronized .. ?",
+      "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c7e52084_d698a884",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-11-05T18:32:02Z",
+      "side": 1,
+      "message": "same question ..",
+      "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "380f12f4_bc2f0a67",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
         "patchSetId": 2
