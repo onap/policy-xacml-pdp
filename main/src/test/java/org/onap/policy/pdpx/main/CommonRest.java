@@ -120,6 +120,9 @@ public class CommonRest {
         final String[] xacmlPdpConfigParameters = {"-c", CommonRest.CONFIG_FILE};
         main = new Main(xacmlPdpConfigParameters);
 
+        // start xacml rest controller
+        XacmlPdpActivator.getCurrent().startXacmlRestController();
+
         if (!NetworkUtil.isTcpPortOpen("localhost", port, 20, 1000L)) {
             throw new IllegalStateException("server is not listening on port " + port);
         }

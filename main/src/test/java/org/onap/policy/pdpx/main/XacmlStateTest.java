@@ -135,6 +135,14 @@ public class XacmlStateTest {
         // ensure info was saved
         status = state.genHeartbeat();
         assertEquals(PdpState.SAFE, status.getState());
+
+        req.setState(PdpState.ACTIVE);
+        status = state.updateInternalState(req);
+        assertEquals(PdpState.ACTIVE, status.getState());
+
+        req.setState(PdpState.PASSIVE);
+        status = state.updateInternalState(req);
+        assertEquals(PdpState.PASSIVE, status.getState());
     }
 
     @Test
