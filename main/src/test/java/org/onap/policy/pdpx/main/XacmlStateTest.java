@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -135,6 +136,16 @@ public class XacmlStateTest {
         // ensure info was saved
         status = state.genHeartbeat();
         assertEquals(PdpState.SAFE, status.getState());
+
+        req.setState(PdpState.ACTIVE);
+        status = state.updateInternalState(req);
+        assertEquals(PdpState.ACTIVE, status.getState());
+        verify(act).startXacmlRestController();
+
+        req.setState(PdpState.PASSIVE);
+        status = state.updateInternalState(req);
+        assertEquals(PdpState.PASSIVE, status.getState());
+        verify(act).stopXacmlRestController();
     }
 
     @Test
