@@ -64,6 +64,7 @@ public class TestXacmlPdpActivator extends CommonRest {
     /**
      * Creates the activator.
      */
+    @Override
     @Before
     public void setUp() {
         activator = new XacmlPdpActivator(parGroup);
@@ -72,11 +73,20 @@ public class TestXacmlPdpActivator extends CommonRest {
     @Test
     public void testXacmlPdpActivator() throws Exception {
         assertFalse(activator.isAlive());
+        assertFalse(activator.isXacmlRestControllerAlive());
         activator.start();
         assertTrue(activator.isAlive());
+
+        // XacmlPdp starts in PASSIVE state so the rest controller should not be alive
+        assertFalse(activator.isXacmlRestControllerAlive());
         assertTrue(activator.getParameterGroup().isValid());
         assertEquals(CommonTestData.PDPX_GROUP_NAME, activator.getParameterGroup().getName());
 
+        activator.startXacmlRestController();
+        assertTrue(activator.isXacmlRestControllerAlive());
+
+        activator.stopXacmlRestController();
+        assertFalse(activator.isXacmlRestControllerAlive());
     }
 
     @Test

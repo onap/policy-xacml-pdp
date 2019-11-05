@@ -61,6 +61,7 @@ import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
 import org.onap.policy.pdpx.main.startstop.Main;
+import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,6 +117,7 @@ public class TestDecision {
         // Start the service
         //
         main = startXacmlPdpService(fileParams);
+        XacmlPdpActivator.getCurrent().startXacmlRestController();
         //
         // Make sure it is running
         //

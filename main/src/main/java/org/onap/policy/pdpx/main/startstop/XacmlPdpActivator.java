@@ -62,6 +62,7 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
     @Getter
     @Setter
     private static XacmlPdpActivator current = null;
+    private final RestServer restServer;
 
     // The parameters of this policy xacml pdp activator
     private final XacmlPdpParameterGroup xacmlPdpParameterGroup;
@@ -85,7 +86,6 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
         final XacmlPdpHearbeatPublisher heartbeat;
         final TopicSinkClient sinkClient;
         final XacmlState state;
-        final RestServer restServer;
 
         try {
             XacmlPdpApplicationManager appmgr =
@@ -145,10 +145,6 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
             heartbeat::start,
             heartbeat::terminate);
 
-        addAction("REST server",
-            restServer::start,
-            restServer::stop);
-
         // @formatter:on
     }
 
@@ -203,5 +199,31 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
         for (TopicSource source : TopicEndpointManager.getManager().getTopicSources(Arrays.asList(TOPIC))) {
             source.unregister(msgDispatcher);
         }
+    }
+
+    /**
+     * Start the xacmlpdp rest controller.
+     */
+    public void startXacmlRestController() {
+        if (restServer.isAlive()) {
+            LOGGER.info("Xacml rest controller already running");
+        } else {
+            restServer.start();
+        }
+    }
+
+    /**
+     * Stop the xacmlpdp rest controller.
+     */
+    public void stopXacmlRestController() {
+        if (restServer.isAlive()) {
+            restServer.stop();
+        } else {
+            LOGGER.info("Xacml rest controller already stopped");
+        }
+    }
+
+    public boolean isXacmlRestControllerAlive() {
+        return restServer.isAlive();
     }
 }
