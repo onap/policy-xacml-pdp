@@ -231,6 +231,24 @@
     },
     {
       "key": {
+        "uuid": "4ec72afe_2c70fac0",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-05T19:50:38Z",
+      "side": 1,
+      "message": "that\u0027s correct, but there\u0027s still a race condition between checking isAlive() and invoking start()",
+      "parentUuid": "d02b1eb4_676f6e64",
+      "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c7e52084_d698a884",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
         "patchSetId": 2
