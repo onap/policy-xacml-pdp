@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d190acb4_8f04d7a1",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-05T19:21:58Z",
+      "side": 1,
+      "message": "could, though not necessary, as this is only invoked via the topic endpoint subscription thread",
+      "parentUuid": "e1179ecf_9fe907ff",
+      "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0f7646af_910bf00a",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2019-11-05T18:32:02Z",
       "side": 1,
       "message": "If PdpState.ACTIVE is a string, we usually reverse it, PdpState.ACTIVE.equals(state.getState())",
+      "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "940b8a5f_c0ed356e",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-05T19:21:58Z",
+      "side": 1,
+      "message": "it\u0027s an enum so maybe just use \"\u003d\u003d\"",
+      "parentUuid": "0f7646af_910bf00a",
       "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -81,6 +117,24 @@
       "writtenOn": "2019-11-05T18:32:02Z",
       "side": 1,
       "message": "seems to me it should be synchronized .. ?",
+      "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8852e769_d5c3425e",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-05T19:21:58Z",
+      "side": 1,
+      "message": "again, not necessary, as this is only invoked via the topic endpoint subscription thread.  On the other hand, it wouldn\u0027t hurt and would make it less likely to introduce a bug if someone later added another way by which it could be invoked",
+      "parentUuid": "e13ae64a_33dc363f",
       "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
