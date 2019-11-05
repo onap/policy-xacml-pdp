@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "380f12f4_bc2f0a67",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-05T17:49:07Z",
+      "side": 1,
+      "message": "This is really only used by JUnits - could use it in the above 2 methods. But that\u0027s ok - I\u0027m good with it.",
+      "range": {
+        "startLine": 226,
+        "startChar": 19,
+        "endLine": 226,
+        "endChar": 45
+      },
+      "revId": "0ef20d49935698a95972a4bcaf81b589ee6e360d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
