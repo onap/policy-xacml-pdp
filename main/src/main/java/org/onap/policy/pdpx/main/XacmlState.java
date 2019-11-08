@@ -20,6 +20,7 @@
 
 package org.onap.policy.pdpx.main;
 
+import com.att.aft.dme2.internal.apache.commons.lang3.StringUtils;
 import java.util.Collections;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.pdp.concepts.PdpMessage;
@@ -51,7 +52,6 @@ public class XacmlState {
      * Records the current state of this PDP.
      */
     private final PdpStatus status;
-
 
     /**
      * Constructs the object, initializing the state.
@@ -105,7 +105,7 @@ public class XacmlState {
          * within a group/subgroup.
          */
 
-        PdpStatus status2 = makeResponse(message);
+        PdpStatus status2 = makeResponse(message, "");
 
         // start/stop rest controller based on state change
         handleXacmlRestController();
@@ -123,12 +123,12 @@ public class XacmlState {
      * @param message message from which to update the internal state
      * @return a response to the message
      */
-    public PdpStatus updateInternalState(PdpUpdate message) {
+    public PdpStatus updateInternalState(PdpUpdate message, String errMessage) {
         status.setPdpGroup(message.getPdpGroup());
         status.setPdpSubgroup(message.getPdpSubgroup());
         status.setPolicies(appManager.getToscaPolicyIdentifiers());
 
-        return makeResponse(message);
+        return makeResponse(message, errMessage);
     }
 
     /**
@@ -145,11 +145,18 @@ public class XacmlState {
      * Makes a response to the given message, based on the current state.
      *
      * @param message message for which the response should be made
+     * @param errMessage the error message to be sent to PAP
      * @return a new response
      */
-    private PdpStatus makeResponse(PdpMessage message) {
+    private PdpStatus makeResponse(PdpMessage message, String errMessage) {
         PdpResponseDetails resp = new PdpResponseDetails();
-        resp.setResponseStatus(PdpResponseStatus.SUCCESS);
+
+        if (StringUtils.isBlank(errMessage)) {
+            resp.setResponseStatus(PdpResponseStatus.SUCCESS);
+        } else {
+            resp.setResponseStatus(PdpResponseStatus.FAIL);
+            resp.setResponseMessage(errMessage);
+        }
         resp.setResponseTo(message.getRequestId());
 
         PdpStatus status2 = new PdpStatus(status);
