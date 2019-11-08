@@ -21,6 +21,7 @@
 package org.onap.policy.pdpx.main;
 
 import java.util.Collections;
+import lombok.Setter;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.pdp.concepts.PdpMessage;
 import org.onap.policy.models.pdp.concepts.PdpResponseDetails;
@@ -52,12 +53,19 @@ public class XacmlState {
      */
     private final PdpStatus status;
 
+    /**
+     * Records the current error(s) thrown from this PDP.
+     */
+    @Setter
+    private String errorMessage;
+
 
     /**
      * Constructs the object, initializing the state.
      */
     public XacmlState(XacmlPdpApplicationManager appManager) {
         this.appManager = appManager;
+        this.errorMessage = null;
 
         this.status = new PdpStatus();
         this.status.setName(NetworkUtil.getHostname());
@@ -149,7 +157,13 @@ public class XacmlState {
      */
     private PdpStatus makeResponse(PdpMessage message) {
         PdpResponseDetails resp = new PdpResponseDetails();
-        resp.setResponseStatus(PdpResponseStatus.SUCCESS);
+
+        if (errorMessage != null && errorMessage.contains("Failed to load policy")) {
+            resp.setResponseStatus(PdpResponseStatus.FAIL);
+            resp.setResponseMessage(errorMessage);
+        } else {
+            resp.setResponseStatus(PdpResponseStatus.SUCCESS);
+        }
         resp.setResponseTo(message.getRequestId());
 
         PdpStatus status2 = new PdpStatus(status);

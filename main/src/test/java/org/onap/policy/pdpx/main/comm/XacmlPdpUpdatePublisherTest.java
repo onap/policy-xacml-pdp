@@ -22,6 +22,7 @@ package org.onap.policy.pdpx.main.comm;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,6 +39,7 @@ import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
+import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdpx.main.XacmlState;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
@@ -82,7 +84,16 @@ public class XacmlPdpUpdatePublisherTest {
     private ToscaPolicy added2;
 
     @Mock
+    private ToscaPolicy failPolicy1;
+
+    @Mock
+    private ToscaPolicy failPolicy2;
+
+    @Mock
     private PdpUpdate update;
+
+    @Mock
+    private PdpUpdate failurePdpUpdate;
 
     private XacmlPdpUpdatePublisher publisher;
 
@@ -105,9 +116,14 @@ public class XacmlPdpUpdatePublisherTest {
         List<ToscaPolicy> updatePolicies = Arrays.asList(added1, deployed2, deployed3, added2);
         when(update.getPolicies()).thenReturn(updatePolicies);
 
+        List<ToscaPolicy> failureUpdatePolicies = Arrays.asList(added1, deployed2, deployed3, failPolicy1, failPolicy2);
+        when(failurePdpUpdate.getPolicies()).thenReturn(failureUpdatePolicies);
+
         when(appmgr.getPolicyCount()).thenReturn(NEW_COUNT);
 
         when(state.updateInternalState(update)).thenReturn(status);
+
+        when(state.updateInternalState(failurePdpUpdate)).thenReturn(status);
 
         when(client.send(any())).thenReturn(true);
 
@@ -115,7 +131,7 @@ public class XacmlPdpUpdatePublisherTest {
     }
 
     @Test
-    public void testHandlePdpUpdate() {
+    public void testHandlePdpUpdate() throws XacmlApplicationException {
         XacmlPdpStatisticsManager statmgr = new XacmlPdpStatisticsManager();
         XacmlPdpStatisticsManager.setCurrent(statmgr);
 
@@ -141,7 +157,25 @@ public class XacmlPdpUpdatePublisherTest {
     }
 
     @Test
-    public void testHandlePdpUpdate_NullPolicies() {
+    public void testHandlePdpUpdate_LoadPolicyFailed() throws XacmlApplicationException {
+        // Set loadPolicy to fail
+        doThrow(new XacmlApplicationException()).when(appmgr).loadDeployedPolicy(failPolicy1);
+        doThrow(new XacmlApplicationException()).when(appmgr).loadDeployedPolicy(failPolicy2);
+
+        publisher.handlePdpUpdate(failurePdpUpdate);
+
+        // two removed
+        verify(appmgr).removeUndeployedPolicy(deployed1);
+        verify(appmgr).removeUndeployedPolicy(deployed4);
+
+        verify(failurePdpUpdate).setPolicies(any());
+
+        verify(state).setErrorMessage(any());
+        verify(client).send(status);
+    }
+
+    @Test
+    public void testHandlePdpUpdate_NullPolicies() throws XacmlApplicationException {
         when(update.getPolicies()).thenReturn(null);
 
         publisher.handlePdpUpdate(update);
