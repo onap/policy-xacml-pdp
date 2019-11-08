@@ -116,7 +116,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
     }
 
     @Override
-    public synchronized boolean loadPolicy(ToscaPolicy toscaPolicy) {
+    public synchronized boolean loadPolicy(ToscaPolicy toscaPolicy) throws XacmlApplicationException {
         try {
             //
             // Convert the policies first
@@ -166,7 +166,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             this.mapLoadedPolicies.put(toscaPolicy, refPath);
         } catch (IOException | ToscaPolicyConversionException e) {
             LOGGER.error("Failed to loadPolicies {}", e);
-            return false;
+            throw new XacmlApplicationException("loadPolicy failed {}", e);
         }
         return true;
     }

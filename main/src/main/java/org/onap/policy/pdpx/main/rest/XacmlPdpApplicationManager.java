@@ -173,7 +173,7 @@ public class XacmlPdpApplicationManager {
      *
      * @param policy Incoming policy
      */
-    public void loadDeployedPolicy(ToscaPolicy policy) {
+    public void loadDeployedPolicy(ToscaPolicy policy) throws XacmlApplicationException {
 
         for (XacmlApplicationServiceProvider application : applicationLoader) {
             try {
@@ -194,6 +194,7 @@ public class XacmlPdpApplicationManager {
                 }
             } catch (XacmlApplicationException e) {
                 LOGGER.error("Failed to load the Tosca Policy", e);
+                throw e;
             }
         }
     }
