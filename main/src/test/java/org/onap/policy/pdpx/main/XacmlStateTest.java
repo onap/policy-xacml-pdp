@@ -165,6 +165,11 @@ public class XacmlStateTest {
         status = state.genHeartbeat();
         assertEquals(GROUP, status.getPdpGroup());
         assertEquals(SUBGROUP, status.getPdpSubgroup());
+
+        state.setErrorMessage("Failed to load policy: failLoadPolicy1: null");
+        status = state.updateInternalState(req);
+        assertEquals(status.getResponse().getResponseMessage(), "Failed to load policy: failLoadPolicy1: null");
+        assertEquals(status.getResponse().getResponseStatus(), PdpResponseStatus.FAIL);
     }
 
     @Test
