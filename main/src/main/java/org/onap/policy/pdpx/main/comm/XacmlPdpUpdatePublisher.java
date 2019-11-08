@@ -20,6 +20,7 @@
 
 package org.onap.policy.pdpx.main.comm;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,6 +28,8 @@ import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
+import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
+import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.onap.policy.pdpx.main.XacmlState;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
 import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
@@ -73,13 +76,24 @@ public class XacmlPdpUpdatePublisher {
             }
         }
 
+        StringBuilder errorMessage = new StringBuilder();
         // Deploy a policy
         // if deployed policies do not contain the incoming policy load it
         for (ToscaPolicy policy : incomingPolicies) {
             if (!deployedPolicies.contains(policy)) {
-                appManager.loadDeployedPolicy(policy);
+                try {
+                    appManager.loadDeployedPolicy(policy);
+                } catch (XacmlApplicationException e) {
+                    // Failed to load policy, return error(s) to PAP
+                    LOGGER.error("Failed to load policy: {}", policy, e);
+                    errorMessage.append("Failed to load policy: " + policy + ": "
+                            + e.getMessage() + XacmlPolicyUtils.LINE_SEPARATOR);
+                }
             }
         }
+        // Return current deployed policies
+        message.setPolicies(new ArrayList<ToscaPolicy>(appManager.getToscaPolicies().keySet()));
+        LOGGER.debug("Returning current deployed policies: {} ", message.getPolicies());
 
         // update the policy count statistic
         XacmlPdpStatisticsManager stats = XacmlPdpStatisticsManager.getCurrent();
@@ -87,7 +101,7 @@ public class XacmlPdpUpdatePublisher {
             stats.setTotalPolicyCount(appManager.getPolicyCount());
         }
 
-        sendPdpUpdate(state.updateInternalState(message));
+        sendPdpUpdate(state.updateInternalState(message, errorMessage.toString()));
     }
 
     private void sendPdpUpdate(PdpStatus status) {
