@@ -169,31 +169,27 @@ public class XacmlPdpApplicationManager {
     }
 
     /**
-     * Finds the appropriate application and loads the policy.
+     * Finds the appropriate application and loads the policy, throws an exception if it fails.
      *
      * @param policy Incoming policy
+     * @throws XacmlApplicationException if loadPolicy fails
      */
-    public void loadDeployedPolicy(ToscaPolicy policy) {
+    public void loadDeployedPolicy(ToscaPolicy policy) throws XacmlApplicationException {
 
         for (XacmlApplicationServiceProvider application : applicationLoader) {
-            try {
-                //
-                // There should be only one application per policytype. We can
-                // put more logic surrounding enforcement of that later. For now,
-                // just use the first one found.
-                //
-                if (application.canSupportPolicyType(policy.getTypeIdentifier())) {
-                    if (application.loadPolicy(policy)) {
-                        if (LOGGER.isInfoEnabled()) {
-                            LOGGER.info("Loaded ToscaPolicy {} into application {}", policy.getMetadata(),
-                                application.applicationName());
-                        }
-                        mapLoadedPolicies.put(policy, application);
-                    }
-                    return;
+            //
+            // There should be only one application per policytype. We can
+            // put more logic surrounding enforcement of that later. For now,
+            // just use the first one found.
+            //
+            if (application.canSupportPolicyType(policy.getTypeIdentifier())) {
+                application.loadPolicy(policy);
+                mapLoadedPolicies.put(policy, application);
+                if (LOGGER.isInfoEnabled()) {
+                    LOGGER.info("Loaded ToscaPolicy {} into application {}", policy.getMetadata(),
+                            application.applicationName());
                 }
-            } catch (XacmlApplicationException e) {
-                LOGGER.error("Failed to load the Tosca Policy", e);
+                return;
             }
         }
     }
