@@ -23,6 +23,7 @@ package org.onap.policy.pdpx.main;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -160,11 +161,23 @@ public class XacmlStateTest {
         assertNotNull(resp);
         assertEquals(req.getRequestId(), resp.getResponseTo());
         assertEquals(PdpResponseStatus.SUCCESS, resp.getResponseStatus());
+        assertNull(resp.getResponseMessage());
 
         // ensure info was saved
         status = state.genHeartbeat();
         assertEquals(GROUP, status.getPdpGroup());
         assertEquals(SUBGROUP, status.getPdpSubgroup());
+
+        state.setErrorMessage("");
+        status = state.updateInternalState(req);
+        assertEquals(status.getResponse().getResponseStatus(), PdpResponseStatus.SUCCESS);
+        assertNull(status.getResponse().getResponseMessage());
+
+        state.setErrorMessage("Failed to load policy: failLoadPolicy1: null");
+        status = state.updateInternalState(req);
+        assertEquals(status.getResponse().getResponseMessage(), "Failed to load policy: failLoadPolicy1: null");
+        assertEquals(status.getResponse().getResponseStatus(), PdpResponseStatus.FAIL);
+
     }
 
     @Test

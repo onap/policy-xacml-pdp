@@ -190,10 +190,10 @@ public class StdXacmlApplicationServiceProviderTest {
     }
 
     @Test
-    public void testLoadPolicy_ConversionError() throws ToscaPolicyConversionException {
+    public void testLoadPolicy_ConversionError() throws XacmlApplicationException, ToscaPolicyConversionException {
         when(trans.convertPolicy(policy)).thenReturn(null);
 
-        assertFalse(prov.loadPolicy(policy));
+        assertThatThrownBy(() -> prov.loadPolicy(policy)).isInstanceOf(XacmlApplicationException.class);
     }
 
     @Test
@@ -203,7 +203,8 @@ public class StdXacmlApplicationServiceProviderTest {
 
         final Set<String> set = XACMLProperties.getRootPolicyIDs(prov.getProperties());
 
-        assertTrue(prov.loadPolicy(policy));
+        // Load policy
+        prov.loadPolicy(policy);
 
         // policy file should have been created
         File policyFile = new File(TEMP_DIR, "my-name_1.2.3.xml");
