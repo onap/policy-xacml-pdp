@@ -25,7 +25,6 @@ package org.onap.policy.pdp.xacml.xacmltest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
@@ -82,10 +81,14 @@ public class TestUtils {
         //
         for (Map<String, ToscaPolicy> policies : completedJtst.getToscaTopologyTemplate().getPolicies()) {
             for (ToscaPolicy policy : policies.values()) {
-                if (service.loadPolicy(policy)) {
-                    loadedPolicies.add(policy);
-                } else {
-                    LOGGER.error("Application failed to load policy");
+                try {
+                    if (service.loadPolicy(policy)) {
+                        loadedPolicies.add(policy);
+                    } else {
+                        LOGGER.error("Application failed to load policy");
+                    }
+                } catch (XacmlApplicationException e) {
+                    LOGGER.error("Application failed to load policy", e);
                 }
             }
         }

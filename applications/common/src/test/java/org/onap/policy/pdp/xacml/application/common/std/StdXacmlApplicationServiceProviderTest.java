@@ -190,10 +190,10 @@ public class StdXacmlApplicationServiceProviderTest {
     }
 
     @Test
-    public void testLoadPolicy_ConversionError() throws ToscaPolicyConversionException {
+    public void testLoadPolicy_ConversionError() throws XacmlApplicationException, ToscaPolicyConversionException {
         when(trans.convertPolicy(policy)).thenReturn(null);
 
-        assertFalse(prov.loadPolicy(policy));
+        assertThatThrownBy(() -> prov.loadPolicy(policy)).isInstanceOf(XacmlApplicationException.class);
     }
 
     @Test
