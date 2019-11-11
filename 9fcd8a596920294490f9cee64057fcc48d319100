@@ -52,6 +52,24 @@
       "revId": "9fcd8a596920294490f9cee64057fcc48d319100",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01859a29_dfc16aa3",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdXacmlApplicationServiceProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-11T18:55:54Z",
+      "side": 1,
+      "message": "Yeah the guard code needs a lot of cleanup itself.",
+      "parentUuid": "fa990866_cfba6aaf",
+      "revId": "9fcd8a596920294490f9cee64057fcc48d319100",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
