@@ -88,6 +88,74 @@
       "revId": "9fcd8a596920294490f9cee64057fcc48d319100",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e9bcc68_d17dd4e1",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-11T20:17:39Z",
+      "side": 1,
+      "message": "does this ever get cleared?",
+      "revId": "9fcd8a596920294490f9cee64057fcc48d319100",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b5e5745_92e3b6bc",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-11T20:17:39Z",
+      "side": 1,
+      "message": "so other errors should be treated as success?",
+      "revId": "9fcd8a596920294490f9cee64057fcc48d319100",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3152e68e_f589c772",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpUpdatePublisher.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-11T20:17:39Z",
+      "side": 1,
+      "message": "instead of using a stream here, how about:\n\n  new ArrayList\u003c\u003e(...keySet())",
+      "revId": "9fcd8a596920294490f9cee64057fcc48d319100",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a8c16c4_7816f012",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/XacmlStateTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-11T20:17:39Z",
+      "side": 1,
+      "message": "add a test for the other branch: error message is set, but it doesn\u0027t contain \"Failed to load\"",
+      "revId": "9fcd8a596920294490f9cee64057fcc48d319100",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
