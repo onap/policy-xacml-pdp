@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "56fcbc77_8cb9626a",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdXacmlApplicationServiceProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-11T16:09:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "35c5bf89_afce0354",
+      "revId": "b5f9de4bd187e7d0c7396b73742de6f175ae15f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "89cffd4d_809d1a4e",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2019-11-11T15:35:09Z",
       "side": 1,
       "message": "I think this is redundant, by default would be null, not sure how sonar works on this, if flags one way or another.",
+      "revId": "b5f9de4bd187e7d0c7396b73742de6f175ae15f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e14b951e_0d268ad2",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-11T16:09:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "89cffd4d_809d1a4e",
       "revId": "b5f9de4bd187e7d0c7396b73742de6f175ae15f7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
