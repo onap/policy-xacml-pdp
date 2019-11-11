@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b64e7023_e7627406",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-11T23:41:10Z",
+      "side": 1,
+      "message": "Sure, done",
+      "parentUuid": "18b0eb27_9616aa4f",
+      "revId": "c2d3be952397b31ddfa184761fe52d796610f2d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fec6f1b8_9877a3f0",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
         "patchSetId": 6
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "d83e6b08_c789b4b2",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-11T23:41:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fec6f1b8_9877a3f0",
+      "revId": "c2d3be952397b31ddfa184761fe52d796610f2d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3f89742_596be902",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpUpdatePublisher.java",
         "patchSetId": 6
@@ -47,6 +83,24 @@
       "writtenOn": "2019-11-11T22:46:39Z",
       "side": 1,
       "message": "will it take \"\u003c\u003e\"?  If so, use that, otherwise sonar will complain",
+      "revId": "c2d3be952397b31ddfa184761fe52d796610f2d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d461d141_e6b2517a",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpUpdatePublisher.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-11T23:41:10Z",
+      "side": 1,
+      "message": "Hmm I didn\u0027t get any sonar complaints while building.. I do get a type safety warning if I remove \u003cToscaPolicy\u003e",
+      "parentUuid": "e3f89742_596be902",
       "revId": "c2d3be952397b31ddfa184761fe52d796610f2d3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
