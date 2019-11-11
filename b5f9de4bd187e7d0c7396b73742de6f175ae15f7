@@ -50,6 +50,24 @@
       "revId": "b5f9de4bd187e7d0c7396b73742de6f175ae15f7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e59ff3a8_230d7d23",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-11T16:07:06Z",
+      "side": 1,
+      "message": "No we don\u0027t. Load all that we can. Up to whoever is deploying the policies to undeploy.",
+      "parentUuid": "494f99bf_be9c198c",
+      "revId": "b5f9de4bd187e7d0c7396b73742de6f175ae15f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
