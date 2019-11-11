@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e24c3b10_db214837",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdXacmlApplicationServiceProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-11T14:34:30Z",
+      "side": 1,
+      "message": "Ok done",
+      "parentUuid": "87723f31_17d9c82d",
+      "range": {
+        "startLine": 119,
+        "startChar": 24,
+        "endLine": 119,
+        "endChar": 31
+      },
+      "revId": "915b2f66e8eb8afe432b4a8d11d6bef91738c902",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "019dfc16_161af0dc",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdXacmlApplicationServiceProvider.java",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "915b2f66e8eb8afe432b4a8d11d6bef91738c902",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df3abe14_621cd12d",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdXacmlApplicationServiceProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-11T14:34:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "019dfc16_161af0dc",
+      "range": {
+        "startLine": 168,
+        "startChar": 12,
+        "endLine": 168,
+        "endChar": 57
+      },
+      "revId": "915b2f66e8eb8afe432b4a8d11d6bef91738c902",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "16f88309_2ce2bd3b",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-11T14:34:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4df2ffcf_baffad55",
+      "range": {
+        "startLine": 196,
+        "startChar": 16,
+        "endLine": 196,
+        "endChar": 67
+      },
+      "revId": "915b2f66e8eb8afe432b4a8d11d6bef91738c902",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ac910a8f_aa6ddf7f",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/comm/XacmlPdpUpdatePublisherTest.java",
         "patchSetId": 2
@@ -91,6 +163,30 @@
       "revId": "915b2f66e8eb8afe432b4a8d11d6bef91738c902",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6839197_b40b8598",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/comm/XacmlPdpUpdatePublisherTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-11T14:34:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac910a8f_aa6ddf7f",
+      "range": {
+        "startLine": 174,
+        "startChar": 8,
+        "endLine": 175,
+        "endChar": 59
+      },
+      "revId": "915b2f66e8eb8afe432b4a8d11d6bef91738c902",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
