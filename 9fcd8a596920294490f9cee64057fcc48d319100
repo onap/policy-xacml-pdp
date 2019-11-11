@@ -70,6 +70,24 @@
       "revId": "9fcd8a596920294490f9cee64057fcc48d319100",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ffbdd9d_d38c82c7",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdXacmlApplicationServiceProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-11T19:20:52Z",
+      "side": 1,
+      "message": "Also, convertPolicy() throws a ToscaPolicyConversionException so I think we have to keep that in the catch clause below",
+      "parentUuid": "01859a29_dfc16aa3",
+      "revId": "9fcd8a596920294490f9cee64057fcc48d319100",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
