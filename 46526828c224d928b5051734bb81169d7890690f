@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3113d099_290afdfb",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-11T23:22:20Z",
+      "side": 1,
+      "message": "\"an be\" \u003d\u003e \"and be\"?",
+      "revId": "46526828c224d928b5051734bb81169d7890690f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f56d321_2c1bfde3",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-11T23:22:20Z",
+      "side": 1,
+      "message": "looks like this could be turned into a static map.  \n\nActually, as I look through the rest of these changes, it seems like there could be a class hierarchy of \"Obligation\" (or some such), where each subclass knows how to extract/process/set its attribute.  Such a structure is indicated by the fact that the code has the equivalent of \"switch\" statements scattered through-out.",
+      "revId": "46526828c224d928b5051734bb81169d7890690f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "00a5c0a9_b43239a5",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-11T23:22:20Z",
+      "side": 1,
+      "message": "this looks pretty clean/clear to me, though it could be shortened up by adding a wrapper method, addOptionalAttributeToObligation, thus eliminating the need for the \"if\" tests.",
+      "revId": "46526828c224d928b5051734bb81169d7890690f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ad02bb2_1389181a",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-11T23:22:20Z",
+      "side": 1,
+      "message": "can combine lines 205 \u0026 209 to avoid a double look-up",
+      "revId": "46526828c224d928b5051734bb81169d7890690f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e175ee9e_f01c35ed",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-11T23:22:20Z",
+      "side": 1,
+      "message": "this should be \"int\"",
+      "revId": "46526828c224d928b5051734bb81169d7890690f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2cd4b390_dd92ef59",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-11T23:22:20Z",
+      "side": 1,
+      "message": "this should probably be \"int\" as the code below assumes it is never null",
+      "revId": "46526828c224d928b5051734bb81169d7890690f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d258fad_7c5ff12c",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-11T23:22:20Z",
+      "side": 1,
+      "message": "more efficient to return/use \"int\" if it can never be null",
+      "revId": "46526828c224d928b5051734bb81169d7890690f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
