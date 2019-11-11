@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "35c5bf89_afce0354",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdXacmlApplicationServiceProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-11-11T15:35:09Z",
+      "side": 1,
+      "message": "copy/paste error probably, the {} won\u0027t work here, remove or expand message",
+      "revId": "b5f9de4bd187e7d0c7396b73742de6f175ae15f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "89cffd4d_809d1a4e",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-11-11T15:35:09Z",
+      "side": 1,
+      "message": "I think this is redundant, by default would be null, not sure how sonar works on this, if flags one way or another.",
+      "revId": "b5f9de4bd187e7d0c7396b73742de6f175ae15f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "494f99bf_be9c198c",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-11-11T15:35:09Z",
+      "side": 1,
+      "message": "Do we want to abort \"loadDeployedPolicy\" for remaining policies if loadPolicy throws an exception for one of them?",
+      "revId": "b5f9de4bd187e7d0c7396b73742de6f175ae15f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
