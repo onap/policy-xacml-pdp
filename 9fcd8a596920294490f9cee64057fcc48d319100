@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "351b9f02_8fb4eebc",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdXacmlApplicationServiceProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-11-11T18:05:06Z",
+      "side": 1,
+      "message": "just fyi, but could throw the XacmlApplicationException directly here and have the catch clause just catch the IOException.",
+      "revId": "9fcd8a596920294490f9cee64057fcc48d319100",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
