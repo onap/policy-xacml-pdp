@@ -51,6 +51,10 @@ import org.slf4j.LoggerFactory;
 public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringPdpApplication.class);
 
+    // Note: this requirement is temporary; it will no longer be necessary once the PDPs and PAP
+    // are updated to use the PDP Group name instead of the supported types.
+    private static final String ONAP_MONITORING_OTHER_POLICY_TYPE = "onap.policies.monitoring.*";
+
     private static final String ONAP_MONITORING_BASE_POLICY_TYPE = "onap.Monitoring";
     private static final String ONAP_MONITORING_CDAP = "onap.policies.monitoring.cdap.tca.hi.lo.app";
     private static final String ONAP_MONITORING_APPSERVER =
@@ -73,6 +77,9 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
         supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_CDAP, VERSION_100));
         supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_APPSERVER, VERSION_100));
         supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_SONHANDLER, VERSION_100));
+
+        // temporary requirement
+        supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_OTHER_POLICY_TYPE, VERSION_100));
     }
 
     @Override
@@ -101,7 +108,8 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
                 || policyTypeId.getName().equals(ONAP_MONITORING_CDAP)
                 || policyTypeId.getName().equals(ONAP_MONITORING_APPSERVER)
                 || policyTypeId.getName().equals(ONAP_MONITORING_SONHANDLER)
-                || policyTypeId.getName().startsWith(ONAP_MONITORING_DERIVED_POLICY_TYPE));
+                || policyTypeId.getName().startsWith(ONAP_MONITORING_DERIVED_POLICY_TYPE)
+                || policyTypeId.getName().startsWith("onap.policies.monitoring."));
     }
 
     @Override
