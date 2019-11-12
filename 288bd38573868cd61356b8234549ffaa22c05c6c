@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "be0725eb_d95d0302",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/OnapObligation.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T12:43:14Z",
+      "side": 1,
+      "message": "Jim, I can start the switch on assignment.getAttributeId(), however Java won\u0027t allow me to use the ToscaDictionary.ID_OBLIGATION_ID in the case statements since they do not evaluate to a constant.\n\nThis class is NOT finished, going to re-use it for both creating and evaluation obligations.",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 60,
+        "endChar": 69
+      },
+      "revId": "288bd38573868cd61356b8234549ffaa22c05c6c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
