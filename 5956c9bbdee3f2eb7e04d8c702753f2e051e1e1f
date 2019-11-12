@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d028cf35_74a998bc",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/OnapObligation.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T23:48:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e60d07a4_795e4548",
+      "revId": "5956c9bbdee3f2eb7e04d8c702753f2e051e1e1f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2df7d1a3_fe84ae2b",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/OnapObligation.java",
         "patchSetId": 9
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "320bf780_e1972682",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/OnapObligation.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T23:48:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2df7d1a3_fe84ae2b",
+      "revId": "5956c9bbdee3f2eb7e04d8c702753f2e051e1e1f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dccc83e7_6741ce8b",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/OnapObligation.java",
         "patchSetId": 9
@@ -47,6 +83,24 @@
       "writtenOn": "2019-11-12T23:32:42Z",
       "side": 1,
       "message": "doesn\u0027t \"obligations\" go away once this method returns?  Not sure of the point of adding \"obligation\" to this list",
+      "revId": "5956c9bbdee3f2eb7e04d8c702753f2e051e1e1f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c1c0940_41331dbf",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/OnapObligation.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T23:48:23Z",
+      "side": 1,
+      "message": "Oh wait a minute - looks like I should have deleted that.",
+      "parentUuid": "dccc83e7_6741ce8b",
       "revId": "5956c9bbdee3f2eb7e04d8c702753f2e051e1e1f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
