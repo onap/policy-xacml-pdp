@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "5cedb6d4_1c045bb6",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/OnapObligation.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T19:19:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "64ba2029_bd2eefd6",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 60,
+        "endChar": 69
+      },
+      "revId": "288bd38573868cd61356b8234549ffaa22c05c6c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "11d2f1cf_437bce1a",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
         "patchSetId": 7
@@ -60,6 +84,24 @@
       "writtenOn": "2019-11-12T13:56:56Z",
       "side": 1,
       "message": "I think (don\u0027t know for sure) that ObjectFactory is thread-safe, in which case, this could be made \"static\"",
+      "revId": "288bd38573868cd61356b8234549ffaa22c05c6c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f35a97be_3153799d",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T19:19:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "11d2f1cf_437bce1a",
       "revId": "288bd38573868cd61356b8234549ffaa22c05c6c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
