@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "cb3400c8_53d70f98",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T01:54:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3113d099_290afdfb",
+      "revId": "46526828c224d928b5051734bb81169d7890690f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f56d321_2c1bfde3",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2019-11-11T23:22:20Z",
       "side": 1,
       "message": "looks like this could be turned into a static map.  \n\nActually, as I look through the rest of these changes, it seems like there could be a class hierarchy of \"Obligation\" (or some such), where each subclass knows how to extract/process/set its attribute.  Such a structure is indicated by the fact that the code has the equivalent of \"switch\" statements scattered through-out.",
+      "revId": "46526828c224d928b5051734bb81169d7890690f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57d7deba_a0ce67e7",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T01:54:36Z",
+      "side": 1,
+      "message": "I will look into moving into a class. You can\u0027t really use a switch with the Identifier classes, java complains must use a constant.",
+      "parentUuid": "3f56d321_2c1bfde3",
       "revId": "46526828c224d928b5051734bb81169d7890690f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "75357504_355d0ae1",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T01:54:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "00a5c0a9_b43239a5",
+      "revId": "46526828c224d928b5051734bb81169d7890690f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0ad02bb2_1389181a",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
         "patchSetId": 5
@@ -64,6 +118,24 @@
       "writtenOn": "2019-11-11T23:22:20Z",
       "side": 1,
       "message": "can combine lines 205 \u0026 209 to avoid a double look-up",
+      "revId": "46526828c224d928b5051734bb81169d7890690f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e676f2fc_e6b8e9a8",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T01:54:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0ad02bb2_1389181a",
       "revId": "46526828c224d928b5051734bb81169d7890690f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "cf5c4162_29e870d6",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T01:54:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e175ee9e_f01c35ed",
+      "revId": "46526828c224d928b5051734bb81169d7890690f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2cd4b390_dd92ef59",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
         "patchSetId": 5
@@ -104,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "19b30171_2b3bacfc",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T01:54:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2cd4b390_dd92ef59",
+      "revId": "46526828c224d928b5051734bb81169d7890690f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d258fad_7c5ff12c",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
         "patchSetId": 5
@@ -115,6 +223,24 @@
       "writtenOn": "2019-11-11T23:22:20Z",
       "side": 1,
       "message": "more efficient to return/use \"int\" if it can never be null",
+      "revId": "46526828c224d928b5051734bb81169d7890690f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b88ed8a_6b59c764",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T01:54:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d258fad_7c5ff12c",
       "revId": "46526828c224d928b5051734bb81169d7890690f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
