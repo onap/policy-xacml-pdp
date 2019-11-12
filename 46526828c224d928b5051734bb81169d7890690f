@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "2fb6f1c8_59f3e293",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-12T13:56:56Z",
+      "side": 1,
+      "message": "right.  Now that you\u0027ve introduced OnapObligation, this can be done differently.  However, prior to that, this could be done using:\n\n  Map\u003cattribute-id, Function\u003cAssignment,Object\u003e\u003e\n\nWith that, you just do a look-up of the attribute id and then invoke the function, if found; it becomes a loop instead of a series of \"if\" tests.",
+      "parentUuid": "57d7deba_a0ce67e7",
+      "revId": "46526828c224d928b5051734bb81169d7890690f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "00a5c0a9_b43239a5",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
         "patchSetId": 5
