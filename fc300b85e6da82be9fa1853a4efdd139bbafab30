@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f2bbee99_857c22d1",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T12:41:49Z",
+      "side": 1,
+      "message": "I\u0027m going to move this into a separate class. Yes it SHOULD always be a string, I\u0027m trying to ensure that because its this class that creates the policy. For it not to be, then someone went to the XACML file on the disk and actually manipulated the policy themselves by changing the Datatype.",
+      "parentUuid": "769e24fb_a2d45172",
+      "revId": "fc300b85e6da82be9fa1853a4efdd139bbafab30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2768f161_ebca174d",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdCombinedPolicyResultsTranslator.java",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2019-11-12T03:14:35Z",
       "side": 1,
       "message": "reverse equals check",
+      "revId": "fc300b85e6da82be9fa1853a4efdd139bbafab30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0052be78_36c570f2",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdCombinedPolicyResultsTranslator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T12:41:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2768f161_ebca174d",
       "revId": "fc300b85e6da82be9fa1853a4efdd139bbafab30",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "fbbbf184_3c135863",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdCombinedPolicyResultsTranslator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T12:41:49Z",
+      "side": 1,
+      "message": "Done - I am going to move to another class this functionality.",
+      "parentUuid": "3aaeac62_1cbc5459",
+      "revId": "fc300b85e6da82be9fa1853a4efdd139bbafab30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a316aab_31605175",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdCombinedPolicyResultsTranslator.java",
         "patchSetId": 6
@@ -64,6 +118,24 @@
       "writtenOn": "2019-11-12T03:14:35Z",
       "side": 1,
       "message": "reverse and the one below",
+      "revId": "fc300b85e6da82be9fa1853a4efdd139bbafab30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6c6bffb9_50ad792a",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdCombinedPolicyResultsTranslator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T12:41:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a316aab_31605175",
       "revId": "fc300b85e6da82be9fa1853a4efdd139bbafab30",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "9533cef0_d0ecdf86",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T12:41:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea835038_37d54d7a",
+      "revId": "fc300b85e6da82be9fa1853a4efdd139bbafab30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "33655d3b_85c4464e",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
         "patchSetId": 6
@@ -98,6 +188,24 @@
       "writtenOn": "2019-11-12T03:14:35Z",
       "side": 1,
       "message": "Not a comment but here it goes .. wondering if  having each \"entry\" in its own object implementing the Comparable interface would make things easier to read.",
+      "revId": "fc300b85e6da82be9fa1853a4efdd139bbafab30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cd746e0_2ab5c5e9",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T12:41:49Z",
+      "side": 1,
+      "message": "Good idea",
+      "parentUuid": "33655d3b_85c4464e",
       "revId": "fc300b85e6da82be9fa1853a4efdd139bbafab30",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
