@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "b0d6fb21_443147eb",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-12T14:00:28Z",
+      "side": 1,
+      "message": "thanks, this seems much more maintainable",
+      "parentUuid": "b64e7023_e7627406",
+      "revId": "c2d3be952397b31ddfa184761fe52d796610f2d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fec6f1b8_9877a3f0",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
         "patchSetId": 6
@@ -101,6 +119,24 @@
       "side": 1,
       "message": "Hmm I didn\u0027t get any sonar complaints while building.. I do get a type safety warning if I remove \u003cToscaPolicy\u003e",
       "parentUuid": "e3f89742_596be902",
+      "revId": "c2d3be952397b31ddfa184761fe52d796610f2d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82b7fd8a_e58c907e",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpUpdatePublisher.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-12T14:00:28Z",
+      "side": 1,
+      "message": "got it - I wasn\u0027t sure about this case, typically javac is able to figure it out, but guess not here",
+      "parentUuid": "d461d141_e6b2517a",
       "revId": "c2d3be952397b31ddfa184761fe52d796610f2d3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
