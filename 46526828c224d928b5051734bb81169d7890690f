@@ -90,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "8a55628c_803b35c1",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-11-12T19:19:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2fb6f1c8_59f3e293",
+      "revId": "46526828c224d928b5051734bb81169d7890690f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "00a5c0a9_b43239a5",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslator.java",
         "patchSetId": 5
