@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2951026f_193a80b5",
+        "filename": "applications/monitoring/src/main/java/org/onap/policy/xacml/pdp/application/monitoring/MonitoringPdpApplication.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-12T23:25:43Z",
+      "side": 1,
+      "message": "I think this should be \"onap.policies.monitoring.*\" - it has to match the prefixes listed below",
+      "revId": "f1e0f1718805b6ed6ca8971b14d687558d4f1c93",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e3e3357_95881041",
+        "filename": "applications/monitoring/src/main/java/org/onap/policy/xacml/pdp/application/monitoring/MonitoringPdpApplication.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-12T23:25:43Z",
+      "side": 1,
+      "message": "need to leave off the trailing \"*\" when using startsWith here",
+      "revId": "f1e0f1718805b6ed6ca8971b14d687558d4f1c93",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
