@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aff811ee_edfe8fcd",
+        "filename": "applications/monitoring/src/main/java/org/onap/policy/xacml/pdp/application/monitoring/MonitoringPdpApplication.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-11-13T15:15:17Z",
+      "side": 1,
+      "message": "Could define constants as \nONAP_MONITORING_BASE_POLICY_TYPE\u003d\"onap.policies.monitoring\"\nONAP_MONITORING_ALL_DERIVED_POLICY_TYPE\u003dONAP_MONITORING_BASE_POLICY_TYPE + \".*\"",
+      "revId": "87246e9ed088a99f96558fea663be2481ab67432",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
