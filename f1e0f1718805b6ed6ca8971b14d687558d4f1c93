@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f43901b4_6f57485e",
+        "filename": "applications/monitoring/src/main/java/org/onap/policy/xacml/pdp/application/monitoring/MonitoringPdpApplication.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-13T14:58:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2951026f_193a80b5",
+      "revId": "f1e0f1718805b6ed6ca8971b14d687558d4f1c93",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e3e3357_95881041",
         "filename": "applications/monitoring/src/main/java/org/onap/policy/xacml/pdp/application/monitoring/MonitoringPdpApplication.java",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2019-11-12T23:25:43Z",
       "side": 1,
       "message": "need to leave off the trailing \"*\" when using startsWith here",
+      "revId": "f1e0f1718805b6ed6ca8971b14d687558d4f1c93",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6af0cb70_8ef6ce6c",
+        "filename": "applications/monitoring/src/main/java/org/onap/policy/xacml/pdp/application/monitoring/MonitoringPdpApplication.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-13T14:58:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e3e3357_95881041",
       "revId": "f1e0f1718805b6ed6ca8971b14d687558d4f1c93",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
