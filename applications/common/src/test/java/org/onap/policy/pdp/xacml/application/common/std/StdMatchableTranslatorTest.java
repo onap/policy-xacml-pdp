@@ -20,13 +20,26 @@
 
 package org.onap.policy.pdp.xacml.application.common.std;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.att.research.xacml.api.AttributeAssignment;
+import com.att.research.xacml.api.Decision;
+import com.att.research.xacml.api.IdReference;
+import com.att.research.xacml.api.Obligation;
+import com.att.research.xacml.api.Request;
+import com.att.research.xacml.std.StdStatusCode;
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
@@ -37,6 +50,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -52,10 +67,14 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
+import org.onap.policy.pdp.xacml.application.common.TestUtilsCommon;
+import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
@@ -141,7 +160,7 @@ public class StdMatchableTranslatorTest {
     }
 
     @Test
-    public void test() throws CoderException, ToscaPolicyConversionException {
+    public void test() throws CoderException, ToscaPolicyConversionException, ParseException {
         //
         // Create our translator
         //
@@ -168,15 +187,76 @@ public class StdMatchableTranslatorTest {
         jtst.fromAuthorative(serviceTemplate);
         ToscaServiceTemplate completedJtst = jtst.toAuthorative();
         //
-        // Get the policies
+        // Convert the policy
         //
         for (Map<String, ToscaPolicy> policies : completedJtst.getToscaTopologyTemplate().getPolicies()) {
             for (ToscaPolicy policy : policies.values()) {
                 PolicyType translatedPolicy = translator.convertPolicy(policy);
                 assertNotNull(translatedPolicy);
+                assertThat(translatedPolicy.getObligationExpressions().getObligationExpression()).hasSize(1);
                 logger.info("Translated policy {} {}", XacmlPolicyUtils.LINE_SEPARATOR, translatedPolicy);
+                //
+                // Shortcut to create an obligation, we are just going to steal
+                // the attributes from the translated policy.
+                //
+                List<AttributeAssignment> listAttributes = new ArrayList<>();
+                ObligationExpressionType xacmlObligation = translatedPolicy.getObligationExpressions()
+                        .getObligationExpression().get(0);
+                assertThat(xacmlObligation.getAttributeAssignmentExpression()).hasSize(4);
+                //
+                // Copy into the list
+                //
+                xacmlObligation.getAttributeAssignmentExpression().forEach(assignment -> {
+                    Object value = ((AttributeValueType) assignment.getExpression().getValue()).getContent().get(0);
+                    listAttributes.add(TestUtilsCommon.createAttributeAssignment(assignment.getAttributeId(),
+                            assignment.getCategory(), value));
+                });
+                //
+                // Pretend we got multiple policies to match a fictional request
+                //
+                Obligation obligation1 = TestUtilsCommon.createXacmlObligation(
+                        ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue(),
+                        listAttributes);
+                Obligation obligation2 = TestUtilsCommon.createXacmlObligation(
+                        ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue(),
+                        listAttributes);
+                //
+                // Should ignore this obligation
+                //
+                Obligation obligation3 = TestUtilsCommon.createXacmlObligation(
+                        "nobody:cares",
+                        listAttributes);
+                //
+                // Create a test XACML Response
+                //
+                Map<String, String> ids = new HashMap<>();
+                ids.put("onap.policies.Test", "1.0.0");
+                Collection<IdReference> policyIds = TestUtilsCommon.createPolicyIdList(ids);
+
+                com.att.research.xacml.api.Response xacmlResponse = TestUtilsCommon.createXacmlResponse(
+                        StdStatusCode.STATUS_CODE_OK, Decision.PERMIT,
+                        Arrays.asList(obligation1, obligation2, obligation3), policyIds);
+                //
+                // Test the response
+                //
+                DecisionResponse decisionResponse = translator.convertResponse(xacmlResponse);
+                assertNotNull(decisionResponse);
+                assertThat(decisionResponse.getPolicies()).hasSize(1);
             }
         }
+        //
+        // Test request decisions
+        //
+        DecisionRequest decisionRequest = new DecisionRequest();
+        decisionRequest.setAction("action");
+        decisionRequest.setOnapComponent("onap-component");
+        decisionRequest.setOnapName("onap");
+        Map<String, Object> resource = new HashMap<>();
+        resource.put("matchableString", "I should be matched");
+        decisionRequest.setResource(resource);
+        Request xacmlRequest = translator.convertRequest(decisionRequest);
+        assertNotNull(xacmlRequest);
+        assertThat(xacmlRequest.getRequestAttributes()).hasSize(3);
     }
 
     /**

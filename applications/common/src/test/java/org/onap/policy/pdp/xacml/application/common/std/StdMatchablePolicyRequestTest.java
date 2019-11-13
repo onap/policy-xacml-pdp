@@ -96,39 +96,4 @@ public class StdMatchablePolicyRequestTest {
 
     }
 
-    /*
-    @Test
-    public void testCreateInstance_StringValues() {
-        resources.put(StdMatchablePolicyRequest.POLICY_SCOPE_KEY, POLICY_SCOPE);
-        resources.put(StdMatchablePolicyRequest.POLICY_SCOPE_KEY + "-x", "unused value");
-        resources.put(StdMatchablePolicyRequest.POLICY_TYPE_KEY, POLICY_TYPE);
-
-        stdreq = StdMatchablePolicyRequest.createInstance(decreq);
-
-        Collection<String> res = stdreq.getPolicyScopes();
-        assertFalse(res.isEmpty());
-        assertEquals(POLICY_SCOPE, res.iterator().next());
-
-        res = stdreq.getPolicyTypes();
-        assertFalse(res.isEmpty());
-        assertEquals(POLICY_TYPE, res.iterator().next());
-    }
-
-    @Test
-    public void testCreateInstance_Collections() {
-        resources.put(StdMatchablePolicyRequest.POLICY_SCOPE_KEY, Collections.singleton(POLICY_SCOPE));
-        resources.put(StdMatchablePolicyRequest.POLICY_TYPE_KEY, Collections.singleton(POLICY_TYPE));
-
-        stdreq = StdMatchablePolicyRequest.createInstance(decreq);
-
-        Collection<String> res = stdreq.getPolicyScopes();
-        assertFalse(res.isEmpty());
-        assertEquals(POLICY_SCOPE, res.iterator().next());
-
-        res = stdreq.getPolicyTypes();
-        assertFalse(res.isEmpty());
-        assertEquals(POLICY_TYPE, res.iterator().next());
-    }
-*/
-
 }
