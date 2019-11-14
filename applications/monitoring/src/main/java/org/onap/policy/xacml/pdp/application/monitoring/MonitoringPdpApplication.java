@@ -56,7 +56,11 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
     private static final String ONAP_MONITORING_APPSERVER =
             "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server";
     private static final String ONAP_MONITORING_SONHANDLER = "onap.policies.monitoring.docker.sonhandler.app";
-    private static final String ONAP_MONITORING_DERIVED_POLICY_TYPE = "onap.policies.monitoring";
+    private static final String ONAP_MONITORING_DERIVED_POLICY_TYPE = "onap.policies.monitoring.";
+    // Note: this requirement is temporary; it will no longer be necessary once the PDPs and PAP
+    // are updated to use the PDP Group name instead of the supported types.
+    private static final String ONAP_MONITORING_ALL_DERIVED_POLICY_TYPE = ONAP_MONITORING_DERIVED_POLICY_TYPE + "*";
+
     private static final String VERSION_100 = "1.0.0";
 
     private StdCombinedPolicyResultsTranslator translator = new StdCombinedPolicyResultsTranslator();
@@ -73,6 +77,9 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
         supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_CDAP, VERSION_100));
         supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_APPSERVER, VERSION_100));
         supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_SONHANDLER, VERSION_100));
+
+        // temporary requirement
+        supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_ALL_DERIVED_POLICY_TYPE, VERSION_100));
     }
 
     @Override
