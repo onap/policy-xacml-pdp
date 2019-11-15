@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "409ce8f7_4dbe9501",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/etc/defaultConfig.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-15T16:33:21Z",
+      "side": 1,
+      "message": "is there any code that looks up the parameters by name?  If so, has that code been modified to look them up by the new name.  (At first glance, I don\u0027t see any code that looks up the parameters by name, so probably ok.)",
+      "revId": "7226fb334ff7278fa6420f2e195d24bc1a4b835d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8c24c899_40d8a3f1",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/etc/defaultConfig.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-15T16:33:21Z",
+      "side": 1,
+      "message": "\"XacmlPdpGroup\" \u003d\u003e \"defaultGroup\"",
+      "revId": "7226fb334ff7278fa6420f2e195d24bc1a4b835d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55279087_a2b02c24",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/etc/s3pConfig.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-15T16:33:21Z",
+      "side": 1,
+      "message": "same comments as on the previous file, defaultConfig.json",
+      "revId": "7226fb334ff7278fa6420f2e195d24bc1a4b835d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
