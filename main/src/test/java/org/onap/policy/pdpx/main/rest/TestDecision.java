@@ -106,7 +106,8 @@ public class TestDecision {
                         testData.toObject(testData.getPolicyApiParametersMap(false), RestServerParameters.class);
         TopicParameterGroup topicParameterGroup =
                         testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
-        XacmlPdpParameterGroup params = new XacmlPdpParameterGroup("XacmlPdpGroup", rest, policyApiParameters,
+        XacmlPdpParameterGroup params =
+                new XacmlPdpParameterGroup("XacmlPdpParameters", "XacmlPdpGroup", rest, policyApiParameters,
                         topicParameterGroup, apps.getAbsolutePath());
         final Gson gson = new GsonBuilder().create();
         File fileParams = appsFolder.newFile("params.json");

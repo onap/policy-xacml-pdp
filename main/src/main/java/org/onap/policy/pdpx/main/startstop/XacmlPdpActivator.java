@@ -98,7 +98,7 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
             stats.setTotalPolicyTypesCount(appmgr.getPolicyTypeCount());
             stats.setTotalPolicyCount(appmgr.getPolicyCount());
 
-            state = new XacmlState(appmgr);
+            state = new XacmlState(appmgr, xacmlPdpParameterGroup.getPdpGroup());
 
             this.xacmlPdpParameterGroup = xacmlPdpParameterGroup;
             this.msgDispatcher = new MessageTypeDispatcher(MSG_TYPE_NAMES);
