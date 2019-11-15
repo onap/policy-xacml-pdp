@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "94c11a54_36d817f3",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/etc/defaultConfig.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-15T17:20:56Z",
+      "side": 1,
+      "message": "There\u0027s no code that looks up the parameters by name, but I did find a text file in main/src/test/resources/expectedValidationResults that refers to it. I will update it, thanks!",
+      "parentUuid": "409ce8f7_4dbe9501",
+      "revId": "7226fb334ff7278fa6420f2e195d24bc1a4b835d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8c24c899_40d8a3f1",
         "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/etc/defaultConfig.json",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "2168d7f4_e7dde0f2",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/etc/defaultConfig.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-15T17:20:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8c24c899_40d8a3f1",
+      "revId": "7226fb334ff7278fa6420f2e195d24bc1a4b835d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "55279087_a2b02c24",
         "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/etc/s3pConfig.json",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2019-11-15T16:33:21Z",
       "side": 1,
       "message": "same comments as on the previous file, defaultConfig.json",
+      "revId": "7226fb334ff7278fa6420f2e195d24bc1a4b835d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c078d39_a94471d6",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/etc/s3pConfig.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-15T17:20:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "55279087_a2b02c24",
       "revId": "7226fb334ff7278fa6420f2e195d24bc1a4b835d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
