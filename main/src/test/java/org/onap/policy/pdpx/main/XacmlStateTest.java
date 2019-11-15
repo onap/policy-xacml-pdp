@@ -81,7 +81,7 @@ public class XacmlStateTest {
 
         XacmlPdpActivator.setCurrent(act);
 
-        state = new XacmlState(appmgr);
+        state = new XacmlState(appmgr, GROUP);
     }
 
     @AfterClass
@@ -104,6 +104,7 @@ public class XacmlStateTest {
         PdpStatus status = state.genHeartbeat();
         assertEquals(PdpHealthStatus.NOT_HEALTHY, status.getHealthy());
         assertEquals(hostName, status.getName());
+        assertEquals(GROUP, status.getPdpGroup());
         assertEquals(PDP_TYPE, status.getPdpType());
         assertEquals(PdpState.PASSIVE, status.getState());
         assertEquals("[ToscaPolicyTypeIdentifier(name=nameA, version=typeA), "
@@ -122,12 +123,13 @@ public class XacmlStateTest {
     public void testUpdateInternalStatePdpStateChange() {
         PdpStateChange req = new PdpStateChange();
         req.setName(hostName);
-        req.setPdpGroup(GROUP);
+        req.setPdpGroup("wrong-pdp-group");
         req.setPdpSubgroup(SUBGROUP);
         req.setState(STATE);
 
         PdpStatus status = state.updateInternalState(req);
         assertEquals(PdpState.SAFE, status.getState());
+        assertEquals(GROUP, status.getPdpGroup());
 
         PdpResponseDetails resp = status.getResponse();
         assertNotNull(resp);
@@ -152,7 +154,7 @@ public class XacmlStateTest {
     @Test
     public void testUpdateInternalStatePdpUpdate() {
         PdpUpdate req = new PdpUpdate();
-        req.setPdpGroup(GROUP);
+        req.setPdpGroup("wrong-pdp-group");
         req.setPdpSubgroup(SUBGROUP);
 
         PdpStatus status = state.updateInternalState(req, "");
@@ -171,6 +173,7 @@ public class XacmlStateTest {
         status = state.updateInternalState(req, "Failed to load policy: failLoadPolicy1: null");
         assertEquals(status.getResponse().getResponseMessage(), "Failed to load policy: failLoadPolicy1: null");
         assertEquals(status.getResponse().getResponseStatus(), PdpResponseStatus.FAIL);
+        assertEquals(GROUP, status.getPdpGroup());
     }
 
     @Test

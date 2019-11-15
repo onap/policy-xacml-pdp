@@ -56,7 +56,7 @@ public class XacmlState {
     /**
      * Constructs the object, initializing the state.
      */
-    public XacmlState(XacmlPdpApplicationManager appManager) {
+    public XacmlState(XacmlPdpApplicationManager appManager, String pdpGroupName) {
         this.appManager = appManager;
 
         this.status = new PdpStatus();
@@ -65,6 +65,7 @@ public class XacmlState {
         this.status.setState(PdpState.PASSIVE);
         this.status.setSupportedPolicyTypes(appManager.getToscaPolicyTypeIdents());
         this.status.setPolicies(Collections.emptyList());
+        this.status.setPdpGroup(pdpGroupName);
     }
 
     /**
@@ -124,7 +125,6 @@ public class XacmlState {
      * @return a response to the message
      */
     public PdpStatus updateInternalState(PdpUpdate message, String errMessage) {
-        status.setPdpGroup(message.getPdpGroup());
         status.setPdpSubgroup(message.getPdpSubgroup());
         status.setPolicies(appManager.getToscaPolicyIdentifiers());
 
