@@ -59,7 +59,8 @@ public class CommonTestData {
     private static final boolean POLICY_API_HTTPS = false;
     private static final boolean POLICY_API_AAF = false;
 
-    public static final String PDPX_GROUP_NAME = "XacmlPdpGroup";
+    public static final String PDPX_PARAMETER_GROUP_NAME = "XacmlPdpParameters";
+    public static final String PDPX_GROUP = "XacmlPdpGroup";
     public static final List<TopicParameters> TOPIC_PARAMS =
                     Collections.unmodifiableList(Arrays.asList(getTopicParams()));
 
