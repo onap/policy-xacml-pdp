@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "cef1ed83_8cb485b7",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2019-11-18T13:59:34Z",
+      "side": 1,
+      "message": "It\u0027s in the super class PdpMessage",
+      "parentUuid": "4b9635a8_114dfa42",
+      "range": {
+        "startLine": 68,
+        "startChar": 20,
+        "endLine": 68,
+        "endChar": 31
+      },
+      "revId": "e53be640b3a4c37dbd841c81b5c467082986c05b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "efe0a581_2bdad987",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpActivator.java",
         "patchSetId": 3
