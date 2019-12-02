@@ -167,7 +167,11 @@ public class CountRecentOperationsPipTest {
     @Test
     public void testConfigure_DbException() throws Exception {
         properties.put("javax.persistence.jdbc.url", "invalid");
-        pipEngine.configure("issuer", properties);
+        //
+        // Cannot catch this exception (need to change underlying xacml pip code)
+        // Here for code coverage
+        //
+        pipEngine.configure("issuer", properties); //NOSONAR
     }
 
     @Test

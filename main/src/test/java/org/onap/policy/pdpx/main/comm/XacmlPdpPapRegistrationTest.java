@@ -20,6 +20,7 @@
 
 package org.onap.policy.pdpx.main.comm;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -54,18 +55,24 @@ public class XacmlPdpPapRegistrationTest {
 
     @Test
     public void testPdpRegistration_SendOk() throws TopicSinkClientException {
-        reg.pdpRegistration(status);
+        assertThatCode(() ->
+            reg.pdpRegistration(status)
+        ).doesNotThrowAnyException();
     }
 
     @Test
     public void testPdpRegistration_SendFail() throws TopicSinkClientException {
         when(client.send(status)).thenReturn(false);
-        reg.pdpRegistration(status);
+        assertThatCode(() ->
+            reg.pdpRegistration(status)
+        ).doesNotThrowAnyException();
     }
 
     @Test
     public void testPdpRegistration_SendEx() throws TopicSinkClientException {
         when(client.send(status)).thenThrow(new IllegalStateException());
-        reg.pdpRegistration(status);
+        assertThatCode(() ->
+            reg.pdpRegistration(status)
+        ).doesNotThrowAnyException();
     }
 }
