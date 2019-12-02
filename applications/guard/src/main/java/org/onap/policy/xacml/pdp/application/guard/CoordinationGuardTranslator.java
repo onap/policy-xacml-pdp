@@ -151,9 +151,9 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
          * Replace function placeholders with appropriate values
          */
         try (Stream<String> stream = Files.lines(Paths.get(xacmlProtoFilename))) {
-            return stream.map(s -> s.replaceAll("UNIQUE_ID", uniqueId))
-                .map(s -> s.replaceAll("CONTROL_LOOP_ONE", cLOne))
-                .map(s -> s.replaceAll("CONTROL_LOOP_TWO", cLTwo))
+            return stream.map(s -> s.replace("UNIQUE_ID", uniqueId))
+                .map(s -> s.replace("CONTROL_LOOP_ONE", cLOne))
+                .map(s -> s.replace("CONTROL_LOOP_TWO", cLTwo))
                 .collect(Collectors.joining(XacmlPolicyUtils.LINE_SEPARATOR));
         } catch (IOException e) {
             throw new
