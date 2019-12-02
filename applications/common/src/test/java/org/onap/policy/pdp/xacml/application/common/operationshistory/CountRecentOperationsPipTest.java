@@ -18,6 +18,7 @@
 
 package org.onap.policy.pdp.xacml.application.common.operationshistory;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -167,7 +168,9 @@ public class CountRecentOperationsPipTest {
     @Test
     public void testConfigure_DbException() throws Exception {
         properties.put("javax.persistence.jdbc.url", "invalid");
-        pipEngine.configure("issuer", properties);
+        assertThatCode(() ->
+            pipEngine.configure("issuer", properties)
+        ).doesNotThrowAnyException();
     }
 
     @Test

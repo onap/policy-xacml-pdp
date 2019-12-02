@@ -21,6 +21,7 @@
 
 package org.onap.policy.pdpx.main.startstop;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.After;
@@ -51,6 +52,7 @@ public class TestMain extends CommonRest {
         CommonRest.stopMain();
     }
 
+    @Override
     @Before
     public void setUp() {
         main = null;
@@ -59,6 +61,7 @@ public class TestMain extends CommonRest {
     /**
      * Shuts "main" down.
      */
+    @Override
     @After
     public void tearDown() {
         if (main != null) {
@@ -69,9 +72,11 @@ public class TestMain extends CommonRest {
     @Test
     public void testMain() throws PolicyXacmlPdpException {
         final String[] xacmlPdpConfigParameters = {"-c", CONFIG_FILE};
-        main = new Main(xacmlPdpConfigParameters);
-        main.shutdown();
-        main = null;
+        assertThatCode(() -> {
+            main = new Main(xacmlPdpConfigParameters);
+            main.shutdown();
+            main = null;
+        }).doesNotThrowAnyException();
     }
 
     @Test

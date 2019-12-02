@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 
 public class XacmlPdpUpdateListener extends ScoListener<PdpUpdate> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpStateChangeListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpUpdateListener.class);
 
     private final XacmlState state;
 

@@ -20,6 +20,7 @@
 
 package org.onap.policy.pdpx.main.comm;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.any;
@@ -170,9 +171,11 @@ public class XacmlPdpHearbeatPublisherTest {
         // create a plain listener to test the "real" makeTimer() method
         publisher = new XacmlPdpHearbeatPublisher(client, state);
 
-        publisher.start();
-        publisher.restart(100L);
-        publisher.terminate();
+        assertThatCode( () -> {
+            publisher.start();
+            publisher.restart(100L);
+            publisher.terminate();
+        }).doesNotThrowAnyException();
     }
 
     private class MyPublisher extends XacmlPdpHearbeatPublisher {
