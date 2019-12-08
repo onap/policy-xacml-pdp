@@ -36,6 +36,7 @@
     <module>monitoring</module>
     <module>guard</module>
     <module>optimization</module>
+    <module>naming</module>
   </modules>
 
 
