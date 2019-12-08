@@ -1,0 +1,11 @@
+{
+  "ONAPName": "OOF",
+  "ONAPComponent": "OOF-component",
+  "ONAPInstance": "OOF-component-instance",
+  "action": "optimize",
+  "resource": {
+      "nfRole": [],
+      "naming-type": [],
+      "property-name": []
+  }
+}
