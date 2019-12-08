@@ -76,15 +76,17 @@ public class OptimizationPdpApplicationTest {
     private static RestServerParameters clientParams;
     private static String[] listPolicyTypeFiles = {
         "onap.policies.Optimization",
-        "onap.policies.optimization.AffinityPolicy",
-        "onap.policies.optimization.DistancePolicy",
-        "onap.policies.optimization.HpaPolicy",
-        "onap.policies.optimization.OptimizationPolicy",
-        "onap.policies.optimization.PciPolicy",
-        "onap.policies.optimization.QueryPolicy",
-        "onap.policies.optimization.SubscriberPolicy",
-        "onap.policies.optimization.Vim_fit",
-        "onap.policies.optimization.VnfPolicy"};
+        "onap.policies.optimization.Resource",
+        "onap.policies.optimization.Service",
+        "onap.policies.optimization.resource.AffinityPolicy",
+        "onap.policies.optimization.resource.DistancePolicy",
+        "onap.policies.optimization.resource.HpaPolicy",
+        "onap.policies.optimization.resource.OptimizationPolicy",
+        "onap.policies.optimization.resource.PciPolicy",
+        "onap.policies.optimization.service.QueryPolicy",
+        "onap.policies.optimization.service.SubscriberPolicy",
+        "onap.policies.optimization.resource.Vim_fit",
+        "onap.policies.optimization.resource.VnfPolicy"};
 
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
@@ -176,7 +178,9 @@ public class OptimizationPdpApplicationTest {
         // can support the correct policy types.
         //
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.AffinityPolicy", "1.0.0"))).isTrue();
+                "onap.policies.optimization.resource.AffinityPolicy", "1.0.0"))).isTrue();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+                "onap.policies.optimization.service.SubscriberPolicy", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
                 "onap.foobar", "1.0.0"))).isFalse();
     }
@@ -221,7 +225,7 @@ public class OptimizationPdpApplicationTest {
         //
         // Add in policy type
         //
-        List<String> policyTypes = Lists.newArrayList("onap.policies.optimization.HpaPolicy");
+        List<String> policyTypes = Lists.newArrayList("onap.policies.optimization.resource.HpaPolicy");
         baseRequest.getResource().put("policy-type", policyTypes);
         //
         // Ask for a decision for default HPA policy
@@ -231,7 +235,8 @@ public class OptimizationPdpApplicationTest {
         assertThat(response).isNotNull();
         assertThat(response.getPolicies().size()).isEqualTo(1);
         response.getPolicies().forEach((key, value) -> {
-            assertThat(((Map<String, Object>) value).get("type")).isEqualTo(("onap.policies.optimization.HpaPolicy"));
+            assertThat(((Map<String, Object>) value).get("type"))
+                .isEqualTo(("onap.policies.optimization.resource.HpaPolicy"));
         });
         //
         // Validate it
@@ -275,7 +280,7 @@ public class OptimizationPdpApplicationTest {
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(4);
+        assertThat(response.getPolicies().size()).isEqualTo(5);
         //
         // Validate it
         //
@@ -367,7 +372,7 @@ public class OptimizationPdpApplicationTest {
         //
         // Add in policy type
         //
-        List<String> policyTypes = Lists.newArrayList("onap.policies.optimization.AffinityPolicy");
+        List<String> policyTypes = Lists.newArrayList("onap.policies.optimization.resource.AffinityPolicy");
         baseRequest.getResource().put("policy-type", policyTypes);
         //
         // Ask for a decision for default
@@ -388,7 +393,8 @@ public class OptimizationPdpApplicationTest {
         //
         // Add in another policy type
         //
-        ((List<String>) baseRequest.getResource().get("policy-type")).add("onap.policies.optimization.HpaPolicy");
+        ((List<String>) baseRequest.getResource().get("policy-type"))
+            .add("onap.policies.optimization.resource.HpaPolicy");
         //
         // Ask for a decision for default
         //
