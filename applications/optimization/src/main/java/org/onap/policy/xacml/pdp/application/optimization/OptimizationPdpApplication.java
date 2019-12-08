@@ -49,23 +49,23 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
      */
     public OptimizationPdpApplication() {
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.AffinityPolicy", STRING_VERSION100));
+                "onap.policies.optimization.resource.AffinityPolicy", STRING_VERSION100));
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.DistancePolicy", STRING_VERSION100));
+                "onap.policies.optimization.resource.DistancePolicy", STRING_VERSION100));
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.HpaPolicy", STRING_VERSION100));
+                "onap.policies.optimization.resource.HpaPolicy", STRING_VERSION100));
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.OptimizationPolicy", STRING_VERSION100));
+                "onap.policies.optimization.resource.OptimizationPolicy", STRING_VERSION100));
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.PciPolicy", STRING_VERSION100));
+                "onap.policies.optimization.resource.PciPolicy", STRING_VERSION100));
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.QueryPolicy", STRING_VERSION100));
+                "onap.policies.optimization.service.QueryPolicy", STRING_VERSION100));
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.SubscriberPolicy", STRING_VERSION100));
+                "onap.policies.optimization.service.SubscriberPolicy", STRING_VERSION100));
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.Vim_fit", STRING_VERSION100));
+                "onap.policies.optimization.resource.Vim_fit", STRING_VERSION100));
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.VnfPolicy", STRING_VERSION100));
+                "onap.policies.optimization.resource.VnfPolicy", STRING_VERSION100));
     }
 
     @Override
