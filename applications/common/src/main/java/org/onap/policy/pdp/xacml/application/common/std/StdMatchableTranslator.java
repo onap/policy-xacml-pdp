@@ -332,20 +332,60 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         //
         // Iterate the properties
         //
+        int totalWeight = findMatchableFromMap(properties, policyTypes, targetType);
+        LOGGER.info("Total weight is {}", totalWeight);
+        return Pair.of(targetType, totalWeight);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected int findMatchableFromList(List<Object> listProperties, Collection<ToscaPolicyType> policyTypes,
+            TargetType targetType) {
+        LOGGER.info("findMatchableFromList {}", listProperties);
+        int totalWeight = 0;
+        for (Object property : listProperties) {
+            if (property instanceof List) {
+                totalWeight += findMatchableFromList((List<Object>) property, policyTypes, targetType);
+            } else if (property instanceof Map) {
+                totalWeight += findMatchableFromMap((Map<String, Object>) property, policyTypes, targetType);
+            }
+        }
+        return totalWeight;
+    }
+
+    protected int findMatchableFromMap(Map<String, Object> properties, Collection<ToscaPolicyType> policyTypes,
+            TargetType targetType) {
+        LOGGER.info("findMatchableFromMap {}", properties);
         int totalWeight = 0;
         for (Entry<String, Object> entrySet : properties.entrySet()) {
             //
-            // Find matchable properties
+            // Is this a matchable property?
             //
             if (isMatchable(entrySet.getKey(), policyTypes)) {
                 LOGGER.info("Found matchable property {}", entrySet.getKey());
                 int weight = generateMatchable(targetType, entrySet.getKey(), entrySet.getValue());
                 LOGGER.info("Weight is {}", weight);
                 totalWeight += weight;
+            } else {
+                //
+                // Check if we need to search deeper
+                //
+                totalWeight += checkDeeperForMatchable(entrySet.getValue(), policyTypes, targetType);
             }
         }
-        LOGGER.info("Total weight is {}", totalWeight);
-        return Pair.of(targetType, totalWeight);
+        return totalWeight;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected int checkDeeperForMatchable(Object property, Collection<ToscaPolicyType> policyTypes,
+            TargetType targetType) {
+        if (property instanceof List) {
+            return findMatchableFromList((List<Object>) property, policyTypes, targetType);
+        } else if (property instanceof Map) {
+            return findMatchableFromMap((Map<String, Object>) property, policyTypes,
+                    targetType);
+        }
+        LOGGER.info("checkDeeperForMatchable not necessary for {}", property);
+        return 0;
     }
 
     /**
@@ -362,9 +402,26 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
                 if (checkIsMatchableProperty(propertyName, propertiesEntry)) {
                     return true;
                 }
+                //
+                // Check if its a list or map
+                //
+                if (isListOrMap(propertiesEntry.getValue().getType())
+                        && ! isYamlType(propertiesEntry.getValue().getEntrySchema().getType())) {
+                    LOGGER.info("need to search list or map");
+                }
             }
         }
+        LOGGER.info("isMatchable false for {}", propertyName);
         return false;
+    }
+
+    private boolean isListOrMap(String type) {
+        return "list".equalsIgnoreCase(type) || "map".equalsIgnoreCase(type);
+    }
+
+    private boolean isYamlType(String type) {
+        return "string".equalsIgnoreCase(type) || "integer".equalsIgnoreCase(type) || "float".equalsIgnoreCase(type)
+                || "boolean".equalsIgnoreCase(type) || "timestamp".equalsIgnoreCase(type);
     }
 
     /**
@@ -665,6 +722,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
             LOGGER.error("parameters: {} ", this.apiRestParameters);
             return null;
         }
+        LOGGER.info("Successfully pulled {}", policyTypeId);
         //
         // Store it locally
         //

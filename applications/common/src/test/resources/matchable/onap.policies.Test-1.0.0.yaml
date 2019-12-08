@@ -18,10 +18,10 @@ policy_types:
                 type: integer
                 metadata:
                    matchable: true
-            nonmatachableDouble:
-                type: double
-            matchableDouble:
-                type: double
+            nonmatachableFloat:
+                type: float
+            matchableFloat:
+                type: float
                 metadata:
                    matchable: true
             nonmatachableBoolean:
@@ -36,3 +36,44 @@ policy_types:
                    matchable: true
                 entry_schema:
                    type: string
+            propertyOneMap:
+                type: map
+                entry_schema:
+                    type: onap.datatype.level1
+data_types:
+    onap.datatype.one:
+        derived_from: tosca.datatypes.Root
+        properties:
+            oneString:
+                type: string
+            oneStringMatchable:
+                type: string
+                metadata:
+                    matachable: true
+            propertyTwoList:
+                type: list
+                entry_schema:
+                    type: onap.datatype.two
+    onap.datatype.two:
+        derived_from: tosca.datatypes.Root
+        properties:
+            twoString:
+                type: string
+            twoStringMatchable:
+                type: string
+                metadata:
+                    matachable: true
+            propertyThreeMap:
+                type: map
+                entry_schema:
+                    type: onap.datatype.three
+    onap.datatype.three:
+        derived_from: tosca.datatypes.Root
+        properties:
+            threeString:
+                type: string
+            threeStringMatchable:
+                type: string
+                metadata:
+                    matachable: true
+     
