@@ -332,20 +332,60 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         //
         // Iterate the properties
         //
+        int totalWeight = findMatchableFromMap(properties, policyTypes, targetType);
+        LOGGER.info("Total weight is {}", totalWeight);
+        return Pair.of(targetType, totalWeight);
+    }
+
+    protected int findMatchableFromList(List<Object> listProperties, Collection<ToscaPolicyType> policyTypes,
+            TargetType targetType) {
+        LOGGER.info("find matchable in list {}", listProperties);
+        int totalWeight = 0;
+        for (Object property : listProperties) {
+            if (property instanceof List) {
+                int weight = findMatchableFromList((List<Object>) property, policyTypes, targetType);
+                totalWeight += weight;
+            } else if (property instanceof Map) {
+                int weight = findMatchableFromMap((Map<String, Object>) property, policyTypes, targetType);
+                totalWeight += weight;
+            }
+        }
+        return totalWeight;
+    }
+
+    protected int findMatchableFromMap(Map<String, Object> properties, Collection<ToscaPolicyType> policyTypes,
+            TargetType targetType) {
+        LOGGER.info("find matchable in map {}", properties);
         int totalWeight = 0;
         for (Entry<String, Object> entrySet : properties.entrySet()) {
             //
-            // Find matchable properties
+            // Is this a matchable property?
             //
             if (isMatchable(entrySet.getKey(), policyTypes)) {
                 LOGGER.info("Found matchable property {}", entrySet.getKey());
                 int weight = generateMatchable(targetType, entrySet.getKey(), entrySet.getValue());
                 LOGGER.info("Weight is {}", weight);
                 totalWeight += weight;
+            } else {
+                //
+                // Check if we need to search deeper
+                //
+                totalWeight += checkDeeperForMatchable(entrySet.getValue(), policyTypes, targetType);
             }
         }
-        LOGGER.info("Total weight is {}", totalWeight);
-        return Pair.of(targetType, totalWeight);
+        return totalWeight;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected int checkDeeperForMatchable(Object property, Collection<ToscaPolicyType> policyTypes,
+            TargetType targetType) {
+        if (property instanceof List) {
+            return findMatchableFromList((List<Object>) property, policyTypes, targetType);
+        } else if (property instanceof Map) {
+            return findMatchableFromMap((Map<String, Object>) property, policyTypes,
+                    targetType);
+        }
+        return 0;
     }
 
     /**
