@@ -1,23 +1,31 @@
 tosca_definitions_version: tosca_simple_yaml_1_0_0
 topology_template:
-  policies:
-    -
-      Test.policy:
-         type: onap.policies.Test
-         type_version: 1.0.0
-         version: 1.0.0
-         metadata:
-             policy-id: Test.policy
-             policy-version: 1
-         properties:
-            nonmatachableString: "I am NON matchable"
-            matchableString: "I should be matched"
-            nonmatachableInteger: 0
-            matachableInteger: 1000
-            nonmatachableDouble: 0.0
-            matchableDouble: 1.1
-            nonmatachableBoolean: false
-            matachableBoolean: true
-            matchableListString:
-               - match A
-               - match B
+    policies:
+    -   Test.policy:
+            type: onap.policies.Test
+            type_version: 1.0.0
+            version: 1.0.0
+            metadata:
+                policy-id: Test.policy
+                policy-version: 1
+            properties:
+                nonmatachableString: I am NON matchable
+                matchableString: I should be matched
+                nonmatachableInteger: 0
+                matachableInteger: 1000
+                nonmatachableFloat: 0.0
+                matchableFloat: 1.1
+                nonmatachableBoolean: false
+                matachableBoolean: true
+                matchableListString:
+                - match A
+                - match B
+                propertyOneMap:
+                    oneString: One is NOT matchable
+                    oneStringMatchable: One should be matched
+                    propertyTwoList:
+                    -   twoString: Two is NOT matchable
+                        twoStringMatachable: Two should be matched
+                        propertyThreeMap:
+                            threeString: Three is NOT matchable
+                            threeStringMatchable: Three should be matched
