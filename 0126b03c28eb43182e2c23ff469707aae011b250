@@ -45,6 +45,74 @@
       "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6688b075_8e397862",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-09T13:33:47Z",
+      "side": 1,
+      "message": "maybe extract this common code block into its own method",
+      "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6d499f0_f239ce76",
+        "filename": "applications/naming/src/test/java/org/onap/policy/xacml/pdp/application/naming/NamingPdpApplicationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-09T13:33:47Z",
+      "side": 1,
+      "message": "not sure, but sonar might prefer the lambda be replaced with: policyFolder::newFile",
+      "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c792f4ad_aca37894",
+        "filename": "applications/naming/src/test/java/org/onap/policy/xacml/pdp/application/naming/NamingPdpApplicationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-09T13:33:47Z",
+      "side": 1,
+      "message": "utf-8",
+      "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c5df23b_7fb7617a",
+        "filename": "applications/naming/src/test/java/org/onap/policy/xacml/pdp/application/naming/NamingPdpApplicationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-09T13:33:47Z",
+      "side": 1,
+      "message": "use \"for\" loop instead of an iterator",
+      "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
