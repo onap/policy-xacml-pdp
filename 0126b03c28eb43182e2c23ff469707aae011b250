@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c964286_24056b6a",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-12-09T13:05:02Z",
+      "side": 1,
+      "message": "Could probably eliminate the \"weight\" local variable.",
+      "range": {
+        "startLine": 346,
+        "startChar": 16,
+        "endLine": 347,
+        "endChar": 38
+      },
+      "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a54df23f_dcf3e30e",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-12-09T13:05:02Z",
+      "side": 1,
+      "message": "Same comment\n\nalso below.",
+      "range": {
+        "startLine": 349,
+        "startChar": 14,
+        "endLine": 351,
+        "endChar": 13
+      },
+      "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
