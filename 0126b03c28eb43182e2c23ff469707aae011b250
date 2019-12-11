@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a184ccb1_6dc21284",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-12-11T16:51:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3c964286_24056b6a",
+      "range": {
+        "startLine": 346,
+        "startChar": 16,
+        "endLine": 347,
+        "endChar": 38
+      },
+      "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a54df23f_dcf3e30e",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2019-12-09T13:05:02Z",
       "side": 1,
       "message": "Same comment\n\nalso below.",
+      "range": {
+        "startLine": 349,
+        "startChar": 14,
+        "endLine": 351,
+        "endChar": 13
+      },
+      "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ab07aca_88378fd9",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-12-11T16:51:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a54df23f_dcf3e30e",
       "range": {
         "startLine": 349,
         "startChar": 14,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "514522d1_8265815c",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-12-11T16:51:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6688b075_8e397862",
+      "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d6d499f0_f239ce76",
         "filename": "applications/naming/src/test/java/org/onap/policy/xacml/pdp/application/naming/NamingPdpApplicationTest.java",
         "patchSetId": 3
@@ -76,6 +142,24 @@
       "writtenOn": "2019-12-09T13:33:47Z",
       "side": 1,
       "message": "not sure, but sonar might prefer the lambda be replaced with: policyFolder::newFile",
+      "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c071d809_33fcc6be",
+        "filename": "applications/naming/src/test/java/org/onap/policy/xacml/pdp/application/naming/NamingPdpApplicationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-12-11T16:51:17Z",
+      "side": 1,
+      "message": "I don\u0027t see it in the sonar report - I copied this from the optimization test. I can change it - but I\u0027d like to change in all the tests then.",
+      "parentUuid": "d6d499f0_f239ce76",
       "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -99,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "a6c2cf41_c1225ade",
+        "filename": "applications/naming/src/test/java/org/onap/policy/xacml/pdp/application/naming/NamingPdpApplicationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-12-11T16:51:17Z",
+      "side": 1,
+      "message": "hmm - not sure what to change here. I copied from the other tests. Ok if I add a TODO and fix all of application tests on a subsequent review under the jira I have for sonar?",
+      "parentUuid": "c792f4ad_aca37894",
+      "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c5df23b_7fb7617a",
         "filename": "applications/naming/src/test/java/org/onap/policy/xacml/pdp/application/naming/NamingPdpApplicationTest.java",
         "patchSetId": 3
@@ -110,6 +212,24 @@
       "writtenOn": "2019-12-09T13:33:47Z",
       "side": 1,
       "message": "use \"for\" loop instead of an iterator",
+      "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "98a57560_31554bec",
+        "filename": "applications/naming/src/test/java/org/onap/policy/xacml/pdp/application/naming/NamingPdpApplicationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-12-11T16:51:17Z",
+      "side": 1,
+      "message": "Not a collection - ServiceLoader only provides iterator. I could use the forEach. I copied from other tests, so maybe I could change all at once in another review? Add //TODO",
+      "parentUuid": "7c5df23b_7fb7617a",
       "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
