@@ -121,8 +121,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             //
             // Convert the policies first
             //
-            PolicyType xacmlPolicy = this.getTranslator(toscaPolicy.getType())
-                .convertPolicy(toscaPolicy);
+            PolicyType xacmlPolicy = this.getTranslator(toscaPolicy.getType()).convertPolicy(toscaPolicy);
             if (xacmlPolicy == null) {
                 throw new ToscaPolicyConversionException("Failed to convert policy");
             }
