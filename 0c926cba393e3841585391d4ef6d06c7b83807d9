@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ad4eb8e_7acd1175",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-11T17:01:09Z",
+      "side": 1,
+      "message": "can use checkDeeperForMatchable() here",
+      "revId": "0c926cba393e3841585391d4ef6d06c7b83807d9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
