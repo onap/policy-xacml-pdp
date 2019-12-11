@@ -166,6 +166,24 @@
     },
     {
       "key": {
+        "uuid": "6082c0ba_42288b38",
+        "filename": "applications/naming/src/test/java/org/onap/policy/xacml/pdp/application/naming/NamingPdpApplicationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-11T17:01:09Z",
+      "side": 1,
+      "message": "if sonar didn\u0027t flag it, then let\u0027s leave it",
+      "parentUuid": "c071d809_33fcc6be",
+      "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c792f4ad_aca37894",
         "filename": "applications/naming/src/test/java/org/onap/policy/xacml/pdp/application/naming/NamingPdpApplicationTest.java",
         "patchSetId": 3
@@ -201,6 +219,24 @@
     },
     {
       "key": {
+        "uuid": "c51e385b_bc983242",
+        "filename": "applications/naming/src/test/java/org/onap/policy/xacml/pdp/application/naming/NamingPdpApplicationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-11T17:01:09Z",
+      "side": 1,
+      "message": "let\u0027s just leave it since it\u0027s working and that\u0027s how the others are",
+      "parentUuid": "a6c2cf41_c1225ade",
+      "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c5df23b_7fb7617a",
         "filename": "applications/naming/src/test/java/org/onap/policy/xacml/pdp/application/naming/NamingPdpApplicationTest.java",
         "patchSetId": 3
@@ -230,6 +266,24 @@
       "side": 1,
       "message": "Not a collection - ServiceLoader only provides iterator. I could use the forEach. I copied from other tests, so maybe I could change all at once in another review? Add //TODO",
       "parentUuid": "7c5df23b_7fb7617a",
+      "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0718000e_2c0fcc90",
+        "filename": "applications/naming/src/test/java/org/onap/policy/xacml/pdp/application/naming/NamingPdpApplicationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-11T17:01:09Z",
+      "side": 1,
+      "message": "oh, duh, then it\u0027s fine as is.",
+      "parentUuid": "98a57560_31554bec",
       "revId": "0126b03c28eb43182e2c23ff469707aae011b250",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
