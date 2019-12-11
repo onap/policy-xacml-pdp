@@ -39,9 +39,10 @@ public class DecisionProvider {
 
     /**
      * Retrieves the policy decision for the specified parameters.
-     * @param body
      *
-     * @return the Decision object
+     * @param request DecisionRequest
+     * @param queryParams Map of parameters
+     * @return DecisionResponse
      */
     public DecisionResponse fetchDecision(DecisionRequest request, Map<String, String[]> queryParams) {
         LOGGER.debug("Fetching decision {}", request);

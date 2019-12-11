@@ -30,8 +30,6 @@ import static org.mockito.Mockito.when;
 import com.att.research.xacml.api.Response;
 import com.google.common.collect.Lists;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -162,6 +160,9 @@ public class OptimizationPdpApplicationTest {
         service.initialize(propertiesFile.toPath().getParent(), clientParams);
     }
 
+    /**
+     * Simply test some of the simple methods for the application.
+     */
     @Test
     public void test01Basics() {
         //
@@ -169,7 +170,7 @@ public class OptimizationPdpApplicationTest {
         //
         assertThat(service.applicationName()).isNotEmpty();
         //
-        // Decisions
+        // Does it return the correct decisions
         //
         assertThat(service.actionDecisionsSupported().size()).isEqualTo(1);
         assertThat(service.actionDecisionsSupported()).contains("optimize");
@@ -185,6 +186,11 @@ public class OptimizationPdpApplicationTest {
                 "onap.foobar", "1.0.0"))).isFalse();
     }
 
+    /**
+     * With no policies loaded, there should be 0 policies returned.
+     *
+     * @throws CoderException CoderException
+     */
     @Test
     public void test02NoPolicies() throws CoderException {
         //
@@ -198,9 +204,13 @@ public class OptimizationPdpApplicationTest {
         assertThat(decision.getKey().getPolicies().size()).isEqualTo(0);
     }
 
+    /**
+     * Should return ONLY default policies.
+     *
+     * @throws XacmlApplicationException could not load policies
+     */
     @Test
-    public void test03OptimizationDefault() throws CoderException, FileNotFoundException, IOException,
-        XacmlApplicationException {
+    public void test03OptimizationDefault() throws XacmlApplicationException {
         //
         // Now load all the optimization policies
         //
@@ -218,10 +228,12 @@ public class OptimizationPdpApplicationTest {
         validateDecision(response, baseRequest);
     }
 
+    /**
+     * Should only return default HPA policy type.
+     */
     @SuppressWarnings("unchecked")
     @Test
-    public void test04OptimizationDefaultHpa() throws CoderException, FileNotFoundException, IOException,
-        XacmlApplicationException {
+    public void test04OptimizationDefaultHpa() {
         //
         // Add in policy type
         //
@@ -244,6 +256,9 @@ public class OptimizationPdpApplicationTest {
         validateDecision(response, baseRequest);
     }
 
+    /**
+     * Refine for US only policies.
+     */
     @SuppressWarnings("unchecked")
     @Test
     public void test05OptimizationDefaultGeography() throws CoderException {
@@ -267,9 +282,12 @@ public class OptimizationPdpApplicationTest {
         validateDecision(response, baseRequest);
     }
 
+    /**
+     * Add more refinement for service.
+     */
     @SuppressWarnings("unchecked")
     @Test
-    public void test06OptimizationDefaultGeographyAndService() throws CoderException {
+    public void test06OptimizationDefaultGeographyAndService() {
         //
         // Add vCPE to the service list
         //
@@ -280,16 +298,19 @@ public class OptimizationPdpApplicationTest {
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(5);
+        assertThat(response.getPolicies().size()).isEqualTo(3);
         //
         // Validate it
         //
         validateDecision(response, baseRequest);
     }
 
+    /**
+     * Add more refinement for specific resource.
+     */
     @SuppressWarnings("unchecked")
     @Test
-    public void test07OptimizationDefaultGeographyAndServiceAndResource() throws CoderException {
+    public void test07OptimizationDefaultGeographyAndServiceAndResource() {
         //
         // Add vG to the resource list
         //
@@ -300,75 +321,91 @@ public class OptimizationPdpApplicationTest {
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(8);
+        assertThat(response.getPolicies().size()).isEqualTo(6);
         //
         // Validate it
         //
         validateDecision(response, baseRequest);
     }
 
+    /**
+     * Now we need to add in subscriberName in order to get scope for gold.
+     */
     @SuppressWarnings("unchecked")
     @Test
-    public void test08OptimizationGeographyAndServiceAndResourceAndScope() throws CoderException {
+    public void test08OptimizationGeographyAndServiceAndResourceAndScopeIsGoldSubscriber() {
         //
         // Add gold as a scope
         //
-        ((List<String>)baseRequest.getResource().get("scope")).add("gold");
+        //((List<String>)baseRequest.getResource().get("scope")).add("gold");
+        ((List<String>)baseRequest.getContext().get("subscriberName")).add("subscriber_a");
         //
         // Ask for a decision for specific US vCPE vG gold
         //
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(8);
+        assertThat(response.getPolicies().size()).isEqualTo(6);
         //
         // Validate it
         //
         validateDecision(response, baseRequest);
     }
 
+    /**
+     * Add a subscriber that should be platinum.
+     */
     @SuppressWarnings("unchecked")
     @Test
-    public void test09OptimizationGeographyAndServiceAndResourceAndScopeIsGoldOrPlatinum() throws CoderException {
+    public void test09OptimizationGeographyAndServiceAndResourceAndScopeGoldOrPlatinumSubscriber() {
         //
         // Add platinum to the scope list: this is now gold OR platinum
         //
-        ((List<String>)baseRequest.getResource().get("scope")).add("platinum");
+        ((List<String>)baseRequest.getResource().get("scope")).remove("gold");
+        ((List<String>)baseRequest.getContext().get("subscriberName")).add("subscriber_x");
         //
         // Ask for a decision for specific US vCPE vG (gold or platinum)
         //
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(10);
+        assertThat(response.getPolicies().size()).isEqualTo(8);
         //
         // Validate it
         //
         validateDecision(response, baseRequest);
     }
 
+    /**
+     * Remove gold subscriber, keep the platinum one.
+     */
     @SuppressWarnings("unchecked")
     @Test
-    public void test10OptimizationGeographyAndServiceAndResourceAndScopeNotGold() throws CoderException {
+    public void test10OptimizationGeographyAndServiceAndResourceAndScopeNotGoldStillPlatinum() {
         //
         // Add gold as a scope
         //
         ((List<String>)baseRequest.getResource().get("scope")).remove("gold");
+        ((List<String>)baseRequest.getResource().get("scope")).remove("platinum");
+        ((List<String>)baseRequest.getContext().get("subscriberName")).remove("subscriber_a");
         //
         // Ask for a decision for specific US vCPE vG gold
         //
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(9);
+        assertThat(response.getPolicies().size()).isEqualTo(7);
         //
         // Validate it
         //
         validateDecision(response, baseRequest);
     }
 
+    /**
+     * Filter by Affinity policy.
+     */
     @Test
-    public void test11OptimizationPolicyTypeDefault() throws CoderException {
+    public void test11OptimizationPolicyTypeDefault() {
         //
         // Add in policy type
         //
@@ -387,9 +424,12 @@ public class OptimizationPdpApplicationTest {
         validateDecision(response, baseRequest);
     }
 
+    /**
+     * Now filter by HPA policy type.
+     */
     @SuppressWarnings("unchecked")
     @Test
-    public void test12OptimizationPolicyTypeDefault() throws CoderException {
+    public void test12OptimizationPolicyTypeDefault() {
         //
         // Add in another policy type
         //
