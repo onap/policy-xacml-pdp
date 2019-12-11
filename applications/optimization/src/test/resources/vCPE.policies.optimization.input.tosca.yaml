@@ -291,7 +291,7 @@ topology_template:
                 scope: []
                 services: [vCPE]
                 identity: subscriber_vCPE
-                properties:
+                subscriberProperties:
                     subscriberName: [subscriber_x, subscriber_y]
                     subscriberRole: [platinum]
                     provStatus: [CAPPED]
@@ -307,7 +307,7 @@ topology_template:
                 scope: []
                 services: [vCPE]
                 identity: subscriber_vCPE
-                properties:
+                subscriberProperties:
                     subscriberName: [subscriber_a, subscriber_b]
                     subscriberRole: [gold]
                     provStatus: [CAPPED]

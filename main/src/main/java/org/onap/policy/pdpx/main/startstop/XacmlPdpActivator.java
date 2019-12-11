@@ -146,6 +146,9 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
             heartbeat::terminate);
 
         // @formatter:on
+
+        // PLD
+        this.startXacmlRestController();
     }
 
     /*

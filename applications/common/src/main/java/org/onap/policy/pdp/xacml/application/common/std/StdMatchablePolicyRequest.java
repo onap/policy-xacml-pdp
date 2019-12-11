@@ -163,7 +163,7 @@ public class StdMatchablePolicyRequest {
         return mutableRequest;
     }
 
-    private static StdMutableRequestAttributes addResources(StdMutableRequestAttributes attributes,
+    protected static StdMutableRequestAttributes addResources(StdMutableRequestAttributes attributes,
             Collection<Object> values, String id) throws DataTypeException {
 
         DataTypeFactory factory = getDataTypeFactory();

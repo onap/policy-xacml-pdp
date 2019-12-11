@@ -106,6 +106,22 @@ public final class ToscaDictionary {
             new IdentifierImpl(ID_URN_ONAP, "guard:advice:request-id");
 
     /*
+     * These id's are specifically for optimization subscriber policies
+     */
+    public static final Identifier ID_SUBJECT_OPTIMIZATION_SUBSCRIBER_NAME =
+            new IdentifierImpl(ID_URN_ONAP, "optimization:subscriber:name");
+
+    /*
+     * These ids are specifically for optimization advice
+     */
+    public static final Identifier ID_ADVICE_OPTIMIZATION_SUBSCRIBER =
+            new IdentifierImpl(ID_URN_ONAP, "optimization:advice:subscriber");
+    public static final Identifier ID_ADVICE_OPTIMIZATION_SUBSCRIBER_ROLE =
+            new IdentifierImpl(ID_URN_ONAP, "optimization:advice:subscriber:role");
+    public static final Identifier ID_ADVICE_OPTIMIZATION_SUBSCRIBER_STATUS =
+            new IdentifierImpl(ID_URN_ONAP, "optimization:advice:subscriber:status");
+
+    /*
      * Obligation specific ID's
      */
 
