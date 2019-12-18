@@ -39,7 +39,8 @@ public class DecisionProvider {
 
     /**
      * Retrieves the policy decision for the specified parameters.
-     * @param body
+     * @param request The incoming DecisionRequest
+     * @param queryParams Any query parameters included in the API request
      *
      * @return the Decision object
      */
