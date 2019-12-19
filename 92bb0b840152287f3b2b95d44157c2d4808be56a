@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d603968_8f737838",
+        "filename": "applications/monitoring/src/test/resources/xacml.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-12-19T22:24:38Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 0
+      },
+      "revId": "92bb0b840152287f3b2b95d44157c2d4808be56a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ac30a4a_25c938dc",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-12-19T22:24:38Z",
+      "side": 1,
+      "message": "this may get fixed on one of my reviews.",
+      "range": {
+        "startLine": 42,
+        "startChar": 5,
+        "endLine": 44,
+        "endChar": 5
+      },
+      "revId": "92bb0b840152287f3b2b95d44157c2d4808be56a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
