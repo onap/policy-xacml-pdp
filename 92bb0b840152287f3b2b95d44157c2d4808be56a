@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "4c5d8138_d7506697",
+        "filename": "applications/common/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-12-19T22:24:38Z",
+      "side": 1,
+      "message": "Ah - these were the things I was expecting to see. Only XACML PDP requires these? That\u0027s surprising.",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 21
+      },
+      "revId": "92bb0b840152287f3b2b95d44157c2d4808be56a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad9013d2_40d1a04d",
+        "filename": "applications/guard/src/test/resources/xacml.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-12-19T22:24:38Z",
+      "side": 1,
+      "message": "Not sure I like how checkstyle is requiring this - properties files should be ignored.",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 87
+      },
+      "revId": "92bb0b840152287f3b2b95d44157c2d4808be56a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9d603968_8f737838",
         "filename": "applications/monitoring/src/test/resources/xacml.properties",
         "patchSetId": 1
