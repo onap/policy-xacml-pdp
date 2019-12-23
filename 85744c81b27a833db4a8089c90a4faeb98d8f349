@@ -1,0 +1,10 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Pamela Dragosh <pdragosh@research.att.com>
+Code-Review+1: Ali Hockla <ah999m@att.com>
+Code-Review+1: Ram Krishna Verma <ram.krishna.verma@est.tech>
+Code-Review+2: Liam Fallon <liam.fallon@est.tech>
+Submitted-by: Liam Fallon <liam.fallon@est.tech>
+Submitted-at: Mon, 23 Dec 2019 20:30:58 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/xacml-pdp/+/99495
+Project: policy/xacml-pdp
+Branch: refs/heads/master
