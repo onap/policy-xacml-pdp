@@ -107,9 +107,7 @@ public class XacmlStateTest {
         assertEquals(GROUP, status.getPdpGroup());
         assertEquals(PDP_TYPE, status.getPdpType());
         assertEquals(PdpState.PASSIVE, status.getState());
-        assertEquals("[ToscaPolicyTypeIdentifier(name=nameA, version=typeA), "
-                        + "ToscaPolicyTypeIdentifier(name=nameB, version=typeB)]",
-                        status.getSupportedPolicyTypes().toString());
+        assertEquals("[]", status.getSupportedPolicyTypes().toString());
         assertTrue(status.getPolicies().isEmpty());
 
         // healthy

@@ -63,7 +63,6 @@ public class XacmlState {
         this.status.setName(NetworkUtil.getHostname());
         this.status.setPdpType("xacml");
         this.status.setState(PdpState.PASSIVE);
-        this.status.setSupportedPolicyTypes(appManager.getToscaPolicyTypeIdents());
         this.status.setPolicies(Collections.emptyList());
         this.status.setPdpGroup(pdpGroupName);
     }
