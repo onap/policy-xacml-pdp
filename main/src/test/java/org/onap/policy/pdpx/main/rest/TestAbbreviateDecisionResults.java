@@ -178,7 +178,7 @@ public class TestAbbreviateDecisionResults {
             DecisionResponse response = getDecision(request);
             LOGGER.info("Decision Response {}", response);
 
-            assertFalse(response.getPolicies().isEmpty());
+            assertTrue(response.getPolicies().isEmpty());
 
             @SuppressWarnings("unchecked")
             Map<String, Object> policy = (Map<String, Object>) response.getPolicies().get("onap.scaleout.tca");
