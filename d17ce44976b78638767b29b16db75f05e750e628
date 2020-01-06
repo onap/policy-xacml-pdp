@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a6e1b49b_5da6a20b",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/XacmlStateTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-06T15:05:07Z",
+      "side": 1,
+      "message": "now that we know this works, perhaps we should go ahead and remove this line so we don\u0027t have to remove it later",
+      "revId": "d17ce44976b78638767b29b16db75f05e750e628",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
