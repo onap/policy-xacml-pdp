@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,9 @@ package org.onap.policy.pdpx.main.comm;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyLong;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -134,17 +133,17 @@ public class XacmlPdpHearbeatPublisherTest {
 
         // null interval - no changes
         publisher.restart(null);
-        verify(executor, times(1)).scheduleWithFixedDelay(any(), anyInt(), anyLong(), any());
+        verify(executor, times(1)).scheduleWithFixedDelay(any(), anyLong(), anyLong(), any());
         assertSame(timer2, timers.peek());
 
         // same interval - no changes
         publisher.restart(INTERVAL1);
-        verify(executor, times(1)).scheduleWithFixedDelay(any(), anyInt(), anyLong(), any());
+        verify(executor, times(1)).scheduleWithFixedDelay(any(), anyLong(), anyLong(), any());
         assertSame(timer2, timers.peek());
 
         // invalid interval - no changes
         publisher.restart(INTERVAL_INVALID);
-        verify(executor, times(1)).scheduleWithFixedDelay(any(), anyInt(), anyLong(), any());
+        verify(executor, times(1)).scheduleWithFixedDelay(any(), anyLong(), anyLong(), any());
         assertSame(timer2, timers.peek());
 
         // new interval - old timer should be cancelled and new started
@@ -162,7 +161,7 @@ public class XacmlPdpHearbeatPublisherTest {
 
         // repeat - nothing more should happen
         publisher.start();
-        verify(executor, times(1)).scheduleWithFixedDelay(any(), anyInt(), anyLong(), any());
+        verify(executor, times(1)).scheduleWithFixedDelay(any(), anyLong(), anyLong(), any());
         verify(timer1, never()).cancel(anyBoolean());
     }
 
