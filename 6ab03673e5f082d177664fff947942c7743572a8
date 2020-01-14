@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4137a2da_ac9159e4",
+        "filename": "checkstyle-suppressions.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-01-14T19:04:16Z",
+      "side": 1,
+      "message": "really, this is now needed?",
+      "revId": "6ab03673e5f082d177664fff947942c7743572a8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
