@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
   ============LICENSE_START=======================================================
-   Copyright (C) 2019-2020 AT&T Technologies. All rights reserved.
+   Copyright (C) 2020 AT&T Technologies. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,8 +20,7 @@
 
 
   **** NOTE ****
-  This file is needed in case Cucumber-style tests are added, as they do not
-  conform to the checkstyle conventions.
+  This file is needed to suppress checkstyle for properties files.
   **************
 -->
 
@@ -30,11 +29,5 @@
      "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
 
 <suppressions>
-  <suppress checks="AbbreviationAsWordInName"
-    files="Stepdefs.java"
-    lines="1-9999"/>
-  <suppress checks="MethodName"
-    files="Stepdefs.java"
-    lines="1-9999"/>
   <suppress files="xacml.properties" checks="[a-zA-Z0-9]*"/>
 </suppressions>
