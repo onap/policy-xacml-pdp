@@ -1,4 +1,4 @@
-FROM onap/policy-common-alpine:1.4.0
+FROM onap/policy-jre-debian
 
 LABEL maintainer="Policy Team"
 
@@ -7,7 +7,7 @@ ARG POLICY_LOGS=/var/log/onap/policy/pdpx
 ENV POLICY_LOGS=$POLICY_LOGS
 
 ENV POLICY_HOME=$POLICY_HOME/pdpx
-RUN apk add --no-cache mariadb-client
+RUN apt-get install -y mariadb-client
 RUN mkdir -p $POLICY_HOME $POLICY_LOGS $POLICY_HOME/etc/ssl $POLICY_HOME/bin $POLICY_HOME/apps && \
     chown -R policy:policy $POLICY_HOME $POLICY_LOGS && mkdir /packages
 
