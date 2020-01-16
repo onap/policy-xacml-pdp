@@ -86,7 +86,7 @@
             <outputDirectory>/apps/guard</outputDirectory>
             <lineEnding>unix</lineEnding>
         </fileSet>
-                <fileSet>
+        <fileSet>
             <directory>${project.basedir}/src/main/resources/apps/monitoring
             </directory>
             <includes>
@@ -95,7 +95,16 @@
             <outputDirectory>/apps/monitoring</outputDirectory>
             <lineEnding>unix</lineEnding>
         </fileSet>
-                <fileSet>
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/apps/naming
+            </directory>
+            <includes>
+                <include>*.properties</include>
+            </includes>
+            <outputDirectory>/apps/naming</outputDirectory>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
+        <fileSet>
             <directory>${project.basedir}/src/main/resources/apps/optimization
             </directory>
             <includes>
