@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f68e1837_a93fa025",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/package/tarball/assembly.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-21T15:50:23Z",
+      "side": 1,
+      "message": "does make me wonder if it would still work if we just left out the leading slash",
+      "revId": "901493fbb07715951f8a93b5a781d7659f9c97b1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
