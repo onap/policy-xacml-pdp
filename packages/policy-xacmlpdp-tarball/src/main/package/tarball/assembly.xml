@@ -1,6 +1,6 @@
 <!--
   ============LICENSE_START=======================================================
-   Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+   Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
     <dependencySets>
         <dependencySet>
             <useProjectArtifact>true</useProjectArtifact>
-            <outputDirectory>/lib</outputDirectory>
+            <outputDirectory>${file.separator}lib</outputDirectory>
             <unpack>false</unpack>
             <scope>runtime</scope>
             <includes>
@@ -44,7 +44,7 @@
                 <include>*.xml</include>
                 <include>*.properties</include>
             </includes>
-            <outputDirectory>/etc</outputDirectory>
+            <outputDirectory>${file.separator}etc</outputDirectory>
             <lineEnding>unix</lineEnding>
             <excludes>
                 <exclude>*.formatted</exclude>
@@ -56,7 +56,7 @@
             <includes>
                 <include>policy*</include>
             </includes>
-            <outputDirectory>/etc/ssl</outputDirectory>
+            <outputDirectory>${file.separator}etc${file.separator}ssl</outputDirectory>
             <lineEnding>keep</lineEnding>
         </fileSet>
         <fileSet>
@@ -65,7 +65,7 @@
             <includes>
                 <include>*.sh</include>
             </includes>
-            <outputDirectory>/mysql/bin</outputDirectory>
+            <outputDirectory>${file.separator}mysql${file.separator}bin</outputDirectory>
             <lineEnding>unix</lineEnding>
         </fileSet>
         <fileSet>
@@ -74,7 +74,7 @@
             <includes>
                 <include>*.sql</include>
             </includes>
-            <outputDirectory>/mysql/sql</outputDirectory>
+            <outputDirectory>${file.separator}mysql${file.separator}sql</outputDirectory>
             <lineEnding>unix</lineEnding>
         </fileSet>
         <fileSet>
@@ -83,7 +83,7 @@
             <includes>
                 <include>*.properties</include>
             </includes>
-            <outputDirectory>/apps/guard</outputDirectory>
+            <outputDirectory>${file.separator}apps${file.separator}guard</outputDirectory>
             <lineEnding>unix</lineEnding>
         </fileSet>
         <fileSet>
@@ -92,7 +92,7 @@
             <includes>
                 <include>*.properties</include>
             </includes>
-            <outputDirectory>/apps/monitoring</outputDirectory>
+            <outputDirectory>${file.separator}apps${file.separator}monitoring</outputDirectory>
             <lineEnding>unix</lineEnding>
         </fileSet>
         <fileSet>
@@ -101,7 +101,7 @@
             <includes>
                 <include>*.properties</include>
             </includes>
-            <outputDirectory>/apps/naming</outputDirectory>
+            <outputDirectory>${file.separator}apps${file.separator}naming</outputDirectory>
             <lineEnding>unix</lineEnding>
         </fileSet>
         <fileSet>
@@ -110,7 +110,7 @@
             <includes>
                 <include>*.properties</include>
             </includes>
-            <outputDirectory>/apps/optimization</outputDirectory>
+            <outputDirectory>${file.separator}apps${file.separator}optimization</outputDirectory>
             <lineEnding>unix</lineEnding>
         </fileSet>
     </fileSets>
