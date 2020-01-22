@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ package org.onap.policy.pdpx.main.comm;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
@@ -51,8 +50,6 @@ public class XacmlPdpHearbeatPublisher implements Runnable {
 
     private ScheduledExecutorService timerThread;
 
-    private ScheduledFuture<?> timer;
-
 
     /**
      * Constructor for instantiating XacmlPdpPublisher.
@@ -80,7 +77,6 @@ public class XacmlPdpHearbeatPublisher implements Runnable {
         if (timerThread != null) {
             timerThread.shutdownNow();
             timerThread = null;
-            timer = null;
         }
     }
 
@@ -95,8 +91,14 @@ public class XacmlPdpHearbeatPublisher implements Runnable {
             this.intervalMs = intervalMs;
 
             if (timerThread != null) {
-                timer.cancel(false);
-                timer = timerThread.scheduleWithFixedDelay(this, 0, this.intervalMs, TimeUnit.MILLISECONDS);
+                /*
+                 * We had been simply canceling the timer and starting a new one, but the
+                 * timer thread threw an exception when trying to re-schedule it with a
+                 * new interval, so we changed the code to restart the whole timer thread.
+                 */
+                timerThread.shutdownNow();
+                timerThread = makeTimerThread();
+                timerThread.scheduleWithFixedDelay(this, 0, this.intervalMs, TimeUnit.MILLISECONDS);
             }
         }
     }
@@ -107,7 +109,7 @@ public class XacmlPdpHearbeatPublisher implements Runnable {
     public synchronized void start() {
         if (timerThread == null) {
             timerThread = makeTimerThread();
-            timer = timerThread.scheduleWithFixedDelay(this, 0, this.intervalMs, TimeUnit.MILLISECONDS);
+            timerThread.scheduleWithFixedDelay(this, 0, this.intervalMs, TimeUnit.MILLISECONDS);
         }
     }
 

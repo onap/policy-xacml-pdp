@@ -148,7 +148,7 @@ public class XacmlPdpHearbeatPublisherTest {
 
         // new interval - old timer should be cancelled and new started
         publisher.restart(INTERVAL2);
-        verify(timer1).cancel(anyBoolean());
+        verify(executor).shutdownNow();
         verify(executor).scheduleWithFixedDelay(publisher, 0, INTERVAL2, TimeUnit.MILLISECONDS);
     }
 
