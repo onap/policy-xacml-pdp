@@ -1,6 +1,7 @@
 <!--
   ============LICENSE_START=======================================================
    Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+   Modifications Copyright (C) 2020 Bell Canada.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,7 +24,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.onap.policy.xacml-pdp</groupId>
-        <artifactId>packages</artifactId>
+        <artifactId>xacml-packages</artifactId>
         <version>2.2.0-SNAPSHOT</version>
     </parent>
 
@@ -34,7 +35,7 @@
     <dependencies>
         <dependency>
             <groupId>org.onap.policy.xacml-pdp</groupId>
-            <artifactId>main</artifactId>
+            <artifactId>xacml-main</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
