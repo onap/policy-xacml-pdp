@@ -27,7 +27,7 @@
         <version>2.2.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>main</artifactId>
+    <artifactId>xacml-main</artifactId>
 
     <name>${project.artifactId}</name>
     <description>The main module of Policy PDP-X that handles startup, lifecycle management, and parameters.</description>

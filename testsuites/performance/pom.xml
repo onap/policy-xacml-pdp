@@ -21,10 +21,10 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.onap.policy.xacml-pdp</groupId>
-        <artifactId>testsuites</artifactId>
+        <artifactId>xacml-testsuites</artifactId>
         <version>2.2.0-SNAPSHOT</version>
     </parent>
-    <artifactId>performance</artifactId>
+    <artifactId>xacml-performance</artifactId>
     <build>
         <plugins>
             <plugin>
