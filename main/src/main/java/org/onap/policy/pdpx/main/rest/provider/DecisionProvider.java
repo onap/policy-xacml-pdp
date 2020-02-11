@@ -22,20 +22,27 @@ package org.onap.policy.pdpx.main.rest.provider;
 
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.http.entity.ContentType;
 import org.onap.policy.models.decisions.concepts.DecisionException;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
 import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
+import org.onap.policy.xacml.pdp.application.nativ.NativePdpApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 public class DecisionProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(DecisionProvider.class);
+    private static final String APPLICATION_XACML_XML = "application/xacml+xml";
 
     /**
      * Retrieves the policy decision for the specified parameters.
@@ -62,6 +69,65 @@ public class DecisionProvider {
         // Return the decision
         //
         return decision.getKey();
+    }
+
+    /**
+     * Retrieves the policy decision for the native xacml request.
+     *
+     * @param request the raw http servlet request
+     * @return the xacml response in string
+     */
+    public String fetchNativeDecision(HttpServletRequest request) {
+        LOGGER.debug("Fetching decision {}", request);
+        //
+        // Assign native request to native application directly
+        //
+        XacmlApplicationServiceProvider nativeApp = new NativePdpApplication();
+        //
+        // Get and validate the content-type
+        //
+        ContentType contentType = ContentType.parse(request.getContentType());
+        validateContentType(contentType);
+        //
+        // Get the raw request
+        //
+        String incomingRequestString;
+        try {
+            incomingRequestString = getRequestAsString(request);
+        } catch (IOException exc) {
+            String errMsg = "failed to get the raw request as string";
+            throw new DecisionException(javax.ws.rs.core.Response.Status.BAD_REQUEST, errMsg);
+        }
+        //
+        // Make xacml decision
+        //
+        Pair<String, Response> decision = nativeApp.makeDecision(contentType, incomingRequestString);
+        LOGGER.debug("Xacml decision {}", decision);
+        //
+        // Calculate statistics
+        this.calculateStatistic(decision.getValue());
+        //
+        // Return the string decision
+        //
+        return decision.getKey();
+    }
+
+    private void validateContentType(ContentType contentType) {
+        if (!(contentType.getMimeType().equalsIgnoreCase(ContentType.APPLICATION_JSON.getMimeType())
+                || contentType.getMimeType().equalsIgnoreCase(APPLICATION_XACML_XML))) {
+            String errMsg = "unsupported content type";
+            throw new DecisionException(javax.ws.rs.core.Response.Status.BAD_REQUEST, errMsg);
+        }
+    }
+
+    private String getRequestAsString(HttpServletRequest request) throws IOException {
+        StringBuilder buffer = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+        String line;
+        while((line = reader.readLine()) != null){
+            buffer.append(line);
+        }
+        return buffer.toString();
     }
 
     private XacmlApplicationServiceProvider findApplication(DecisionRequest request) {

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,8 +63,12 @@ import org.slf4j.LoggerFactory;
  */
 @Path("/policy/pdpx/v1")
 @Api
-@Produces({MediaType.APPLICATION_JSON, XacmlPdpRestController.APPLICATION_YAML})
-@Consumes({MediaType.APPLICATION_JSON, XacmlPdpRestController.APPLICATION_YAML})
+@Produces({MediaType.APPLICATION_JSON,
+           XacmlPdpRestController.APPLICATION_YAML,
+           XacmlPdpRestController.APPLICATION_XACML_XML})
+@Consumes({MediaType.APPLICATION_JSON,
+           XacmlPdpRestController.APPLICATION_YAML,
+           XacmlPdpRestController.APPLICATION_XACML_XML})
 @SwaggerDefinition(info = @Info(description = "Policy Xacml PDP Service", version = "1.0.0", title = "Policy Xacml PDP",
         extensions = {@Extension(properties = {@ExtensionProperty(name = "planned-retirement-date", value = "tbd"),
                 @ExtensionProperty(name = "component", value = "Policy Framework")})}),
@@ -73,7 +77,7 @@ import org.slf4j.LoggerFactory;
 public class XacmlPdpRestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpRestController.class);
     public static final String APPLICATION_YAML = "application/yaml";
-
+    public static final String APPLICATION_XACML_XML = "application/xacml+xml";
 
     @GET
     @Path("/healthcheck")
@@ -179,6 +183,55 @@ public class XacmlPdpRestController {
         try {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(new DecisionProvider().fetchDecision(body, request.getParameterMap())).build();
+        } catch (DecisionException e) {
+            LOGGER.error("Decision exception", e);
+            XacmlPdpStatisticsManager.getCurrent().updateErrorCount();
+            return addLoggingHeaders(
+                    addVersionControlHeaders(Response.status((e.getErrorResponse().getResponseCode()))), requestId)
+                    .entity(e.getErrorResponse()).build();
+        }
+    }
+
+    /**
+     * Our native decision entry point.
+     *
+     * @param body Should be a NativeDecisionRequest object
+     * @param requestId Unique request id
+     * @return DecisionResponse or ErrorResponse object
+     */
+    @POST
+    @Path("/nativedecision")
+    @ApiOperation(value = "Fetch the decision using specified decision parameters",
+            notes = "Returns the policy decision from Policy Xacml PDP", response = String.class,
+            responseHeaders = {
+                    @ResponseHeader(name = "X-MinorVersion",
+                            description = "Used to request or communicate a MINOR version back from the client"
+                                    + " to the server, and from the server back to the client",
+                            response = String.class),
+                    @ResponseHeader(name = "X-PatchVersion",
+                            description = "Used only to communicate a PATCH version in a response for"
+                                    + " troubleshooting purposes only, and will not be provided by"
+                                    + " the client on request",
+                            response = String.class),
+                    @ResponseHeader(name = "X-LatestVersion",
+                            description = "Used only to communicate an API's latest version", response = String.class),
+                    @ResponseHeader(name = "X-ONAP-RequestID",
+                            description = "Used to track REST transactions for logging purpose",
+                            response = UUID.class)},
+            authorizations = @Authorization(value = "basicAuth"), tags = {"Decision",},
+            extensions = {@Extension(name = "interface info",
+                    properties = {@ExtensionProperty(name = "pdpx-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Frankfurt")})})
+    @ApiResponses(value = {@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+            @ApiResponse(code = 401, message = "Authentication Error"),
+            @ApiResponse(code = 403, message = "Authorization Error"),
+            @ApiResponse(code = 500, message = "Internal Server Error")})
+    public Response nativeDecision(
+            @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
+            @Context HttpServletRequest request) {
+        try {
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(new DecisionProvider().fetchNativeDecision(request)).build();
         } catch (DecisionException e) {
             LOGGER.error("Decision exception", e);
             XacmlPdpStatisticsManager.getCurrent().updateErrorCount();
