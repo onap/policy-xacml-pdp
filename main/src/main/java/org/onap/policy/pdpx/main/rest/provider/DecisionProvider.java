@@ -20,6 +20,7 @@
 
 package org.onap.policy.pdpx.main.rest.provider;
 
+import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
 import java.util.Map;
@@ -30,6 +31,7 @@ import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
 import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
+import org.onap.policy.xacml.pdp.application.nativ.NativePdpApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +64,32 @@ public class DecisionProvider {
         // Return the decision
         //
         return decision.getKey();
+    }
+
+    /**
+     * Retrieves the policy decision for the native xacml request.
+     *
+     * @param request the xacml request
+     * @return the xacml response
+     */
+    public Response fetchNativeDecision(Request request) {
+        LOGGER.debug("Fetching decision {}", request);
+        //
+        // Assign native request to native application directly
+        //
+        NativePdpApplication nativeApp = new NativePdpApplication();
+        //
+        // Make xacml decision
+        //
+        Response decision = nativeApp.makeNativeDecision(request);
+        LOGGER.debug("Xacml decision {}", decision);
+        //
+        // Calculate statistics
+        this.calculateStatistic(decision);
+        //
+        // Return the string decision
+        //
+        return decision;
     }
 
     private XacmlApplicationServiceProvider findApplication(DecisionRequest request) {
