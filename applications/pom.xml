@@ -41,6 +41,7 @@
     <module>guard</module>
     <module>optimization</module>
     <module>naming</module>
+    <module>native</module>
   </modules>
 
 

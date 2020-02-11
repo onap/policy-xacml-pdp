@@ -20,6 +20,7 @@
 
 package org.onap.policy.pdpx.main.rest.provider;
 
+import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
 import java.util.Map;
@@ -30,6 +31,7 @@ import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
 import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
+import org.onap.policy.xacml.pdp.application.nativ.NativePdpApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,6 +66,33 @@ public class DecisionProvider {
         return decision.getKey();
     }
 
+    /**
+     * Retrieves the policy decision for the native xacml request.
+     *
+     * @param request the xacml request
+     * @return the xacml response
+     */
+    public Response fetchNativeDecision(Request request) {
+        LOGGER.debug("Fetching decision {}", request);
+        //
+        // Assign native request to native application directly
+        //
+        XacmlApplicationServiceProvider nativeApp = findNativeApplication();
+        //
+        // Make xacml decision
+        //
+        Response decision = ((NativePdpApplication) nativeApp).makeNativeDecision(request);
+        LOGGER.debug("Xacml decision {}", decision);
+        //
+        // Calculate statistics
+        //
+        this.calculateStatistic(decision);
+        //
+        // Return the string decision
+        //
+        return decision;
+    }
+
     private XacmlApplicationServiceProvider findApplication(DecisionRequest request) {
         XacmlApplicationServiceProvider application = XacmlPdpApplicationManager.getCurrent().findApplication(request);
         if (application != null) {
@@ -73,8 +102,16 @@ public class DecisionProvider {
                 "No application for action " + request.getAction());
     }
 
-    private void calculateStatistic(Response xacmlResponse) {
+    private XacmlApplicationServiceProvider findNativeApplication() {
+        XacmlApplicationServiceProvider application = XacmlPdpApplicationManager.getCurrent().findNativeApplication();
+        if (application instanceof NativePdpApplication) {
+            return application;
+        }
+        throw new DecisionException(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR,
+                "Native PDP application cannot be found");
+    }
 
+    private void calculateStatistic(Response xacmlResponse) {
         for (Result result : xacmlResponse.getResults()) {
             switch (result.getDecision()) {
                 case PERMIT:
@@ -98,9 +135,7 @@ public class DecisionProvider {
 
                 default:
                     break;
-
             }
         }
     }
-
 }
