@@ -118,6 +118,10 @@ public class XacmlPdpApplicationManager {
         return providerActionMap.get(request.getAction());
     }
 
+    public XacmlApplicationServiceProvider findNativeApplication() {
+        return providerActionMap.get("native");
+    }
+
     /**
      * getToscaPolicies.
      *
