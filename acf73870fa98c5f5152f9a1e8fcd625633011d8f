@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9397826e_26a2d07e",
+        "filename": "applications/native/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-12T00:24:17Z",
+      "side": 1,
+      "message": "format and missing license",
+      "revId": "acf73870fa98c5f5152f9a1e8fcd625633011d8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55c95a17_0dab4d24",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativeDecisionRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-12T00:24:17Z",
+      "side": 1,
+      "message": "shouldn\u0027t be a string though - I would think we re-use the XACML objects here. I am in the process of re-building the JSON object, but the XML one is available.",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 33
+      },
+      "revId": "acf73870fa98c5f5152f9a1e8fcd625633011d8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5936e6b_b8e09a31",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-12T00:24:17Z",
+      "side": 1,
+      "message": "Return the actual decision, let\u0027s not mask to Permit. Missing Indeterminate. And we\u0027ll pass EVERYTHING, the obligation/advice. The caller should expect to send a full request via the spec and get the full response.",
+      "range": {
+        "startLine": 122,
+        "startChar": 16,
+        "endLine": 122,
+        "endChar": 71
+      },
+      "revId": "acf73870fa98c5f5152f9a1e8fcd625633011d8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c807f81e_dbe9b922",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-12T00:24:17Z",
+      "side": 1,
+      "message": "Hmm ok - so this is where I was hoping to re-use XACML objects instead of masking it into another object. And return the XACML appropriate response.\n\nXML request -\u003e XML response\nJson request -\u003e Json response\n\nWe can start with the XML versions.",
+      "range": {
+        "startLine": 226,
+        "startChar": 35,
+        "endLine": 226,
+        "endChar": 61
+      },
+      "revId": "acf73870fa98c5f5152f9a1e8fcd625633011d8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
