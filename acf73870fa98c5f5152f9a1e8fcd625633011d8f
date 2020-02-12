@@ -65,6 +65,29 @@
     },
     {
       "key": {
+        "uuid": "bb6fd0a6_77345a2b",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-12T00:24:17Z",
+      "side": 1,
+      "message": "You will have to URL decode it first.",
+      "range": {
+        "startLine": 137,
+        "startChar": 15,
+        "endLine": 137,
+        "endChar": 48
+      },
+      "revId": "acf73870fa98c5f5152f9a1e8fcd625633011d8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c807f81e_dbe9b922",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
         "patchSetId": 1
