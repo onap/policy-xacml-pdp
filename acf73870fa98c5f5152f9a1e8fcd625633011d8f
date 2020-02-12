@@ -159,6 +159,30 @@
       "revId": "acf73870fa98c5f5152f9a1e8fcd625633011d8f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d81b5eaf_d940f1dc",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-02-12T21:34:02Z",
+      "side": 1,
+      "message": "I\u0027ve got one idea and putting together a new patch that will be in pretty soon.",
+      "parentUuid": "c807f81e_dbe9b922",
+      "range": {
+        "startLine": 226,
+        "startChar": 35,
+        "endLine": 226,
+        "endChar": 61
+      },
+      "revId": "acf73870fa98c5f5152f9a1e8fcd625633011d8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
