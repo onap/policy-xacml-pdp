@@ -42,6 +42,40 @@
     },
     {
       "key": {
+        "uuid": "47bced6c_87ec076f",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplication.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-12T00:54:27Z",
+      "side": 1,
+      "message": "should probably just use supportedPolicyTypes.contains(id)\n\nif ToscaPolicyTypeIdentifier doesn\u0027t have an equals(), we can add one",
+      "revId": "acf73870fa98c5f5152f9a1e8fcd625633011d8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eaa7a929_6098b9b2",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-12T00:54:27Z",
+      "side": 1,
+      "message": "could just return it here",
+      "revId": "acf73870fa98c5f5152f9a1e8fcd625633011d8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a5936e6b_b8e09a31",
         "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
         "patchSetId": 1
@@ -62,6 +96,23 @@
       "revId": "acf73870fa98c5f5152f9a1e8fcd625633011d8f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea229211_1771b04b",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-12T00:54:27Z",
+      "side": 1,
+      "message": "should get the policy once and put it in a variable.  Then use the variable in the debug() and in the \"return\"",
+      "revId": "acf73870fa98c5f5152f9a1e8fcd625633011d8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
