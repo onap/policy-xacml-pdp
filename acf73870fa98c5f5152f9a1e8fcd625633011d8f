@@ -59,6 +59,24 @@
     },
     {
       "key": {
+        "uuid": "dd405ed0_1d1a75d2",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplication.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-02-13T17:50:17Z",
+      "side": 1,
+      "message": "Cool. I like this one-line return! Thanks. Done",
+      "parentUuid": "47bced6c_87ec076f",
+      "revId": "acf73870fa98c5f5152f9a1e8fcd625633011d8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eaa7a929_6098b9b2",
         "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
         "patchSetId": 1
@@ -70,6 +88,24 @@
       "writtenOn": "2020-02-12T00:54:27Z",
       "side": 1,
       "message": "could just return it here",
+      "revId": "acf73870fa98c5f5152f9a1e8fcd625633011d8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46b5726c_6e2eec45",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-02-13T17:50:17Z",
+      "side": 1,
+      "message": "reimplement convertRequest in a different way",
+      "parentUuid": "eaa7a929_6098b9b2",
       "revId": "acf73870fa98c5f5152f9a1e8fcd625633011d8f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -99,6 +135,30 @@
     },
     {
       "key": {
+        "uuid": "1c6a280d_ecc8c3de",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-02-13T17:50:17Z",
+      "side": 1,
+      "message": "Reimplement convertResponse in a different way",
+      "parentUuid": "a5936e6b_b8e09a31",
+      "range": {
+        "startLine": 122,
+        "startChar": 16,
+        "endLine": 122,
+        "endChar": 71
+      },
+      "revId": "acf73870fa98c5f5152f9a1e8fcd625633011d8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ea229211_1771b04b",
         "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
         "patchSetId": 1
@@ -116,6 +176,24 @@
     },
     {
       "key": {
+        "uuid": "4a8bf0ac_503c9151",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-02-13T17:50:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea229211_1771b04b",
+      "revId": "acf73870fa98c5f5152f9a1e8fcd625633011d8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb6fd0a6_77345a2b",
         "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
         "patchSetId": 1
@@ -127,6 +205,30 @@
       "writtenOn": "2020-02-12T00:24:17Z",
       "side": 1,
       "message": "You will have to URL decode it first.",
+      "range": {
+        "startLine": 137,
+        "startChar": 15,
+        "endLine": 137,
+        "endChar": 48
+      },
+      "revId": "acf73870fa98c5f5152f9a1e8fcd625633011d8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c013495_78cc8381",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-02-13T17:50:17Z",
+      "side": 1,
+      "message": "decoding is implemented in convertPolicy(). Here, just wanted to get the raw encoded policy string",
+      "parentUuid": "bb6fd0a6_77345a2b",
       "range": {
         "startLine": 137,
         "startChar": 15,
