@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b2d5e8cc_59a21f53",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-14T14:03:05Z",
+      "side": 1,
+      "message": "hmm.  May be too late at the moment, but this type of media conversion should be done using a serialization provider that occurs before it even gets to the REST server methods.  There\u0027s already a provider for json, would just need to add one for xml.  Then all of these \"convertRequest() methods would go away, at least insofar as they translate media types",
+      "revId": "51921568c5049360eb44a82fec854208f5496c0e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c076f785_cf8bad57",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-14T14:03:05Z",
+      "side": 1,
+      "message": "maybe swap the equals:\n\n JSON.getMimeType().equalsIgnoreCase(contentType...)\n\nsame for both cases",
+      "revId": "51921568c5049360eb44a82fec854208f5496c0e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cea499ef_c9b955d3",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-14T14:03:05Z",
+      "side": 1,
+      "message": "could just invoke toString() instead of doing the cast",
+      "revId": "51921568c5049360eb44a82fec854208f5496c0e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9acc077b_7d6b51c3",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-14T14:03:05Z",
+      "side": 1,
+      "message": "is this no longer a DecisionResponse?  Seems like we\u0027ve lost some \"type\" information.  Can this really be an arbitrary string?  Or is it always an encoded POJO?  If the latter, then this should return that instead of \"String\".",
+      "revId": "51921568c5049360eb44a82fec854208f5496c0e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62f1c6a8_8ad139fa",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-14T14:03:05Z",
+      "side": 1,
+      "message": "Is this truly an arbitrary request?  Is it not some type of POJO?  If so, then that should be used here, instead, and a serialization provider used to translate between the media type and the POJO",
+      "revId": "51921568c5049360eb44a82fec854208f5496c0e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0201cfb_6c88cd3b",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-14T14:03:05Z",
+      "side": 1,
+      "message": "looks like most of these lines would be eliminated if it were done via a serialization provider",
+      "revId": "51921568c5049360eb44a82fec854208f5496c0e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ac5fa7bc_c2fe7154",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-14T14:03:05Z",
+      "side": 1,
+      "message": "pretty sure there\u0027s a Files, IOUtil, or IoUtils method to do this",
+      "revId": "51921568c5049360eb44a82fec854208f5496c0e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
