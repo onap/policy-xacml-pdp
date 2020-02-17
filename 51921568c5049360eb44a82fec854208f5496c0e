@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5c1d8234_e02c5102",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-02-17T16:31:30Z",
+      "side": 1,
+      "message": "Jim, are you suggesting we need new MessageBodyHandlers for custom content-type application/xacml+xml and application/xacml+json? Then register these new body handlers to rest server? \n\nI think for this conversion from json to xacml request. The existing json body handler cannot be reused since it needs a special de-serialization (JsonRequestTranslator.load(jsonstring)). What I am thinking is to add application/xacml+json custom content-type/.",
+      "parentUuid": "b2d5e8cc_59a21f53",
+      "revId": "51921568c5049360eb44a82fec854208f5496c0e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c076f785_cf8bad57",
         "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
         "patchSetId": 2
