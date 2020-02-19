@@ -1,7 +1,28 @@
 tosca_definitions_version: tosca_simple_yaml_1_0_0
 policy_types:
-    onap.policies.Test:
+    onap.policies.Base:
         derived_from: tosca.policies.Root
+        version: 1.0.0
+        properties:
+            baseNoMatch:
+                type: string
+            baseMatch:
+                type: string
+                metadata:
+                   matchable: true
+    onap.policies.base.Middle:
+        derived_from: onap.policies.Base
+        version: 1.0.0
+        properties:
+            middleNoMatch:
+                type: string
+            middleMatch:
+                type: string
+                metadata:
+                   matchable: true
+    onap.policies.base.middle.Test:
+        derived_from: onap.policies.base.Middle
+        type_version: 1.0.0
         version: 1.0.0
         properties:
             nonmatachableString:
@@ -30,6 +51,10 @@ policy_types:
                 type: boolean
                 metadata:
                    matchable: true
+            nonmatchableListInteger:
+                type: list
+                entry_schema:
+                   type: integer
             matchableListString:
                 type: list
                 metadata:
@@ -39,7 +64,7 @@ policy_types:
             propertyOneMap:
                 type: map
                 entry_schema:
-                    type: onap.datatype.level1
+                    type: onap.datatype.one
 data_types:
     onap.datatype.one:
         derived_from: tosca.datatypes.Root
@@ -49,7 +74,7 @@ data_types:
             oneStringMatchable:
                 type: string
                 metadata:
-                    matachable: true
+                    matchable: true
             propertyTwoList:
                 type: list
                 entry_schema:
@@ -62,7 +87,7 @@ data_types:
             twoStringMatchable:
                 type: string
                 metadata:
-                    matachable: true
+                    matchable: true
             propertyThreeMap:
                 type: map
                 entry_schema:
@@ -75,4 +100,4 @@ data_types:
             threeStringMatchable:
                 type: string
                 metadata:
-                    matachable: true
+                    matchable: true

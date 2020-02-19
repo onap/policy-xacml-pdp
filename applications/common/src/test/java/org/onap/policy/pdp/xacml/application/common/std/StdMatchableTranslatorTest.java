@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,6 @@ import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 import org.onap.policy.pdp.xacml.application.common.TestUtilsCommon;
@@ -87,7 +86,7 @@ public class StdMatchableTranslatorTest {
     private static final StandardYamlCoder yamlCoder = new StandardYamlCoder();
     private static int port;
     private static RestServerParameters clientParams;
-    private static ToscaPolicyType testPolicyType;
+    private static ToscaServiceTemplate testTemplate;
 
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
@@ -144,14 +143,15 @@ public class StdMatchableTranslatorTest {
         //
         JpaToscaServiceTemplate jtst = new JpaToscaServiceTemplate();
         jtst.fromAuthorative(serviceTemplate);
-        ToscaServiceTemplate completedJtst = jtst.toAuthorative();
+        testTemplate = jtst.toAuthorative();
         //
-        // Find the Policy Type - SHOULD only be one
+        // Make sure the Policy Types are there
         //
-        assertEquals(1, completedJtst.getPolicyTypes().size());
-        testPolicyType = completedJtst.getPolicyTypes().get("onap.policies.Test");
-        assertNotNull(testPolicyType);
-        logger.info("Test Policy Type {}{}", XacmlPolicyUtils.LINE_SEPARATOR, testPolicyType);
+        assertEquals(3, testTemplate.getPolicyTypes().size());
+        assertNotNull(testTemplate.getPolicyTypes().get("onap.policies.Base"));
+        assertNotNull(testTemplate.getPolicyTypes().get("onap.policies.base.Middle"));
+        assertNotNull(testTemplate.getPolicyTypes().get("onap.policies.base.middle.Test"));
+        logger.info("Test Policy Type {}{}", XacmlPolicyUtils.LINE_SEPARATOR, testTemplate);
     }
 
     @AfterClass
@@ -191,6 +191,9 @@ public class StdMatchableTranslatorTest {
         //
         for (Map<String, ToscaPolicy> policies : completedJtst.getToscaTopologyTemplate().getPolicies()) {
             for (ToscaPolicy policy : policies.values()) {
+                //
+                // Test that we can convert the policy
+                //
                 PolicyType translatedPolicy = translator.convertPolicy(policy);
                 assertNotNull(translatedPolicy);
                 assertThat(translatedPolicy.getObligationExpressions().getObligationExpression()).hasSize(1);
@@ -282,7 +285,7 @@ public class StdMatchableTranslatorTest {
         public Response getSpecificVersionOfPolicyType(@PathParam("policyTypeId") String policyTypeId,
                         @PathParam("versionId") String versionId, @HeaderParam("X-ONAP-RequestID") UUID requestId) {
             logger.info("request for policy type={} version={}", policyTypeId, versionId);
-            return Response.status(Response.Status.OK).entity(testPolicyType).build();
+            return Response.status(Response.Status.OK).entity(testTemplate).build();
 
         }
     }

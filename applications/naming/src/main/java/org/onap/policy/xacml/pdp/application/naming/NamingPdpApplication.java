@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,14 +22,11 @@
 
 package org.onap.policy.xacml.pdp.application.naming;
 
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
-import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
-import org.onap.policy.pdp.xacml.application.common.std.StdMatchableTranslator;
+import org.onap.policy.pdp.xacml.application.common.std.StdCombinedPolicyResultsTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServiceProvider;
 
 public class NamingPdpApplication extends StdXacmlApplicationServiceProvider {
@@ -37,7 +34,7 @@ public class NamingPdpApplication extends StdXacmlApplicationServiceProvider {
     private static final ToscaPolicyTypeIdentifier supportedPolicy = new ToscaPolicyTypeIdentifier(
             "onap.policies.Naming", "1.0.0");
 
-    private StdMatchableTranslator translator = new StdMatchableTranslator();
+    private StdCombinedPolicyResultsTranslator translator = new StdCombinedPolicyResultsTranslator();
 
     @Override
     public String applicationName() {
@@ -47,21 +44,6 @@ public class NamingPdpApplication extends StdXacmlApplicationServiceProvider {
     @Override
     public List<String> actionDecisionsSupported() {
         return Arrays.asList("naming");
-    }
-
-    @Override
-    public void initialize(Path pathForData, RestServerParameters policyApiParameters)
-            throws XacmlApplicationException {
-        //
-        // Store our API parameters and path for translator so it
-        // can go get Policy Types
-        //
-        this.translator.setPathForData(pathForData);
-        this.translator.setApiRestParameters(policyApiParameters);
-        //
-        // Let our super class do its thing
-        //
-        super.initialize(pathForData, policyApiParameters);
     }
 
     @Override

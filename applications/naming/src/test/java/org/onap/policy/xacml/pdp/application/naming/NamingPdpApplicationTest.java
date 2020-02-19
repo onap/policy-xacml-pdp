@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -42,8 +43,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.assertj.core.api.Condition;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runners.MethodSorters;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -59,6 +62,7 @@ import org.onap.policy.pdp.xacml.xacmltest.TestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class NamingPdpApplicationTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(NamingPdpApplicationTest.class);
     private static Properties properties = new Properties();
@@ -92,7 +96,6 @@ public class NamingPdpApplicationTest {
         //
         // Setup our temporary folder
         //
-        // TODO use lambda policyFolder::newFile
         XacmlPolicyUtils.FileCreator myCreator = (String filename) -> policyFolder.newFile(filename);
         propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties",
                 properties, myCreator);
@@ -102,7 +105,6 @@ public class NamingPdpApplicationTest {
         String policy = "onap.policies.Naming";
         String policyType = ResourceUtils.getResourceAsString("policytypes/" + policy + ".yaml");
         LOGGER.info("Copying {}", policyType);
-        // TODO investigate UTF-8
         Files.write(Paths.get(policyFolder.getRoot().getAbsolutePath(), policy + "-1.0.0.yaml"),
                 policyType.getBytes());
         //
@@ -188,7 +190,19 @@ public class NamingPdpApplicationTest {
         // Ask for a decision for available default policies
         //
         DecisionResponse response = makeDecision();
-
+        //
+        // There is no default policy
+        //
+        assertThat(response).isNotNull();
+        assertThat(response.getPolicies().size()).isEqualTo(0);
+        //
+        // Ask for VNF
+        //
+        baseRequest.getResource().put("policy-type", Arrays.asList("onap.policies.Naming"));
+        //
+        // Ask for a decision for VNF default policies
+        //
+        response = makeDecision();
         assertThat(response).isNotNull();
         assertThat(response.getPolicies().size()).isEqualTo(1);
         //

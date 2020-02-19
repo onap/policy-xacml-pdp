@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ import org.onap.policy.common.endpoints.http.client.HttpClientConfigException;
 import org.onap.policy.common.endpoints.http.client.HttpClientFactoryInstance;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +75,7 @@ public class PolicyApiCaller {
      * @return the desired policy type
      * @throws PolicyApiException if an error occurs
      */
-    public ToscaPolicyType getPolicyType(ToscaPolicyTypeIdentifier type) throws PolicyApiException {
+    public ToscaServiceTemplate getPolicyType(ToscaPolicyTypeIdentifier type) throws PolicyApiException {
 
         try {
             Response resp = httpClient
@@ -83,7 +83,7 @@ public class PolicyApiCaller {
 
             switch (resp.getStatus()) {
                 case HttpURLConnection.HTTP_OK:
-                    return resp.readEntity(ToscaPolicyType.class);
+                    return resp.readEntity(ToscaServiceTemplate.class);
                 case HttpURLConnection.HTTP_NOT_FOUND:
                     logger.warn("policy-api not found {}", resp);
                     throw new NotFoundException(type.toString());

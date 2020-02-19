@@ -2,13 +2,17 @@ tosca_definitions_version: tosca_simple_yaml_1_0_0
 topology_template:
     policies:
     -   Test.policy:
-            type: onap.policies.Test
+            type: onap.policies.base.middle.Test
             type_version: 1.0.0
             version: 1.0.0
             metadata:
                 policy-id: Test.policy
                 policy-version: 1
             properties:
+                baseNoMatch: Do not match the base
+                baseMatch: base Match
+                middleNoMatch: Do not match the middle
+                middleMatch: middle Match
                 nonmatachableString: I am NON matchable
                 matchableString: I should be matched
                 nonmatachableInteger: 0
@@ -17,6 +21,7 @@ topology_template:
                 matchableFloat: 1.1
                 nonmatachableBoolean: false
                 matachableBoolean: true
+                nonmatchableListInteger: {0, 1, 2}
                 matchableListString:
                 - match A
                 - match B
@@ -25,7 +30,7 @@ topology_template:
                     oneStringMatchable: One should be matched
                     propertyTwoList:
                     -   twoString: Two is NOT matchable
-                        twoStringMatachable: Two should be matched
+                        twoStringMatchable: Two should be matched
                         propertyThreeMap:
                             threeString: Three is NOT matchable
                             threeStringMatchable: Three should be matched
