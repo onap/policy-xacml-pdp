@@ -34,10 +34,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -58,12 +56,12 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 import org.onap.policy.pdp.xacml.application.common.OnapObligation;
 import org.onap.policy.pdp.xacml.application.common.PolicyApiCaller;
 import org.onap.policy.pdp.xacml.application.common.PolicyApiException;
@@ -86,7 +84,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
     private static final Logger LOGGER = LoggerFactory.getLogger(StdMatchableTranslator.class);
     private static final StandardYamlCoder standardYamlCoder = new StandardYamlCoder();
 
-    private final Map<ToscaPolicyTypeIdentifier, ToscaPolicyType> matchablePolicyTypes = new HashMap<>();
+    private final Map<ToscaPolicyTypeIdentifier, ToscaServiceTemplate> matchablePolicyTypes = new HashMap<>();
     @Setter
     private RestServerParameters apiRestParameters;
     @Setter
@@ -236,12 +234,12 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         //
         // Get the TOSCA Policy Type for this policy
         //
-        Collection<ToscaPolicyType> toscaPolicyTypes = this.getPolicyTypes(toscaPolicy.getTypeIdentifier());
+        ToscaServiceTemplate toscaPolicyTypeTemplate = this.findPolicyType(toscaPolicy.getTypeIdentifier());
         //
         // If we don't have any TOSCA policy types, then we cannot know
         // which properties are matchable.
         //
-        if (toscaPolicyTypes.isEmpty()) {
+        if (toscaPolicyTypeTemplate == null) {
             throw new ToscaPolicyConversionException(
                     "Cannot retrieve Policy Type definition for policy " + toscaPolicy.getName());
         }
@@ -270,7 +268,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         // Generate the TargetType - the policy should not be evaluated
         // unless all the matchable properties it cares about are matched.
         //
-        Pair<TargetType, Integer> pairGenerated = generateTargetType(toscaPolicy.getProperties(), toscaPolicyTypes);
+        Pair<TargetType, Integer> pairGenerated = generateTargetType(toscaPolicy, toscaPolicyTypeTemplate);
         newPolicyType.setTarget(pairGenerated.getLeft());
         //
         // Now represent the policy as Json
@@ -326,97 +324,317 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
      * @param policyTypes Collection of policy Type to find matchable metadata
      * @return {@code Pair<TargetType, Integer>} Returns a TargetType and a Total Weight of matchables.
      */
-    protected Pair<TargetType, Integer> generateTargetType(Map<String, Object> properties,
-            Collection<ToscaPolicyType> policyTypes) {
+    protected Pair<TargetType, Integer> generateTargetType(ToscaPolicy policyType,
+            ToscaServiceTemplate policyTemplate) {
+        //
+        // Our return object
+        //
         TargetType targetType = new TargetType();
         //
-        // Iterate the properties
+        // Top-level list of properties
         //
-        int totalWeight = findMatchableFromMap(properties, policyTypes, targetType);
+        Map<String, Object> properties = policyType.getProperties();
+        //
+        // To start, we know these properties are for this specific Policy Type ID/Version
+        //
+        ToscaPolicyTypeIdentifier propertiesPolicyId = policyType.getTypeIdentifier();
+        //
+        // Scan the property map for matchables
+        //
+        int totalWeight = findMatchablesInProperties(properties, propertiesPolicyId, policyTemplate, targetType);
         LOGGER.info("Total weight is {}", totalWeight);
         return Pair.of(targetType, totalWeight);
     }
 
-    @SuppressWarnings("unchecked")
-    protected int findMatchableFromList(List<Object> listProperties, Collection<ToscaPolicyType> policyTypes,
+    protected int findMatchablesInProperties(Map<String, Object> properties,
+            ToscaPolicyTypeIdentifier propertiesPolicyId,
+            ToscaServiceTemplate policyTemplate,
             TargetType targetType) {
-        LOGGER.info("findMatchableFromList {}", listProperties);
-        int totalWeight = 0;
-        for (Object property : listProperties) {
-            if (property instanceof List) {
-                totalWeight += findMatchableFromList((List<Object>) property, policyTypes, targetType);
-            } else if (property instanceof Map) {
-                totalWeight += findMatchableFromMap((Map<String, Object>) property, policyTypes, targetType);
-            }
+        LOGGER.info("findMatchablesInProperties from policy Type {} {}", propertiesPolicyId, properties);
+        //
+        // We better have the policy type definition available from the template
+        //
+        ToscaPolicyType policyType = getToscaPolicyTypeFromTemplate(propertiesPolicyId, policyTemplate);
+        if (policyType == null) {
+            LOGGER.error("Failed to find policy type in template {}", propertiesPolicyId);
+            return 0;
         }
-        return totalWeight;
-    }
-
-    protected int findMatchableFromMap(Map<String, Object> properties, Collection<ToscaPolicyType> policyTypes,
-            TargetType targetType) {
-        LOGGER.info("findMatchableFromMap {}", properties);
+        //
+        // Our total weight to return
+        //
         int totalWeight = 0;
         for (Entry<String, Object> entrySet : properties.entrySet()) {
             //
-            // Is this a matchable property?
+            // Find the property details
             //
-            if (isMatchable(entrySet.getKey(), policyTypes)) {
-                LOGGER.info("Found matchable property {}", entrySet.getKey());
-                int weight = generateMatchable(targetType, entrySet.getKey(), entrySet.getValue());
+            Pair<ToscaProperty, ToscaServiceTemplate> property = findProperty(entrySet.getKey(),
+                    policyType, propertiesPolicyId, policyTemplate);
+            if (property == null) {
+                continue;
+            }
+            ToscaProperty toscaProperty = property.getLeft();
+            LOGGER.info("Found property {} with type {} schema {}", entrySet.getKey(), toscaProperty.getType(),
+                    (toscaProperty.getEntrySchema() == null ? "null" : toscaProperty.getEntrySchema().getType()));
+            //
+            // Is it matchable?
+            //
+            if (checkIsMatchableProperty(toscaProperty)) {
+                //
+                // This will generate the matchables for the property
+                //
+                int weight = generateMatchable(targetType, entrySet.getKey(), entrySet.getValue(),
+                        property.getLeft(), property.getRight());
                 LOGGER.info("Weight is {}", weight);
                 totalWeight += weight;
             } else {
                 //
-                // Check if we need to search deeper
+                // Not matchable, but we need to check if this contains list or map of datatypes.
+                // Those will need to be searched for matchables.
                 //
-                totalWeight += checkDeeperForMatchable(entrySet.getValue(), policyTypes, targetType);
+                if ("list".equals(toscaProperty.getType())) {
+                    int weight = findMatchablesInList(entrySet.getKey(), entrySet.getValue(), toscaProperty,
+                            policyTemplate, targetType);
+                    LOGGER.info("Weight list is {}", weight);
+                    totalWeight += weight;
+                } else if ("map".equals(toscaProperty.getType())) {
+                    int weight = findMatchablesInMap(entrySet.getKey(), entrySet.getValue(), toscaProperty,
+                            policyTemplate, targetType);
+                    LOGGER.info("Weight map is {}", weight);
+                    totalWeight += weight;
+                }
             }
+            //
+            // Check for lists/maps
+            //
         }
         return totalWeight;
     }
 
     @SuppressWarnings("unchecked")
-    protected int checkDeeperForMatchable(Object property, Collection<ToscaPolicyType> policyTypes,
-            TargetType targetType) {
-        if (property instanceof List) {
-            return findMatchableFromList((List<Object>) property, policyTypes, targetType);
-        } else if (property instanceof Map) {
-            return findMatchableFromMap((Map<String, Object>) property, policyTypes,
-                    targetType);
+    protected int findMatchablesInList(String listPropertyName, Object listValue, ToscaProperty listProperty,
+            ToscaServiceTemplate listTemplate, TargetType targetType) {
+        //
+        // Don't bother if there is no schema (which should be a problem) or
+        // its a list of primitives
+        //
+        if (listProperty.getEntrySchema() == null) {
+            LOGGER.error("No entry schema for list property {}", listPropertyName);
+            return 0;
         }
-        LOGGER.info("checkDeeperForMatchable not necessary for {}", property);
-        return 0;
-    }
+        //
+        // If they are primitives, then no need to go through them. ??
+        //
+        if (isYamlType(listProperty.getEntrySchema().getType())) {
+            LOGGER.info("list of primitives");
+            return 0;
+        }
+        //
+        // Find the datatype
+        //
+        ToscaDataType listDataType = listTemplate.getDataTypes().get(listProperty.getEntrySchema().getType());
+        if (listDataType == null) {
+            LOGGER.error("Unable to find datatype {}", listProperty.getEntrySchema().getType());
+            return 0;
+        }
 
-    /**
-     * isMatchable - Iterates through available TOSCA Policy Types to determine if a property
-     * should be treated as matchable.
-     *
-     * @param propertyName Name of property
-     * @param policyTypes Collection of TOSCA Policy Types to scan
-     * @return true if matchable
-     */
-    protected boolean isMatchable(String propertyName, Collection<ToscaPolicyType> policyTypes) {
-        for (ToscaPolicyType policyType : policyTypes) {
-            for (Entry<String, ToscaProperty> propertiesEntry : policyType.getProperties().entrySet()) {
-                if (checkIsMatchableProperty(propertyName, propertiesEntry)) {
-                    return true;
+        int totalWeight = 0;
+        for (Object datatypeValue : ((Collection<Object>)listValue)) {
+            //
+            // This should be a map - because this is a list of datatypes.
+            //
+            if (! (datatypeValue instanceof Map)) {
+                LOGGER.error("datatype {} value is not a map {}", listDataType.getName(), datatypeValue.getClass());
+                continue;
+            }
+            for (Entry<String, Object> entrySet : ((Map<String, Object>)datatypeValue).entrySet()) {
+                ToscaProperty toscaProperty = listDataType.getProperties().get(entrySet.getKey());
+                if (toscaProperty == null) {
+                    LOGGER.error("Failed to find datatype {} property {}", listDataType.getName(), entrySet.getKey());
+                    continue;
                 }
+                LOGGER.info("Found list property {} with type {} schema {}", entrySet.getKey(), toscaProperty.getType(),
+                        (toscaProperty.getEntrySchema() == null ? "null" : toscaProperty.getEntrySchema().getType()));
                 //
-                // Check if its a list or map
+                // Is it matchable?
                 //
-                if (isListOrMap(propertiesEntry.getValue().getType())
-                        && ! isYamlType(propertiesEntry.getValue().getEntrySchema().getType())) {
-                    LOGGER.info("need to search list or map");
+                if (checkIsMatchableProperty(toscaProperty)) {
+                    //
+                    // This will generate the matchables for the property
+                    //
+                    int weight = generateMatchable(targetType, entrySet.getKey(), entrySet.getValue(),
+                            toscaProperty, listTemplate);
+                    LOGGER.info("Weight is {}", weight);
+                    totalWeight += weight;
+                } else {
+                    //
+                    // Not matchable, but we need to check if this contains list or map of datatypes.
+                    // Those will need to be searched for matchables.
+                    //
+                    if ("list".equals(toscaProperty.getType())) {
+                        int weight = findMatchablesInList(entrySet.getKey(), entrySet.getValue(), toscaProperty,
+                                listTemplate, targetType);
+                        LOGGER.info("Weight list is {}", weight);
+                        totalWeight += weight;
+                    } else if ("map".equals(toscaProperty.getType())) {
+                        int weight = findMatchablesInMap(entrySet.getKey(), entrySet.getValue(), toscaProperty,
+                                listTemplate, targetType);
+                        LOGGER.info("Weight map is {}", weight);
+                        totalWeight += weight;
+                    }
                 }
             }
         }
-        LOGGER.info("isMatchable false for {}", propertyName);
-        return false;
+
+        return totalWeight;
     }
 
-    private boolean isListOrMap(String type) {
-        return "list".equalsIgnoreCase(type) || "map".equalsIgnoreCase(type);
+    @SuppressWarnings("unchecked")
+    protected int findMatchablesInMap(String mapPropertyName, Object mapValue, ToscaProperty mapProperty,
+            ToscaServiceTemplate mapTemplate, TargetType targetType) {
+        //
+        // There needs to be a schema.
+        //
+        if (mapProperty.getEntrySchema() == null) {
+            LOGGER.error("No entry schema for map property {}", mapPropertyName);
+            return 0;
+        }
+        //
+        // If they are primitives, then no need to go through them. ??
+        //
+        if (isYamlType(mapProperty.getEntrySchema().getType())) {
+            LOGGER.debug("map property {} is primitives", mapPropertyName);
+            return 0;
+        }
+        //
+        // Find the datatype
+        //
+        ToscaDataType mapDataType = mapTemplate.getDataTypes().get(mapProperty.getEntrySchema().getType());
+        if (mapDataType == null) {
+            LOGGER.error("Unable to find datatype {}", mapProperty.getEntrySchema().getType());
+            return 0;
+        }
+
+        int totalWeight = 0;
+        for (Entry<String, Object> entrySet : ((Map<String, Object>)mapValue).entrySet()) {
+            ToscaProperty toscaProperty = mapDataType.getProperties().get(entrySet.getKey());
+            if (toscaProperty == null) {
+                LOGGER.error("Failed to find datatype {} property {}", mapDataType.getName(), entrySet.getKey());
+                continue;
+            }
+            LOGGER.info("Found map property {} with type {} schema {}", entrySet.getKey(), toscaProperty.getType(),
+                    (toscaProperty.getEntrySchema() == null ? "null" : toscaProperty.getEntrySchema().getType()));
+            //
+            // Is it matchable?
+            //
+            if (checkIsMatchableProperty(toscaProperty)) {
+                //
+                // This will generate the matchables for the property
+                //
+                int weight = generateMatchable(targetType, entrySet.getKey(), entrySet.getValue(),
+                        toscaProperty, mapTemplate);
+                LOGGER.info("Weight is {}", weight);
+                totalWeight += weight;
+            } else {
+                //
+                // Not matchable, but we need to check if this contains list or map of datatypes.
+                // Those will need to be searched for matchables.
+                //
+                if ("list".equals(toscaProperty.getType())) {
+                    int weight = findMatchablesInList(entrySet.getKey(), entrySet.getValue(), toscaProperty,
+                            mapTemplate, targetType);
+                    LOGGER.info("Weight list is {}", weight);
+                    totalWeight += weight;
+                } else if ("map".equals(toscaProperty.getType())) {
+                    int weight = findMatchablesInMap(entrySet.getKey(), entrySet.getValue(), toscaProperty,
+                            mapTemplate, targetType);
+                    LOGGER.info("Weight map is {}", weight);
+                    totalWeight += weight;
+                }
+            }
+        }
+
+        return totalWeight;
+    }
+
+    /**
+     * findMatchableProperty - Iterates through available TOSCA Policy Types and return the
+     * ToscaProperty and template for the property.
+     *
+     * @param propertyName Name of property
+     * @param policyTypes Collection of TOSCA Policy Types to scan
+     * @return ToscaProperty and ToscaServiceTemplate if matchable
+     */
+    protected Pair<ToscaProperty, ToscaServiceTemplate> findProperty(String propertyName,
+            ToscaPolicyType policyType, ToscaPolicyTypeIdentifier propertiesPolicyId,
+            ToscaServiceTemplate policyTemplate) {
+        //
+        // See if the property is defined by the policy template
+        //
+        ToscaProperty toscaProperty = policyType.getProperties().get(propertyName);
+        if (toscaProperty != null) {
+            //
+            // Does it contain the matchable property and if so its set to true?
+            //
+            return Pair.of(toscaProperty, policyTemplate);
+        }
+        LOGGER.debug("property {} is not in policy type {}", propertyName, propertiesPolicyId);
+        //
+        // Check its parent policy types
+        //
+        ToscaPolicyTypeIdentifier parentId = getParentDerivedFrom(propertiesPolicyId, policyTemplate);
+        while (parentId != null) {
+            LOGGER.debug("searching parent policy type {}", parentId);
+            //
+            // Search the existing template (should be there during runtime)
+            //
+            ToscaPolicyType parentPolicyType = getParentPolicyType(parentId, policyTemplate);
+            if (parentPolicyType != null) {
+                toscaProperty = parentPolicyType.getProperties().get(propertyName);
+                if (toscaProperty != null) {
+                    return Pair.of(toscaProperty, policyTemplate);
+                }
+                //
+                // Move to the next parent
+                //
+                parentId = getParentDerivedFrom(parentId, policyTemplate);
+            } else {
+                LOGGER.warn("Parent policy type is not found {}", parentId);
+                //
+                // Find the parent policy type. During JUnit this may be in a separate
+                // file. We hope that during runtime the template is complete.
+                //
+                ToscaServiceTemplate parentTemplate = findPolicyType(parentId);
+                if (parentTemplate != null) {
+                    parentPolicyType = getParentPolicyType(parentId, parentTemplate);
+                    if (parentPolicyType != null) {
+                        toscaProperty = parentPolicyType.getProperties().get(propertyName);
+                        if (toscaProperty != null) {
+                            return Pair.of(toscaProperty, parentTemplate);
+                        }
+                    }
+                    //
+                    // Move to the next parent
+                    //
+                    parentId = getParentDerivedFrom(parentId, parentTemplate);
+                } else {
+                    LOGGER.error("Unable to find/pull parent policy type {}", parentId);
+                    parentId = null;
+                }
+            }
+        }
+        LOGGER.warn("Property {} is NOT found in any template", propertyName);
+        return null;
+    }
+
+    private ToscaPolicyType getToscaPolicyTypeFromTemplate(ToscaPolicyTypeIdentifier propertiesPolicyId,
+            ToscaServiceTemplate policyTemplate) {
+        for (Entry<String, ToscaPolicyType> entry : policyTemplate.getPolicyTypes().entrySet()) {
+            if (propertiesPolicyId.getName().equals(entry.getKey())
+                    && propertiesPolicyId.getVersion().equals(entry.getValue().getVersion())) {
+                return entry.getValue();
+            }
+        }
+        return null;
     }
 
     private boolean isYamlType(String type) {
@@ -425,21 +643,18 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
     }
 
     /**
-     * checkIsMatchableProperty - checks the policy contents for matchable field. If the metadata doesn't exist,
-     * then definitely not. If the property doesn't exist, then definitely not. Otherwise need to have a metadata
-     * section with the matchable property set to true.
+     * checkIsMatchableProperty - checks the property metadata to see if matchable exists.
      *
-     * @param propertyName String value of property
-     * @param propertiesEntry Section of the TOSCA Policy Type where properties and metadata sections are held
+     * @param toscaProperty ToscaProperty
      * @return true if matchable
      */
-    protected boolean checkIsMatchableProperty(String propertyName, Entry<String, ToscaProperty> propertiesEntry) {
-        if (! propertiesEntry.getKey().equals(propertyName)
-                || propertiesEntry.getValue().getMetadata() == null) {
+    protected boolean checkIsMatchableProperty(ToscaProperty toscaProperty) {
+        if (toscaProperty.getMetadata() == null) {
             return false;
         }
-        for (Entry<String, String> entrySet : propertiesEntry.getValue().getMetadata().entrySet()) {
+        for (Entry<String, String> entrySet : toscaProperty.getMetadata().entrySet()) {
             if ("matchable".equals(entrySet.getKey()) && "true".equals(entrySet.getValue())) {
+                LOGGER.debug("found matchable of type {}", toscaProperty.getType());
                 return true;
             }
         }
@@ -454,17 +669,26 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
      * @param targetType TargetType object to add matches to
      * @param key Property key
      * @param value Object is the value - which can be a Collection or single Object
+     * @param toscaProperty The property that was found
+     * @param toscaServiceTemplate The template from which the property was found
      * @return int Weight of the match.
      */
-    @SuppressWarnings("unchecked")
-    protected int generateMatchable(TargetType targetType, String key, Object value) {
+    protected int generateMatchable(TargetType targetType, String key, Object value, ToscaProperty toscaProperty,
+            ToscaServiceTemplate toscaServiceTemplate) {
         int weight = 0;
         if (value instanceof Collection) {
-            AnyOfType anyOf = generateMatches((Collection<Object>) value,
-                    new IdentifierImpl(ToscaDictionary.ID_RESOURCE_MATCHABLE + key));
-            if (! anyOf.getAllOf().isEmpty()) {
-                targetType.getAnyOf().add(anyOf);
-                weight = 1;
+            //
+            // Further determine how we treat this collection. We will need the schema
+            // if it is not available then we have to bail.
+            //
+            if (toscaProperty.getEntrySchema() == null) {
+                LOGGER.error("No schema for property {} of type {}", key, toscaProperty.getType());
+            }
+            if ("list".equals(toscaProperty.getType())) {
+                return generateMatchableList(targetType, key, value, toscaProperty, toscaServiceTemplate);
+            }
+            if ("map".equals(toscaProperty.getType())) {
+                return generateMatchableMap(targetType, key, value, toscaProperty, toscaServiceTemplate);
             }
         } else {
             AnyOfType anyOf = generateMatches(Arrays.asList(value),
@@ -473,6 +697,43 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
                 targetType.getAnyOf().add(anyOf);
                 weight = 1;
             }
+        }
+        return weight;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected int generateMatchableList(TargetType targetType, String key, Object value, ToscaProperty toscaProperty,
+            ToscaServiceTemplate toscaServiceTemplate) {
+        int weight = 0;
+        if (isYamlType(toscaProperty.getEntrySchema().getType())) {
+            AnyOfType anyOf = generateMatches((Collection<Object>) value,
+                    new IdentifierImpl(ToscaDictionary.ID_RESOURCE_MATCHABLE + key));
+            if (! anyOf.getAllOf().isEmpty()) {
+                targetType.getAnyOf().add(anyOf);
+                weight = 1;
+            }
+        } else {
+            LOGGER.debug("PLD use datatype for list?");
+        }
+        return weight;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected int generateMatchableMap(TargetType targetType, String key, Object value, ToscaProperty toscaProperty,
+            ToscaServiceTemplate toscaServiceTemplate) {
+        int weight = 0;
+        if (isYamlType(toscaProperty.getEntrySchema().getType())) {
+            //
+            // PLD TODO - this won't work
+            //
+            AnyOfType anyOf = generateMatches((Collection<Object>) value,
+                    new IdentifierImpl(ToscaDictionary.ID_RESOURCE_MATCHABLE + key));
+            if (! anyOf.getAllOf().isEmpty()) {
+                targetType.getAnyOf().add(anyOf);
+                weight = 1;
+            }
+        } else {
+            LOGGER.debug("PLD use datatype for map?");
         }
         return weight;
     }
@@ -530,73 +791,29 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         return anyOf;
     }
 
-    /**
-     * Get Policy Type definitions. This could be previously loaded, or could be
-     * stored in application path, or may need to be pulled from the API.
-     *
-     *
-     * @param policyTypeId Policy Type Id
-     * @return A list of PolicyTypes
-     */
-    private List<ToscaPolicyType> getPolicyTypes(ToscaPolicyTypeIdentifier policyTypeId) {
-        //
-        // Create identifier from the policy
-        //
-        ToscaPolicyTypeIdentifier typeId = new ToscaPolicyTypeIdentifier(policyTypeId);
-        //
-        // Find the Policy Type
-        //
-        ToscaPolicyType policyType = findPolicyType(typeId);
-        if (policyType == null)  {
-            return Collections.emptyList();
-        }
-        //
-        // Create our return object
-        //
-        List<ToscaPolicyType> listTypes = new ArrayList<>();
-        listTypes.add(policyType);
-        //
-        // Look for parent policy types that could also contain matchable properties
-        //
-        ToscaPolicyType childPolicyType = policyType;
-        while (! childPolicyType.getDerivedFrom().startsWith("tosca.policies.Root")) {
-            //
-            // Create parent policy type id.
-            //
-            // We will have to assume the same version between child and the
-            // parent policy type it derives from.
-            //
-            // Or do we assume 1.0.0?
-            //
-            ToscaPolicyTypeIdentifier parentId = new ToscaPolicyTypeIdentifier(childPolicyType.getDerivedFrom(),
-                    "1.0.0");
-            //
-            // Find the policy type
-            //
-            ToscaPolicyType parentPolicyType = findPolicyType(parentId);
-            if (parentPolicyType == null) {
-                //
-                // Probably would be best to throw an exception and
-                // return nothing back.
-                //
-                // But instead we will log a warning
-                //
-                LOGGER.warn("Missing parent policy type - proceeding anyway {}", parentId);
-                //
-                // Break the loop
-                //
-                break;
+    private ToscaPolicyTypeIdentifier getParentDerivedFrom(ToscaPolicyTypeIdentifier policyTypeId,
+            ToscaServiceTemplate template) {
+        for (Entry<String, ToscaPolicyType> entrySet : template.getPolicyTypes().entrySet()) {
+            ToscaPolicyType policyType = entrySet.getValue();
+            if (entrySet.getKey().equals(policyTypeId.getName())
+                    && policyType.getVersion().equals(policyTypeId.getVersion())
+                    && ! "tosca.policies.Root".equals(policyType.getDerivedFrom())) {
+                return new ToscaPolicyTypeIdentifier(policyType.getDerivedFrom(), "1.0.0");
             }
-            //
-            // Great save it
-            //
-            listTypes.add(parentPolicyType);
-            //
-            // Move to the next parent
-            //
-            childPolicyType = parentPolicyType;
         }
-        return listTypes;
+
+        return null;
+    }
+
+    private ToscaPolicyType getParentPolicyType(ToscaPolicyTypeIdentifier policyTypeId, ToscaServiceTemplate template) {
+        for (Entry<String, ToscaPolicyType> entrySet : template.getPolicyTypes().entrySet()) {
+            ToscaPolicyType policyType = entrySet.getValue();
+            if (entrySet.getKey().equals(policyTypeId.getName())
+                    && policyType.getVersion().equals(policyTypeId.getVersion())) {
+                return policyType;
+            }
+        }
+        return null;
     }
 
     /**
@@ -607,21 +824,27 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
      * @param policyTypeId ToscaPolicyTypeIdentifier to find
      * @return ToscaPolicyType object. Can be null if failure.
      */
-    private ToscaPolicyType findPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
+    private ToscaServiceTemplate findPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
         //
         // Is it loaded in memory?
         //
-        ToscaPolicyType policyType = this.matchablePolicyTypes.get(policyTypeId);
-        if (policyType == null)  {
+        ToscaServiceTemplate policyTemplate = this.matchablePolicyTypes.get(policyTypeId);
+        if (policyTemplate == null)  {
             //
             // Load the policy
             //
-            policyType = this.loadPolicyType(policyTypeId);
+            policyTemplate = this.loadPolicyType(policyTypeId);
+            //
+            // Save it
+            //
+            if (policyTemplate != null) {
+                this.matchablePolicyTypes.put(policyTypeId, policyTemplate);
+            }
         }
         //
         // Yep return it
         //
-        return policyType;
+        return policyTemplate;
     }
 
     /**
@@ -632,7 +855,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
      * @param policyTypeId ToscaPolicyTypeIdentifier input
      * @return ToscaPolicyType object. Null if failure.
      */
-    private ToscaPolicyType loadPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
+    private ToscaServiceTemplate loadPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
         //
         // Construct what the file name should be
         //
@@ -662,34 +885,8 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         //
         LOGGER.info("Read in local policy type {}", policyTypePath.toAbsolutePath());
         try {
-            ToscaServiceTemplate serviceTemplate = standardYamlCoder.decode(new String(bytes, StandardCharsets.UTF_8),
+            return standardYamlCoder.decode(new String(bytes, StandardCharsets.UTF_8),
                     ToscaServiceTemplate.class);
-            JpaToscaServiceTemplate jtst = new JpaToscaServiceTemplate();
-            jtst.fromAuthorative(serviceTemplate);
-            ToscaServiceTemplate completedJtst = jtst.toAuthorative();
-            //
-            // Search for our Policy Type, there really only should be one but
-            // this is returned as a map.
-            //
-            for ( Entry<String, ToscaPolicyType> entrySet : completedJtst.getPolicyTypes().entrySet()) {
-                ToscaPolicyType entryPolicyType = entrySet.getValue();
-                if (policyTypeId.getName().equals(entryPolicyType.getName())
-                        && policyTypeId.getVersion().equals(entryPolicyType.getVersion())) {
-                    LOGGER.info("Found existing local policy type {} {}", entryPolicyType.getName(),
-                            entryPolicyType.getVersion());
-                    //
-                    // Just simply return the policy type right here
-                    //
-                    return entryPolicyType;
-                } else {
-                    LOGGER.warn("local policy type contains different name version {} {}", entryPolicyType.getName(),
-                            entryPolicyType.getVersion());
-                }
-            }
-            //
-            // This would be an error, if the file stored does not match what its supposed to be
-            //
-            LOGGER.error("Existing policy type file does not contain right name and version");
         } catch (CoderException e) {
             LOGGER.error("Failed to decode tosca template for {}", policyTypePath, e);
         }
@@ -708,15 +905,16 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
      * @param policyTypePath Path object to store locally
      * @return ToscaPolicyType object. Null if failure.
      */
-    private synchronized ToscaPolicyType pullPolicyType(ToscaPolicyTypeIdentifier policyTypeId, Path policyTypePath) {
+    private synchronized ToscaServiceTemplate pullPolicyType(ToscaPolicyTypeIdentifier policyTypeId,
+            Path policyTypePath) {
         //
         // This is what we return
         //
-        ToscaPolicyType policyType = null;
+        ToscaServiceTemplate policyTemplate = null;
         try {
             PolicyApiCaller api = new PolicyApiCaller(this.apiRestParameters);
 
-            policyType = api.getPolicyType(policyTypeId);
+            policyTemplate = api.getPolicyType(policyTypeId);
         } catch (PolicyApiException e) {
             LOGGER.error("Failed to make API call", e);
             LOGGER.error("parameters: {} ", this.apiRestParameters);
@@ -727,14 +925,14 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         // Store it locally
         //
         try {
-            standardYamlCoder.encode(policyTypePath.toFile(), policyType);
+            standardYamlCoder.encode(policyTypePath.toFile(), policyTemplate);
         } catch (CoderException e) {
             LOGGER.error("Failed to store {} locally to {}", policyTypeId, policyTypePath, e);
         }
         //
         // Done return the policy type
         //
-        return policyType;
+        return policyTemplate;
     }
 
     /**
