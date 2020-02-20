@@ -22,6 +22,47 @@
       "revId": "9a9f2c71ef6e2b5cb3c91a6e8e58e8bc1e61cfae",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a2167c5_3bd7fc00",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-20T21:26:22Z",
+      "side": 1,
+      "message": "Ah ok - this is good to use and should work. But you don\u0027t know ahead of time if the policy is PolicyType or PolicySetType that is returned. However, I see that you are just testing right now with a PolicyType so I\u0027m surprised it is having issues. \n\nI will take a closer look tonight, I have to hit the road.",
+      "parentUuid": "bdd61962_db788bbb",
+      "range": {
+        "startLine": 75,
+        "startChar": 19,
+        "endLine": 75,
+        "endChar": 66
+      },
+      "revId": "9a9f2c71ef6e2b5cb3c91a6e8e58e8bc1e61cfae",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e417d22f_e66fe494",
+        "filename": "applications/native/src/test/resources/policies/native.policy.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-20T21:26:22Z",
+      "side": 1,
+      "message": "probably want this saved as native.policy.xml (eg an XML not TXT)",
+      "revId": "9a9f2c71ef6e2b5cb3c91a6e8e58e8bc1e61cfae",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
