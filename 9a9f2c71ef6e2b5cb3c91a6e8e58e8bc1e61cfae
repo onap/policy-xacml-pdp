@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bdd61962_db788bbb",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-02-20T20:59:32Z",
+      "side": 1,
+      "message": "@Pam, seems it is not the right way to read in the native policy and convert to PolicyType since my junit test always complains \"failed to convert policy\" which is located at this line. See the logs below:\n\n[Fatal Error] :1:7: The processing instruction target matching \"[xX][mM][lL]\" is not allowed.\n15:56:54.722 [main] ERROR com.att.research.xacml.util.XACMLPolicyScanner - The processing instruction target matching \"[xX][mM][lL]\" is not allowed.\n15:56:54.724 [main] ERROR org.onap.policy.pdp.xacml.xacmltest.TestUtils - Application failed to load policy\norg.onap.policy.pdp.xacml.application.common.XacmlApplicationException: loadPolicy failed\n\n\nI don\u0027t understand what this \"Fatal Error\" actually talks about. The policy is the one I copied from github xacml used for conformance test. Do you have any hint?",
+      "range": {
+        "startLine": 75,
+        "startChar": 19,
+        "endLine": 75,
+        "endChar": 66
+      },
+      "revId": "9a9f2c71ef6e2b5cb3c91a6e8e58e8bc1e61cfae",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
