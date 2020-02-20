@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb94dfe8_c4bcf5a5",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpRestServer.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-02-20T15:44:00Z",
+      "side": 1,
+      "message": "Jim, do you mean the changes like this? does the super constructor actually call the overridden getServerProperties?",
+      "range": {
+        "startLine": 52,
+        "startChar": 4,
+        "endLine": 59,
+        "endChar": 103
+      },
+      "revId": "3a5808b6e5271c5ca3ee334dcf73ca468ad9abf7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
