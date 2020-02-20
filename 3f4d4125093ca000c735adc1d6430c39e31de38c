@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b45a79ee_97e09157",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-20T11:51:17Z",
+      "side": 1,
+      "message": "very possibly - but this sonar requirement to not go too deeply nested and break things out made it very difficult for me. I actually overnight figured a better way to do this.",
+      "parentUuid": "67ec5bd5_babb5445",
+      "revId": "3f4d4125093ca000c735adc1d6430c39e31de38c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bdd4d77f_cdecfb9d",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2020-02-20T02:23:08Z",
       "side": 1,
       "message": "sonar: nesting too deep",
+      "revId": "3f4d4125093ca000c735adc1d6430c39e31de38c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d59f6b8e_4ec001ee",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-20T11:51:17Z",
+      "side": 1,
+      "message": "Yes probably - but last iteration I tried to remove that and the recursivness of all the possibilities makes it difficult to break things out. I\u0027d like to try a different strategy in my next go around for Optimization.",
+      "parentUuid": "bdd4d77f_cdecfb9d",
       "revId": "3f4d4125093ca000c735adc1d6430c39e31de38c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
