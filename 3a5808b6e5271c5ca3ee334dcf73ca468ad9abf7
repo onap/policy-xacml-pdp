@@ -22,6 +22,47 @@
       "revId": "3a5808b6e5271c5ca3ee334dcf73ca468ad9abf7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "111e9305_378abc69",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpRestServer.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-20T16:11:46Z",
+      "side": 1,
+      "message": "almost.  Just invoke super.getServerProperties() to get the initial set, then all that has to be done is to update the serialization provider.  Thus lines 60, 61, and 66-79 would go away",
+      "parentUuid": "eb94dfe8_c4bcf5a5",
+      "range": {
+        "startLine": 52,
+        "startChar": 4,
+        "endLine": 59,
+        "endChar": 103
+      },
+      "revId": "3a5808b6e5271c5ca3ee334dcf73ca468ad9abf7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c054be63_e610fd3f",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpRestServer.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-20T16:11:46Z",
+      "side": 1,
+      "message": "don\u0027t think this is needed anymore",
+      "revId": "3a5808b6e5271c5ca3ee334dcf73ca468ad9abf7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
