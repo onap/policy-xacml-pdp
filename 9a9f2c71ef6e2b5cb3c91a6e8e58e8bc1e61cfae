@@ -49,6 +49,57 @@
     },
     {
       "key": {
+        "uuid": "21f5192f_13dfe8da",
+        "filename": "applications/native/src/test/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-20T23:48:24Z",
+      "side": 1,
+      "message": "could just say \"filename\" instead of \"(String filename)\", but it\u0027s fine as is",
+      "revId": "9a9f2c71ef6e2b5cb3c91a6e8e58e8bc1e61cfae",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f3cbbe0_25f93e75",
+        "filename": "applications/native/src/test/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-20T23:48:24Z",
+      "side": 1,
+      "message": "use for-each construct instead of an iterator",
+      "revId": "9a9f2c71ef6e2b5cb3c91a6e8e58e8bc1e61cfae",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff6e1132_eee0f0b1",
+        "filename": "applications/native/src/test/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-20T23:48:24Z",
+      "side": 1,
+      "message": "both of these lines bump the iterator - probably not what you want, unless the desired value is the second item",
+      "revId": "9a9f2c71ef6e2b5cb3c91a6e8e58e8bc1e61cfae",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e417d22f_e66fe494",
         "filename": "applications/native/src/test/resources/policies/native.policy.txt",
         "patchSetId": 6
