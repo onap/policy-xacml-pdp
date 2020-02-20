@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5045c26b_47138b3e",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/serialization/XacmlJsonMessageBodyHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-20T02:35:12Z",
+      "side": 1,
+      "message": "could just use \"\u003d\u003d\"",
+      "revId": "2c89f5315b4c14c926f28a4bc9a05e3e75cb6a7c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1adc0980_61e9db21",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/serialization/XacmlXmlMessageBodyHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-20T02:35:12Z",
+      "side": 1,
+      "message": "could just use \"\u003d\u003d\"",
+      "revId": "2c89f5315b4c14c926f28a4bc9a05e3e75cb6a7c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91855b0f_eaaa131c",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/startstop/XacmlPdpRestServer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-20T02:35:12Z",
+      "side": 1,
+      "message": "override getServerProperties() and insert lines 66-72 into it.  Then you can eliminate the rest of the lines in this constructor",
+      "revId": "2c89f5315b4c14c926f28a4bc9a05e3e75cb6a7c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
