@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "f5d9f929_c6472425",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-02-21T01:34:39Z",
+      "side": 1,
+      "message": "It’s kind of strange. I actually tried two different sets of policy/request/response. Both ended up with the same issue - failed to convert policy",
+      "parentUuid": "7a2167c5_3bd7fc00",
+      "range": {
+        "startLine": 75,
+        "startChar": 19,
+        "endLine": 75,
+        "endChar": 66
+      },
+      "revId": "9a9f2c71ef6e2b5cb3c91a6e8e58e8bc1e61cfae",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "21f5192f_13dfe8da",
         "filename": "applications/native/src/test/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTest.java",
         "patchSetId": 6
