@@ -27,9 +27,9 @@ import com.att.research.xacml.std.annotations.XACMLRequest;
 import com.att.research.xacml.std.annotations.XACMLResource;
 import com.att.research.xacml.std.annotations.XACMLSubject;
 
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 
 import org.junit.ClassRule;
 import org.junit.rules.TemporaryFolder;
