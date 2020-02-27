@@ -1,0 +1,14 @@
+tosca_definitions_version: tosca_simple_yaml_1_0_0
+topology_template:
+  policies:
+    -
+      guard.coordination.firstBlocksSecond.test:
+        type: onap.policies.controlloop.guard.coordination.FirstBlocksSecond
+        version: 1.0.0
+        metadata:
+          policy-id : guard.coordination.firstBlocksSecond.test
+          policy-version: 1
+        properties:
+          controlLoop:
+            - ControlLoop-vPCI-fb41f388-a5f2-11e8-98d0-529269fb1459
+            - ControlLoop-vSONH-7d4baf04-8875-4d1f-946d-06b874048b61
