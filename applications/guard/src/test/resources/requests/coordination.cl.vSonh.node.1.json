@@ -1,0 +1,15 @@
+{
+    "ONAPName": "Policy",
+    "ONAPComponent": "drools-pdp",
+    "ONAPInstance": "usecase-template",
+    "requestId": "unique-request-id-47",
+    "action": "guard",
+    "resource": {
+        "guard": {
+            "actor": "SDNR",
+            "recipe": "ModifyConfigANR",
+            "clname": "ControlLoop-vSONH-7d4baf04-8875-4d1f-946d-06b874048b61",
+            "target": "node1"
+        }
+    }
+}

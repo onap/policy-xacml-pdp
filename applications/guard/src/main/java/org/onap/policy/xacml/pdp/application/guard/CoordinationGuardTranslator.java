@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,12 +94,20 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
         }
     }
 
+    /**
+     * This function is not used for CLC instead
+     * the one in LegacyGuardTranslator is used.
+     */
     @Override
     public Request convertRequest(DecisionRequest request) {
         LOGGER.info("this convertRequest shouldn't be used");
         return null;
     }
 
+    /**
+     * This function is not used for CLC instead
+     * the one in LegacyGuardTranslator is used.
+     */
     @Override
     public DecisionResponse convertResponse(Response xacmlResponse) {
         LOGGER.info("this convertResponse shouldn't be used");
@@ -112,13 +120,15 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
      * @param directiveFilename yaml directive file to load
      * @return the CoordinationDirective
      */
-    public static CoordinationDirective loadCoordinationDirectiveFromFile(String directiveFilename) {
+    public static CoordinationDirective loadCoordinationDirectiveFromFile(
+        String directiveFilename) {
         try (InputStream is = new FileInputStream(new File(directiveFilename))) {
             String contents = IOUtils.toString(is, StandardCharsets.UTF_8);
             //
             // Read the yaml into our Java Object
             //
-            CoordinationDirective obj = new StandardYamlCoder().decode(contents, CoordinationDirective.class);
+            CoordinationDirective obj =
+                new StandardYamlCoder().decode(contents, CoordinationDirective.class);
             LOGGER.debug(contents);
             return obj;
         } catch (IOException | CoderException e) {
@@ -135,11 +145,12 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
      * @return the generated Xacml policy
      */
     public static String generateXacmlFromCoordinationDirective(CoordinationDirective cd,
-                                                                String protoDir) throws ToscaPolicyConversionException {
+        String protoDir) throws ToscaPolicyConversionException {
         /*
          * Determine file names
          */
-        String xacmlProtoFilename = protoDir + File.separator + cd.getCoordinationFunction() + ".xml";
+        String xacmlProtoFilename =
+            protoDir + File.separator + cd.getCoordinationFunction() + ".xml";
         LOGGER.debug("xacmlProtoFilename={}", xacmlProtoFilename);
         /*
          * Values to be used for placeholders
@@ -156,8 +167,8 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
                 .map(s -> s.replace("CONTROL_LOOP_TWO", cLTwo))
                 .collect(Collectors.joining(XacmlPolicyUtils.LINE_SEPARATOR));
         } catch (IOException e) {
-            throw new
-                ToscaPolicyConversionException("Error while generating XACML policy for coordination directive", e);
+            throw new ToscaPolicyConversionException(
+                "Error while generating XACML policy for coordination directive", e);
         }
     }
 
