@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ddea30e8_dfcd72d7",
+        "filename": "applications/guard/src/test/java/org/onap/policy/xacml/pdp/application/guard/SonCoordinationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-28T11:23:22Z",
+      "side": 1,
+      "message": "If this isn\u0027t used, then let\u0027s remove it.",
+      "range": {
+        "startLine": 74,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 53
+      },
+      "revId": "1e27a3e05b4f793d87fb7e68051e8fc9c653ef95",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
