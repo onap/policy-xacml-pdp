@@ -22,6 +22,30 @@
       "revId": "bdef9f5dfd8c95eff86e710ef94c1fab4e652854",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c893d38c_d3a4fdc3",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplication.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-02-28T20:18:57Z",
+      "side": 1,
+      "message": "Interesting. Typically we cam remove this argument. Pam, could you please confirm as I see this in all other applications. It is only used in guard application for logging purpose.",
+      "parentUuid": "ec4ab3bf_5b48c99f",
+      "range": {
+        "startLine": 66,
+        "startChar": 57,
+        "endLine": 66,
+        "endChar": 61
+      },
+      "revId": "bdef9f5dfd8c95eff86e710ef94c1fab4e652854",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
