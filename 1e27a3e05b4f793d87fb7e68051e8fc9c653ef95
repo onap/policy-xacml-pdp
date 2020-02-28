@@ -22,6 +22,23 @@
       "revId": "1e27a3e05b4f793d87fb7e68051e8fc9c653ef95",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef47926a_5f0fcf84",
+        "filename": "applications/guard/src/test/java/org/onap/policy/xacml/pdp/application/guard/SonCoordinationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-28T13:22:46Z",
+      "side": 1,
+      "message": "I generally prefer to see these at the top, just below @BeforeClass",
+      "revId": "1e27a3e05b4f793d87fb7e68051e8fc9c653ef95",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
