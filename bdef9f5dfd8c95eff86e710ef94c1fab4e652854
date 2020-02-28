@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "c3fdd29c_37687b7f",
+        "filename": "applications/native/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-28T20:24:26Z",
+      "side": 1,
+      "message": "trailing space",
+      "revId": "bdef9f5dfd8c95eff86e710ef94c1fab4e652854",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ec4ab3bf_5b48c99f",
         "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplication.java",
         "patchSetId": 1
