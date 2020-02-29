@@ -63,6 +63,53 @@
       "revId": "bdef9f5dfd8c95eff86e710ef94c1fab4e652854",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6bea5f6a_432b5198",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplication.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-29T02:14:32Z",
+      "side": 1,
+      "message": "It stays - its defined in the interface. Optional way to have multiple translators for a certain policy type. The example is guard.",
+      "parentUuid": "c893d38c_d3a4fdc3",
+      "range": {
+        "startLine": 66,
+        "startChar": 57,
+        "endLine": 66,
+        "endChar": 61
+      },
+      "revId": "bdef9f5dfd8c95eff86e710ef94c1fab4e652854",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47030d54_9f732533",
+        "filename": "applications/native/src/test/resources/xacml.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-29T02:14:32Z",
+      "side": 1,
+      "message": "It should not need any PIP definition - this is only for guard. Next review please remove it.",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 38
+      },
+      "revId": "bdef9f5dfd8c95eff86e710ef94c1fab4e652854",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
