@@ -24,6 +24,7 @@ package org.onap.policy.pdpx.main.rest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
+import com.att.research.xacml.std.dom.DOMStructureException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.File;
@@ -54,6 +55,7 @@ import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.onap.policy.common.utils.network.NetworkUtil;
+import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.errors.concepts.ErrorResponse;
@@ -73,6 +75,7 @@ public class TestDecision {
     private static Main main;
     private static HttpClient client;
     private static CommonTestData testData = new CommonTestData();
+    private static final String APPLICATION_XACML_XML = "application/xacml+xml";
 
     @ClassRule
     public static final TemporaryFolder appsFolder = new TemporaryFolder();
@@ -179,6 +182,22 @@ public class TestDecision {
         assertThat(response.getStatus()).isEqualTo("Permit");
     }
 
+    @Test
+    public void testDecision_Native() throws IOException, DOMStructureException {
+
+        LOGGER.info("Running test testDecision_Native");
+
+        String requestAsString = ResourceUtils.getResourceAsString(
+                "src/test/resources/decisions/decision.native.request.xml");
+        if (requestAsString == null) {
+            throw new IOException("failed to read the xml request");
+        }
+
+        String response = getNativeDecision(requestAsString);
+        LOGGER.info("Response {}", response);
+        assertThat(response).contains("NOTAPPLICABLE");
+    }
+
     private static Main startXacmlPdpService(File params) throws PolicyXacmlPdpException {
         final String[] XacmlPdpConfigParameters = {"-c", params.getAbsolutePath()};
         return new Main(XacmlPdpConfigParameters);
@@ -191,17 +210,27 @@ public class TestDecision {
     private DecisionResponse getDecision(DecisionRequest request) {
 
         Entity<DecisionRequest> entityRequest = Entity.entity(request, MediaType.APPLICATION_JSON);
-        Response response = client.post("", entityRequest, Collections.emptyMap());
+        Response response = client.post("/decision", entityRequest, Collections.emptyMap());
 
         assertEquals(200, response.getStatus());
 
         return HttpClient.getBody(response, DecisionResponse.class);
     }
 
+    private String getNativeDecision(String request) {
+
+        Entity<String> entityRequest = Entity.entity(request, APPLICATION_XACML_XML);
+        Response response = client.post("/xacml", entityRequest, Collections.emptyMap());
+
+        assertEquals(200, response.getStatus());
+
+        return HttpClient.getBody(response, String.class);
+    }
+
     private ErrorResponse getErrorDecision(DecisionRequest request) {
 
         Entity<DecisionRequest> entityRequest = Entity.entity(request, MediaType.APPLICATION_JSON);
-        Response response = client.post("", entityRequest, Collections.emptyMap());
+        Response response = client.post("/decision", entityRequest, Collections.emptyMap());
 
         assertEquals(400, response.getStatus());
 
@@ -213,7 +242,7 @@ public class TestDecision {
                 .clientName("testDecisionClient")
                 .serializationProvider(GsonMessageBodyHandler.class.getName())
                 .useHttps(false).allowSelfSignedCerts(false).hostname("localhost").port(port)
-                .basePath("policy/pdpx/v1/decision")
+                .basePath("policy/pdpx/v1")
                 .userName("healthcheck").password("zb!XztG34").managed(true).build());
     }
 

@@ -28,7 +28,6 @@ import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
 import org.onap.policy.common.endpoints.event.comm.TopicSource;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
-import org.onap.policy.common.endpoints.http.server.RestServer;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
 import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.services.ServiceManagerContainer;
@@ -62,7 +61,7 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
     @Getter
     @Setter
     private static XacmlPdpActivator current = null;
-    private final RestServer restServer;
+    private final XacmlPdpRestServer restServer;
 
     // The parameters of this policy xacml pdp activator
     private final XacmlPdpParameterGroup xacmlPdpParameterGroup;
@@ -115,8 +114,8 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
             msgDispatcher.register(PdpMessageType.PDP_UPDATE.name(),
                             new XacmlPdpUpdateListener(sinkClient, state, heartbeat, appmgr));
 
-            restServer = new RestServer(xacmlPdpParameterGroup.getRestServerParameters(), XacmlPdpAafFilter.class,
-                                XacmlPdpRestController.class);
+            restServer = new XacmlPdpRestServer(xacmlPdpParameterGroup.getRestServerParameters(),
+                    XacmlPdpAafFilter.class, XacmlPdpRestController.class);
 
         } catch (RuntimeException | TopicSinkClientException e) {
             throw new PolicyXacmlPdpRuntimeException(e.getMessage(), e);
