@@ -1,4 +1,4 @@
-FROM onap/policy-jre-alpine
+FROM onap/policy-jre-alpine:2.0.1
 
 LABEL maintainer="Policy Team"
 
