@@ -10,7 +10,7 @@
 
   <name>${project.artifactId}</name>
   <description>This modules contains the xacml application that evaluates native policies and requests.</description>
-  
+ 
   <dependencies>
       <dependency>
           <groupId>org.onap.policy.xacml-pdp.applications</groupId>
