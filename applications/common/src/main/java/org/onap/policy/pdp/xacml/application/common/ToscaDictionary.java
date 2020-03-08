@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,6 +82,10 @@ public final class ToscaDictionary {
             new IdentifierImpl(ID_URN_ONAP, "guard:target:min");
     public static final Identifier ID_RESOURCE_GUARD_MAX =
             new IdentifierImpl(ID_URN_ONAP, "guard:target:max");
+    public static final Identifier ID_RESOURCE_GUARD_TIMESTART =
+            new IdentifierImpl(ID_URN_ONAP, "guard.target:timestart");
+    public static final Identifier ID_RESOURCE_GUARD_TIMEEND =
+            new IdentifierImpl(ID_URN_ONAP, "guard.target:timeend");
 
     /*
      * This id specifically for guard is provided by the

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ import org.onap.policy.models.decisions.concepts.DecisionRequest;
 @Setter
 @ToString
 @XACMLRequest(ReturnPolicyIdList = true)
-public class LegacyGuardPolicyRequest {
+public class GuardPolicyRequest {
 
     private static final String STR_GUARD = "guard";
 
@@ -73,14 +73,7 @@ public class LegacyGuardPolicyRequest {
     @XACMLResource(includeInResults = true, attributeId = "urn:org:onap:guard:target:vf-count")
     private Integer vfCount;
 
-    @XACMLResource(includeInResults = true, attributeId = "urn:org:onap:guard:target:min")
-    private Integer min;
-
-    @XACMLResource(includeInResults = true, attributeId = "urn:org:onap:guard:target:max")
-    private Integer max;
-
-
-    public LegacyGuardPolicyRequest() {
+    public GuardPolicyRequest() {
         super();
     }
 
@@ -91,11 +84,11 @@ public class LegacyGuardPolicyRequest {
      * @return StdMetadataPolicyRequest
      */
     @SuppressWarnings("unchecked")
-    public static LegacyGuardPolicyRequest createInstance(DecisionRequest decisionRequest) {
+    public static GuardPolicyRequest createInstance(DecisionRequest decisionRequest) {
         //
         // Create our return object
         //
-        LegacyGuardPolicyRequest request = new LegacyGuardPolicyRequest();
+        GuardPolicyRequest request = new GuardPolicyRequest();
         //
         // Add the subject attributes
         //
@@ -140,13 +133,11 @@ public class LegacyGuardPolicyRequest {
             request.targetId = guard.get("target").toString();
         }
         if (guard.containsKey("vfCount")) {
+            //
+            // TODO this can potentially throw a NumberFormatException. Fix this to
+            // throw the exception when you fix the ConvertRequest to throw exceptions also.
+            //
             request.vfCount = Integer.decode(guard.get("vfCount").toString());
-        }
-        if (guard.containsKey("min")) {
-            request.min = Integer.decode(guard.get("min").toString());
-        }
-        if (guard.containsKey("max")) {
-            request.max = Integer.decode(guard.get("max").toString());
         }
 
         return request;

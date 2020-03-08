@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@
 
 package org.onap.policy.pdp.xacml.application.common;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Constructor;
@@ -37,6 +38,11 @@ public class ToscaPolicyTranslatorUtilsTest {
             = ToscaPolicyTranslatorUtils.class.getDeclaredConstructor();
         assertTrue(Modifier.isPrivate(constructor.getModifiers()));
 
+    }
+
+    @Test
+    public void testTimeInRange() {
+        assertThat(ToscaPolicyTranslatorUtils.generateTimeInRange("T00:00:00Z", "T08:00:00Z")).isNotNull();
     }
 
 }

@@ -32,6 +32,11 @@
 
     <artifactId>xacml-test</artifactId>
 
+    <properties>
+        <!-- There is code to support JUnit testing in this sub-module. -->
+        <sonar.skip>true</sonar.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.onap.policy.xacml-pdp.applications</groupId>

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Properties;
-
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
@@ -101,14 +101,14 @@ public class GetOperationOutcomePip extends StdOnapPip {
         // Determine if the issuer is correct
         //
         if (Strings.isNullOrEmpty(pipRequest.getIssuer())) {
-            logger.debug("issuer is null - returning empty response");
+            logger.error("issuer is null - returning empty response");
             //
             // We only respond to ourself as the issuer
             //
             return StdPIPResponse.PIP_RESPONSE_EMPTY;
         }
         if (! pipRequest.getIssuer().startsWith(ToscaDictionary.GUARD_ISSUER_PREFIX)) {
-            logger.debug("Issuer does not start with guard");
+            logger.error("Issuer does not start with guard");
             //
             // We only respond to ourself as the issuer
             //
@@ -161,9 +161,11 @@ public class GetOperationOutcomePip extends StdOnapPip {
                 .setParameter(2, target)
                 .setMaxResults(1)
                 .getSingleResult();
+        } catch (NoResultException e) {
+            logger.trace("No results", e);
         } catch (Exception e) {
-            logger.error("Typed query failed ", e);
-            return null;
+            logger.error("Typed query failed", e);
         }
+        return null;
     }
 }
