@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.Instant;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
@@ -51,6 +52,8 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
+import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
@@ -160,6 +163,16 @@ public class CoordinationTest {
     }
 
     /**
+     * Close the entity manager.
+     */
+    @AfterClass
+    public static void cleanup() throws Exception {
+        if (em != null) {
+            em.close();
+        }
+    }
+
+    /**
      * Clears the database before each test.
      *
      */
@@ -170,52 +183,35 @@ public class CoordinationTest {
         em.getTransaction().commit();
     }
 
-    /**
-     * Check that decision matches expectation.
-     *
-     * @param expected from the response
-     * @param response received
-     *
-     **/
-    public void checkDecision(String expected, DecisionResponse response) throws CoderException {
-        LOGGER.info("Looking for {} Decision", expected);
-        assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isNotNull();
-        assertThat(response.getStatus()).isEqualTo(expected);
+    @Test
+    public void test0Basics() throws ToscaPolicyConversionException {
+        LOGGER.info("**************** Running test0Basics ****************");
         //
-        // Dump it out as Json
+        // Check the methods in coordination translator that don't get tested by
+        // the application.
         //
-        LOGGER.info(gson.encode(response));
-    }
-
-    /**
-     * Request a decision and check that it matches expectation.
-     *
-     * @param request to send to Xacml PDP
-     * @param expected from the response
-     *
-     **/
-    public void requestAndCheckDecision(DecisionRequest request, String expected) throws CoderException {
-        //
-        // Ask for a decision
-        //
-        Pair<DecisionResponse, Response> decision = service.makeDecision(request, null);
-        //
-        // Check decision
-        //
-        checkDecision(expected, decision.getKey());
+        CoordinationGuardTranslator translator = new CoordinationGuardTranslator();
+        assertThat(translator.convertRequest(null)).isNull();
+        assertThat(translator.convertResponse(null)).isNull();
+        assertThat(CoordinationGuardTranslator.loadCoordinationDirectiveFromFile(
+                policyFolder.getRoot().getAbsolutePath() + "/nonexist.yaml")).isNull();
+        CoordinationDirective directive = CoordinationGuardTranslator.loadCoordinationDirectiveFromFile(
+                "src/test/resources/test-directive.yaml");
+        assertThat(directive).isNotNull();
     }
 
     @Test
-    public void test1() throws CoderException, IOException, XacmlApplicationException {
-        LOGGER.info("**************** Running test1 ****************");
+    public void test1Coordination() throws CoderException, IOException, XacmlApplicationException {
+        LOGGER.info("**************** Running test1Coordination ****************");
         //
         // Now load the test coordination policy - make sure
         // the pdp can support it and have it load
         // into the PDP.
         //
-        TestUtils.loadPolicies("src/test/resources/test.policy.guard.coordination.firstBlocksSecond.tosca.yaml",
-                service);
+        List<ToscaPolicy> loadedPolicies = TestUtils.loadPolicies(
+                "src/test/resources/test.policy.guard.coordination.firstBlocksSecond.tosca.yaml", service);
+        assertThat(loadedPolicies).isNotNull();
+        assertThat(loadedPolicies.get(0).getName()).isEqualTo("guard.coordination.firstBlocksSecond.test");
         //
         // cl1 doesn't have open action: cl2 should get permit
         //
@@ -266,6 +262,42 @@ public class CoordinationTest {
         requestAndCheckDecision(requestCl2Node1, DENY);
     }
 
+    /**
+     * Check that decision matches expectation.
+     *
+     * @param expected from the response
+     * @param response received
+     *
+     **/
+    public void checkDecision(String expected, DecisionResponse response) throws CoderException {
+        LOGGER.info("Looking for {} Decision", expected);
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isNotNull();
+        assertThat(response.getStatus()).isEqualTo(expected);
+        //
+        // Dump it out as Json
+        //
+        LOGGER.info(gson.encode(response));
+    }
+
+    /**
+     * Request a decision and check that it matches expectation.
+     *
+     * @param request to send to Xacml PDP
+     * @param expected from the response
+     *
+     **/
+    public void requestAndCheckDecision(DecisionRequest request, String expected) throws CoderException {
+        //
+        // Ask for a decision
+        //
+        Pair<DecisionResponse, Response> decision = service.makeDecision(request, null);
+        //
+        // Check decision
+        //
+        checkDecision(expected, decision.getKey());
+    }
+
     @SuppressWarnings("unchecked")
     private void insertOperationEvent(DecisionRequest request, String outcome) {
         //
@@ -287,15 +319,5 @@ public class CoordinationTest {
         em.getTransaction().begin();
         em.persist(newEntry);
         em.getTransaction().commit();
-    }
-
-    /**
-     * Close the entity manager.
-     */
-    @AfterClass
-    public static void cleanup() throws Exception {
-        if (em != null) {
-            em.close();
-        }
     }
 }

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@
 package org.onap.policy.xacml.pdp.application.guard;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import com.att.research.xacml.api.Response;
 import java.io.File;
@@ -30,8 +31,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Date;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
@@ -53,6 +54,7 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
@@ -71,9 +73,7 @@ public class GuardPdpApplicationTest {
     private static File propertiesFile;
     private static RestServerParameters clientParams = new RestServerParameters();
     private static XacmlApplicationServiceProvider service;
-    private static DecisionRequest requestVfCount1;
-    private static DecisionRequest requestVfCount3;
-    private static DecisionRequest requestVfCount6;
+    private static DecisionRequest requestVfCount;
     private static StandardCoder gson = new StandardCoder();
     private static EntityManager em;
     private static final String DENY = "Deny";
@@ -132,17 +132,9 @@ public class GuardPdpApplicationTest {
         //
         // Load Decision Requests
         //
-        requestVfCount1 = gson.decode(
+        requestVfCount = gson.decode(
                 TextFileUtils.getTextFileAsString(
-                    "src/test/resources/requests/guard.vfCount.1.json"),
-                    DecisionRequest.class);
-        requestVfCount3 = gson.decode(
-                TextFileUtils.getTextFileAsString(
-                    "src/test/resources/requests/guard.vfCount.3.json"),
-                    DecisionRequest.class);
-        requestVfCount6 = gson.decode(
-                TextFileUtils.getTextFileAsString(
-                    "src/test/resources/requests/guard.vfCount.6.json"),
+                    "src/test/resources/requests/guard.vfCount.json"),
                     DecisionRequest.class);
         //
         // Create EntityManager for manipulating DB
@@ -154,7 +146,17 @@ public class GuardPdpApplicationTest {
     }
 
     /**
-     * Clears the database before each test.
+     * Close the entity manager.
+     */
+    @AfterClass
+    public static void cleanup() throws Exception {
+        if (em != null) {
+            em.close();
+        }
+    }
+
+    /**
+     * Clears the database before each test so there are no operations in it.
      *
      */
     @Before
@@ -202,7 +204,7 @@ public class GuardPdpApplicationTest {
 
     @Test
     public void test1Basics() throws CoderException, IOException {
-        LOGGER.info("**************** Running test1 ****************");
+        LOGGER.info("**************** Running test1Basics ****************");
         //
         // Make sure there's an application name
         //
@@ -219,17 +221,17 @@ public class GuardPdpApplicationTest {
         assertThat(service.supportedPolicyTypes()).isNotEmpty();
         assertThat(service.supportedPolicyTypes().size()).isEqualTo(4);
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
-                "onap.policies.controlloop.guard.FrequencyLimiter", "1.0.0"))).isTrue();
+                "onap.policies.controlloop.guard.common.FrequencyLimiter", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
-                "onap.policies.controlloop.guard.FrequencyLimiter", "1.0.1"))).isFalse();
+                "onap.policies.controlloop.guard.common.FrequencyLimiter", "1.0.1"))).isFalse();
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
-                "onap.policies.controlloop.guard.MinMax", "1.0.0"))).isTrue();
+                "onap.policies.controlloop.guard.common.MinMax", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
-                "onap.policies.controlloop.guard.MinMax", "1.0.1"))).isFalse();
+                "onap.policies.controlloop.guard.common.MinMax", "1.0.1"))).isFalse();
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
-                "onap.policies.controlloop.guard.Blacklist", "1.0.0"))).isTrue();
+                "onap.policies.controlloop.guard.common.Blacklist", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
-                "onap.policies.controlloop.guard.Blacklist", "1.0.1"))).isFalse();
+                "onap.policies.controlloop.guard.common.Blacklist", "1.0.1"))).isFalse();
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
                 "onap.policies.controlloop.guard.coordination.FirstBlocksSecond", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
@@ -239,146 +241,106 @@ public class GuardPdpApplicationTest {
 
     @Test
     public void test2NoPolicies() throws CoderException {
-        LOGGER.info("**************** Running test2 ****************");
-        requestAndCheckDecision(requestVfCount1,PERMIT);
+        LOGGER.info("**************** Running test2NoPolicies ****************");
+        assertThatCode(() -> requestAndCheckDecision(requestVfCount, PERMIT)).doesNotThrowAnyException();
     }
 
     @Test
     public void test3FrequencyLimiter() throws CoderException, FileNotFoundException, IOException,
         XacmlApplicationException {
-        LOGGER.info("**************** Running test3 ****************");
+        LOGGER.info("**************** Running test3FrequencyLimiter ****************");
         //
         // Now load the vDNS frequency limiter Policy - make sure
         // the pdp can support it and have it load
         // into the PDP.
         //
-        TestUtils.loadPolicies("src/test/resources/vDNS.policy.guard.frequency.output.tosca.yaml", service);
+        List<ToscaPolicy> loadedPolicies = TestUtils.loadPolicies(
+                "policies/vDNS.policy.guard.frequencylimiter.input.tosca.yaml", service);
+        assertThat(loadedPolicies).hasSize(1);
+        assertThat(loadedPolicies.get(0).getName()).isEqualTo("guard.frequency.scaleout");
         //
         // Zero recent actions: should get permit
         //
-        requestAndCheckDecision(requestVfCount1,PERMIT);
+        requestAndCheckDecision(requestVfCount, PERMIT);
         //
         // Add entry into operations history DB
         //
-        insertOperationEvent(requestVfCount1);
-        //
-        // Only one recent actions: should get permit
-        //
-        requestAndCheckDecision(requestVfCount1,PERMIT);
-        //
-        // Add entry into operations history DB
-        //
-        insertOperationEvent(requestVfCount1);
+        insertOperationEvent(requestVfCount);
         //
         // Two recent actions, more than specified limit of 2: should get deny
         //
-        requestAndCheckDecision(requestVfCount1,DENY);
+        requestAndCheckDecision(requestVfCount, DENY);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void test4MinMax() throws CoderException, FileNotFoundException, IOException, XacmlApplicationException {
-        LOGGER.info("**************** Running test4 ****************");
+        LOGGER.info("**************** Running test4MinMax ****************");
         //
         // Now load the vDNS min max Policy - make sure
         // the pdp can support it and have it load
         // into the PDP.
         //
-        TestUtils.loadPolicies("src/test/resources/vDNS.policy.guard.minmax.output.tosca.yaml", service);
+        List<ToscaPolicy> loadedPolicies = TestUtils.loadPolicies(
+                "policies/vDNS.policy.guard.minmaxvnfs.input.tosca.yaml", service);
+        assertThat(loadedPolicies).hasSize(1);
+        assertThat(loadedPolicies.get(0).getName()).isEqualTo("guard.minmax.scaleout");
         //
-        // vfcount=1 below min of 2: should get a Deny
+        // vfcount=0 below min of 1: should get a Permit
         //
-        requestAndCheckDecision(requestVfCount1, DENY);
+        requestAndCheckDecision(requestVfCount, PERMIT);
         //
-        // vfcount=3 between min of 2 and max of 5: should get a Permit
+        // vfcount=1 between min of 1 and max of 2: should get a Permit
         //
-        requestAndCheckDecision(requestVfCount3, PERMIT);
+        ((Map<String, Object>) requestVfCount.getResource().get("guard")).put("vfCount", 1);
+        requestAndCheckDecision(requestVfCount, PERMIT);
         //
-        // vfcount=6 above max of 5: should get a Deny
+        // vfcount=2 hits the max of 2: should get a Deny
         //
-        requestAndCheckDecision(requestVfCount6,DENY);
+        ((Map<String, Object>) requestVfCount.getResource().get("guard")).put("vfCount", 2);
+        requestAndCheckDecision(requestVfCount, DENY);
         //
-        // Add two entry into operations history DB
+        // vfcount=3 above max of 2: should get a Deny
         //
-        insertOperationEvent(requestVfCount1);
-        insertOperationEvent(requestVfCount1);
+        ((Map<String, Object>) requestVfCount.getResource().get("guard")).put("vfCount", 3);
+        requestAndCheckDecision(requestVfCount,DENY);
         //
-        // vfcount=3 between min of 2 and max of 5, but 2 recent actions is above frequency limit: should get a Deny
+        // Insert entry into operations history DB - to indicate a successful
+        // VF Module Create.
         //
-        requestAndCheckDecision(requestVfCount3, DENY);
+        insertOperationEvent(requestVfCount);
         //
-        // vfcount=6 above max of 5: should get a Deny
+        // vfcount=1 between min of 1 and max of 2; MinMax should succeed,
+        // BUT the frequency limiter should fail
         //
-        requestAndCheckDecision(requestVfCount6, DENY);
-    }
-
-    @Test
-    public void test5MissingFields() throws FileNotFoundException, IOException, XacmlApplicationException,
-        CoderException {
-        LOGGER.info("**************** Running test5 ****************");
-        //
-        // Most likely we would not get a policy with missing fields passed to
-        // us from the API. But in case that happens, or we decide that some fields
-        // will be optional due to re-working of how the XACML policies are built,
-        // let's add support in for that.
-        //
-        TestUtils.loadPolicies("src/test/resources/guard.policy-minmax-missing-fields1.yaml", service);
-        //
-        // We can create a DecisionRequest on the fly - no need
-        // to have it in the .json files
-        //
-        DecisionRequest request = new DecisionRequest();
-        request.setOnapName("JUnit");
-        request.setOnapComponent("test5MissingFields");
-        request.setRequestId(UUID.randomUUID().toString());
-        request.setAction("guard");
-        Map<String, Object> guard = new HashMap<>();
-        guard.put("actor", "FOO");
-        guard.put("recipe", "bar");
-        guard.put("vfCount", "4");
-        Map<String, Object> resource = new HashMap<>();
-        resource.put("guard", guard);
-        request.setResource(resource);
-        //
-        // Ask for a decision - should get permit
-        //
-        Pair<DecisionResponse, Response> decision = service.makeDecision(request, null);
-        LOGGER.info("Looking for Permit Decision {}", decision.getKey());
-        assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getStatus()).isNotNull();
-        assertThat(decision.getKey().getStatus()).isEqualTo("Permit");
-        //
-        // Try a deny
-        //
-        guard.put("vfCount", "10");
-        resource.put("guard", guard);
-        request.setResource(resource);
-        decision = service.makeDecision(request, null);
-        LOGGER.info("Looking for Deny Decision {}", decision.getKey());
-        assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getStatus()).isNotNull();
-        assertThat(decision.getKey().getStatus()).isEqualTo("Deny");
+        ((Map<String, Object>) requestVfCount.getResource().get("guard")).put("vfCount", 1);
+        requestAndCheckDecision(requestVfCount, DENY);
     }
 
     @SuppressWarnings("unchecked")
     @Test
-    public void test6Blacklist() throws CoderException, XacmlApplicationException {
-        LOGGER.info("**************** Running test4 ****************");
+    public void test5Blacklist() throws CoderException, XacmlApplicationException {
+        LOGGER.info("**************** Running test5Blacklist ****************");
         //
-        // Setup requestVfCount1 to point to another target for this test
+        // Load the blacklist policy in with the others.
         //
-        ((Map<String, Object>)requestVfCount3.getResource().get("guard")).put("targets", "vLoadBalancer-01");
+        List<ToscaPolicy> loadedPolicies = TestUtils.loadPolicies(
+                "policies/vDNS.policy.guard.blacklist.input.tosca.yaml", service);
+        assertThat(loadedPolicies).hasSize(1);
+        assertThat(loadedPolicies.get(0).getName()).isEqualTo("guard.blacklist.scaleout");
         //
-        // vfcount=1 above min of 2: should get a permit
+        // vfcount=0 below min of 1: should get a Permit because target is NOT blacklisted
         //
-        requestAndCheckDecision(requestVfCount3, PERMIT);
+        requestAndCheckDecision(requestVfCount, PERMIT);
         //
-        // Now load the vDNS blacklist policy
+        // vfcount=1 between min of 1 and max of 2: change the
         //
-        TestUtils.loadPolicies("src/test/resources/vDNS.policy.guard.blacklist.output.tosca.yaml", service);
+        ((Map<String, Object>) requestVfCount.getResource().get("guard"))
+            .put("target", "the-vfmodule-where-root-is-true");
         //
-        // vfcount=1 above min of 2: should get a permit
+        // vfcount=0 below min of 1: should get a Deny because target IS blacklisted
         //
-        requestAndCheckDecision(requestVfCount3, DENY);
+        requestAndCheckDecision(requestVfCount, DENY);
     }
 
     @SuppressWarnings("unchecked")
@@ -404,16 +366,6 @@ public class GuardPdpApplicationTest {
         em.getTransaction().begin();
         em.persist(newEntry);
         em.getTransaction().commit();
-    }
-
-    /**
-     * Close the entity manager.
-     */
-    @AfterClass
-    public static void cleanup() throws Exception {
-        if (em != null) {
-            em.close();
-        }
     }
 
 }
