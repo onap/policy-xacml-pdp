@@ -82,6 +82,10 @@ public final class ToscaDictionary {
             new IdentifierImpl(ID_URN_ONAP, "guard:target:min");
     public static final Identifier ID_RESOURCE_GUARD_MAX =
             new IdentifierImpl(ID_URN_ONAP, "guard:target:max");
+    public static final Identifier ID_RESOURCE_GUARD_TIMESTART =
+            new IdentifierImpl(ID_URN_ONAP, "guard.target:timestart");
+    public static final Identifier ID_RESOURCE_GUARD_TIMEEND =
+            new IdentifierImpl(ID_URN_ONAP, "guard.target:timeend");
 
     /*
      * This id specifically for guard is provided by the

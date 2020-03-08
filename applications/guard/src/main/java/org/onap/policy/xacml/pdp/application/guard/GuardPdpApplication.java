@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,9 +42,8 @@ public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(GuardPdpApplication.class);
     private static final String STRING_VERSION100 = "1.0.0";
     private List<ToscaPolicyTypeIdentifier> supportedPolicyTypes = new ArrayList<>();
-    private LegacyGuardTranslator legacyTranslator = new LegacyGuardTranslator();
+    private GuardTranslator guardTranslator = new GuardTranslator();
     private CoordinationGuardTranslator coordinationTranslator = new CoordinationGuardTranslator();
-
 
     /**
      * Constructor.
@@ -52,13 +51,13 @@ public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
      */
     public GuardPdpApplication() {
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.controlloop.guard.FrequencyLimiter",
+                GuardTranslator.POLICYTYPE_FREQUENCY,
                 STRING_VERSION100));
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.controlloop.guard.MinMax",
+                GuardTranslator.POLICYTYPE_MINMAX,
                 STRING_VERSION100));
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.controlloop.guard.Blacklist",
+                GuardTranslator.POLICYTYPE_BLACKLIST,
                 STRING_VERSION100));
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
                 "onap.policies.controlloop.guard.coordination.FirstBlocksSecond",
@@ -101,8 +100,8 @@ public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
             LOGGER.debug("returning coordinationTranslator");
             return coordinationTranslator;
         } else {
-            LOGGER.debug("returning legacyTranslator");
-            return legacyTranslator;
+            LOGGER.debug("returning guardTranslator");
+            return guardTranslator;
         }
     }
 

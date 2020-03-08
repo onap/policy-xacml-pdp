@@ -101,14 +101,14 @@ public class GetOperationOutcomePip extends StdOnapPip {
         // Determine if the issuer is correct
         //
         if (Strings.isNullOrEmpty(pipRequest.getIssuer())) {
-            logger.debug("issuer is null - returning empty response");
+            logger.error("issuer is null - returning empty response");
             //
             // We only respond to ourself as the issuer
             //
             return StdPIPResponse.PIP_RESPONSE_EMPTY;
         }
         if (! pipRequest.getIssuer().startsWith(ToscaDictionary.GUARD_ISSUER_PREFIX)) {
-            logger.debug("Issuer does not start with guard");
+            logger.error("Issuer does not start with guard");
             //
             // We only respond to ourself as the issuer
             //
@@ -162,7 +162,11 @@ public class GetOperationOutcomePip extends StdOnapPip {
                 .setMaxResults(1)
                 .getSingleResult();
         } catch (Exception e) {
-            logger.error("Typed query failed ", e);
+            if (e instanceof javax.persistence.NoResultException) {
+                logger.trace("No results", e);
+            } else {
+                logger.error("Typed query failed", e);
+            }
             return null;
         }
     }

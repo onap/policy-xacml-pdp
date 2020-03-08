@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,14 @@
 package org.onap.policy.pdp.xacml.application.common;
 
 import com.att.research.xacml.api.Identifier;
+import com.att.research.xacml.api.XACML3;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * This class contains static methods of helper classes to convert TOSCA policies
@@ -36,6 +40,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
  *
  */
 public final class ToscaPolicyTranslatorUtils {
+    private static final ObjectFactory factory = new ObjectFactory();
 
     private ToscaPolicyTranslatorUtils() {
         super();
@@ -98,5 +103,67 @@ public final class ToscaPolicyTranslatorUtils {
             allOf.getMatch().add(match);
         }
         return allOf;
+    }
+
+    /**
+     * Takes start and end time interval and generates an ApplyType for it.
+     *
+     * @param start ISO8601 timestamp
+     * @param end ISO8601 timestamp
+     * @return ApplyType
+     */
+    public static ApplyType generateTimeInRange(String start, String end) {
+        if (StringUtils.isBlank(start) || StringUtils.isBlank(end)) {
+            return null;
+        }
+
+        AttributeDesignatorType designator = new AttributeDesignatorType();
+        designator.setAttributeId(XACML3.ID_ENVIRONMENT_CURRENT_TIME.stringValue());
+        designator.setCategory(XACML3.ID_ATTRIBUTE_CATEGORY_ENVIRONMENT.stringValue());
+        designator.setDataType(XACML3.ID_DATATYPE_TIME.stringValue());
+
+        AttributeValueType valueStart = new AttributeValueType();
+        valueStart.setDataType(XACML3.ID_DATATYPE_TIME.stringValue());
+        valueStart.getContent().add(start);
+
+        AttributeValueType valueEnd = new AttributeValueType();
+        valueEnd.setDataType(XACML3.ID_DATATYPE_TIME.stringValue());
+        valueEnd.getContent().add(end);
+
+
+        ApplyType applyOneAndOnly = new ApplyType();
+        applyOneAndOnly.setDescription("Unbag the current time");
+        applyOneAndOnly.setFunctionId(XACML3.ID_FUNCTION_TIME_ONE_AND_ONLY.stringValue());
+        applyOneAndOnly.getExpression().add(factory.createAttributeDesignator(designator));
+
+        ApplyType applyTimeInRange = new ApplyType();
+        applyTimeInRange.setDescription("return true if current time is in range.");
+        applyTimeInRange.setFunctionId(XACML3.ID_FUNCTION_TIME_IN_RANGE.stringValue());
+        applyTimeInRange.getExpression().add(factory.createApply(applyOneAndOnly));
+        applyTimeInRange.getExpression().add(factory.createAttributeValue(valueStart));
+        applyTimeInRange.getExpression().add(factory.createAttributeValue(valueEnd));
+
+        return applyTimeInRange;
+    }
+
+    /**
+     * Parses an integer value from the string.
+     *
+     * @param strInteger String representation of integer
+     * @return Integer object
+     */
+    public static Integer parseInteger(String strInteger) {
+        Integer theInt = null;
+        try {
+            theInt = Integer.parseInt(strInteger);
+        } catch (NumberFormatException e) {
+            try {
+                Double dblLimit = Double.parseDouble(strInteger);
+                theInt = dblLimit.intValue();
+            } catch (NumberFormatException e1) {
+                return null;
+            }
+        }
+        return theInt;
     }
 }

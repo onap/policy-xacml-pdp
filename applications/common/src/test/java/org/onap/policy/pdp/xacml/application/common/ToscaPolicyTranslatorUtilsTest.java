@@ -22,6 +22,7 @@
 
 package org.onap.policy.pdp.xacml.application.common;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Constructor;
@@ -37,6 +38,11 @@ public class ToscaPolicyTranslatorUtilsTest {
             = ToscaPolicyTranslatorUtils.class.getDeclaredConstructor();
         assertTrue(Modifier.isPrivate(constructor.getModifiers()));
 
+    }
+
+    @Test
+    public void testTimeInRange() {
+        assertThat(ToscaPolicyTranslatorUtils.generateTimeInRange("T00:00:00Z", "T08:00:00Z")).isNotNull();
     }
 
 }
