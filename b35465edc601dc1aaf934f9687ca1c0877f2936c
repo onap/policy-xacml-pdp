@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "141891ee_d1058742",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-09T18:07:21Z",
+      "side": 1,
+      "message": "I don\u0027t have time for that - I already have one JIRA for re-factoring StdMatchableTranslator. I\u0027m going to create another one for other areas including this. I think you have suggested the same for Obligations also.",
+      "parentUuid": "3dd9a2ee_7aebdf81",
+      "revId": "b35465edc601dc1aaf934f9687ca1c0877f2936c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4d5037b2_7f18175e",
         "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "b35465edc601dc1aaf934f9687ca1c0877f2936c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4b79711_db5c5f3f",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-09T18:07:21Z",
+      "side": 1,
+      "message": "Actually for this case, there is only one result ever. But you always get a collection in you are doing a multiple request or send in multiple lists of subjects. Optimization has one instance of multiple results, but that\u0027s because I didn\u0027t have time to re-work the xacml code to combine some attributes and force it to one result. Again, I am out of time and just making the code work.",
+      "parentUuid": "4d5037b2_7f18175e",
+      "revId": "b35465edc601dc1aaf934f9687ca1c0877f2936c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     },
     {
       "key": {
