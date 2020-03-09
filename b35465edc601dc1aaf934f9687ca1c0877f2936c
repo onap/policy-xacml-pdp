@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3dd9a2ee_7aebdf81",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-03-09T17:23:40Z",
+      "side": 1,
+      "message": "FYI: could define POJOs (could be static/nested) for the various properties and add annotations.  Then the type conversions would go away and much of the validation could be done by a BeanValidator.",
+      "revId": "b35465edc601dc1aaf934f9687ca1c0877f2936c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d5037b2_7f18175e",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-03-09T17:23:40Z",
+      "side": 1,
+      "message": "only appears to keep the last result.  Shouldn\u0027t it DENY if ANY of them DENY?",
+      "revId": "b35465edc601dc1aaf934f9687ca1c0877f2936c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf60f147_d00d2b04",
+        "filename": "applications/guard/src/test/resources/test-policies.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-03-09T17:23:40Z",
+      "side": 1,
+      "message": "trailing spaces\n\nmaybe add a newline to make gerrit happy",
+      "revId": "b35465edc601dc1aaf934f9687ca1c0877f2936c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
