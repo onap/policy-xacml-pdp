@@ -22,6 +22,8 @@ package org.onap.policy.pdpx.main.rest.serialization;
 
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
+import com.att.research.xacml.std.json.JsonRequestTranslator;
+import com.att.research.xacml.std.json.JsonResponseTranslator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -60,8 +62,7 @@ public class XacmlJsonMessageBodyHandler implements MessageBodyReader<Request>, 
                     throws IOException {
 
         try (OutputStreamWriter writer = new OutputStreamWriter(entityStream, StandardCharsets.UTF_8)) {
-            //TODO
-            //writer.write(JsonResponseTranslator.toString(response, true));
+            writer.write(JsonResponseTranslator.toString(response, true));
         } catch (Exception exc) {
             throw new IOException("failed to convert a json response to a string");
         }
@@ -78,8 +79,7 @@ public class XacmlJsonMessageBodyHandler implements MessageBodyReader<Request>, 
 
         Request jsonRequest = null;
         try {
-            //TODO
-            //jsonRequest = JsonResponseTranslator.load(entityStream);
+            jsonRequest = JsonRequestTranslator.load(entityStream);
         } catch (Exception exc) {
             throw new IOException("failed to decode incoming request string to a json request");
         }

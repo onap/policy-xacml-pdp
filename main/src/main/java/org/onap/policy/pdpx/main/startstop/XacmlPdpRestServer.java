@@ -29,6 +29,8 @@ import org.onap.policy.common.endpoints.http.server.aaf.AafAuthFilter;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.properties.PolicyEndPointProperties;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
+import org.onap.policy.pdpx.main.rest.serialization.XacmlJsonExceptionMapper;
+import org.onap.policy.pdpx.main.rest.serialization.XacmlJsonMessageBodyHandler;
 import org.onap.policy.pdpx.main.rest.serialization.XacmlXmlExceptionMapper;
 import org.onap.policy.pdpx.main.rest.serialization.XacmlXmlMessageBodyHandler;
 
@@ -62,7 +64,7 @@ public class XacmlPdpRestServer extends RestServer {
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_SERIALIZATION_PROVIDER,
                 String.join(",", GsonMessageBodyHandler.class.getName(), YamlMessageBodyHandler.class.getName(),
                                 JsonExceptionMapper.class.getName(), YamlExceptionMapper.class.getName(),
-                                //XacmlJsonMessageBodyHandler.class.getName(), XacmlJsonExceptionMapper.class.getName(),
+                                XacmlJsonMessageBodyHandler.class.getName(), XacmlJsonExceptionMapper.class.getName(),
                                 XacmlXmlMessageBodyHandler.class.getName(), XacmlXmlExceptionMapper.class.getName()));
         return props;
     }
