@@ -28,6 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import com.att.research.xacml.api.Advice;
 import com.att.research.xacml.api.AttributeAssignment;
 import com.att.research.xacml.api.Decision;
 import com.att.research.xacml.api.IdReference;
@@ -249,6 +250,10 @@ public class StdBaseTranslatorTest {
         protected void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse) {
         }
 
+        @Override
+        protected void scanAdvice(Collection<Advice> advice, DecisionResponse decisionResponse) {
+        }
+
     }
 
     private class TestTranslator extends StdBaseTranslator {
@@ -256,6 +261,10 @@ public class StdBaseTranslatorTest {
 
         @Override
         protected void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse) {
+        }
+
+        @Override
+        protected void scanAdvice(Collection<Advice> advice, DecisionResponse decisionResponse) {
         }
 
         @Override

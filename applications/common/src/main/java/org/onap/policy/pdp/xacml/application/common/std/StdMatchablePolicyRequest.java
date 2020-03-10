@@ -92,7 +92,7 @@ public class StdMatchablePolicyRequest {
     }
 
     /**
-     * Parses the DecisionRequest into a MonitoringRequest.
+     * Parses the DecisionRequest into a XAML request.
      *
      * @param decisionRequest Input DecisionRequest
      * @return Request XACML Request object
