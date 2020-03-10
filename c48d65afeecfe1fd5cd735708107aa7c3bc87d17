@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "7adb5ea7_f87299d5",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdOnapPip.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-10T22:41:05Z",
+      "side": 1,
+      "message": "I will have to add some shutdown methodology to the XACML github engine in order for cleanup to occur. I will look at that this week.",
+      "parentUuid": "6bc731ad_f9c37b18",
+      "revId": "c48d65afeecfe1fd5cd735708107aa7c3bc87d17",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7d49eccd_1a69066c",
         "filename": "applications/common/src/test/resources/finder.test.properties",
         "patchSetId": 1
