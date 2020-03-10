@@ -22,6 +22,40 @@
       "revId": "d69ee01c137a600d286021b11868151984b6cf31",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe24fa0e_c0d67bba",
+        "filename": "applications/optimization/src/main/java/org/onap/policy/xacml/pdp/application/optimization/OptimizationPdpApplication.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-03-10T13:09:37Z",
+      "side": 1,
+      "message": "perhaps change to PERMIT.equals(...)",
+      "revId": "d69ee01c137a600d286021b11868151984b6cf31",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a3d58dd_53adf387",
+        "filename": "applications/optimization/src/main/java/org/onap/policy/xacml/pdp/application/optimization/OptimizationPdpApplicationTranslator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-03-10T13:09:37Z",
+      "side": 1,
+      "message": "this block looks the same as 137-144 except for the map key - perhaps extract a common method",
+      "revId": "d69ee01c137a600d286021b11868151984b6cf31",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
