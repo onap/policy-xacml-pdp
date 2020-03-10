@@ -22,6 +22,7 @@
 
 package org.onap.policy.pdp.xacml.application.common.std;
 
+import com.att.research.xacml.api.Advice;
 import com.att.research.xacml.api.DataTypeException;
 import com.att.research.xacml.api.Identifier;
 import com.att.research.xacml.api.Obligation;
@@ -155,6 +156,21 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
                 scanContentObligation(obligation, decisionResponse);
             }
         }
+    }
+
+    /**
+     * scanAdvice - not implemented in this class.
+     *
+     * @param advice Collection of advice objects
+     * @param DecisionResponse DecisionResponse object
+     */
+    @Override
+    protected void scanAdvice(Collection<Advice> advice, DecisionResponse decisionResponse) {
+        //
+        // By default there are no advice supported in this object. Please override and provide
+        // any needed functionality.
+        //
+        LOGGER.warn("Advice found - not supported in this class {}", this.getClass());
     }
 
     /**

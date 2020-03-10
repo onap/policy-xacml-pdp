@@ -1,0 +1,34 @@
+tosca_definitions_version: tosca_simple_yaml_1_0_0
+topology_template:
+  policies:
+    -
+        missing-subscriberProperties:
+            type: onap.policies.optimization.service.SubscriberPolicy
+            version: 1.0.0
+            type_version: 1.0.0
+            properties:
+                scope: []
+                services: [vCPE]
+                identity: subscriber_vCPE
+    -
+        missing-subscriberName:
+            type: onap.policies.optimization.service.SubscriberPolicy
+            version: 1.0.0
+            type_version: 1.0.0
+            properties:
+                scope: []
+                services: [vCPE]
+                identity: subscriber_vCPE
+                subscriberProperties:
+                    missingName: foo
+    -
+        missing-subscriberRole:
+            type: onap.policies.optimization.service.SubscriberPolicy
+            version: 1.0.0
+            type_version: 1.0.0
+            properties:
+                scope: []
+                services: [vCPE]
+                identity: subscriber_vCPE
+                subscriberProperties:
+                    subscriberName: foo
