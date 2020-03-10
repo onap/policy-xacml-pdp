@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ public class StdMatchablePolicyRequest {
     }
 
     /**
-     * Parses the DecisionRequest into a MonitoringRequest.
+     * Parses the DecisionRequest into a XAML request.
      *
      * @param decisionRequest Input DecisionRequest
      * @return Request XACML Request object

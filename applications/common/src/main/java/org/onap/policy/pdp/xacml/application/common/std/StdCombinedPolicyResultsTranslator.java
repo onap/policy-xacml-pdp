@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@
 
 package org.onap.policy.pdp.xacml.application.common.std;
 
+import com.att.research.xacml.api.Advice;
 import com.att.research.xacml.api.DataTypeException;
 import com.att.research.xacml.api.Identifier;
 import com.att.research.xacml.api.Obligation;
@@ -155,6 +156,21 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
                 scanContentObligation(obligation, decisionResponse);
             }
         }
+    }
+
+    /**
+     * scanAdvice - not implemented in this class.
+     *
+     * @param advice Collection of advice objects
+     * @param DecisionResponse DecisionResponse object
+     */
+    @Override
+    protected void scanAdvice(Collection<Advice> advice, DecisionResponse decisionResponse) {
+        //
+        // By default there are no advice supported in this object. Please override and provide
+        // any needed functionality.
+        //
+        LOGGER.warn("Advice found - not supported in this class {}", this.getClass());
     }
 
     /**

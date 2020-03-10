@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,17 @@
 
 package org.onap.policy.xacml.pdp.application.optimization;
 
+import com.att.research.xacml.api.Advice;
+import com.att.research.xacml.api.AttributeAssignment;
+import com.att.research.xacml.api.Identifier;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.util.XACMLPolicyWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
@@ -40,6 +45,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import org.apache.commons.lang3.StringUtils;
+import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
@@ -53,6 +59,9 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
 
     private static final String OPTIMIZATION_POLICYTYPE_SUBSCRIBER =
             "onap.policies.optimization.service.SubscriberPolicy";
+
+    private static final String FIELD_SUBSCRIBER_ROLE = "subscriberRole";
+    private static final String FIELD_PROV_STATUS = "provStatus";
 
     @SuppressWarnings("unchecked")
     @Override
@@ -81,7 +90,7 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
             //
             // Add subscriber advice
             //
-            policy.setAdviceExpressions(generateSubscriberAdvice(toscaPolicy, subscriberProperties));
+            policy.setAdviceExpressions(generateSubscriberAdvice(subscriberProperties));
             //
             // Dump our revised policy out
             //
@@ -93,6 +102,49 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
             }
         }
         return policy;
+    }
+
+    @Override
+    protected void scanAdvice(Collection<Advice> advice, DecisionResponse decisionResponse) {
+        for (Advice adv : advice) {
+            if (! ToscaDictionary.ID_ADVICE_OPTIMIZATION_SUBSCRIBER.equals(adv.getId())) {
+                LOGGER.warn("Unknown advice id {}", adv.getId());
+                continue;
+            }
+            //
+            // Get the existing advice if any, we are appending to it.
+            //
+            Map<String, Object> mapAdvice = decisionResponse.getAdvice();
+            //
+            // If there's nothing, create a map
+            //
+            if (mapAdvice == null) {
+                mapAdvice = new HashMap<>();
+            }
+            for (AttributeAssignment assignment : adv.getAttributeAssignments()) {
+                if (ToscaDictionary.ID_ADVICE_OPTIMIZATION_SUBSCRIBER_ROLE.equals(assignment.getAttributeId())) {
+                    addValuesToMap(assignment.getAttributeValue().getValue(), FIELD_SUBSCRIBER_ROLE, mapAdvice);
+                } else if (ToscaDictionary.ID_ADVICE_OPTIMIZATION_SUBSCRIBER_STATUS.equals(
+                        assignment.getAttributeId())) {
+                    addValuesToMap(assignment.getAttributeValue().getValue(), FIELD_PROV_STATUS, mapAdvice);
+                }
+            }
+            if (! mapAdvice.isEmpty()) {
+                decisionResponse.setAdvice(mapAdvice);
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void addValuesToMap(Object values, String key, Map<String, Object> mapAdvice) {
+        if (values instanceof Collection) {
+            List<String> valueList = new ArrayList<>();
+            ((Collection<Object>) values).forEach(val -> valueList.add(val.toString()));
+            mapAdvice.put(key, valueList);
+        } else {
+            mapAdvice.put(key, values.toString());
+        }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -132,50 +184,63 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
     }
 
     @SuppressWarnings("unchecked")
-    private static AdviceExpressionsType generateSubscriberAdvice(ToscaPolicy toscaPolicy,
-            Map<String, Object> subscriberProperties) throws ToscaPolicyConversionException {
+    private static AdviceExpressionsType generateSubscriberAdvice(Map<String, Object> subscriberProperties)
+            throws ToscaPolicyConversionException {
         //
         // Get the subscriber role
         //
-        Object role = subscriberProperties.get("subscriberRole");
+        Object role = subscriberProperties.get(FIELD_SUBSCRIBER_ROLE);
         if (role == null || StringUtils.isBlank(role.toString())) {
             throw new ToscaPolicyConversionException("Missing subscriberRole");
         }
         //
-        // Get the provision status
-        // TODO
-        //
-        // Our subscriber Advice expression holds all the attribute assignments
+        // Create our subscriber advice expression
         //
         AdviceExpressionType adviceExpression = new AdviceExpressionType();
         adviceExpression.setAppliesTo(EffectType.PERMIT);
         adviceExpression.setAdviceId(ToscaDictionary.ID_ADVICE_OPTIMIZATION_SUBSCRIBER.stringValue());
         //
-        // Add in subscriber role
+        // Add in subscriber role advice attributes
         //
-        generateSubscriberRoleAdvice(adviceExpression, role instanceof Collection ? (List<Object>) role :
-            Arrays.asList(role));
-
+        generateSubscriberAdviceAttributes(
+                adviceExpression,
+                ToscaDictionary.ID_ADVICE_OPTIMIZATION_SUBSCRIBER_ROLE,
+                role instanceof Collection ? (List<Object>) role : Arrays.asList(role));
+        //
+        // Get the provision status
+        //
+        Object provision = subscriberProperties.get(FIELD_PROV_STATUS);
+        if (provision == null || StringUtils.isBlank(provision.toString())) {
+            throw new ToscaPolicyConversionException("Missing provStatus");
+        }
+        adviceExpression = generateSubscriberAdviceAttributes(
+                adviceExpression,
+                ToscaDictionary.ID_ADVICE_OPTIMIZATION_SUBSCRIBER_STATUS,
+                role instanceof Collection ? (List<Object>) provision : Arrays.asList(role));
+        //
+        // Add it to the overall expressions
+        //
         AdviceExpressionsType adviceExpressions = new AdviceExpressionsType();
         adviceExpressions.getAdviceExpression().add(adviceExpression);
-
+        //
+        // Done return our advice expressions
+        //
         return adviceExpressions;
     }
 
-    private static AdviceExpressionType generateSubscriberRoleAdvice(AdviceExpressionType adviceExpression,
-            Collection<Object> subscriberRoles) {
-        for (Object subscriberRole : subscriberRoles) {
+    private static AdviceExpressionType generateSubscriberAdviceAttributes(AdviceExpressionType adviceExpression,
+            Identifier attributeId, Collection<Object> adviceAttribute) {
+        for (Object attribute : adviceAttribute) {
             AttributeValueType value = new AttributeValueType();
             value.setDataType(XACML3.ID_DATATYPE_STRING.stringValue());
-            value.getContent().add(subscriberRole.toString());
+            value.getContent().add(attribute.toString());
 
             AttributeAssignmentExpressionType assignment = new AttributeAssignmentExpressionType();
-            assignment.setAttributeId(ToscaDictionary.ID_ADVICE_OPTIMIZATION_SUBSCRIBER_ROLE.stringValue());
+            assignment.setAttributeId(attributeId.stringValue());
             assignment.setCategory(XACML3.ID_SUBJECT_CATEGORY_ACCESS_SUBJECT.stringValue());
             assignment.setExpression(new ObjectFactory().createAttributeValue(value));
 
             adviceExpression.getAttributeAssignmentExpression().add(assignment);
-
         }
         //
         // Return for convenience
