@@ -22,6 +22,7 @@
 
 package org.onap.policy.pdp.xacml.application.common.std;
 
+import com.att.research.xacml.api.Advice;
 import com.att.research.xacml.api.Identifier;
 import com.att.research.xacml.api.Obligation;
 import com.att.research.xacml.api.Request;
@@ -83,6 +84,10 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StdMatchableTranslator.class);
     private static final StandardYamlCoder standardYamlCoder = new StandardYamlCoder();
+
+    private static final String MSG_WEIGHT = "Weight is {}";
+    private static final String MSG_WEIGHT_LIST = "Weight list is {}";
+    private static final String MSG_WEIGHT_MAP = "Weight map is {}";
 
     private final Map<ToscaPolicyTypeIdentifier, ToscaServiceTemplate> matchablePolicyTypes = new HashMap<>();
     @Setter
@@ -153,6 +158,10 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
                 })
             )
         );
+    }
+
+    protected void scanAdvice(Collection<Advice> advice, DecisionResponse decisionResponse) {
+        LOGGER.warn("scanAdvice not supported by {}", this.getClass());
     }
 
     /**
@@ -384,7 +393,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
                 //
                 int weight = generateMatchable(targetType, entrySet.getKey(), entrySet.getValue(),
                         property.getLeft(), property.getRight());
-                LOGGER.info("Weight is {}", weight);
+                LOGGER.info(MSG_WEIGHT, weight);
                 totalWeight += weight;
             } else {
                 //
@@ -394,12 +403,12 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
                 if ("list".equals(toscaProperty.getType())) {
                     int weight = findMatchablesInList(entrySet.getKey(), entrySet.getValue(), toscaProperty,
                             policyTemplate, targetType);
-                    LOGGER.info("Weight list is {}", weight);
+                    LOGGER.info(MSG_WEIGHT_LIST, weight);
                     totalWeight += weight;
                 } else if ("map".equals(toscaProperty.getType())) {
                     int weight = findMatchablesInMap(entrySet.getKey(), entrySet.getValue(), toscaProperty,
                             policyTemplate, targetType);
-                    LOGGER.info("Weight map is {}", weight);
+                    LOGGER.info(MSG_WEIGHT_MAP, weight);
                     totalWeight += weight;
                 }
             }
@@ -460,7 +469,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
                     //
                     int weight = generateMatchable(targetType, entrySet.getKey(), entrySet.getValue(),
                             toscaProperty, listTemplate);
-                    LOGGER.info("Weight is {}", weight);
+                    LOGGER.info(MSG_WEIGHT, weight);
                     totalWeight += weight;
                 } else {
                     //
@@ -470,12 +479,12 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
                     if ("list".equals(toscaProperty.getType())) {
                         int weight = findMatchablesInList(entrySet.getKey(), entrySet.getValue(), toscaProperty,
                                 listTemplate, targetType);
-                        LOGGER.info("Weight list is {}", weight);
+                        LOGGER.info(MSG_WEIGHT_LIST, weight);
                         totalWeight += weight;
                     } else if ("map".equals(toscaProperty.getType())) {
                         int weight = findMatchablesInMap(entrySet.getKey(), entrySet.getValue(), toscaProperty,
                                 listTemplate, targetType);
-                        LOGGER.info("Weight map is {}", weight);
+                        LOGGER.info(MSG_WEIGHT_MAP, weight);
                         totalWeight += weight;
                     }
                 }
@@ -529,7 +538,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
                 //
                 int weight = generateMatchable(targetType, entrySet.getKey(), entrySet.getValue(),
                         toscaProperty, mapTemplate);
-                LOGGER.info("Weight is {}", weight);
+                LOGGER.info(MSG_WEIGHT, weight);
                 totalWeight += weight;
             } else {
                 //
@@ -539,12 +548,12 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
                 if ("list".equals(toscaProperty.getType())) {
                     int weight = findMatchablesInList(entrySet.getKey(), entrySet.getValue(), toscaProperty,
                             mapTemplate, targetType);
-                    LOGGER.info("Weight list is {}", weight);
+                    LOGGER.info(MSG_WEIGHT_LIST, weight);
                     totalWeight += weight;
                 } else if ("map".equals(toscaProperty.getType())) {
                     int weight = findMatchablesInMap(entrySet.getKey(), entrySet.getValue(), toscaProperty,
                             mapTemplate, targetType);
-                    LOGGER.info("Weight map is {}", weight);
+                    LOGGER.info(MSG_WEIGHT_MAP, weight);
                     totalWeight += weight;
                 }
             }
@@ -721,7 +730,8 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         int weight = 0;
         if (isYamlType(toscaProperty.getEntrySchema().getType())) {
             //
-            // PLD TODO - this won't work
+            // PLD TODO - this won't work. Right now there are no maps being used to match.
+            // need to investigate whether we really can support that situation.
             //
             AnyOfType anyOf = generateMatches((Collection<Object>) value,
                     new IdentifierImpl(ToscaDictionary.ID_RESOURCE_MATCHABLE + key));

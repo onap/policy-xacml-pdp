@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@
 
 package org.onap.policy.pdp.xacml.application.common.std;
 
+import com.att.research.xacml.api.Advice;
 import com.att.research.xacml.api.Decision;
 import com.att.research.xacml.api.Obligation;
 import com.att.research.xacml.api.Request;
@@ -92,6 +93,10 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
                 // Go through obligations
                 //
                 scanObligations(xacmlResult.getObligations(), decisionResponse);
+                //
+                // Go through advice
+                //
+                scanAdvice(xacmlResult.getAssociatedAdvice(), decisionResponse);
             } else {
                 //
                 // TODO we have to return an ErrorResponse object instead
@@ -112,6 +117,16 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
      * @param decisionResponse DecisionResponse object used to store any results from obligations.
      */
     protected abstract void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse);
+
+    /**
+     * scanAdvice - scans the list of advice and make appropriate call to process the advice. This method
+     * can be overridden for each specific application as advice may have different expected attributes per
+     * application.
+     *
+     * @param advice Collection of Advice objects
+     * @param decisionResponse DecisionResponse object used to store any results from advice.
+     */
+    protected abstract void scanAdvice(Collection<Advice> advice, DecisionResponse decisionResponse);
 
     /**
      * From the TOSCA metadata section, pull in values that are needed into the XACML policy.
