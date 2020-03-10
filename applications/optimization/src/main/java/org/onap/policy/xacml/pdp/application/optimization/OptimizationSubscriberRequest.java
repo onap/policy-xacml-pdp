@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,6 +72,10 @@ public class OptimizationSubscriberRequest extends StdMatchablePolicyRequest {
         Map<String, Object> contexts = decisionRequest.getContext();
         for (Entry<String, Object> entrySet : contexts.entrySet()) {
             try {
+                //
+                // Should always be a collection, but in case someone changes
+                // the class without checking this repo.
+                //
                 if (entrySet.getValue() instanceof Collection) {
                     addSubject(contextAttributes, (Collection) entrySet.getValue(),
                             ToscaDictionary.ID_SUBJECT_OPTIMIZATION_SUBSCRIBER_NAME);

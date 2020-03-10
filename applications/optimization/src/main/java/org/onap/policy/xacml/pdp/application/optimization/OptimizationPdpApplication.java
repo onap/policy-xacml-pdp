@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,18 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
     private static final Logger LOGGER = LoggerFactory.getLogger(OptimizationPdpApplication.class);
     private static final String STRING_VERSION100 = "1.0.0";
     private static final String RESOURCE_SUBSCRIBERNAME = "subscriberName";
+    private static final String RESOURCE_POLICYTYPE = "policy-type";
+    private static final String RESOURCE_SCOPE = "scope";
+
+    public static final String POLICYTYPE_AFFINITY = "onap.policies.optimization.resource.AffinityPolicy";
+    public static final String POLICYTYPE_SUBSCRIBER = "onap.policies.optimization.service.SubscriberPolicy";
+    public static final String POLICYTYPE_DISTANCE = "onap.policies.optimization.resource.DistancePolicy";
+    public static final String POLICYTYPE_HPA = "onap.policies.optimization.resource.HpaPolicy";
+    public static final String POLICYTYPE_OPTIMIZATION = "onap.policies.optimization.resource.OptimizationPolicy";
+    public static final String POLICYTYPE_PCI = "onap.policies.optimization.resource.PciPolicy";
+    public static final String POLICYTYPE_QUERY = "onap.policies.optimization.service.QueryPolicy";
+    public static final String POLICYTYPE_VIMFIT = "onap.policies.optimization.resource.Vim_fit";
+    public static final String POLICYTYPE_VNF = "onap.policies.optimization.resource.VnfPolicy";
 
     private OptimizationPdpApplicationTranslator translator = new OptimizationPdpApplicationTranslator();
     private List<ToscaPolicyTypeIdentifier> supportedPolicyTypes = new ArrayList<>();
@@ -60,24 +72,15 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
      * Constructor.
      */
     public OptimizationPdpApplication() {
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.resource.AffinityPolicy", STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.resource.DistancePolicy", STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.resource.HpaPolicy", STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.resource.OptimizationPolicy", STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.resource.PciPolicy", STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.service.QueryPolicy", STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.service.SubscriberPolicy", STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.resource.Vim_fit", STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
-                "onap.policies.optimization.resource.VnfPolicy", STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_AFFINITY, STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_DISTANCE, STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_HPA, STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_OPTIMIZATION, STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_PCI, STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_QUERY, STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_SUBSCRIBER, STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_VIMFIT, STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_VNF, STRING_VERSION100));
     }
 
     @Override
@@ -133,6 +136,10 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
     public Pair<DecisionResponse, Response> makeDecision(DecisionRequest request,
             Map<String, String[]> requestQueryParams) {
         //
+        // In case we have a subcriber policy
+        //
+        Response xacmlSubscriberResponse = null;
+        //
         // Check if there are subject attributes for subscriber
         //
         if (hasSubscriberAttributes(request)) {
@@ -147,16 +154,16 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
             //
             // Override the PolicyType to ensure we are only looking at Subscriber Policies
             //
-            if (subscriberRequest.getResource().containsKey("policy-type")) {
-                subscriberRequest.getResource().remove("policy-type");
+            if (subscriberRequest.getResource().containsKey(RESOURCE_POLICYTYPE)) {
+                subscriberRequest.getResource().remove(RESOURCE_POLICYTYPE);
             }
-            subscriberRequest.getResource().put("policy-type", "onap.policies.optimization.service.SubscriberPolicy");
+            subscriberRequest.getResource().put(RESOURCE_POLICYTYPE, POLICYTYPE_SUBSCRIBER);
             //
             // Convert to a XacmlRequest and get a decision
             //
-            Response xacmlResponse = null;
             try {
-                xacmlResponse = this.xacmlDecision(OptimizationSubscriberRequest.createInstance(subscriberRequest));
+                xacmlSubscriberResponse =
+                        this.xacmlDecision(OptimizationSubscriberRequest.createInstance(subscriberRequest));
             } catch (XacmlApplicationException e) {
                 LOGGER.error("Could not create subscriberName request {}", e);
             }
@@ -164,12 +171,12 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
             // Check the response for subscriber attributes and add them
             // to the initial request.
             //
-            if (! addSubscriberAttributes(xacmlResponse, request)) {
-                LOGGER.error("Failed to get subscriber attributes");
+            if (xacmlSubscriberResponse != null && ! addSubscriberAttributes(xacmlSubscriberResponse, request)) {
+                LOGGER.error("Failed to get subscriber role attributes");
                 //
                 // Convert to a DecisionResponse
                 //
-                return Pair.of(this.getTranslator().convertResponse(xacmlResponse), xacmlResponse);
+                return Pair.of(this.getTranslator().convertResponse(xacmlSubscriberResponse), xacmlSubscriberResponse);
             }
         }
         //
@@ -183,7 +190,15 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
         //
         // Convert to a DecisionResponse
         //
-        return Pair.of(this.getTranslator().convertResponse(xacmlResponse), xacmlResponse);
+        Pair<DecisionResponse, Response> returnPair = Pair.of(this.getTranslator().convertResponse(xacmlResponse),
+                xacmlResponse);
+        //
+        // Add back in advice from subscriber
+        //
+        if (xacmlSubscriberResponse != null) {
+            addSubscriberAdvice(xacmlSubscriberResponse, returnPair.getLeft());
+        }
+        return returnPair;
     }
 
     @Override
@@ -204,7 +219,9 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
 
     private boolean addSubscriberAttributes(Response xacmlResponse, DecisionRequest initialRequest) {
         //
-        // Should only be one result
+        // This has multiple results right now because of how the attributes were added to the
+        // request. That will have to be fixed in the future, for now find the Permit result
+        // and add the role attributes as they will be used in the next request.
         //
         for (Result result : xacmlResponse.getResults()) {
             //
@@ -216,7 +233,7 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
                 //
                 scanAdvice(result.getAssociatedAdvice(), initialRequest);
                 //
-                // PLD this is an assumption
+                // PLD this is an assumption that all is good
                 //
                 return true;
             } else {
@@ -225,6 +242,21 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
         }
         return false;
     }
+
+    private void addSubscriberAdvice(Response xacmlResponse, DecisionResponse response) {
+        //
+        // Again find the Permit result
+        //
+        for (Result result : xacmlResponse.getResults()) {
+            //
+            // Check the result
+            //
+            if (result.getStatus().isOk() && result.getDecision().equals(Decision.PERMIT)) {
+                this.translator.scanAdvice(result.getAssociatedAdvice(), response);
+            }
+        }
+    }
+
 
     @SuppressWarnings("unchecked")
     private void scanAdvice(Collection<Advice> adviceCollection, DecisionRequest initialRequest) {
@@ -235,20 +267,21 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
             //
             // Look for the optimization specific advice
             //
-            if (ToscaDictionary.ID_ADVICE_OPTIMIZATION_SUBSCRIBER.equals(advice.getId())) {
-                //
-                // Get the attributes and add them
-                for (AttributeAssignment attribute : advice.getAttributeAssignments()) {
-                    //
-                    // If this is subscriber role
-                    //
-                    if (ToscaDictionary.ID_ADVICE_OPTIMIZATION_SUBSCRIBER_ROLE.equals(attribute.getAttributeId())) {
-                        ((List<String>) initialRequest.getResource().get("scope")).add(attribute.getAttributeValue()
-                                .getValue().toString());
-                    }
-                }
-            } else {
+            if (! ToscaDictionary.ID_ADVICE_OPTIMIZATION_SUBSCRIBER.equals(advice.getId())) {
                 LOGGER.error("Unsupported advice id {}", advice.getId());
+                continue;
+            }
+            //
+            // Get the attributes and add them
+            //
+            for (AttributeAssignment attribute : advice.getAttributeAssignments()) {
+                //
+                // If this is subscriber role
+                //
+                if (ToscaDictionary.ID_ADVICE_OPTIMIZATION_SUBSCRIBER_ROLE.equals(attribute.getAttributeId())) {
+                    ((List<String>) initialRequest.getResource().get(RESOURCE_SCOPE))
+                            .add(attribute.getAttributeValue().getValue().toString());
+                }
             }
         }
     }

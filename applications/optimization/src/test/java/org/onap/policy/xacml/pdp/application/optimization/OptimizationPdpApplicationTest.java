@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
    Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,6 +24,7 @@
 package org.onap.policy.xacml.pdp.application.optimization;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -50,11 +51,15 @@ import org.junit.runners.MethodSorters;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
@@ -214,7 +219,10 @@ public class OptimizationPdpApplicationTest {
         //
         // Now load all the optimization policies
         //
-        TestUtils.loadPolicies("src/test/resources/vCPE.policies.optimization.input.tosca.yaml", service);
+        List<ToscaPolicy> loadedPolicies = TestUtils.loadPolicies("src/test/resources/test-optimization-policies.yaml",
+                service);
+        assertThat(loadedPolicies).isNotNull();
+        assertThat(loadedPolicies).hasSize(14);
         //
         // Ask for a decision for available default policies
         //
@@ -337,7 +345,6 @@ public class OptimizationPdpApplicationTest {
         //
         // Add gold as a scope
         //
-        //((List<String>)baseRequest.getResource().get("scope")).add("gold");
         ((List<String>)baseRequest.getContext().get("subscriberName")).add("subscriber_a");
         //
         // Ask for a decision for specific US vCPE vG gold
@@ -345,7 +352,8 @@ public class OptimizationPdpApplicationTest {
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(6);
+        assertThat(response.getPolicies()).hasSize(6);
+        assertThat(response.getAdvice()).hasSize(2);
         //
         // Validate it
         //
@@ -369,7 +377,8 @@ public class OptimizationPdpApplicationTest {
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(8);
+        assertThat(response.getPolicies()).hasSize(8);
+        assertThat(response.getAdvice()).hasSize(2);
         //
         // Validate it
         //
@@ -446,6 +455,47 @@ public class OptimizationPdpApplicationTest {
         // Validate it
         //
         validateDecision(response, baseRequest);
+    }
+
+    @Test
+    public void test999BadSubscriberPolicies() throws Exception {
+        final StandardYamlCoder yamlCoder = new StandardYamlCoder();
+        //
+        // Decode it
+        //
+        String policyYaml = ResourceUtils.getResourceAsString("src/test/resources/bad-subscriber-policies.yaml");
+        //
+        // Serialize it into a class
+        //
+        ToscaServiceTemplate serviceTemplate;
+        try {
+            serviceTemplate = yamlCoder.decode(policyYaml, ToscaServiceTemplate.class);
+        } catch (CoderException e) {
+            throw new XacmlApplicationException("Failed to decode policy from resource file", e);
+        }
+        //
+        // Make sure all the fields are setup properly
+        //
+        JpaToscaServiceTemplate jtst = new JpaToscaServiceTemplate();
+        jtst.fromAuthorative(serviceTemplate);
+        ToscaServiceTemplate completedJtst = jtst.toAuthorative();
+        //
+        // Get the policies
+        //
+        for (Map<String, ToscaPolicy> policies : completedJtst.getToscaTopologyTemplate().getPolicies()) {
+            for (ToscaPolicy policy : policies.values()) {
+                if ("missing-subscriberProperties".equals(policy.getName())) {
+                    assertThatExceptionOfType(XacmlApplicationException.class).isThrownBy(() ->
+                        service.loadPolicy(policy));
+                } else if ("missing-subscriberName".equals(policy.getName())) {
+                    assertThatExceptionOfType(XacmlApplicationException.class).isThrownBy(() ->
+                        service.loadPolicy(policy));
+                } else if ("missing-subscriberRole".equals(policy.getName())) {
+                    assertThatExceptionOfType(XacmlApplicationException.class).isThrownBy(() ->
+                        service.loadPolicy(policy));
+                }
+            }
+        }
     }
 
     private DecisionResponse makeDecision() {
