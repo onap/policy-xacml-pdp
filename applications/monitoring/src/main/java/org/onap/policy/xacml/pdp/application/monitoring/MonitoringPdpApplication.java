@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,17 +51,14 @@ import org.slf4j.LoggerFactory;
 public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringPdpApplication.class);
 
-    private static final String ONAP_MONITORING_BASE_POLICY_TYPE = "onap.Monitoring";
-    private static final String ONAP_MONITORING_CDAP = "onap.policies.monitoring.cdap.tca.hi.lo.app";
-    private static final String ONAP_MONITORING_APPSERVER =
+    public static final String ONAP_MONITORING_BASE_POLICY_TYPE = "onap.Monitoring";
+    public static final String ONAP_MONITORING_CDAP = "onap.policies.monitoring.cdap.tca.hi.lo.app";
+    public static final String ONAP_MONITORING_APPSERVER =
             "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server";
-    private static final String ONAP_MONITORING_SONHANDLER = "onap.policies.monitoring.docker.sonhandler.app";
-    private static final String ONAP_MONITORING_DERIVED_POLICY_TYPE = "onap.policies.monitoring.";
-    // Note: this requirement is temporary; it will no longer be necessary once the PDPs and PAP
-    // are updated to use the PDP Group name instead of the supported types.
-    private static final String ONAP_MONITORING_ALL_DERIVED_POLICY_TYPE = ONAP_MONITORING_DERIVED_POLICY_TYPE + "*";
+    public static final String ONAP_MONITORING_SONHANDLER = "onap.policies.monitoring.docker.sonhandler.app";
+    public static final String ONAP_MONITORING_DERIVED_POLICY_TYPE = "onap.policies.monitoring.";
 
-    private static final String VERSION_100 = "1.0.0";
+    public static final String VERSION_100 = "1.0.0";
 
     private StdCombinedPolicyResultsTranslator translator = new StdCombinedPolicyResultsTranslator();
     private List<ToscaPolicyTypeIdentifier> supportedPolicyTypes = new ArrayList<>();
@@ -77,9 +74,6 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
         supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_CDAP, VERSION_100));
         supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_APPSERVER, VERSION_100));
         supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_SONHANDLER, VERSION_100));
-
-        // temporary requirement
-        supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_ALL_DERIVED_POLICY_TYPE, VERSION_100));
     }
 
     @Override
@@ -129,18 +123,18 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
         //
         // Abbreviate results if needed
         //
-        if (checkAbbreviateResults(requestQueryParams) && decisionResponse.getPolicies() != null
-                && !decisionResponse.getPolicies().isEmpty()) {
+        if (checkAbbreviateResults(requestQueryParams) && decisionResponse.getPolicies() != null) {
             LOGGER.info("Abbreviating decision results {}", decisionResponse);
             for (Entry<String, Object> entry : decisionResponse.getPolicies().entrySet()) {
-                if (entry.getValue() instanceof Map) {
-                    @SuppressWarnings("unchecked")
-                    Map<String, Object> policy = (Map<String, Object>) entry.getValue();
-                    policy.remove("type_version");
-                    policy.remove("properties");
-                    policy.remove("name");
-                    policy.remove("version");
-                }
+                //
+                // DecisionResponse policies will always be a map
+                //
+                @SuppressWarnings("unchecked")
+                Map<String, Object> policy = (Map<String, Object>) entry.getValue();
+                policy.remove("type_version");
+                policy.remove("properties");
+                policy.remove("name");
+                policy.remove("version");
             }
         }
         return Pair.of(decisionResponse, xacmlResponse);

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,6 +122,10 @@ public class StdCombinedPolicyResultsTranslatorTest {
     @Test
     public void testConvert() throws ToscaPolicyConversionException, CoderException {
         StdCombinedPolicyResultsTranslator translator = new StdCombinedPolicyResultsTranslator();
+
+        assertThatThrownBy(() -> translator.convertPolicy(null)).isInstanceOf(ToscaPolicyConversionException.class)
+                    .hasMessageContaining("Cannot convert a NULL policy");
+
 
         assertThatThrownBy(() -> translator.convertPolicy(
                 new ToscaPolicy())).isInstanceOf(ToscaPolicyConversionException.class)
