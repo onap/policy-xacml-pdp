@@ -33,6 +33,24 @@
       "revId": "c48d65afeecfe1fd5cd735708107aa7c3bc87d17",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "279c24e6_af4d4dae",
+        "filename": "applications/common/src/test/resources/finder.test.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-10T21:51:50Z",
+      "side": 1,
+      "message": "Yes - the XACML github PDP code can be extendable to create your own PDP. The PDP in there is named ATT",
+      "parentUuid": "7d49eccd_1a69066c",
+      "revId": "c48d65afeecfe1fd5cd735708107aa7c3bc87d17",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
