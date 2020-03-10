@@ -87,6 +87,24 @@
       "revId": "c48d65afeecfe1fd5cd735708107aa7c3bc87d17",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37360d2d_09e2a0c6",
+        "filename": "applications/common/src/test/resources/finder.test.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-10T22:01:16Z",
+      "side": 1,
+      "message": "No actually - I defer to my first answer. They are not specific to internal AT\u0026T, but the XACML github way of finding classes to load. Someday I\u0027ll change all that.",
+      "parentUuid": "091ba0ab_d4833ff3",
+      "revId": "c48d65afeecfe1fd5cd735708107aa7c3bc87d17",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
