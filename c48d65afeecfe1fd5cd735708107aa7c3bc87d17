@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6bc731ad_f9c37b18",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdOnapPip.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-10T21:58:11Z",
+      "side": 1,
+      "message": "hmmm - actually need to look at this to see if its a singleton. Because we create and delete PDP engine instances which in turn class load the PIP\u0027s. There is an init() but no shutdown method would be called.",
+      "parentUuid": "1c11a2a3_78e8e820",
+      "revId": "c48d65afeecfe1fd5cd735708107aa7c3bc87d17",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7d49eccd_1a69066c",
         "filename": "applications/common/src/test/resources/finder.test.properties",
         "patchSetId": 1
@@ -48,6 +66,24 @@
       "side": 1,
       "message": "Yes - the XACML github PDP code can be extendable to create your own PDP. The PDP in there is named ATT",
       "parentUuid": "7d49eccd_1a69066c",
+      "revId": "c48d65afeecfe1fd5cd735708107aa7c3bc87d17",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "091ba0ab_d4833ff3",
+        "filename": "applications/common/src/test/resources/finder.test.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-10T21:58:11Z",
+      "side": 1,
+      "message": "Oh wait a minute - I see not sure where these values came from. Probably policy/engine - Let me delete them.",
+      "parentUuid": "279c24e6_af4d4dae",
       "revId": "c48d65afeecfe1fd5cd735708107aa7c3bc87d17",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
