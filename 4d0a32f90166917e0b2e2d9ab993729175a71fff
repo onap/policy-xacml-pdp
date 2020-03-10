@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "34719b2a_56e6d5c6",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestDecision.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-03-10T21:22:33Z",
+      "side": 1,
+      "message": "License date, maybe check the other files too.",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 3,
+        "endChar": 21
+      },
+      "revId": "4d0a32f90166917e0b2e2d9ab993729175a71fff",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
