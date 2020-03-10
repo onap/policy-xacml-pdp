@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,19 +40,12 @@ import com.att.research.xacmlatt.pdp.std.StdPolicyFinder;
 import com.att.research.xacmlatt.pdp.util.ATTPDPProperties;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
-
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,14 +116,6 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
             }
         }
 
-        propLocation = this.properties.getProperty(policyId + PROP_URL);
-        if (propLocation != null) {
-            PolicyDef policy = this.loadPolicyUrlDef(propLocation);
-            if (policy != null) {
-                return policy;
-            }
-        }
-
         logger.error("No known location for Policy {}", policyId);
         return null;
     }
@@ -156,38 +141,6 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
             logger.error("Error loading policy file {}: {}", fileLocation.getAbsolutePath(), ex);
             return new Policy(StdStatusCode.STATUS_CODE_SYNTAX_ERROR, ex.getMessage());
         }
-    }
-
-    protected PolicyDef loadPolicyUrlDef(String propLocation) {
-        InputStream is = null;
-        try {
-            URL url                     = new URL(propLocation);
-            URLConnection urlConnection = url.openConnection();
-            OnapPolicyFinderFactory.logger.info("Loading policy file {}", url);
-            is = urlConnection.getInputStream();
-            PolicyDef policyDef         = DOMPolicyDef.load(is);
-            if (policyDef != null) {
-                return policyDef;
-            }
-        } catch (MalformedURLException ex) {
-            logger.error("Invalid URL " + propLocation + ": " + ex.getMessage(), ex);
-        } catch (IOException ex) {
-            logger.error("IOException opening URL {}: {}{}",
-                    propLocation, ex.getMessage(), ex);
-        } catch (DOMStructureException ex) {
-            logger.error("Invalid Policy " + propLocation + ": " + ex.getMessage(), ex);
-            return new Policy(StdStatusCode.STATUS_CODE_SYNTAX_ERROR, ex.getMessage());
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    logger.error("Exception closing InputStream for GET of url {}: {}",
-                            propLocation, e.getMessage() + "  (May be memory leak)", e);
-                }
-            }
-        }
-        return null;
     }
 
     /**

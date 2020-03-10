@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,13 +36,14 @@ import com.att.research.xacml.std.pip.StdPIPRequest;
 import com.att.research.xacml.std.pip.engines.StdConfigurableEngine;
 
 import java.math.BigInteger;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
-
+import javax.persistence.Persistence;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +69,7 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
 
     protected Properties properties;
     protected EntityManager em;
+    protected String issuer;
 
     public StdOnapPip() {
         super();
@@ -83,6 +85,33 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
         super.configure(id, properties);
         logger.info("Configuring historyDb PIP {}", properties);
         this.properties = properties;
+        //
+        // Create our entity manager
+        //
+        em = null;
+        try {
+            //
+            // In case there are any overloaded properties for the JPA
+            //
+            Properties emProperties = new Properties();
+            emProperties.putAll(properties);
+
+            //
+            // Need to decode the password before creating the EntityManager
+            //
+            String decodedPassword = new String(Base64.getDecoder()
+                    .decode(emProperties.getProperty("javax.persistence.jdbc.password")));
+            emProperties.setProperty("javax.persistence.jdbc.password", decodedPassword);
+
+            //
+            // Create the entity manager factory
+            //
+            em = Persistence.createEntityManagerFactory(
+                    properties.getProperty(this.issuer + ".persistenceunit"),
+                    emProperties).createEntityManager();
+        } catch (Exception e) {
+            logger.error("Persistence failed {} operations history db {}", e.getLocalizedMessage(), e);
+        }
     }
 
     protected String getAttribute(PIPFinder pipFinder, PIPRequest pipRequest) {

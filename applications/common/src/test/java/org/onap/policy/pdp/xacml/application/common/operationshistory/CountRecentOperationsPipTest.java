@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ package org.onap.policy.pdp.xacml.application.common.operationshistory;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import com.att.research.xacml.api.Attribute;
@@ -115,6 +115,16 @@ public class CountRecentOperationsPipTest {
     }
 
     /**
+     * Close the entity manager.
+     */
+    @AfterClass
+    public static void cleanup() {
+        if (em != null) {
+            em.close();
+        }
+    }
+
+    /**
      * Create an instance of our engine.
      *
      * @throws Exception if an error occurs
@@ -142,22 +152,6 @@ public class CountRecentOperationsPipTest {
         when(resp3.getStatus()).thenReturn(okStatus);
 
         when(okStatus.isOk()).thenReturn(true);
-    }
-
-    private Dbao createEntry(String cl, String target, String outcome) {
-        //
-        // Create entry
-        //
-        Dbao newEntry = new Dbao();
-        newEntry.setClosedLoopName(cl);
-        newEntry.setTarget(target);
-        newEntry.setOutcome(outcome);
-        newEntry.setActor("Controller");
-        newEntry.setOperation("operationA");
-        newEntry.setStarttime(Date.from(Instant.now().minusMillis(20000)));
-        newEntry.setEndtime(Date.from(Instant.now()));
-        newEntry.setRequestId(UUID.randomUUID().toString());
-        return newEntry;
     }
 
     @Test
@@ -236,19 +230,6 @@ public class CountRecentOperationsPipTest {
         assertEquals(1, getCount(newEntry));
     }
 
-    private long getCount(Dbao newEntry) throws PIPException {
-        responses = new LinkedList<>(Arrays.asList(resp1, resp2, resp3));
-        attributes = new LinkedList<>(
-                        Arrays.asList(newEntry.getActor(), newEntry.getOperation(), newEntry.getTarget()));
-
-        PIPResponse result = pipEngine.getAttributes(pipRequest, pipFinder);
-
-        Attribute attr = result.getAttributes().iterator().next();
-        AttributeValue<?> value = attr.getValues().iterator().next();
-
-        return ((Number) value.getValue()).longValue();
-    }
-
     @Test
     public void testStringToChronoUnit() throws PIPException {
         // not configured yet
@@ -277,14 +258,33 @@ public class CountRecentOperationsPipTest {
         assertEquals(-1, getCount(newEntry));
     }
 
-    /**
-     * Close the entity manager.
-     */
-    @AfterClass
-    public static void cleanup() {
-        if (em != null) {
-            em.close();
-        }
+    private long getCount(Dbao newEntry) throws PIPException {
+        responses = new LinkedList<>(Arrays.asList(resp1, resp2, resp3));
+        attributes = new LinkedList<>(
+                        Arrays.asList(newEntry.getActor(), newEntry.getOperation(), newEntry.getTarget()));
+
+        PIPResponse result = pipEngine.getAttributes(pipRequest, pipFinder);
+
+        Attribute attr = result.getAttributes().iterator().next();
+        AttributeValue<?> value = attr.getValues().iterator().next();
+
+        return ((Number) value.getValue()).longValue();
+    }
+
+    private Dbao createEntry(String cl, String target, String outcome) {
+        //
+        // Create entry
+        //
+        Dbao newEntry = new Dbao();
+        newEntry.setClosedLoopName(cl);
+        newEntry.setTarget(target);
+        newEntry.setOutcome(outcome);
+        newEntry.setActor("Controller");
+        newEntry.setOperation("operationA");
+        newEntry.setStarttime(Date.from(Instant.now().minusMillis(20000)));
+        newEntry.setEndtime(Date.from(Instant.now()));
+        newEntry.setRequestId(UUID.randomUUID().toString());
+        return newEntry;
     }
 
     private class MyPip extends CountRecentOperationsPip {

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -95,11 +95,13 @@ public class Main {
     }
 
     /**
-     * The main method.
+     * The main method. The NOSONAR is for security hotspot for checking
+     * command line arguments. Since we use XacmlPdpCommandLineArguments
+     * and validate the arguments the NOSONAR is ok to clear it.
      *
      * @param args the arguments
      */
-    public static void main(final String[] args) {
+    public static void main(final String[] args) { //NOSONAR
         try {
             new Main(args);
         } catch (RuntimeException | PolicyXacmlPdpException e) {

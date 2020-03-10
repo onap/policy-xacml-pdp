@@ -16,7 +16,6 @@
  * ============LICENSE_END=========================================================
  */
 
-
 package org.onap.policy.pdp.xacml.application.common.operationshistory;
 
 import com.att.research.xacml.api.XACML3;
@@ -27,14 +26,9 @@ import com.att.research.xacml.api.pip.PIPResponse;
 import com.att.research.xacml.std.pip.StdMutablePIPResponse;
 import com.att.research.xacml.std.pip.StdPIPResponse;
 import com.google.common.base.Strings;
-
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collection;
-import java.util.Properties;
 import javax.persistence.NoResultException;
-import javax.persistence.Persistence;
-
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.std.StdOnapPip;
 import org.slf4j.Logger;
@@ -47,43 +41,12 @@ public class GetOperationOutcomePip extends StdOnapPip {
 
     public GetOperationOutcomePip() {
         super();
+        this.issuer = ISSUER_NAME;
     }
 
     @Override
     public Collection<PIPRequest> attributesRequired() {
         return Arrays.asList(PIP_REQUEST_TARGET);
-    }
-
-    @Override
-    public void configure(String id, Properties properties) throws PIPException {
-        super.configure(id, properties);
-        //
-        // Create our entity manager
-        //
-        em = null;
-        try {
-            //
-            // In case there are any overloaded properties for the JPA
-            //
-            Properties emProperties = new Properties();
-            emProperties.putAll(properties);
-
-            //
-            // Need to decode the password before creating the EntityManager
-            //
-            String decodedPassword = new String(Base64.getDecoder()
-                    .decode(emProperties.getProperty("javax.persistence.jdbc.password")));
-            emProperties.setProperty("javax.persistence.jdbc.password", decodedPassword);
-
-            //
-            // Create the entity manager factory
-            //
-            em = Persistence.createEntityManagerFactory(
-                    properties.getProperty(ISSUER_NAME + ".persistenceunit"),
-                    emProperties).createEntityManager();
-        } catch (Exception e) {
-            logger.error("Persistence failed {} operations history db {}", e.getLocalizedMessage(), e);
-        }
     }
 
     /**
