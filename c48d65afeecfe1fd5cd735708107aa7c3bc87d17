@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7d49eccd_1a69066c",
+        "filename": "applications/common/src/test/resources/finder.test.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-03-10T21:23:13Z",
+      "side": 1,
+      "message": "is this ok ATT mentioned here and part of the prop key/value?",
+      "revId": "c48d65afeecfe1fd5cd735708107aa7c3bc87d17",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
