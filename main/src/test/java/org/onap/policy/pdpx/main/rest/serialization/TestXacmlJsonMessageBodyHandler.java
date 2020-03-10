@@ -20,15 +20,34 @@
 
 package org.onap.policy.pdpx.main.rest.serialization;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import com.att.research.xacml.api.Request;
+import com.att.research.xacml.api.RequestAttributes;
+import com.att.research.xacml.api.Response;
+import com.att.research.xacml.std.dom.DOMResponse;
 import com.att.research.xacml.std.dom.DOMStructureException;
+import com.att.research.xacml.std.json.JSONStructureException;
+import com.att.research.xacml.std.json.JsonResponseTranslator;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
 import org.junit.Before;
 import org.junit.Test;
+import org.onap.policy.common.utils.resources.ResourceUtils;
 
 public class TestXacmlJsonMessageBodyHandler {
 
     private static final String PRIMARY_TYPE = "application";
     private static final String SUB_TYPE = "xacml+json";
+
+    @SuppressWarnings("rawtypes")
+    private static final Class REQUEST_CLASS = Request.class;
+    @SuppressWarnings("rawtypes")
+    private static final Class RESPONSE_CLASS = Response.class;
 
     private XacmlJsonMessageBodyHandler hdlr;
 
@@ -43,8 +62,12 @@ public class TestXacmlJsonMessageBodyHandler {
     }
 
     @Test
-    public void testWriteTo() throws IOException, DOMStructureException {
-        //TODO: placeholder for JsonResponseTranslator
+    public void testWriteTo() throws IOException, DOMStructureException, JSONStructureException {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        Response resp = DOMResponse.load(ResourceUtils.getResourceAsString(
+                "src/test/resources/decisions/decision.native.response.xml"));
+        hdlr.writeTo(resp, RESPONSE_CLASS, RESPONSE_CLASS, null, null, null, stream);
+        assertEquals(resp, JsonResponseTranslator.load(new ByteArrayInputStream(stream.toByteArray())));
     }
 
     @Test
@@ -52,8 +75,29 @@ public class TestXacmlJsonMessageBodyHandler {
         CommonSerialization.testIsWritableOrReadable(PRIMARY_TYPE, SUB_TYPE, hdlr::isReadable);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testReadFrom() throws IOException {
-        //TODO: placeholder for JsonRequestTranslator
+        Request req = hdlr.readFrom(REQUEST_CLASS, REQUEST_CLASS, null, null, null, ResourceUtils.getResourceAsStream(
+                "src/test/resources/decisions/decision.native.request.json"));
+        assertFalse(req.getCombinedDecision());
+        assertFalse(req.getReturnPolicyIdList());
+        assertTrue(req.getRequestAttributes().size() == 3);
+        Iterator<RequestAttributes> iter = req.getRequestAttributes().iterator();
+
+        RequestAttributes firstRequestAttributes = iter.next();
+        assertTrue(firstRequestAttributes.getAttributes().size() == 1);
+        assertEquals("Julius Hibbert", firstRequestAttributes.getAttributes().iterator().next()
+                .getValues().iterator().next().getValue().toString());
+
+        RequestAttributes secondRequestAttributes = iter.next();
+        assertTrue(secondRequestAttributes.getAttributes().size() == 1);
+        assertEquals("http://medico.com/record/patient/BartSimpson", secondRequestAttributes.getAttributes()
+                .iterator().next().getValues().iterator().next().getValue().toString());
+
+        RequestAttributes thirdRequestAttributes = iter.next();
+        assertTrue(thirdRequestAttributes.getAttributes().size() == 1);
+        assertEquals("read", thirdRequestAttributes.getAttributes().iterator().next()
+                .getValues().iterator().next().getValue().toString());
     }
 }
