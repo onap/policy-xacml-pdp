@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.att.research.xacml.api.Response;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import org.apache.commons.lang3.tuple.Pair;
@@ -140,11 +142,21 @@ public class MonitoringPdpApplicationTest {
         // Ensure it has the supported policy types and
         // can support the correct policy types.
         //
-        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier("onap.Monitoring", "1.0.0"))).isTrue();
-        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier("onap.Monitoring", "1.5.0"))).isTrue();
-        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+        assertThat(service.canSupportPolicyType(
+                new ToscaPolicyTypeIdentifier(MonitoringPdpApplication.ONAP_MONITORING_CDAP, "1.0.0"))).isTrue();
+        assertThat(service.canSupportPolicyType(
+                new ToscaPolicyTypeIdentifier(MonitoringPdpApplication.ONAP_MONITORING_APPSERVER, "1.0.0"))).isTrue();
+        assertThat(service.canSupportPolicyType(
+                new ToscaPolicyTypeIdentifier(MonitoringPdpApplication.ONAP_MONITORING_SONHANDLER, "1.0.0"))).isTrue();
+        assertThat(service.canSupportPolicyType(
+                new ToscaPolicyTypeIdentifier("onap.Monitoring", "1.0.0"))).isTrue();
+        assertThat(service.canSupportPolicyType(
+                new ToscaPolicyTypeIdentifier("onap.Monitoring", "1.5.0"))).isTrue();
+        assertThat(service.canSupportPolicyType(
+                new ToscaPolicyTypeIdentifier(
                 "onap.policies.monitoring.foobar", "1.0.1"))).isTrue();
-        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier("onap.foobar", "1.0.0"))).isFalse();
+        assertThat(service.canSupportPolicyType(
+                new ToscaPolicyTypeIdentifier("onap.foobar", "1.0.0"))).isFalse();
         //
         // Ensure it supports decisions
         //
@@ -160,9 +172,28 @@ public class MonitoringPdpApplicationTest {
         LOGGER.info("Decision {}", decision);
 
         assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies().size()).isEqualTo(0);
+        assertThat(decision.getKey().getPolicies()).hasSize(0);
+        //
+        // Test the branch for query params, and we have no policy anyway
+        //
+        Map<String, String[]> requestQueryParams = new HashMap<>();
+        decision = service.makeDecision(requestSinglePolicy, requestQueryParams);
+        LOGGER.info("Decision {}", decision);
+
+        assertThat(decision.getKey()).isNotNull();
+        assertThat(decision.getKey().getPolicies()).hasSize(0);
+        //
+        // Test the branch for query params, and we have no policy anyway
+        //
+        requestQueryParams.put("abbrev", new String[] {"false"});
+        decision = service.makeDecision(requestSinglePolicy, requestQueryParams);
+        LOGGER.info("Decision {}", decision);
+
+        assertThat(decision.getKey()).isNotNull();
+        assertThat(decision.getKey().getPolicies()).hasSize(0);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void test3AddvDnsPolicy() throws IOException, CoderException, XacmlApplicationException {
         //
@@ -182,7 +213,7 @@ public class MonitoringPdpApplicationTest {
         LOGGER.info("Decision {}", decision);
 
         assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies().size()).isEqualTo(1);
+        assertThat(decision.getKey().getPolicies()).hasSize(1);
         //
         // Dump it out as Json
         //
@@ -194,7 +225,53 @@ public class MonitoringPdpApplicationTest {
         LOGGER.info("Decision {}", decision);
 
         assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies().size()).isEqualTo(1);
+        assertThat(decision.getKey().getPolicies()).hasSize(1);
+        Map<String, Object> jsonPolicy = (Map<String, Object>) decision.getKey().getPolicies().get("onap.scaleout.tca");
+        assertThat(jsonPolicy).isNotNull();
+        assertThat(jsonPolicy.get("properties")).isNotNull();
+        //
+        // Dump it out as Json
+        //
+        LOGGER.info(gson.encode(decision.getKey()));
+        //
+        // Ask for abbreviated results
+        //
+        Map<String, String[]> requestQueryParams = new HashMap<>();
+        requestQueryParams.put("abbrev", new String[] {"true"});
+        decision = service.makeDecision(requestPolicyType, requestQueryParams);
+        LOGGER.info("Decision {}", decision);
+
+        assertThat(decision.getKey()).isNotNull();
+        assertThat(decision.getKey().getPolicies()).hasSize(1);
+        jsonPolicy = (Map<String, Object>) decision.getKey().getPolicies().get("onap.scaleout.tca");
+        assertThat(jsonPolicy).isNotNull();
+        assertThat(jsonPolicy).doesNotContainKey("properties");
+        //
+        // Don't Ask for abbreviated results
+        //
+        requestQueryParams = new HashMap<>();
+        requestQueryParams.put("abbrev", new String[] {"false"});
+        decision = service.makeDecision(requestPolicyType, requestQueryParams);
+        LOGGER.info("Decision {}", decision);
+
+        assertThat(decision.getKey()).isNotNull();
+        assertThat(decision.getKey().getPolicies()).hasSize(1);
+        jsonPolicy = (Map<String, Object>) decision.getKey().getPolicies().get("onap.scaleout.tca");
+        assertThat(jsonPolicy).isNotNull();
+        assertThat(jsonPolicy.get("properties")).isNotNull();
+        //
+        // Throw an unknown exception
+        //
+        requestQueryParams = new HashMap<>();
+        requestQueryParams.put("unknown", new String[] {"true"});
+        decision = service.makeDecision(requestPolicyType, requestQueryParams);
+        LOGGER.info("Decision {}", decision);
+
+        assertThat(decision.getKey()).isNotNull();
+        assertThat(decision.getKey().getPolicies()).hasSize(1);
+        jsonPolicy = (Map<String, Object>) decision.getKey().getPolicies().get("onap.scaleout.tca");
+        assertThat(jsonPolicy).isNotNull();
+        assertThat(jsonPolicy.get("properties")).isNotNull();
         //
         // Dump it out as Json
         //
@@ -213,7 +290,7 @@ public class MonitoringPdpApplicationTest {
         LOGGER.info("Decision {}", decision.getKey());
 
         assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies().size()).isEqualTo(0);
+        assertThat(decision.getKey().getPolicies()).hasSize(0);
     }
 
 }
