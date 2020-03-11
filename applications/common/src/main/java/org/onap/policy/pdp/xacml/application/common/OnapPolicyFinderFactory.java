@@ -138,7 +138,7 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
             }
             return new Policy(StdStatusCode.STATUS_CODE_SYNTAX_ERROR, "DOM Could not load policy");
         } catch (DOMStructureException ex) {
-            logger.error("Error loading policy file {}: {}", fileLocation.getAbsolutePath(), ex);
+            logger.error("Error loading policy file {}", fileLocation.getAbsolutePath(), ex);
             return new Policy(StdStatusCode.STATUS_CODE_SYNTAX_ERROR, ex.getMessage());
         }
     }

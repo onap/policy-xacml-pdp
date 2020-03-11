@@ -165,7 +165,7 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
                 xacmlSubscriberResponse =
                         this.xacmlDecision(OptimizationSubscriberRequest.createInstance(subscriberRequest));
             } catch (XacmlApplicationException e) {
-                LOGGER.error("Could not create subscriberName request {}", e);
+                LOGGER.error("Could not create subscriberName request", e);
             }
             //
             // Check the response for subscriber attributes and add them

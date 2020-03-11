@@ -86,7 +86,7 @@ public class StdMatchablePolicyRequest {
             }
             dataTypeFactory = DataTypeFactory.newInstance();
         } catch (FactoryException e) {
-            LOGGER.error("Can't get Data type Factory: {}", e);
+            LOGGER.error("Can't get Data type Factory", e);
         }
         return dataTypeFactory;
     }
