@@ -120,7 +120,7 @@ public class StdBaseTranslatorTest {
     }
 
     @Test
-    public void test() throws ParseException {
+    public void test() throws Exception {
         StdBaseTranslator translator = new MyStdBaseTranslator();
         assertNotNull(translator);
         assertThatThrownBy(() -> translator.convertPolicy(null)).isInstanceOf(ToscaPolicyConversionException.class);

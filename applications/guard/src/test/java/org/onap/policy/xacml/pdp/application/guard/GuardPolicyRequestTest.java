@@ -23,16 +23,18 @@
 package org.onap.policy.xacml.pdp.application.guard;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 
 public class GuardPolicyRequestTest {
 
     @Test
-    public void testAnomalies() {
+    public void testAnomalies() throws ToscaPolicyConversionException {
         DecisionRequest decisionRequest = new DecisionRequest();
         assertThat(GuardPolicyRequest.createInstance(decisionRequest)).isNotNull();
 
@@ -82,6 +84,12 @@ public class GuardPolicyRequestTest {
         resources.put("guard", guard);
         decisionRequest.setResource(resources);
         assertThat(GuardPolicyRequest.createInstance(decisionRequest)).isNotNull();
+
+        guard.put("vfCount", "I am not valid");
+        resources.put("guard", guard);
+        decisionRequest.setResource(resources);
+        assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
+            GuardPolicyRequest.createInstance(decisionRequest));
     }
 
 }

@@ -23,6 +23,7 @@
 package org.onap.policy.xacml.pdp.application.guard;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.att.research.xacml.api.Response;
 import java.io.File;
@@ -191,7 +192,8 @@ public class CoordinationTest {
         // the application.
         //
         CoordinationGuardTranslator translator = new CoordinationGuardTranslator();
-        assertThat(translator.convertRequest(null)).isNull();
+        assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
+            translator.convertRequest(null)).withMessage("this convertRequest shouldn't be used");
         assertThat(translator.convertResponse(null)).isNull();
         assertThat(CoordinationGuardTranslator.loadCoordinationDirectiveFromFile(
                 policyFolder.getRoot().getAbsolutePath() + "/nonexist.yaml")).isNull();

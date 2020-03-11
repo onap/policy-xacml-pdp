@@ -148,7 +148,7 @@ public class StdCombinedPolicyResultsTranslatorTest {
     }
 
     @Test
-    public void testDecision() {
+    public void testDecision() throws ToscaPolicyConversionException {
         StdCombinedPolicyResultsTranslator translator = new StdCombinedPolicyResultsTranslator();
 
         DecisionRequest decision = new DecisionRequest();

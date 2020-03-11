@@ -95,11 +95,8 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
     }
 
     @Override
-    public Request convertRequest(DecisionRequest request) {
-        //
-        // We do nothing to DecisionRequest for native xacml application
-        //
-        return null;
+    public Request convertRequest(DecisionRequest request) throws ToscaPolicyConversionException {
+        throw new ToscaPolicyConversionException("Do not call native convertRequest");
     }
 
     @Override

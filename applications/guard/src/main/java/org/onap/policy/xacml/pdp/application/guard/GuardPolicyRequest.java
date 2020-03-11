@@ -34,13 +34,13 @@ import lombok.Setter;
 import lombok.ToString;
 
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 
 @Getter
 @Setter
 @ToString
 @XACMLRequest(ReturnPolicyIdList = true)
 public class GuardPolicyRequest {
-
     private static final String STR_GUARD = "guard";
 
     @XACMLSubject(includeInResults = true)
@@ -82,9 +82,11 @@ public class GuardPolicyRequest {
      *
      * @param decisionRequest Input DecisionRequest
      * @return StdMetadataPolicyRequest
+     * @throws ToscaPolicyConversionException If we cannot parse the request
      */
     @SuppressWarnings("unchecked")
-    public static GuardPolicyRequest createInstance(DecisionRequest decisionRequest) {
+    public static GuardPolicyRequest createInstance(DecisionRequest decisionRequest) 
+            throws ToscaPolicyConversionException {
         //
         // Create our return object
         //
@@ -133,11 +135,11 @@ public class GuardPolicyRequest {
             request.targetId = guard.get("target").toString();
         }
         if (guard.containsKey("vfCount")) {
-            //
-            // TODO this can potentially throw a NumberFormatException. Fix this to
-            // throw the exception when you fix the ConvertRequest to throw exceptions also.
-            //
-            request.vfCount = Integer.decode(guard.get("vfCount").toString());
+            try {
+                request.vfCount = Integer.decode(guard.get("vfCount").toString());
+            } catch (NumberFormatException e) {
+                throw new ToscaPolicyConversionException("Failed to decode vfCount", e);
+            }
         }
 
         return request;
