@@ -194,7 +194,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             Files.delete(refPolicy);
         } catch (IOException e) {
             LOGGER.error("Failed to delete policy {} from disk {}", toscaPolicy.getMetadata(),
-                    refPolicy.toAbsolutePath().toString(), e);
+                    refPolicy.toAbsolutePath(), e);
         }
         //
         // Write the properties to disk
@@ -277,7 +277,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
                 this.pdpEngine = engine;
             }
         } catch (FactoryException e) {
-            LOGGER.error("Failed to create XACML PDP Engine {}", e);
+            LOGGER.error("Failed to create XACML PDP Engine", e);
         }
     }
 
@@ -299,7 +299,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
         try {
             response = this.pdpEngine.decide(request);
         } catch (PDPException e) {
-            LOGGER.error("Xacml PDP Engine failed {}", e);
+            LOGGER.error("Xacml PDP Engine decide failed", e);
         } finally {
             //
             // Track the end of timing

@@ -105,7 +105,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         try {
             return StdMatchablePolicyRequest.createInstance(request);
         } catch (XacmlApplicationException e) {
-            LOGGER.error("Failed to convert DecisionRequest: {}", e);
+            LOGGER.error("Failed to convert DecisionRequest", e);
         }
         //
         // TODO throw exception

@@ -110,7 +110,7 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
                     properties.getProperty(this.issuer + ".persistenceunit"),
                     emProperties).createEntityManager();
         } catch (Exception e) {
-            logger.error("Persistence failed {} operations history db {}", e.getLocalizedMessage(), e);
+            logger.error("Persistence failed {} operations history db", e.getLocalizedMessage(), e);
         }
     }
 
@@ -143,7 +143,7 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
                 pipResponse = null;
             }
         } catch (PIPException ex) {
-            logger.error("PIPException getting subject-id attribute: " + ex.getMessage(), ex);
+            logger.error("PIPException getting subject-id attribute", ex);
         }
         return pipResponse;
     }
@@ -167,7 +167,7 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
         try {
             attributeValue  = makeInteger(value);
         } catch (Exception e) {
-            logger.error("Failed to convert {} to integer {}", value, e);
+            logger.error("Failed to convert {} to integer", value, e);
         }
         if (attributeValue != null) {
             stdPipResponse.addAttribute(new StdMutableAttribute(category, attributeId, attributeValue,
@@ -181,7 +181,7 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
         try {
             attributeValue  = makeLong(value);
         } catch (Exception e) {
-            logger.error("Failed to convert {} to long {}", value, e);
+            logger.error("Failed to convert {} to long", value, e);
         }
         if (attributeValue != null) {
             stdPipResponse.addAttribute(new StdMutableAttribute(category, attributeId, attributeValue,
