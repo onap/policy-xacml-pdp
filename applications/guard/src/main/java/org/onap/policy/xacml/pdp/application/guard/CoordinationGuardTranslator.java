@@ -99,9 +99,8 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
      * the one in LegacyGuardTranslator is used.
      */
     @Override
-    public Request convertRequest(DecisionRequest request) {
-        LOGGER.info("this convertRequest shouldn't be used");
-        return null;
+    public Request convertRequest(DecisionRequest request) throws ToscaPolicyConversionException {
+        throw new ToscaPolicyConversionException("this convertRequest shouldn't be used");
     }
 
     /**

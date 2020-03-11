@@ -232,7 +232,16 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
         //
         // Convert to a XacmlRequest
         //
-        Request xacmlRequest = this.getTranslator().convertRequest(request);
+        Request xacmlRequest;
+        try {
+            xacmlRequest = this.getTranslator().convertRequest(request);
+        } catch (ToscaPolicyConversionException e) {
+            LOGGER.error("Failed to convert request", e);
+            DecisionResponse response = new DecisionResponse();
+            response.setStatus("error");
+            response.setMessage(e.getLocalizedMessage());
+            return Pair.of(response, null);
+        }
         //
         // Now get a decision
         //

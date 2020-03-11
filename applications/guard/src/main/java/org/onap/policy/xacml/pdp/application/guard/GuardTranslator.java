@@ -140,17 +140,13 @@ public class GuardTranslator implements ToscaPolicyTranslator {
     /**
      * Convert Request.
      */
-    public Request convertRequest(DecisionRequest request) {
+    public Request convertRequest(DecisionRequest request) throws ToscaPolicyConversionException {
         LOGGER.info("Converting Request {}", request);
         try {
             return RequestParser.parseRequest(GuardPolicyRequest.createInstance(request));
         } catch (IllegalArgumentException | IllegalAccessException | DataTypeException e) {
-            LOGGER.error("Failed to convert DecisionRequest", e);
+            throw new ToscaPolicyConversionException("Failed to convert DecisionRequest", e);
         }
-        //
-        // TODO throw exception
-        //
-        return null;
     }
 
     /**

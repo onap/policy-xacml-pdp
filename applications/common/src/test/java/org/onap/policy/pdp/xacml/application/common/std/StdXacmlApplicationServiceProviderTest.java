@@ -255,7 +255,7 @@ public class StdXacmlApplicationServiceProviderTest {
     }
 
     @Test
-    public void testMakeDecision() {
+    public void testMakeDecision() throws ToscaPolicyConversionException {
         prov.createEngine(null);
 
         DecisionRequest decreq = mock(DecisionRequest.class);

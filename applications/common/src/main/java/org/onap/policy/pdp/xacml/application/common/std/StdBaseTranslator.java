@@ -69,7 +69,7 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
     }
 
     @Override
-    public Request convertRequest(DecisionRequest request) {
+    public Request convertRequest(DecisionRequest request) throws ToscaPolicyConversionException {
         return null;
     }
 
@@ -99,9 +99,10 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
                 scanAdvice(xacmlResult.getAssociatedAdvice(), decisionResponse);
             } else {
                 //
-                // TODO we have to return an ErrorResponse object instead
+                // Return error information back
                 //
-                decisionResponse.setStatus("A better error message");
+                decisionResponse.setStatus("error");
+                decisionResponse.setMessage(xacmlResult.getStatus().getStatusMessage());
             }
         }
 

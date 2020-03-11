@@ -112,6 +112,10 @@ public class DecisionProvider {
     }
 
     private void calculateStatistic(Response xacmlResponse) {
+        if (xacmlResponse == null) {
+            XacmlPdpStatisticsManager.getCurrent().updateErrorCount();
+            return;
+        }
         for (Result result : xacmlResponse.getResults()) {
             switch (result.getDecision()) {
                 case PERMIT:

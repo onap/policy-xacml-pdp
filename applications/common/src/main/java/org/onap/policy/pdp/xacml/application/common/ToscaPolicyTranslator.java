@@ -49,7 +49,7 @@ public interface ToscaPolicyTranslator {
      * @param request Incoming DecisionRequest
      * @return Xacml Request object
      */
-    Request convertRequest(DecisionRequest request);
+    Request convertRequest(DecisionRequest request) throws ToscaPolicyConversionException;
 
     /**
      * Implement this method to convert a Xacml Response
