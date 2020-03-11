@@ -25,7 +25,6 @@ package org.onap.policy.xacml.pdp.application.optimization;
 import com.att.research.xacml.api.Advice;
 import com.att.research.xacml.api.AttributeAssignment;
 import com.att.research.xacml.api.Decision;
-import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
 import java.nio.file.Path;
@@ -180,25 +179,16 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
             }
         }
         //
-        // Convert to a XacmlRequest
+        // Make the decision
         //
-        Request xacmlRequest = this.getTranslator().convertRequest(request);
-        //
-        // Now get a decision
-        //
-        Response xacmlResponse = this.xacmlDecision(xacmlRequest);
-        //
-        // Convert to a DecisionResponse
-        //
-        Pair<DecisionResponse, Response> returnPair = Pair.of(this.getTranslator().convertResponse(xacmlResponse),
-                xacmlResponse);
+        Pair<DecisionResponse, Response> decisionPair = super.makeDecision(request, requestQueryParams);
         //
         // Add back in advice from subscriber
         //
         if (xacmlSubscriberResponse != null) {
-            addSubscriberAdvice(xacmlSubscriberResponse, returnPair.getLeft());
+            addSubscriberAdvice(xacmlSubscriberResponse, decisionPair.getLeft());
         }
-        return returnPair;
+        return decisionPair;
     }
 
     @Override

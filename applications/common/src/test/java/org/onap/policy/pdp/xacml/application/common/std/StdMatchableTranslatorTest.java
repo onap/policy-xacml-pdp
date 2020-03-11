@@ -237,7 +237,7 @@ public class StdMatchableTranslatorTest {
                 Collection<IdReference> policyIds = TestUtilsCommon.createPolicyIdList(ids);
 
                 com.att.research.xacml.api.Response xacmlResponse = TestUtilsCommon.createXacmlResponse(
-                        StdStatusCode.STATUS_CODE_OK, Decision.PERMIT,
+                        StdStatusCode.STATUS_CODE_OK, null, Decision.PERMIT,
                         Arrays.asList(obligation1, obligation2, obligation3), policyIds);
                 //
                 // Test the response

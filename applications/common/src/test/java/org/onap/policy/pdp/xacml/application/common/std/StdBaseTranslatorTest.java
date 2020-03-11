@@ -120,7 +120,7 @@ public class StdBaseTranslatorTest {
     }
 
     @Test
-    public void test() throws ParseException {
+    public void testTranslatorNormalFlow() throws Exception {
         StdBaseTranslator translator = new MyStdBaseTranslator();
         assertNotNull(translator);
         assertThatThrownBy(() -> translator.convertPolicy(null)).isInstanceOf(ToscaPolicyConversionException.class);
@@ -176,7 +176,7 @@ public class StdBaseTranslatorTest {
         ids.put("onap.policies.Test", "1.0.0");
         Collection<IdReference> policyIds = TestUtilsCommon.createPolicyIdList(ids);
 
-        Response xacmlResponse = TestUtilsCommon.createXacmlResponse(StdStatusCode.STATUS_CODE_OK,
+        Response xacmlResponse = TestUtilsCommon.createXacmlResponse(StdStatusCode.STATUS_CODE_OK, null,
                 Decision.PERMIT, Arrays.asList(obligation), policyIds);
 
         DecisionResponse decision = translator.convertResponse(xacmlResponse);
@@ -210,7 +210,7 @@ public class StdBaseTranslatorTest {
         ids.put("onap.policies.Test", "1.0.0");
         Collection<IdReference> policyIds = TestUtilsCommon.createPolicyIdList(ids);
 
-        Response xacmlResponse = TestUtilsCommon.createXacmlResponse(StdStatusCode.STATUS_CODE_OK,
+        Response xacmlResponse = TestUtilsCommon.createXacmlResponse(StdStatusCode.STATUS_CODE_OK, null,
                 Decision.PERMIT, Arrays.asList(obligation), policyIds);
 
         DecisionResponse decision = translator.convertResponse(xacmlResponse);
@@ -220,28 +220,25 @@ public class StdBaseTranslatorTest {
         assertThat(decision.getPolicies()).isNotNull();
         assertThat(decision.getPolicies().size()).isEqualTo(0);
 
-        //
-        // This will need more work when I fix
-        // the convertResponse
-        //
-
         Obligation badObligation = TestUtilsCommon.createXacmlObligation(
                 ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue(),
                 Arrays.asList(assignmentBadPolicy, assignmentUnknown));
 
-        xacmlResponse = TestUtilsCommon.createXacmlResponse(StdStatusCode.STATUS_CODE_MISSING_ATTRIBUTE,
+        xacmlResponse = TestUtilsCommon.createXacmlResponse(StdStatusCode.STATUS_CODE_MISSING_ATTRIBUTE, null,
                 Decision.PERMIT, Arrays.asList(badObligation), policyIds);
 
         decision = translator.convertResponse(xacmlResponse);
 
         assertNotNull(decision);
 
-        xacmlResponse = TestUtilsCommon.createXacmlResponse(StdStatusCode.STATUS_CODE_OK,
-                Decision.DENY, Arrays.asList(badObligation), policyIds);
+        xacmlResponse = TestUtilsCommon.createXacmlResponse(StdStatusCode.STATUS_CODE_PROCESSING_ERROR,
+                "Bad obligation", Decision.DENY, Arrays.asList(badObligation), policyIds);
 
         decision = translator.convertResponse(xacmlResponse);
 
         assertNotNull(decision);
+        assertThat(decision.getStatus()).isEqualTo("error");
+        assertThat(decision.getMessage()).isEqualTo("Bad obligation");
     }
 
     private class MyStdBaseTranslator extends StdBaseTranslator {

@@ -100,17 +100,13 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
     }
 
     @Override
-    public Request convertRequest(DecisionRequest request) {
+    public Request convertRequest(DecisionRequest request) throws ToscaPolicyConversionException {
         LOGGER.info("Converting Request {}", request);
         try {
             return StdMatchablePolicyRequest.createInstance(request);
         } catch (XacmlApplicationException e) {
-            LOGGER.error("Failed to convert DecisionRequest", e);
+            throw new ToscaPolicyConversionException("Failed to convert DecisionRequest", e);
         }
-        //
-        // TODO throw exception
-        //
-        return null;
     }
 
     /**

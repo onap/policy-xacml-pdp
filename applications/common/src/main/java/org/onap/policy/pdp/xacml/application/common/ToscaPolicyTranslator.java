@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public interface ToscaPolicyTranslator {
      * @param request Incoming DecisionRequest
      * @return Xacml Request object
      */
-    Request convertRequest(DecisionRequest request);
+    Request convertRequest(DecisionRequest request) throws ToscaPolicyConversionException;
 
     /**
      * Implement this method to convert a Xacml Response
