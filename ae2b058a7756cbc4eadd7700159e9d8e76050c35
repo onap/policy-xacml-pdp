@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24e1d184_c34ec94a",
+        "filename": "main/src/test/resources/decisions/decision.native.request.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-03-11T15:32:15Z",
+      "side": 1,
+      "message": ":) simpsons theme",
+      "revId": "ae2b058a7756cbc4eadd7700159e9d8e76050c35",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
