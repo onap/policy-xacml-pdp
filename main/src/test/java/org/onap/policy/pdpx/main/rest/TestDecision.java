@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,6 @@ package org.onap.policy.pdpx.main.rest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
-import com.att.research.xacml.std.dom.DOMStructureException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.File;
@@ -76,6 +75,7 @@ public class TestDecision {
     private static HttpClient client;
     private static CommonTestData testData = new CommonTestData();
     private static final String APPLICATION_XACML_XML = "application/xacml+xml";
+    private static final String APPLICATION_XACML_JSON = "application/xacml+json";
 
     @ClassRule
     public static final TemporaryFolder appsFolder = new TemporaryFolder();
@@ -142,7 +142,6 @@ public class TestDecision {
 
     @Test
     public void testDecision_UnsupportedAction() throws Exception {
-
         LOGGER.info("Running test testDecision_UnsupportedAction");
 
         DecisionRequest request = new DecisionRequest();
@@ -164,7 +163,6 @@ public class TestDecision {
     @Test
     public void testDecision_Guard() throws KeyManagementException, NoSuchAlgorithmException,
         ClassNotFoundException {
-
         LOGGER.info("Running test testDecision_Guard");
 
         DecisionRequest request = new DecisionRequest();
@@ -183,19 +181,28 @@ public class TestDecision {
     }
 
     @Test
-    public void testDecision_Native() throws IOException, DOMStructureException {
-
+    public void testDecision_Native() throws IOException {
         LOGGER.info("Running test testDecision_Native");
 
-        String requestAsString = ResourceUtils.getResourceAsString(
+        String xmlRequestAsString = ResourceUtils.getResourceAsString(
                 "src/test/resources/decisions/decision.native.request.xml");
-        if (requestAsString == null) {
+        if (xmlRequestAsString == null) {
             throw new IOException("failed to read the xml request");
         }
 
-        String response = getNativeDecision(requestAsString);
-        LOGGER.info("Response {}", response);
-        assertThat(response).contains("NOTAPPLICABLE");
+        String jsonRequestAsString = ResourceUtils.getResourceAsString(
+                "src/test/resources/decisions/decision.native.request.json");
+        if (jsonRequestAsString == null) {
+            throw new IOException("failed to read the json request");
+        }
+
+        String responseFromXmlRequest = getNativeDecision(xmlRequestAsString, APPLICATION_XACML_XML);
+        LOGGER.info("Response from xml request {}", responseFromXmlRequest);
+        assertThat(responseFromXmlRequest).contains("NOTAPPLICABLE");
+
+        String responseFromJsonRequest = getNativeDecision(jsonRequestAsString, APPLICATION_XACML_JSON);
+        LOGGER.info("Response from json request {}", responseFromJsonRequest);
+        assertThat(responseFromJsonRequest).contains("NOTAPPLICABLE");
     }
 
     private static Main startXacmlPdpService(File params) throws PolicyXacmlPdpException {
@@ -208,7 +215,6 @@ public class TestDecision {
     }
 
     private DecisionResponse getDecision(DecisionRequest request) {
-
         Entity<DecisionRequest> entityRequest = Entity.entity(request, MediaType.APPLICATION_JSON);
         Response response = client.post("/decision", entityRequest, Collections.emptyMap());
 
@@ -217,9 +223,8 @@ public class TestDecision {
         return HttpClient.getBody(response, DecisionResponse.class);
     }
 
-    private String getNativeDecision(String request) {
-
-        Entity<String> entityRequest = Entity.entity(request, APPLICATION_XACML_XML);
+    private String getNativeDecision(String request, String mediaType) {
+        Entity<String> entityRequest = Entity.entity(request, mediaType);
         Response response = client.post("/xacml", entityRequest, Collections.emptyMap());
 
         assertEquals(200, response.getStatus());
@@ -228,7 +233,6 @@ public class TestDecision {
     }
 
     private ErrorResponse getErrorDecision(DecisionRequest request) {
-
         Entity<DecisionRequest> entityRequest = Entity.entity(request, MediaType.APPLICATION_JSON);
         Response response = client.post("/decision", entityRequest, Collections.emptyMap());
 
@@ -254,5 +258,4 @@ public class TestDecision {
             LOGGER.error("Failed to copy {} to {}", source, dest);
         }
     }
-
 }
