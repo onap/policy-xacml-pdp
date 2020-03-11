@@ -108,7 +108,7 @@ public class StdCombinedPolicyResultsTranslatorTest {
         ids.put("onap.policies.Test", "1.0.0");
         Collection<IdReference> policyIds = TestUtilsCommon.createPolicyIdList(ids);
 
-        Response xacmlResponse = TestUtilsCommon.createXacmlResponse(StdStatusCode.STATUS_CODE_OK,
+        Response xacmlResponse = TestUtilsCommon.createXacmlResponse(StdStatusCode.STATUS_CODE_OK, null,
                 Decision.PERMIT, Arrays.asList(obligation), policyIds);
 
         DecisionResponse decision = translator.convertResponse(xacmlResponse);
@@ -148,7 +148,7 @@ public class StdCombinedPolicyResultsTranslatorTest {
     }
 
     @Test
-    public void testDecision() {
+    public void testDecision() throws ToscaPolicyConversionException {
         StdCombinedPolicyResultsTranslator translator = new StdCombinedPolicyResultsTranslator();
 
         DecisionRequest decision = new DecisionRequest();

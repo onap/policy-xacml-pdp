@@ -22,7 +22,6 @@
 
 package org.onap.policy.xacml.pdp.application.monitoring;
 
-import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -109,17 +108,10 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
     public Pair<DecisionResponse, Response> makeDecision(DecisionRequest request,
             Map<String, String[]> requestQueryParams) {
         //
-        // Convert to a XacmlRequest
+        // Make the decision
         //
-        Request xacmlRequest = this.getTranslator().convertRequest(request);
-        //
-        // Now get a decision
-        //
-        Response xacmlResponse = this.xacmlDecision(xacmlRequest);
-        //
-        // Convert to a DecisionResponse
-        //
-        DecisionResponse decisionResponse = this.getTranslator().convertResponse(xacmlResponse);
+        Pair<DecisionResponse, Response> decisionPair = super.makeDecision(request, requestQueryParams);
+        DecisionResponse decisionResponse = decisionPair.getKey();
         //
         // Abbreviate results if needed
         //
@@ -137,7 +129,7 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
                 policy.remove("version");
             }
         }
-        return Pair.of(decisionResponse, xacmlResponse);
+        return decisionPair;
     }
 
     @Override

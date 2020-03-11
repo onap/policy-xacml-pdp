@@ -112,9 +112,11 @@ public class TestUtilsCommon {
      * @param policyIds Collection of IdReference objects
      * @return Response object
      */
-    public static Response createXacmlResponse(StatusCode code, Decision decision, Collection<Obligation> obligations,
+    public static Response createXacmlResponse(StatusCode code, String message, Decision decision, 
+            Collection<Obligation> obligations,
             Collection<IdReference> policyIds) {
-        StdStatus status = new StdStatus(code);
+        
+        StdStatus status = new StdStatus(code, message);
 
         StdMutableResult result = new StdMutableResult(decision, status);
         result.addObligations(obligations);

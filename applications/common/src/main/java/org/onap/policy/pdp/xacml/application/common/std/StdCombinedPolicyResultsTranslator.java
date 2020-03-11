@@ -127,17 +127,13 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
     }
 
     @Override
-    public Request convertRequest(DecisionRequest request) {
+    public Request convertRequest(DecisionRequest request) throws ToscaPolicyConversionException {
         LOGGER.info("Converting Request {}", request);
         try {
             return RequestParser.parseRequest(StdCombinedPolicyRequest.createInstance(request));
         } catch (IllegalArgumentException | IllegalAccessException | DataTypeException e) {
-            LOGGER.error("Failed to convert DecisionRequest", e);
+            throw new ToscaPolicyConversionException("Failed to parse request", e);
         }
-        //
-        // TODO throw exception
-        //
-        return null;
     }
 
     /**

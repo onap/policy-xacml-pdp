@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,6 +112,10 @@ public class DecisionProvider {
     }
 
     private void calculateStatistic(Response xacmlResponse) {
+        if (xacmlResponse == null) {
+            XacmlPdpStatisticsManager.getCurrent().updateErrorCount();
+            return;
+        }
         for (Result result : xacmlResponse.getResults()) {
             switch (result.getDecision()) {
                 case PERMIT:
