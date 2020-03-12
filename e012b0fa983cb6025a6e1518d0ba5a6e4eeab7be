@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "28ae07de_00f4daed",
+        "filename": "applications/common/src/test/java/org/onap/policy/pdp/xacml/application/common/std/StdBaseTranslatorTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-03-12T12:26:24Z",
+      "side": 1,
+      "message": "I sometimes name tests to be more meaningful because it makes it easier to zone in on problems when tests fail on Maven builds.",
+      "range": {
+        "startLine": 123,
+        "startChar": 16,
+        "endLine": 123,
+        "endChar": 20
+      },
+      "revId": "e012b0fa983cb6025a6e1518d0ba5a6e4eeab7be",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
