@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -179,7 +179,6 @@ public class XacmlPdpApplicationManager {
      * @throws XacmlApplicationException if loadPolicy fails
      */
     public void loadDeployedPolicy(ToscaPolicy policy) throws XacmlApplicationException {
-
         for (XacmlApplicationServiceProvider application : applicationLoader) {
             //
             // There should be only one application per policytype. We can
@@ -187,6 +186,9 @@ public class XacmlPdpApplicationManager {
             // just use the first one found.
             //
             if (application.canSupportPolicyType(policy.getTypeIdentifier())) {
+                //
+                // Try to load the policy
+                //
                 application.loadPolicy(policy);
                 mapLoadedPolicies.put(policy, application);
                 if (LOGGER.isInfoEnabled()) {
@@ -196,6 +198,13 @@ public class XacmlPdpApplicationManager {
                 return;
             }
         }
+        //
+        // Ideally we shouldn't ever get here if we
+        // are ensuring we are reporting a set of Policy Types and the
+        // pap honors that. The loadPolicy for each application should be
+        // the own throwing exceptions if there are any errors in the policy type.
+        //
+        throw new XacmlApplicationException("Application not found for policy type" + policy.getTypeIdentifier());
     }
 
     /**
@@ -245,7 +254,8 @@ public class XacmlPdpApplicationManager {
                 //
                 Files.createDirectory(path);
             } catch (IOException e) {
-                LOGGER.error("Failed to create application directory {}", path.toAbsolutePath().toString(), e);
+                throw new XacmlApplicationException("Failed to create application directory " + path.toAbsolutePath(),
+                        e);
             }
         }
         //
