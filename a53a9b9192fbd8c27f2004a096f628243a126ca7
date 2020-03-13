@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5ab0689_ed791c7e",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-03-13T19:52:05Z",
+      "side": 1,
+      "message": "\"own\" \u003d\u003e \"one\"",
+      "revId": "a53a9b9192fbd8c27f2004a096f628243a126ca7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
