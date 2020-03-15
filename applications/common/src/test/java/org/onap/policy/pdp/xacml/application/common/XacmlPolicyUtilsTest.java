@@ -27,7 +27,6 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.util.XACMLPolicyWriter;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -294,5 +293,37 @@ public class XacmlPolicyUtilsTest {
         XacmlPolicyUtils.removeRootPolicy(properties, ref);
         XacmlPolicyUtils.debugDumpPolicyProperties(properties, LOGGER);
         assertThat(properties.getProperty("refstart3.file")).isNotBlank();
+    }
+
+    @Test
+    public void testCopyingProperties() throws Exception {
+        //
+        // Copy to this folder
+        //
+        File copyFolder = policyFolder.newFolder("copy");
+        assertThat(copyFolder.exists()).isTrue();
+        //
+        // Mock up a properties object
+        //
+        Properties mockProperties = new Properties();
+        XacmlPolicyUtils.addRootPolicy(mockProperties, rootPath);
+        XacmlPolicyUtils.addReferencedPolicy(mockProperties, path1);
+        //
+        // Write the properties out to a file
+        //
+        Path fileProperties = XacmlPolicyUtils.getPropertiesPath(policyFolder.getRoot().toPath());
+        XacmlPolicyUtils.storeXacmlProperties(mockProperties, fileProperties);
+        //
+        // Now we can test the copy method
+        //
+        XacmlPolicyUtils.FileCreator myCreator = (String filename) -> policyFolder.newFile("copy/" + filename);
+        File propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents(
+                fileProperties.toAbsolutePath().toString(), mockProperties, myCreator);
+
+        assertThat(propertiesFile.canRead()).isTrue();
+        assertThat(Path.of(copyFolder.getAbsolutePath(),
+                rootPath.getFileName().toString()).toFile().canRead()).isTrue();
+        assertThat(Path.of(copyFolder.getAbsolutePath(),
+                path1.getFileName().toString()).toFile().canRead()).isTrue();
     }
 }

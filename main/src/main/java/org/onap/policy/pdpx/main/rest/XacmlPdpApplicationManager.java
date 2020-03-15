@@ -202,7 +202,7 @@ public class XacmlPdpApplicationManager {
         // Ideally we shouldn't ever get here if we
         // are ensuring we are reporting a set of Policy Types and the
         // pap honors that. The loadPolicy for each application should be
-        // the own throwing exceptions if there are any errors in the policy type.
+        // the one throwing exceptions if there are any errors in the policy type.
         //
         throw new XacmlApplicationException("Application not found for policy type" + policy.getTypeIdentifier());
     }
