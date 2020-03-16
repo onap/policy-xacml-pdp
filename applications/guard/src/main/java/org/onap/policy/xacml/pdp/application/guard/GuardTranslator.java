@@ -96,7 +96,8 @@ public class GuardTranslator implements ToscaPolicyTranslator {
     /**
      * Convert the policy.
      */
-    public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
+    @Override
+    public Object convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
         //
         // Policy name should be at the root
         //
@@ -140,6 +141,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
     /**
      * Convert Request.
      */
+    @Override
     public Request convertRequest(DecisionRequest request) throws ToscaPolicyConversionException {
         LOGGER.info("Converting Request {}", request);
         try {
@@ -152,6 +154,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
     /**
      * Convert response.
      */
+    @Override
     public DecisionResponse convertResponse(Response xacmlResponse) {
         LOGGER.info("Converting Response {}", xacmlResponse);
         DecisionResponse decisionResponse = new DecisionResponse();

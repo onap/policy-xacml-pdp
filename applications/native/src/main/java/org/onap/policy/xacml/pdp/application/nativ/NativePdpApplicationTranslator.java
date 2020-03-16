@@ -27,11 +27,9 @@ import com.att.research.xacml.api.Response;
 import com.att.research.xacml.util.XACMLPolicyScanner;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -56,7 +54,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
     }
 
     @Override
-    public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
+    public Object convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
         //
         // Extract the Base64 encoded policy xml string and decode it
         //
@@ -67,16 +65,19 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         } catch (IllegalArgumentException exc) {
             throw new ToscaPolicyConversionException("error on Base64 decoding the native policy", exc);
         }
-        LOGGER.debug("Decoded xacml policy {}",decodedXacmlPolicy);
+        LOGGER.debug("Decoded xacml policy {}", decodedXacmlPolicy);
         //
         // Scan the string and convert to xacml PolicyType
         //
-        try (InputStream is = new ByteArrayInputStream(decodedXacmlPolicy.getBytes(StandardCharsets.UTF_8))) {
+        try (ByteArrayInputStream is = new ByteArrayInputStream(decodedXacmlPolicy.getBytes(StandardCharsets.UTF_8))) {
             //
-            // Here we assume it is PolicyType, not PolicySetType
-            // PolicySetType will be addressed later
+            // Read the Policy In
             //
-            return (PolicyType) XACMLPolicyScanner.readPolicy(is);
+            Object policy = XACMLPolicyScanner.readPolicy(is);
+            if (policy == null) {
+                throw new ToscaPolicyConversionException("Invalid XACML Policy");
+            }
+            return policy;
         } catch (IOException exc) {
             throw new ToscaPolicyConversionException("Failed to read policy", exc);
         }

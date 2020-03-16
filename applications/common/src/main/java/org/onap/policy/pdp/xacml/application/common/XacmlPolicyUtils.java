@@ -23,6 +23,7 @@
 package org.onap.policy.pdp.xacml.application.common;
 
 import com.att.research.xacml.api.Identifier;
+import com.att.research.xacml.util.XACMLPolicyWriter;
 import com.att.research.xacml.util.XACMLProperties;
 
 import java.io.File;
@@ -352,13 +353,24 @@ public class XacmlPolicyUtils {
      * @param path Path for policy
      * @return Path unique file path for the Policy
      */
-    public static Path constructUniquePolicyFilename(PolicyType policy, Path path) {
+    public static Path constructUniquePolicyFilename(Object policy, Path path) {
+        String id;
+        String version;
+        if (policy instanceof PolicyType) {
+            id = ((PolicyType) policy).getPolicyId();
+            version = ((PolicyType) policy).getVersion();
+        } else if (policy instanceof PolicySetType) {
+            id = ((PolicySetType) policy).getPolicySetId();
+            version = ((PolicySetType) policy).getVersion();
+        } else {
+            throw new IllegalArgumentException("Must pass a PolicyType or PolicySetType");
+        }
         //
         //
         // Can it be possible to produce an invalid filename?
         // Should we insert a UUID
         //
-        String filename = policy.getPolicyId() + "_" + policy.getVersion() + ".xml";
+        String filename = id + "_" + version + ".xml";
         //
         // Construct the Path
         //
@@ -493,6 +505,23 @@ public class XacmlPolicyUtils {
             // Return the new path to the properties folder
             //
             return propertiesFile;
+        }
+    }
+
+    /**
+     * Wraps the call to XACMLPolicyWriter.
+     *
+     * @param path Path to file to be written to.
+     * @param policy PolicyType or PolicySetType
+     * @return Path - the same path passed in most likely from XACMLPolicyWriter. Or NULL if an error occurs.
+     */
+    public static Path writePolicyFile(Path path, Object policy) {
+        if (policy instanceof PolicyType) {
+            return XACMLPolicyWriter.writePolicyFile(path, (PolicyType) policy);
+        } else if (policy instanceof PolicySetType) {
+            return XACMLPolicyWriter.writePolicyFile(path, (PolicySetType) policy);
+        } else {
+            throw new IllegalArgumentException("Expecting PolicyType or PolicySetType");
         }
     }
 }

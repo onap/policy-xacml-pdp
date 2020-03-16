@@ -59,7 +59,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
     }
 
     @Override
-    public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
+    public Object convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
         //
         // Sanity checks
         //

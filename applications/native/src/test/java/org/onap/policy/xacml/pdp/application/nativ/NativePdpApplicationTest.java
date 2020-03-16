@@ -23,6 +23,7 @@
 package org.onap.policy.xacml.pdp.application.nativ;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.att.research.xacml.api.Decision;
 import com.att.research.xacml.api.Request;
@@ -30,6 +31,7 @@ import com.att.research.xacml.api.Response;
 import com.att.research.xacml.std.dom.DOMRequest;
 import com.att.research.xacml.std.dom.DOMResponse;
 import java.io.File;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import org.junit.BeforeClass;
@@ -37,7 +39,14 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
+import org.onap.policy.common.utils.coder.StandardYamlCoder;
+import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.common.utils.resources.TextFileUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
+import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.onap.policy.pdp.xacml.xacmltest.TestUtils;
@@ -48,6 +57,7 @@ public class NativePdpApplicationTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NativePdpApplicationTest.class);
     private static final String PERMIT = "Permit";
+    private static final StandardYamlCoder yamlCoder = new StandardYamlCoder();
     private static Properties properties = new Properties();
     private static File propertiesFile;
     private static RestServerParameters clientParams = new RestServerParameters();
@@ -111,6 +121,59 @@ public class NativePdpApplicationTest {
     }
 
     @Test
+    public void testUncommon() {
+        NativePdpApplicationTranslator translator = new NativePdpApplicationTranslator();
+        assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
+            translator.convertRequest(null)
+        ).withMessageContaining("Do not call native convertRequest");
+
+        assertThat(translator.convertResponse(null)).isNull();
+
+        NativePdpApplication application = new NativePdpApplication();
+        assertThat(application.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+            "onap.policies.native.Xacml", "1.0.0"))).isTrue();
+        assertThat(application.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+                "onap.policies.native.SomethingElse", "1.0.0"))).isFalse();
+        assertThat(application.actionDecisionsSupported()).contains("native");
+    }
+
+    @Test
+    public void testBadPolicies() throws Exception {
+        NativePdpApplicationTranslator translator = new NativePdpApplicationTranslator();
+        String policyYaml = ResourceUtils.getResourceAsString("src/test/resources/policies/bad.native.policies.yaml");
+        //
+        // Serialize it into a class
+        //
+        ToscaServiceTemplate serviceTemplate = yamlCoder.decode(policyYaml, ToscaServiceTemplate.class);
+        //
+        // Make sure all the fields are setup properly
+        //
+        JpaToscaServiceTemplate jtst = new JpaToscaServiceTemplate();
+        jtst.fromAuthorative(serviceTemplate);
+        ToscaServiceTemplate completedJtst = jtst.toAuthorative();
+        //
+        // Get the policies
+        //
+        for (Map<String, ToscaPolicy> policies : completedJtst.getToscaTopologyTemplate().getPolicies()) {
+            for (ToscaPolicy policy : policies.values()) {
+                if ("bad.base64".equals(policy.getName())) {
+                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
+                        translator.convertPolicy(policy)
+                    ).withMessageContaining("error on Base64 decoding the native policy");
+                } else if ("bad.noproperties".equals(policy.getName())) {
+                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
+                        translator.convertPolicy(policy)
+                    ).withMessageContaining("no xacml native policy found in the tosca policy");
+                } else if ("bad.policy".equals(policy.getName())) {
+                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
+                        translator.convertPolicy(policy)
+                    ).withMessageContaining("Invalid XACML Policy");
+                }
+            }
+        }
+    }
+
+    @Test
     public void testNativePolicy() throws Exception {
 
         LOGGER.info("*********** Running native policy test *************");
@@ -152,7 +215,7 @@ public class NativePdpApplicationTest {
      * @throws Exception on errors checking the decision
      *
      **/
-    public void checkDecision(String expected, Response response) throws Exception {
+    private void checkDecision(String expected, Response response) throws Exception {
         LOGGER.info("Looking for {} Decision", expected);
         assertThat(response).isNotNull();
         Decision decision = response.getResults().iterator().next().getDecision();

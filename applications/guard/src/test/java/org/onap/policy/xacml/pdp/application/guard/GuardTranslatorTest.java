@@ -166,7 +166,7 @@ public class GuardTranslatorTest {
                         translator.convertPolicy(policy));
                     continue;
                 }
-                PolicyType xacmlPolicy = translator.convertPolicy(policy);
+                PolicyType xacmlPolicy = (PolicyType) translator.convertPolicy(policy);
                 assertThat(xacmlPolicy).isNotNull();
                 //
                 // Let's dump it out
