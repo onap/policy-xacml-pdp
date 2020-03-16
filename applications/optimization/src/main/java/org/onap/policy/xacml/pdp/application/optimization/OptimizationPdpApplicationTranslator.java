@@ -65,11 +65,12 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
 
     @SuppressWarnings("unchecked")
     @Override
-    public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
+    public Object convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
         //
-        // Have our superclass do the work
+        // Have our superclass do the work - NOTE we are assuming
+        // that we are getting a PolicyType converted.
         //
-        PolicyType policy = super.convertPolicy(toscaPolicy);
+        PolicyType policy = (PolicyType) super.convertPolicy(toscaPolicy);
         //
         // Check if this is the subscriber policy
         //

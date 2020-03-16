@@ -156,6 +156,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         );
     }
 
+    @Override
     protected void scanAdvice(Collection<Advice> advice, DecisionResponse decisionResponse) {
         LOGGER.warn("scanAdvice not supported by {}", this.getClass());
     }
@@ -235,7 +236,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
     }
 
     @Override
-    public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
+    public Object convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
         //
         // Get the TOSCA Policy Type for this policy
         //

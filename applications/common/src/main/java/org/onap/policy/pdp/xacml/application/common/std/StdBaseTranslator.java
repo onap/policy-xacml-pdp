@@ -64,7 +64,7 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
     public static final String POLICY_VERSION = "policy-version";
 
     @Override
-    public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
+    public Object convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
         throw new ToscaPolicyConversionException("Please override convertPolicy");
     }
 

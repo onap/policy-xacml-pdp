@@ -192,9 +192,9 @@ public class StdMatchableTranslatorTest {
         for (Map<String, ToscaPolicy> policies : completedJtst.getToscaTopologyTemplate().getPolicies()) {
             for (ToscaPolicy policy : policies.values()) {
                 //
-                // Test that we can convert the policy
+                // Test that we can convert the policy - assuming PolicyType
                 //
-                PolicyType translatedPolicy = translator.convertPolicy(policy);
+                PolicyType translatedPolicy = (PolicyType) translator.convertPolicy(policy);
                 assertNotNull(translatedPolicy);
                 assertThat(translatedPolicy.getObligationExpressions().getObligationExpression()).hasSize(1);
                 logger.info("Translated policy {} {}", XacmlPolicyUtils.LINE_SEPARATOR, translatedPolicy);

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ package org.onap.policy.pdp.xacml.application.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.util.XACMLPolicyWriter;
@@ -121,9 +122,9 @@ public class XacmlPolicyUtilsTest {
             //
             // Save root policy
             //
-            File rootFile = policyFolder.newFile("root.xml");
-            LOGGER.info("Creating Root Policy {}", rootFile.getAbsolutePath());
-            rootPath = XACMLPolicyWriter.writePolicyFile(rootFile.toPath(), rootPolicy);
+            Path rootFile = XacmlPolicyUtils.constructUniquePolicyFilename(rootPolicy, policyFolder.getRoot().toPath());
+            LOGGER.info("Creating Root Policy {}", rootFile.toAbsolutePath());
+            rootPath = XacmlPolicyUtils.writePolicyFile(rootFile, rootPolicy);
             //
             // Create policies - Policies 1 and 2 will become references in the
             // root policy. While Policies 3 and 4 will become references in the
@@ -200,9 +201,21 @@ public class XacmlPolicyUtilsTest {
         //
         // Save it to disk
         //
-        File file = policyFolder.newFile(policy.getPolicyId() + ".xml");
-        LOGGER.info("Creating Policy {}", file.getAbsolutePath());
-        return XACMLPolicyWriter.writePolicyFile(file.toPath(), policy);
+        Path policyFile = XacmlPolicyUtils.constructUniquePolicyFilename(policy, policyFolder.getRoot().toPath());
+        LOGGER.info("Creating Policy {}", policyFile.toAbsolutePath());
+        return XacmlPolicyUtils.writePolicyFile(policyFile, policy);
+    }
+
+    @Test
+    public void testUncommonConditions() throws IOException {
+        File fileTemp = policyFolder.newFile();
+        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
+            XacmlPolicyUtils.writePolicyFile(fileTemp.toPath(), new String("not a policy"))
+        );
+        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
+            XacmlPolicyUtils.constructUniquePolicyFilename(new String("not a policy"),
+                    policyFolder.getRoot().toPath())
+        );
     }
 
     @Test

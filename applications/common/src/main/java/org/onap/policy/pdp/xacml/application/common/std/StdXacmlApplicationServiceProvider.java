@@ -28,7 +28,6 @@ import com.att.research.xacml.api.pdp.PDPEngine;
 import com.att.research.xacml.api.pdp.PDPEngineFactory;
 import com.att.research.xacml.api.pdp.PDPException;
 import com.att.research.xacml.util.FactoryException;
-import com.att.research.xacml.util.XACMLPolicyWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -39,7 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import lombok.Getter;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
@@ -121,7 +119,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             //
             // Convert the policies first
             //
-            PolicyType xacmlPolicy = this.getTranslator(toscaPolicy.getType()).convertPolicy(toscaPolicy);
+            Object xacmlPolicy = this.getTranslator(toscaPolicy.getType()).convertPolicy(toscaPolicy);
             if (xacmlPolicy == null) {
                 throw new ToscaPolicyConversionException("Failed to convert policy");
             }
@@ -137,7 +135,9 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             // Write the policy to disk
             // Maybe check for an error
             //
-            XACMLPolicyWriter.writePolicyFile(refPath, xacmlPolicy);
+            if (XacmlPolicyUtils.writePolicyFile(refPath, xacmlPolicy) == null) {
+                throw new ToscaPolicyConversionException("Unable to writePolicyFile");
+            }
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info("Xacml Policy is {}{}", XacmlPolicyUtils.LINE_SEPARATOR,
                     new String(Files.readAllBytes(refPath), StandardCharsets.UTF_8));

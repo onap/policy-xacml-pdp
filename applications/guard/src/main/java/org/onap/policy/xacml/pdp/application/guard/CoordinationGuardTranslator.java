@@ -39,9 +39,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
-
 import org.apache.commons.io.IOUtils;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
@@ -63,7 +60,7 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
     }
 
     @Override
-    public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
+    public Object convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
         LOGGER.debug("Using CoordinationGuardTranslator.convertPolicy");
         //
         // Policy name should be at the root
@@ -88,7 +85,7 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
         // Scan the string and convert to PoilcyType
         //
         try (InputStream is = new ByteArrayInputStream(xacmlStr.getBytes(StandardCharsets.UTF_8))) {
-            return (PolicyType) XACMLPolicyScanner.readPolicy(is);
+            return XACMLPolicyScanner.readPolicy(is);
         } catch (IOException e) {
             throw new ToscaPolicyConversionException("Failed to read policy", e);
         }
