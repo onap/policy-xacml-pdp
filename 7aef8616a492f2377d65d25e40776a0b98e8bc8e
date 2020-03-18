@@ -245,6 +245,24 @@
       "revId": "7aef8616a492f2377d65d25e40776a0b98e8bc8e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96a99845_7e818516",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePropertyTypeInteger.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-03-18T21:23:21Z",
+      "side": 1,
+      "message": "Since an \"Integer\" is needed rather than an \"int\", valueOf() should be used.  The reason is that parseInt() returns an \"int\" which then has to be autoboxed into an Integer, whereas valueOf() will return the Integer directly, skipping the autoboxing (in this code, at least)",
+      "parentUuid": "46fafe61_b5c07b67",
+      "revId": "7aef8616a492f2377d65d25e40776a0b98e8bc8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
