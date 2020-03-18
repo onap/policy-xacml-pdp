@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7bacc5c7_4f22f90c",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePolicyType.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-18T22:54:48Z",
+      "side": 1,
+      "message": "My latest patch is the attempt at it - but I am getting a compilation error. I think it cannot handle the different constructors. Take a look - I can pull it out and go back.",
+      "parentUuid": "32aeea50_1caca77c",
+      "revId": "fec2496051545360df8b5ccecd4ad0567f74999e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "aede6ee5_a3fc867d",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePolicyType.java",
         "patchSetId": 2
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "b5fcc0fc_cf0422da",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePropertyTypeInteger.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-18T22:54:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b81da3cf_de5b4521",
+      "revId": "fec2496051545360df8b5ccecd4ad0567f74999e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "835e6e1a_1638ce96",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePropertyTypeMap.java",
         "patchSetId": 2
@@ -64,6 +100,24 @@
       "writtenOn": "2020-03-18T21:23:21Z",
       "side": 1,
       "message": "duplicate code - could extract these lines and put them into the superclass",
+      "revId": "fec2496051545360df8b5ccecd4ad0567f74999e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d7b9684_af793590",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePropertyTypeMap.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-18T22:54:48Z",
+      "side": 1,
+      "message": "Yep saw that - but I\u0027m going to put it in utils instead so its available elsewhere.",
+      "parentUuid": "835e6e1a_1638ce96",
       "revId": "fec2496051545360df8b5ccecd4ad0567f74999e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
