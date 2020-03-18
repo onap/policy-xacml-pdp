@@ -160,7 +160,7 @@ public class StdMatchableTranslatorTest {
     }
 
     @Test
-    public void test() throws CoderException, ToscaPolicyConversionException, ParseException {
+    public void testMatchableTranslator() throws CoderException, ToscaPolicyConversionException, ParseException {
         //
         // Create our translator
         //

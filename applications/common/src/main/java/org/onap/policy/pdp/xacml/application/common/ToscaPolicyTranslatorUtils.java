@@ -25,11 +25,13 @@ package org.onap.policy.pdp.xacml.application.common;
 import com.att.research.xacml.api.Identifier;
 import com.att.research.xacml.api.XACML3;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -165,5 +167,51 @@ public final class ToscaPolicyTranslatorUtils {
             }
         }
         return theInt;
+    }
+
+    /**
+     * For a given MatchType or AnyOfType, builds it and appends it into the
+     * AnyOfType.
+     *
+     * @param anyOf AnyOfType - will create if null
+     * @param type MatchType or AnyOfType
+     * @return returns the given anyOf or new AnyTypeOf if null
+     */
+    public static AnyOfType buildAndAppendAllof(AnyOfType anyOf, Object type) {
+        if (type instanceof MatchType) {
+            AllOfType allOf = new AllOfType();
+            allOf.getMatch().add((MatchType) type);
+            if (anyOf == null) {
+                anyOf = new AnyOfType();
+            }
+            anyOf.getAllOf().add(allOf);
+        } else if (type instanceof AllOfType) {
+            if (anyOf == null) {
+                anyOf = new AnyOfType();
+            }
+            anyOf.getAllOf().add((AllOfType) type);
+        }
+
+        return anyOf;
+    }
+
+    /**
+     * buildAndAppendTarget - adds in the potential object into TargetType.
+     *
+     * @param target TargetType - must exist
+     * @param object AnyOfType or MatchType
+     * @return TargetType
+     */
+    public static TargetType buildAndAppendTarget(TargetType target, Object object) {
+        if (object instanceof AnyOfType) {
+            target.getAnyOf().add((AnyOfType) object);
+        } else if (object instanceof MatchType) {
+            AllOfType allOf = new AllOfType();
+            allOf.getMatch().add((MatchType) object);
+            AnyOfType anyOf = new AnyOfType();
+            anyOf.getAllOf().add(allOf);
+            target.getAnyOf().add(anyOf);
+        }
+        return target;
     }
 }
