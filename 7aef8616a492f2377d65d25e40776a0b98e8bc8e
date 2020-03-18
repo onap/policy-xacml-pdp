@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e46ec33_da4edb8b",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePolicyType.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-18T12:01:22Z",
+      "side": 1,
+      "message": "Liam - do you have these statically defined anywhere in models?",
+      "range": {
+        "startLine": 42,
+        "startChar": 4,
+        "endLine": 49,
+        "endChar": 0
+      },
+      "revId": "7aef8616a492f2377d65d25e40776a0b98e8bc8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
