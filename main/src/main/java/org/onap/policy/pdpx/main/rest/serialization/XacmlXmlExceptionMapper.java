@@ -20,14 +20,8 @@
 
 package org.onap.policy.pdpx.main.rest.serialization;
 
-import java.io.IOException;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Catches IOException when decoding/encoding a REST xacml request/response and converts them from an HTTP 500
@@ -37,32 +31,20 @@ import org.slf4j.LoggerFactory;
  */
 @Provider
 @Produces(XacmlXmlMessageBodyHandler.APPLICATION_XACML_XML)
-public class XacmlXmlExceptionMapper implements ExceptionMapper<IOException> {
+public class XacmlXmlExceptionMapper extends XacmlExceptionMapper {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(XacmlXmlExceptionMapper.class);
-    private static final String INVALID_REQUEST = "invalid XML xacml request";
-    private static final String INVALID_RESPONSE = "invalid XML xacml response";
-
-    @Override
-    public Response toResponse(IOException exc) {
-        if (exc.getMessage().contains("dom request")) {
-            LOGGER.warn(INVALID_REQUEST, exc);
-            return Response.status(Response.Status.BAD_REQUEST).entity(new SimpleResponse(INVALID_REQUEST)).build();
-        } else if (exc.getMessage().contains("dom response")) {
-            LOGGER.warn(INVALID_RESPONSE, exc);
-            return Response.status(Response.Status.BAD_REQUEST).entity(new SimpleResponse(INVALID_RESPONSE)).build();
-        } else {
-            // Unexpected 500
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
+    public XacmlXmlExceptionMapper() {
+        this.invalidRequest = "invalid XML xacml request";
+        this.invalidResponse = "invalid XML xacml response";
     }
 
-    @Getter
-    private static class SimpleResponse {
-        private String errorDetails;
+    @Override
+    public boolean isInvalidRequest(String message) {
+        return message.contains("dom request");
+    }
 
-        public SimpleResponse(String errorDetails) {
-            this.errorDetails = errorDetails;
-        }
+    @Override
+    public boolean isInvalidResponse(String message) {
+        return message.contains("dom response");
     }
 }
