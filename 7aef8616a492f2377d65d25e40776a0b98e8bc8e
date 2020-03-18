@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c4dfb057_fb3aafc9",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchableCallback.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-18T20:41:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cb63e076_08f2b768",
+      "revId": "7aef8616a492f2377d65d25e40776a0b98e8bc8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e46ec33_da4edb8b",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePolicyType.java",
         "patchSetId": 1
@@ -66,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "64a6a62c_5ead35b8",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePolicyType.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-18T20:41:23Z",
+      "side": 1,
+      "message": "Hmm ok - since I need to differentiate between list/map vs the others (some scalars I don\u0027t have support yet but I think that\u0027s ok) I\u0027ll just keep these.",
+      "parentUuid": "f7dafb8b_9b30db3a",
+      "range": {
+        "startLine": 42,
+        "startChar": 4,
+        "endLine": 49,
+        "endChar": 0
+      },
+      "revId": "7aef8616a492f2377d65d25e40776a0b98e8bc8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cfc6de54_726771bd",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePolicyType.java",
         "patchSetId": 1
@@ -77,6 +119,24 @@
       "writtenOn": "2020-03-18T16:54:28Z",
       "side": 1,
       "message": "could probably create a Map\u003cString,Function\u003e and then just look-up and apply the function\n\nsame comment below",
+      "revId": "7aef8616a492f2377d65d25e40776a0b98e8bc8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03176e1a_bd845c7c",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePolicyType.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-18T20:41:23Z",
+      "side": 1,
+      "message": "Let me know if what I did makes sense. To me it seems it just pushes the code somewhere else.",
+      "parentUuid": "cfc6de54_726771bd",
       "revId": "7aef8616a492f2377d65d25e40776a0b98e8bc8e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -100,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "f6a224f2_a207acea",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePolicyType.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-18T20:41:23Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "46a2493a_46745971",
+      "revId": "7aef8616a492f2377d65d25e40776a0b98e8bc8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "077cbae5_2f91c658",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePropertyTypeBase.java",
         "patchSetId": 1
@@ -117,6 +195,24 @@
     },
     {
       "key": {
+        "uuid": "4aebaf56_0aa30b7a",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePropertyTypeBase.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-18T20:41:23Z",
+      "side": 1,
+      "message": "Not yet - I believe that down the road we may want to retain these so that we can utilize the constraints and metadata for directing the translator.",
+      "parentUuid": "077cbae5_2f91c658",
+      "revId": "7aef8616a492f2377d65d25e40776a0b98e8bc8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bd25a192_5e83bb2e",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePropertyTypeInteger.java",
         "patchSetId": 1
@@ -128,6 +224,24 @@
       "writtenOn": "2020-03-18T16:54:28Z",
       "side": 1,
       "message": "since validate() returns an Integer, should use valueOf() instead of parseInt().  Or change validate() to return a plain \"int\"\n\nsimilar comment with the other classes",
+      "revId": "7aef8616a492f2377d65d25e40776a0b98e8bc8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46fafe61_b5c07b67",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePropertyTypeInteger.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-18T20:41:23Z",
+      "side": 1,
+      "message": "We have to toString() it anyway see line #62 - because of XACML/XML issues, so right now the Integer object seems better to use.",
+      "parentUuid": "bd25a192_5e83bb2e",
       "revId": "7aef8616a492f2377d65d25e40776a0b98e8bc8e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
