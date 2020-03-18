@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import lombok.Setter;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
@@ -63,6 +64,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 import org.onap.policy.pdp.xacml.application.common.OnapObligation;
 import org.onap.policy.pdp.xacml.application.common.PolicyApiCaller;
 import org.onap.policy.pdp.xacml.application.common.PolicyApiException;
@@ -70,6 +72,9 @@ import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
+import org.onap.policy.pdp.xacml.application.common.matchable.MatchableCallback;
+import org.onap.policy.pdp.xacml.application.common.matchable.MatchablePolicyType;
+import org.onap.policy.pdp.xacml.application.common.matchable.MatchableProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +85,7 @@ import org.slf4j.LoggerFactory;
  * @author pameladragosh
  *
  */
-public class StdMatchableTranslator  extends StdBaseTranslator {
+public class StdMatchableTranslator  extends StdBaseTranslator implements MatchableCallback {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StdMatchableTranslator.class);
     private static final StandardYamlCoder standardYamlCoder = new StandardYamlCoder();
@@ -90,6 +95,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
     private static final String MSG_WEIGHT_MAP = "Weight map is {}";
 
     private final Map<ToscaPolicyTypeIdentifier, ToscaServiceTemplate> matchablePolicyTypes = new HashMap<>();
+
     @Setter
     private RestServerParameters apiRestParameters;
     @Setter
@@ -322,6 +328,47 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         return newPolicyType;
     }
 
+    @Override
+    public ToscaPolicyType retrievePolicyType(String derivedFrom) {
+        ToscaServiceTemplate template = this.findPolicyType(new ToscaPolicyTypeIdentifier(derivedFrom, "1.0.0"));
+        if (template == null) {
+            LOGGER.error("Could not retrieve Policy Type {}", derivedFrom);
+            return null;
+        }
+        return template.getPolicyTypes().get(derivedFrom);
+    }
+
+    @Override
+    public ToscaDataType retrieveDataType(String datatype) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    private class MyMatchableCallback implements MatchableCallback {
+        private StdMatchableTranslator translator;
+        private ToscaServiceTemplate template;
+
+        public MyMatchableCallback(StdMatchableTranslator translator, ToscaServiceTemplate template) {
+            this.translator = translator;
+            this.template = template;
+        }
+
+        @Override
+        public ToscaPolicyType retrievePolicyType(String derivedFrom) {
+            ToscaPolicyType policyType = this.template.getPolicyTypes().get(derivedFrom);
+            if (policyType != null) {
+                return policyType;
+            }
+            return translator.retrievePolicyType(derivedFrom);
+        }
+
+        @Override
+        public ToscaDataType retrieveDataType(String datatype) {
+            return this.template.getDataTypes().get(datatype);
+        }
+
+    }
+
     /**
      * For generating target type, we scan for matchable properties
      * and use those to build the policy.
@@ -330,26 +377,100 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
      * @param policyTypes Collection of policy Type to find matchable metadata
      * @return {@code Pair<TargetType, Integer>} Returns a TargetType and a Total Weight of matchables.
      */
-    protected Pair<TargetType, Integer> generateTargetType(ToscaPolicy policyType,
-            ToscaServiceTemplate policyTemplate) {
+    protected Pair<TargetType, Integer> generateTargetType(ToscaPolicy policy, ToscaServiceTemplate template) {
         //
         // Our return object
         //
-        TargetType targetType = new TargetType();
-        //
-        // Top-level list of properties
-        //
-        Map<String, Object> properties = policyType.getProperties();
+        TargetType target = new TargetType();
+        //target.getAnyOf().add(new AnyOfType());
         //
         // To start, we know these properties are for this specific Policy Type ID/Version
         //
-        ToscaPolicyTypeIdentifier propertiesPolicyId = policyType.getTypeIdentifier();
+        //ToscaPolicyTypeIdentifier propertiesPolicyId = policyType.getTypeIdentifier();
         //
         // Scan the property map for matchables
         //
-        int totalWeight = findMatchablesInProperties(properties, propertiesPolicyId, policyTemplate, targetType);
-        LOGGER.info("Total weight is {}", totalWeight);
-        return Pair.of(targetType, totalWeight);
+        //int totalWeight = findMatchablesInProperties(properties, propertiesPolicyId, policyTemplate, targetType);
+        //LOGGER.info("Total weight is {}", totalWeight);
+
+        MyMatchableCallback myCallback = new MyMatchableCallback(this, template);
+
+        MatchablePolicyType matchablePolicyType = new MatchablePolicyType(
+                template.getPolicyTypes().get(policy.getType()), myCallback);
+
+        try {
+            fillTargetTypeWithMatchables(target, matchablePolicyType, policy.getProperties());
+        } catch (ToscaPolicyConversionException e) {
+            LOGGER.error("Could not generate target type", e);
+        }
+        //
+        // There may be a case for default policies there is no weight - need to clean
+        // up the target then else PDP will report bad policy missing AnyOf
+        //
+        int weight = calculateWeight(target);
+        LOGGER.debug("Weight is {} for policy {}", weight, policy.getName());
+        //
+        // Assume the number of AllOf's is the weight for now
+        //
+        return Pair.of(target, weight);
+        //return Pair.of(targetType, totalWeight);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected void fillTargetTypeWithMatchables(TargetType target, MatchablePolicyType matchablePolicyType,
+            Map<String, Object> properties) throws ToscaPolicyConversionException {
+        for (Entry<String, Object> entrySet : properties.entrySet()) {
+            String propertyName = entrySet.getKey();
+            Object propertyValue = entrySet.getValue();
+            MatchableProperty matchable = matchablePolicyType.get(propertyName);
+            if (matchable != null) {
+                //
+                // Construct attribute id
+                //
+                Identifier id = new IdentifierImpl(ToscaDictionary.ID_RESOURCE_MATCHABLE + propertyName);
+                //
+                // Generate the matchable
+                //
+                Object object = matchable.getType().generate(propertyValue, id);
+                //
+                // Depending on what type it is, add it into the target
+                //
+                if (object instanceof AnyOfType) {
+                    target.getAnyOf().add((AnyOfType) object);
+                } else if (object instanceof MatchType) {
+                    AllOfType allOf = new AllOfType();
+                    allOf.getMatch().add((MatchType) object);
+                    AnyOfType anyOf = new AnyOfType();
+                    anyOf.getAllOf().add(allOf);
+                    target.getAnyOf().add(anyOf);
+                }
+            } else {
+                //
+                // Here is the special case where we look for a Collection of values that may
+                // contain potential matchables
+                //
+                if (propertyValue instanceof List) {
+                    for (Object listValue : ((List<?>)propertyValue)) {
+                        if (listValue instanceof Map) {
+                            fillTargetTypeWithMatchables(target, matchablePolicyType, (Map<String, Object>) listValue);
+                        }
+                    }
+                } else if (propertyValue instanceof Map) {
+                    fillTargetTypeWithMatchables(target, matchablePolicyType, (Map<String, Object>) propertyValue);
+                }
+            }
+        }
+    }
+
+    protected int calculateWeight(TargetType target) {
+        int weight = 0;
+        for (AnyOfType anyOf : target.getAnyOf()) {
+            for (AllOfType allOf : anyOf.getAllOf()) {
+                weight += allOf.getMatch().size();
+            }
+        }
+
+        return weight;
     }
 
     protected int findMatchablesInProperties(Map<String, Object> properties,
@@ -889,8 +1010,21 @@ public class StdMatchableTranslator  extends StdBaseTranslator {
         //
         LOGGER.info("Read in local policy type {}", policyTypePath.toAbsolutePath());
         try {
-            return standardYamlCoder.decode(new String(bytes, StandardCharsets.UTF_8),
+            //
+            // Decode the template
+            //
+            ToscaServiceTemplate template = standardYamlCoder.decode(new String(bytes, StandardCharsets.UTF_8),
                     ToscaServiceTemplate.class);
+            //
+            // Ensure all the fields are setup correctly
+            //
+            JpaToscaServiceTemplate jtst = new JpaToscaServiceTemplate();
+            jtst.fromAuthorative(template);
+            ToscaServiceTemplate completedJtst = jtst.toAuthorative();
+            //
+            // This should be good
+            //
+            return completedJtst;
         } catch (CoderException e) {
             LOGGER.error("Failed to decode tosca template for {}", policyTypePath, e);
         }
