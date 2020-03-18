@@ -1,5 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
+ * ONAP
+ * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,33 +20,15 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.pdpx.main.rest.serialization;
+package org.onap.policy.pdp.xacml.application.common.matchable;
 
-import javax.ws.rs.Produces;
-import javax.ws.rs.ext.Provider;
+import com.att.research.xacml.api.Identifier;
+import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 
-/**
- * Catches IOException when decoding/encoding a REST xacml request/response and converts them from an HTTP 500
- * error code to an HTTP 400 error code.
- *
- * @author Chenfei Gao (cgao@research.att.com)
- */
-@Provider
-@Produces(XacmlJsonMessageBodyHandler.APPLICATION_XACML_JSON)
-public class XacmlJsonExceptionMapper  extends XacmlExceptionMapper {
+public interface MatchablePropertyType<T> {
 
-    public XacmlJsonExceptionMapper() {
-        this.invalidRequest = "invalid JSON xacml request";
-        this.invalidResponse = "invalid JSON xacml response";
-    }
+    public T validate(Object value) throws ToscaPolicyConversionException;
 
-    @Override
-    public boolean isInvalidRequest(String message) {
-        return message.contains("json request");
-    }
+    public Object generate(Object value, Identifier attributeId) throws ToscaPolicyConversionException;
 
-    @Override
-    public boolean isInvalidResponse(String message) {
-        return message.contains("json response");
-    }
 }

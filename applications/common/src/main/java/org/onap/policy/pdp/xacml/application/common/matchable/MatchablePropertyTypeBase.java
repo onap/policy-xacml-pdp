@@ -1,5 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
+ * ONAP
+ * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,33 +20,23 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.pdpx.main.rest.serialization;
+package org.onap.policy.pdp.xacml.application.common.matchable;
 
-import javax.ws.rs.Produces;
-import javax.ws.rs.ext.Provider;
+import lombok.Getter;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaEntrySchema;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 
-/**
- * Catches IOException when decoding/encoding a REST xacml request/response and converts them from an HTTP 500
- * error code to an HTTP 400 error code.
- *
- * @author Chenfei Gao (cgao@research.att.com)
- */
-@Provider
-@Produces(XacmlJsonMessageBodyHandler.APPLICATION_XACML_JSON)
-public class XacmlJsonExceptionMapper  extends XacmlExceptionMapper {
+@Getter
+public abstract class MatchablePropertyTypeBase<T> implements MatchablePropertyType<T> {
+    private ToscaProperty toscaProperty;
+    private ToscaEntrySchema toscaSchema;
 
-    public XacmlJsonExceptionMapper() {
-        this.invalidRequest = "invalid JSON xacml request";
-        this.invalidResponse = "invalid JSON xacml response";
+    public MatchablePropertyTypeBase(ToscaProperty inProperty) {
+        this.toscaProperty = inProperty;
     }
 
-    @Override
-    public boolean isInvalidRequest(String message) {
-        return message.contains("json request");
+    public MatchablePropertyTypeBase(ToscaEntrySchema inSchema) {
+        this.toscaSchema = inSchema;
     }
 
-    @Override
-    public boolean isInvalidResponse(String message) {
-        return message.contains("json response");
-    }
 }
