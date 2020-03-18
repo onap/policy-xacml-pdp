@@ -46,6 +46,74 @@
       "revId": "7aef8616a492f2377d65d25e40776a0b98e8bc8e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cfc6de54_726771bd",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePolicyType.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-03-18T16:54:28Z",
+      "side": 1,
+      "message": "could probably create a Map\u003cString,Function\u003e and then just look-up and apply the function\n\nsame comment below",
+      "revId": "7aef8616a492f2377d65d25e40776a0b98e8bc8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46a2493a_46745971",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePolicyType.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-03-18T16:54:28Z",
+      "side": 1,
+      "message": "can do this with a Set",
+      "revId": "7aef8616a492f2377d65d25e40776a0b98e8bc8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "077cbae5_2f91c658",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePropertyTypeBase.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-03-18T16:54:28Z",
+      "side": 1,
+      "message": "are these ever used?",
+      "revId": "7aef8616a492f2377d65d25e40776a0b98e8bc8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd25a192_5e83bb2e",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePropertyTypeInteger.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-03-18T16:54:28Z",
+      "side": 1,
+      "message": "since validate() returns an Integer, should use valueOf() instead of parseInt().  Or change validate() to return a plain \"int\"\n\nsimilar comment with the other classes",
+      "revId": "7aef8616a492f2377d65d25e40776a0b98e8bc8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
