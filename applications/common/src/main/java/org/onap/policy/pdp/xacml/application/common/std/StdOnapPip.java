@@ -70,6 +70,7 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
     protected Properties properties;
     protected EntityManager em;
     protected String issuer;
+    protected boolean shutdown = false;
 
     public StdOnapPip() {
         super();
@@ -82,6 +83,13 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
 
     @Override
     public void configure(String id, Properties properties) throws PIPException {
+        //
+        // This most likely will never get called since configure is called
+        // upon startup.
+        //
+        if (this.shutdown) {
+            throw new PIPException("Engine is shutdown.");
+        }
         super.configure(id, properties);
         logger.info("Configuring historyDb PIP {}", properties);
         this.properties = properties;
@@ -112,6 +120,15 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
         } catch (Exception e) {
             logger.error("Persistence failed {} operations history db", e.getLocalizedMessage(), e);
         }
+    }
+
+    @Override
+    public synchronized void shutdown() {
+        if (this.em != null) {
+            this.em.close();
+            this.em = null;
+        }
+        this.shutdown = true;
     }
 
     protected String getAttribute(PIPFinder pipFinder, PIPRequest pipRequest) {
