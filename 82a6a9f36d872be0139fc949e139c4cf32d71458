@@ -68,6 +68,30 @@
       "revId": "82a6a9f36d872be0139fc949e139c4cf32d71458",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24b72c53_9a2eec6a",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePolicyType.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-19T11:06:34Z",
+      "side": 1,
+      "message": "I think I figured it out",
+      "parentUuid": "26946606_d213ff2f",
+      "range": {
+        "startLine": 201,
+        "startChar": 0,
+        "endLine": 205,
+        "endChar": 0
+      },
+      "revId": "82a6a9f36d872be0139fc949e139c4cf32d71458",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
