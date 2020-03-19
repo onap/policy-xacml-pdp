@@ -23,7 +23,6 @@
 package org.onap.policy.pdp.xacml.application.common.matchable;
 
 import com.att.research.xacml.api.Identifier;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
@@ -50,7 +49,7 @@ public class MatchablePropertyTypeList extends MatchablePropertyTypeBase<List<Ma
     @SuppressWarnings("unchecked")
     @Override
     public List<MatchablePropertyType<?>> validate(Object value) throws ToscaPolicyConversionException {
-        if (value instanceof Collection) {
+        if (value instanceof List) {
             return (List<MatchablePropertyType<?>>) value;
         }
         return Collections.emptyList();

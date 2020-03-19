@@ -18,13 +18,20 @@
 
 package org.onap.policy.pdp.xacml.application.common.operationshistory;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+import com.att.research.xacml.api.Status;
 import com.att.research.xacml.api.pip.PIPException;
 import com.att.research.xacml.api.pip.PIPFinder;
 import com.att.research.xacml.api.pip.PIPRequest;
+import com.att.research.xacml.api.pip.PIPResponse;
 import com.att.research.xacml.std.pip.StdPIPResponse;
 import java.io.FileInputStream;
 import java.lang.reflect.Method;
@@ -40,6 +47,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,6 +65,12 @@ public class GetOperationOutcomePipTest {
 
     @Mock
     private PIPFinder pipFinder;
+
+    @Mock
+    private PIPResponse resp1;
+
+    @Mock
+    private Status okStatus;
 
     /**
      * Create an instance of our engine and also the persistence
@@ -124,7 +138,6 @@ public class GetOperationOutcomePipTest {
         pipEngine.configure("issuer", properties);
         LOGGER.info("PIP configured now creating our entity manager");
         LOGGER.info("properties {}", properties);
-
     }
 
     @Test
@@ -153,6 +166,24 @@ public class GetOperationOutcomePipTest {
     }
 
     @Test
+    public void testGetAttributes() throws Exception {
+        //
+        //
+        //
+        when(pipRequest.getIssuer()).thenReturn(ToscaDictionary.GUARD_ISSUER_PREFIX + "clname:clfoo");
+        when(pipFinder.getMatchingAttributes(any(), eq(pipEngine))).thenReturn(resp1);
+        when(resp1.getStatus()).thenReturn(okStatus);
+        when(okStatus.isOk()).thenReturn(true);
+
+        assertNotEquals(StdPIPResponse.PIP_RESPONSE_EMPTY, pipEngine.getAttributes(pipRequest, pipFinder));
+
+        pipEngine.shutdown();
+
+        assertThatExceptionOfType(PIPException.class).isThrownBy(() -> pipEngine.getAttributes(pipRequest, pipFinder))
+            .withMessageContaining("Engine is shutdown");
+    }
+
+    @Test
     public void testGetOutcomeFromDb() throws Exception {
         //
         // Use reflection to run getCountFromDB
@@ -162,13 +193,18 @@ public class GetOperationOutcomePipTest {
                                                                        String.class);
         method.setAccessible(true);
         //
+        // Test pipEngine
+        //
+        String outcome = (String) method.invoke(pipEngine, "testcl1", "testtarget1");
+        assertThat(outcome).isNull();
+        //
         // Insert entry
         //
         insertEntry("testcl1", "testtarget1", "1");
         //
         // Test pipEngine
         //
-        String outcome = (String) method.invoke(pipEngine, "testcl1", "testtarget1");
+        outcome = (String) method.invoke(pipEngine, "testcl1", "testtarget1");
         //
         // outcome should be "1"
         //
@@ -190,6 +226,13 @@ public class GetOperationOutcomePipTest {
 
         outcome = (String) method.invoke(pipEngine, "testcl1", "testtarget2");
         assertEquals("4", outcome);
+
+        //
+        // Shut it down
+        //
+        pipEngine.shutdown();
+
+        assertThat(method.invoke(pipEngine, "testcl1", "testtarget2")).isNull();
     }
 
     private void insertEntry(String cl, String target, String outcome) {

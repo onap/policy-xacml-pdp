@@ -48,6 +48,7 @@ public class MatchablePolicyType {
     public static final String TOSCA_TYPE_LIST = "list";
     public static final String TOSCA_TYPE_MAP = "map";
 
+    //@formatter:off
     private static final Map<String, Function<ToscaProperty, MatchablePropertyTypeBase<?>>>
         mapPrimitivesProperty = Map.of(
             TOSCA_PRIMITIVE_STRING, MatchablePropertyTypeString::new,
@@ -65,6 +66,7 @@ public class MatchablePolicyType {
             TOSCA_PRIMITIVE_BOOLEAN, MatchablePropertyTypeBoolean::new,
             TOSCA_PRIMITIVE_TIMESTAMP, MatchablePropertyTypeTimestamp::new
             );
+    //@formatter:on
 
     ToscaPolicyIdentifier policyId;
     Map<String, MatchableProperty> matchables = new HashMap<>();
@@ -170,7 +172,7 @@ public class MatchablePolicyType {
         Function<ToscaEntrySchema, MatchablePropertyTypeBase<?>> function =
                 mapPrimitivesSchema.get(toscaSchema.getType());
         if (function != null) {
-            return new MatchableProperty(property, function.apply(toscaSchema)); // compilation err wants ToscaProperty
+            return new MatchableProperty(property, function.apply(toscaSchema));
         }
         throw new IllegalArgumentException("Not a primitive " + toscaSchema.getType());
     }
