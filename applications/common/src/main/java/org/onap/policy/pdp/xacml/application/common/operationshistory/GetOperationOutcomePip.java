@@ -58,6 +58,9 @@ public class GetOperationOutcomePip extends StdOnapPip {
      */
     @Override
     public PIPResponse getAttributes(PIPRequest pipRequest, PIPFinder pipFinder) throws PIPException {
+        if (this.shutdown) {
+            throw new PIPException("Engine is shutdown");
+        }
         logger.debug("getAttributes requesting attribute {} of type {} for issuer {}",
                 pipRequest.getAttributeId(), pipRequest.getDataTypeId(), pipRequest.getIssuer());
         //

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@
 
 package org.onap.policy.pdp.xacml.application.common.std;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -297,6 +299,13 @@ public class StdOnapPipTest {
         };
         pip.addStringAttribute(resp, CATEGORY, ATTRIBUTE_ID, STRING_VALUE, request);
         assertEquals(0, resp.getAttributes().size());
+    }
+
+    @Test
+    public void testShutdown() {
+        assertThatCode(() -> pip.shutdown()).doesNotThrowAnyException();
+        assertThatExceptionOfType(PIPException.class).isThrownBy(() -> pip.configure("foo", new Properties()))
+            .withMessageContaining("Engine is shutdown");
     }
 
     private class MyPip extends StdOnapPip {

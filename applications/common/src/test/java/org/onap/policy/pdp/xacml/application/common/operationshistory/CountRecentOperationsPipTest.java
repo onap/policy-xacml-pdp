@@ -19,6 +19,7 @@
 package org.onap.policy.pdp.xacml.application.common.operationshistory;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -195,6 +196,13 @@ public class CountRecentOperationsPipTest {
     public void testGetAttributes_NullTarget() throws PIPException {
         attributes = new LinkedList<>(Arrays.asList(ACTOR, RECIPE, null));
         assertEquals(StdPIPResponse.PIP_RESPONSE_EMPTY, pipEngine.getAttributes(pipRequest, pipFinder));
+    }
+
+    @Test
+    public void testShutdown() {
+        pipEngine.shutdown();
+        assertThatExceptionOfType(PIPException.class).isThrownBy(() -> pipEngine.getAttributes(pipRequest, pipFinder))
+            .withMessageContaining("Engine is shutdown");
     }
 
     @Test
