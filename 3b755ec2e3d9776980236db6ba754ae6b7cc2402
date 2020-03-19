@@ -124,6 +124,23 @@
     },
     {
       "key": {
+        "uuid": "9ea3248d_b8f27d83",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePropertyTypeList.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-03-19T14:08:53Z",
+      "side": 1,
+      "message": "instance of List to be a little more precise ?",
+      "revId": "3b755ec2e3d9776980236db6ba754ae6b7cc2402",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e6a116b1_6550b36c",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
         "patchSetId": 6
