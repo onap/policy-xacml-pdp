@@ -1,4 +1,4 @@
-tosca_definitions_version: tosca_simple_yaml_1_0_0
+tosca_definitions_version: tosca_simple_yaml_1_1_0
 policy_types:
     onap.policies.Base:
         derived_from: tosca.policies.Root
@@ -12,6 +12,7 @@ policy_types:
                    matchable: true
     onap.policies.base.Middle:
         derived_from: onap.policies.Base
+        type_version: 1.0.0
         version: 1.0.0
         properties:
             middleNoMatch:
@@ -25,30 +26,36 @@ policy_types:
         type_version: 1.0.0
         version: 1.0.0
         properties:
-            nonmatachableString:
+            nonmatchableString:
                 type: string
             matchableString:
                 type: string
                 metadata:
                    matchable: true
-            nonmatachableInteger:
+            nonmatchableInteger:
                 type: integer
                 metadata:
                    matchable: false
-            matachableInteger:
+            matchableInteger:
                 type: integer
                 metadata:
                    matchable: true
-            nonmatachableFloat:
+            nonmatchableFloat:
                 type: float
             matchableFloat:
                 type: float
                 metadata:
                    matchable: true
-            nonmatachableBoolean:
+            nonmatchableBoolean:
                 type: boolean
-            matachableBoolean:
+            matchableBoolean:
                 type: boolean
+                metadata:
+                   matchable: true
+            nonmatchableTimestamp:
+                type: timestamp
+            matchableTimestamp:
+                type: timestamp
                 metadata:
                    matchable: true
             nonmatchableListInteger:
@@ -57,15 +64,72 @@ policy_types:
                    type: integer
             matchableListString:
                 type: list
+                description: |
+                    Every entry in the list is matchable, the attribute id will be the same for all value. eg. the
+                    property name.
                 metadata:
                    matchable: true
                 entry_schema:
                    type: string
-            propertyOneMap:
+            matchableMapString:
+               type: map
+               description: |
+                   Every entry in the map is matchable, however the attribute id will be set by the key.
+               metadata:
+                  matchable: true
+               entry_schema:
+                  type: string
+            nonmatchableMapString:
                 type: map
+                description: |
+                    Nothing gets matched - however you have no control over the LHS key. Someone could
+                    easily set that value to a matchable property name defined elsewhere.
                 entry_schema:
-                    type: onap.datatype.one
+                    type: string
+            badDataType:
+               type: i.do.not.exist
+               description: we can only ignore this - should get caught in the API
+            matchableDataType:
+               type: onap.datatype.zero
+               description: |
+                   The matchable field in a datatype must be IGNORED, because this will result in too many assumptions
+                   as we may go down many levels of datatypes, lists of datatypes, maps of datatypes, etc. Does every
+                   field in the datatype become matchable? That does not make sense right now to write a Policy Type
+                   like that.
+               metadata:
+                  matchable: true
 data_types:
+    onap.datatype.zero:
+        derived_from: tosca.datatypes.Root
+        description: Note that we do not have to declare matchable for each property.
+        properties:
+            zeroStringMatchable:
+                type: string
+                metadata:
+                    matchable: true
+            zeroBooleanMatchable:
+                type: boolean
+                metadata:
+                    matchable: true
+            zeroFloatMatchable:
+                type: float
+                metadata:
+                    matchable: true
+            zeroIntegerMatchable:
+                type: integer
+                metadata:
+                    matchable: true
+            zeroTimestampMatchable:
+                type: timestamp
+                metadata:
+                    matchable: true
+            zeroDatatypeOne:
+                type: onap.datatype.one
+            zeroBadDatatype:
+                type: list
+                description: we can only ignore this - should get caught in the API
+                entry_schema:
+                    type: another.missing.datatype
     onap.datatype.one:
         derived_from: tosca.datatypes.Root
         properties:
@@ -75,7 +139,7 @@ data_types:
                 type: string
                 metadata:
                     matchable: true
-            propertyTwoList:
+            propertyTwoListOfDatatype:
                 type: list
                 entry_schema:
                     type: onap.datatype.two
@@ -88,16 +152,22 @@ data_types:
                 type: string
                 metadata:
                     matchable: true
-            propertyThreeMap:
+            twoIntegerMatchable:
+                type: integer
+                metadata:
+                    matchable: true
+            propertyThreeDatatype:
                 type: map
                 entry_schema:
                     type: onap.datatype.three
     onap.datatype.three:
         derived_from: tosca.datatypes.Root
         properties:
-            threeString:
-                type: string
             threeStringMatchable:
                 type: string
+                metadata:
+                    matchable: true
+            threeIntegerMatchable:
+                type: integer
                 metadata:
                     matchable: true

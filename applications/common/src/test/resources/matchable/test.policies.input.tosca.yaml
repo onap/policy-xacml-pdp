@@ -1,4 +1,4 @@
-tosca_definitions_version: tosca_simple_yaml_1_0_0
+tosca_definitions_version: tosca_simple_yaml_1_1_0
 topology_template:
     policies:
     -   Test.policy:
@@ -13,24 +13,38 @@ topology_template:
                 baseMatch: base Match
                 middleNoMatch: Do not match the middle
                 middleMatch: middle Match
-                nonmatachableString: I am NON matchable
+                nonmatchableString: I am NON matchable
                 matchableString: I should be matched
-                nonmatachableInteger: 0
-                matachableInteger: 1000
-                nonmatachableFloat: 0.0
+                nonmatchableInteger: 0
+                matchableInteger: 1000
+                nonmatchableFloat: 0.0
                 matchableFloat: 1.1
-                nonmatachableBoolean: false
-                matachableBoolean: true
+                nonmatchableBoolean: false
+                matchableBoolean: true
+                nonmatchableTimestamp: 2019-01-01T00:00:00Z
+                matchableTimestamp: 2020-01-01T00:00:00Z
                 nonmatchableListInteger: {0, 1, 2}
                 matchableListString:
                 - match A
                 - match B
-                propertyOneMap:
+                matchableMapString:
+                    test1: matchableMap1
+                    test2: matchableMap2
+                nonmatchableMapString:
+                    risk: potential risk of matching
+                matchableDataType:
+                    zeroStringMatchable: zero Match
+                    zeroBooleanMatchable: true
+                    zeroFloatMatchable: 9.9
+                    zeroIntegerMatchable: 1000
+                    zeroTimestampMatchable: 2020-01-01T23:59:59Z
                     oneString: One is NOT matchable
                     oneStringMatchable: One should be matched
-                    propertyTwoList:
+                    propertyTwoListOfDatatype:
                     -   twoString: Two is NOT matchable
                         twoStringMatchable: Two should be matched
-                        propertyThreeMap:
-                            threeString: Three is NOT matchable
-                            threeStringMatchable: Three should be matched
+                        twoIntegerMatchable: 55
+                        propertyThreeDatatype:
+                            myThree:
+                                threeStringMatchable: Three should match
+                                threeIntegerMatchable: 66
