@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5d901e49_995db755",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/ToscaPolicyTranslatorUtils.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-03-19T12:44:48Z",
+      "side": 1,
+      "message": "sonar will complain about modifying a parameter\n\nsame comment on line 190",
+      "revId": "3b755ec2e3d9776980236db6ba754ae6b7cc2402",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0fcb73d0_18851971",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePolicyType.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-03-19T12:44:48Z",
+      "side": 1,
+      "message": "nice!",
+      "revId": "3b755ec2e3d9776980236db6ba754ae6b7cc2402",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7d34f03_131859dc",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePolicyType.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-03-19T12:44:48Z",
+      "side": 1,
+      "message": "might want to put @format:off \u0026 on around this to prevent eclipse from reformatting it (assuming it does)\n\nsame comment on line 60",
+      "revId": "3b755ec2e3d9776980236db6ba754ae6b7cc2402",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "98636c7c_9c5e0092",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePolicyType.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-03-19T12:44:48Z",
+      "side": 1,
+      "message": "can remove this comment now, right?",
+      "revId": "3b755ec2e3d9776980236db6ba754ae6b7cc2402",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6a116b1_6550b36c",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-03-19T12:44:48Z",
+      "side": 1,
+      "message": "throw unsupported exception?",
+      "revId": "3b755ec2e3d9776980236db6ba754ae6b7cc2402",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
