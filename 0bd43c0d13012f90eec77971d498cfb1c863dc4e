@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b45ae40a_82cef0cb",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdOnapPip.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-20T14:01:29Z",
+      "side": 1,
+      "message": "Ok but this method should only be called once on startup. Not a big deal here.",
+      "parentUuid": "1e5cdf94_0a1a9969",
+      "revId": "0bd43c0d13012f90eec77971d498cfb1c863dc4e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4e4d36f_46c94706",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdXacmlApplicationServiceProvider.java",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2020-03-20T13:00:16Z",
       "side": 1,
       "message": "need to catch PIPException?",
+      "revId": "0bd43c0d13012f90eec77971d498cfb1c863dc4e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22f159f9_e7b0c555",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdXacmlApplicationServiceProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-20T14:01:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4e4d36f_46c94706",
       "revId": "0bd43c0d13012f90eec77971d498cfb1c863dc4e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
