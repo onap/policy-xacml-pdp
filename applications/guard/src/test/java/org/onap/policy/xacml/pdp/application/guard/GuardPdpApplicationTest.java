@@ -83,8 +83,7 @@ public class GuardPdpApplicationTest {
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
 
     /**
-     * Copies the xacml.properties and policies files into
-     * temporary folder and loads the service provider saving
+     * Copies the xacml.properties and policies files into temporary folder and loads the service provider saving
      * instance of provider off for other tests to use.
      */
     @BeforeClass
@@ -94,8 +93,8 @@ public class GuardPdpApplicationTest {
         // Setup our temporary folder
         //
         XacmlPolicyUtils.FileCreator myCreator = (String filename) -> policyFolder.newFile(filename);
-        propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties",
-                properties, myCreator);
+        propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties", properties,
+                myCreator);
         //
         // Load service
         //
@@ -132,16 +131,15 @@ public class GuardPdpApplicationTest {
         //
         // Load Decision Requests
         //
-        requestVfCount = gson.decode(
-                TextFileUtils.getTextFileAsString(
-                    "src/test/resources/requests/guard.vfCount.json"),
-                    DecisionRequest.class);
+        requestVfCount =
+                gson.decode(TextFileUtils.getTextFileAsString("src/test/resources/requests/guard.vfCount.json"),
+                        DecisionRequest.class);
         //
         // Create EntityManager for manipulating DB
         //
         String persistenceUnit = CountRecentOperationsPip.ISSUER_NAME + ".persistenceunit";
-        em = Persistence.createEntityManagerFactory(
-                GuardPdpApplicationTest.properties.getProperty(persistenceUnit), properties)
+        em = Persistence
+                .createEntityManagerFactory(GuardPdpApplicationTest.properties.getProperty(persistenceUnit), properties)
                 .createEntityManager();
     }
 
@@ -220,18 +218,20 @@ public class GuardPdpApplicationTest {
         //
         assertThat(service.supportedPolicyTypes()).isNotEmpty();
         assertThat(service.supportedPolicyTypes().size()).isEqualTo(4);
-        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
-                "onap.policies.controlloop.guard.common.FrequencyLimiter", "1.0.0"))).isTrue();
-        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
-                "onap.policies.controlloop.guard.common.FrequencyLimiter", "1.0.1"))).isFalse();
-        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
-                "onap.policies.controlloop.guard.common.MinMax", "1.0.0"))).isTrue();
-        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
-                "onap.policies.controlloop.guard.common.MinMax", "1.0.1"))).isFalse();
-        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
-                "onap.policies.controlloop.guard.common.Blacklist", "1.0.0"))).isTrue();
-        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
-                "onap.policies.controlloop.guard.common.Blacklist", "1.0.1"))).isFalse();
+        assertThat(service.canSupportPolicyType(
+                new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.common.FrequencyLimiter", "1.0.0")))
+                        .isTrue();
+        assertThat(service.canSupportPolicyType(
+                new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.common.FrequencyLimiter", "1.0.1")))
+                        .isFalse();
+        assertThat(service.canSupportPolicyType(
+                new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.common.MinMax", "1.0.0"))).isTrue();
+        assertThat(service.canSupportPolicyType(
+                new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.common.MinMax", "1.0.1"))).isFalse();
+        assertThat(service.canSupportPolicyType(
+                new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.common.Blacklist", "1.0.0"))).isTrue();
+        assertThat(service.canSupportPolicyType(
+                new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.common.Blacklist", "1.0.1"))).isFalse();
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
                 "onap.policies.controlloop.guard.coordination.FirstBlocksSecond", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
@@ -246,16 +246,16 @@ public class GuardPdpApplicationTest {
     }
 
     @Test
-    public void test3FrequencyLimiter() throws CoderException, FileNotFoundException, IOException,
-        XacmlApplicationException {
+    public void test3FrequencyLimiter()
+            throws CoderException, FileNotFoundException, IOException, XacmlApplicationException {
         LOGGER.info("**************** Running test3FrequencyLimiter ****************");
         //
         // Now load the vDNS frequency limiter Policy - make sure
         // the pdp can support it and have it load
         // into the PDP.
         //
-        List<ToscaPolicy> loadedPolicies = TestUtils.loadPolicies(
-                "policies/vDNS.policy.guard.frequencylimiter.input.tosca.yaml", service);
+        List<ToscaPolicy> loadedPolicies =
+                TestUtils.loadPolicies("policies/vDNS.policy.guard.frequencylimiter.input.tosca.yaml", service);
         assertThat(loadedPolicies).hasSize(1);
         assertThat(loadedPolicies.get(0).getName()).isEqualTo("guard.frequency.scaleout");
         //
@@ -281,8 +281,8 @@ public class GuardPdpApplicationTest {
         // the pdp can support it and have it load
         // into the PDP.
         //
-        List<ToscaPolicy> loadedPolicies = TestUtils.loadPolicies(
-                "policies/vDNS.policy.guard.minmaxvnfs.input.tosca.yaml", service);
+        List<ToscaPolicy> loadedPolicies =
+                TestUtils.loadPolicies("policies/vDNS.policy.guard.minmaxvnfs.input.tosca.yaml", service);
         assertThat(loadedPolicies).hasSize(1);
         assertThat(loadedPolicies.get(0).getName()).isEqualTo("guard.minmax.scaleout");
         //
@@ -303,7 +303,7 @@ public class GuardPdpApplicationTest {
         // vfcount=3 above max of 2: should get a Deny
         //
         ((Map<String, Object>) requestVfCount.getResource().get("guard")).put("vfCount", 3);
-        requestAndCheckDecision(requestVfCount,DENY);
+        requestAndCheckDecision(requestVfCount, DENY);
         //
         // Insert entry into operations history DB - to indicate a successful
         // VF Module Create.
@@ -324,8 +324,8 @@ public class GuardPdpApplicationTest {
         //
         // Load the blacklist policy in with the others.
         //
-        List<ToscaPolicy> loadedPolicies = TestUtils.loadPolicies(
-                "policies/vDNS.policy.guard.blacklist.input.tosca.yaml", service);
+        List<ToscaPolicy> loadedPolicies =
+                TestUtils.loadPolicies("policies/vDNS.policy.guard.blacklist.input.tosca.yaml", service);
         assertThat(loadedPolicies).hasSize(1);
         assertThat(loadedPolicies.get(0).getName()).isEqualTo("guard.blacklist.scaleout");
         //
@@ -335,8 +335,8 @@ public class GuardPdpApplicationTest {
         //
         // vfcount=1 between min of 1 and max of 2: change the
         //
-        ((Map<String, Object>) requestVfCount.getResource().get("guard"))
-            .put("target", "the-vfmodule-where-root-is-true");
+        ((Map<String, Object>) requestVfCount.getResource().get("guard")).put("target",
+                "the-vfmodule-where-root-is-true");
         //
         // vfcount=0 below min of 1: should get a Deny because target IS blacklisted
         //
@@ -355,7 +355,7 @@ public class GuardPdpApplicationTest {
         //
         Dbao newEntry = new Dbao();
         newEntry.setActor(properties.get("actor").toString());
-        newEntry.setOperation(properties.get("recipe").toString());
+        newEntry.setOperation(properties.get("operation").toString());
         newEntry.setClosedLoopName(properties.get("clname").toString());
         newEntry.setOutcome("SUCCESS");
         newEntry.setStarttime(Date.from(Instant.now().minusMillis(20000)));

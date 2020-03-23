@@ -85,7 +85,7 @@ public class GuardPolicyRequest {
      * @throws ToscaPolicyConversionException If we cannot parse the request
      */
     @SuppressWarnings("unchecked")
-    public static GuardPolicyRequest createInstance(DecisionRequest decisionRequest) 
+    public static GuardPolicyRequest createInstance(DecisionRequest decisionRequest)
             throws ToscaPolicyConversionException {
         //
         // Create our return object
@@ -105,7 +105,7 @@ public class GuardPolicyRequest {
         //
         // Just in case nothing is in there
         //
-        if (resources == null || resources.isEmpty() || ! resources.containsKey(STR_GUARD)) {
+        if (resources == null || resources.isEmpty() || !resources.containsKey(STR_GUARD)) {
             //
             // Perhaps we throw an exception and then caller
             // can put together a response
@@ -125,8 +125,8 @@ public class GuardPolicyRequest {
         if (guard.containsKey("actor")) {
             request.actorId = guard.get("actor").toString();
         }
-        if (guard.containsKey("recipe")) {
-            request.operationId = guard.get("recipe").toString();
+        if (guard.containsKey("operation")) {
+            request.operationId = guard.get("operation").toString();
         }
         if (guard.containsKey("clname")) {
             request.clnameId = guard.get("clname").toString();
