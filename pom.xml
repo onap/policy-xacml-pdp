@@ -40,7 +40,7 @@
 
     <properties>
         <policy.common.version>1.6.2</policy.common.version>
-        <policy.models.version>2.2.1</policy.models.version>
+        <policy.models.version>2.2.2</policy.models.version>
     </properties>
 
     <modules>
