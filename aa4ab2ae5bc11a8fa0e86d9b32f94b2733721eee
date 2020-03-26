@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bc0b26ed_978941e4",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/comm/listeners/XacmlPdpStateChangeListenerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-26T00:38:43Z",
+      "side": 1,
+      "message": "Hmm - sorry I included a sonar fix in this.",
+      "revId": "aa4ab2ae5bc11a8fa0e86d9b32f94b2733721eee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
