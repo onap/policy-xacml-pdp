@@ -188,6 +188,8 @@ public class OptimizationPdpApplicationTest {
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
                 "onap.policies.optimization.service.SubscriberPolicy", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+                "onap.policies.optimization.service.CustomUseCase", "1.0.0"))).isTrue();
+        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
                 "onap.foobar", "1.0.0"))).isFalse();
     }
 

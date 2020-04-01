@@ -63,6 +63,7 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
     public static final String POLICYTYPE_QUERY = "onap.policies.optimization.service.QueryPolicy";
     public static final String POLICYTYPE_VIMFIT = "onap.policies.optimization.resource.Vim_fit";
     public static final String POLICYTYPE_VNF = "onap.policies.optimization.resource.VnfPolicy";
+    public static final String ONAP_OPTIMIZATION_DERIVED_POLICY_TYPE = "onap.policies.optimization.";
 
     private OptimizationPdpApplicationTranslator translator = new OptimizationPdpApplicationTranslator();
     private List<ToscaPolicyTypeIdentifier> supportedPolicyTypes = new ArrayList<>();
@@ -118,17 +119,16 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
         // For the time being, restrict this if the version isn't known.
         // Could be too difficult to support changing of versions dynamically.
         //
-        //
-        // For the time being, restrict this if the version isn't known.
-        // Could be too difficult to support changing of versions dynamically.
-        //
         for (ToscaPolicyTypeIdentifier supported : this.supportedPolicyTypes) {
             if (policyTypeId.equals(supported)) {
                 LOGGER.info("optimization can support {}", supported);
                 return true;
             }
         }
-        return false;
+        //
+        // Support derived types
+        //
+        return policyTypeId.getName().startsWith(ONAP_OPTIMIZATION_DERIVED_POLICY_TYPE);
     }
 
     @Override
