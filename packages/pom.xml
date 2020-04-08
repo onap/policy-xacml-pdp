@@ -45,6 +45,9 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <modules>
+                <module>policy-xacmlpdp-tarball</module>
+            </modules>
         </profile>
         <profile>
             <id>docker</id>
