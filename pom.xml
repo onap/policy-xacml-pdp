@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.onap.policy.parent</groupId>
         <artifactId>integration</artifactId>
-        <version>3.1.2-SNAPSHOT</version>
+        <version>3.1.2</version>
         <relativePath />
     </parent>
 
@@ -39,8 +39,8 @@
     <description>This code implements the XACML PDP engine</description>
 
     <properties>
-        <policy.common.version>1.6.3-SNAPSHOT</policy.common.version>
-        <policy.models.version>2.2.3-SNAPSHOT</policy.models.version>
+        <policy.common.version>1.6.3</policy.common.version>
+        <policy.models.version>2.2.3</policy.models.version>
     </properties>
 
     <modules>
