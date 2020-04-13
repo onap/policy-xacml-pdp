@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import com.att.research.xacml.api.AttributeAssignment;
 import com.att.research.xacml.api.Identifier;
 import com.att.research.xacml.api.Obligation;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -44,7 +45,8 @@ public class OnapObligation {
     private static final ObjectFactory factory = new ObjectFactory();
 
     @Getter(AccessLevel.NONE)
-    private static final Gson gson = new Gson();
+    private static final Gson gson =
+            new GsonBuilder().registerTypeAdapterFactory(new XacmlMapDoubleAdapterFactory()).create();
 
     private String policyId;
     private String policyType;
@@ -93,7 +95,7 @@ public class OnapObligation {
     }
 
     /**
-     * getPolicyContentAsMap returns the policy as a map for convience.
+     * getPolicyContentAsMap returns the policy as a map for convenience.
      *
      * @return {@code Map<String, Object>}
      */

@@ -185,7 +185,7 @@ public class NamingPdpApplicationTest {
         //
         // Now load all the optimization policies
         //
-        TestUtils.loadPolicies("policies/sdnc.policy.naming.input.tosca.yaml", service);
+        TestUtils.loadPolicies("policies/sdnc.policy.naming.input.tosca.json", service);
         //
         // Ask for a decision for available default policies
         //

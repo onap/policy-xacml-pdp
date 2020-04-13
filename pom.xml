@@ -40,7 +40,7 @@
 
     <properties>
         <policy.common.version>1.6.3</policy.common.version>
-        <policy.models.version>2.2.3</policy.models.version>
+        <policy.models.version>2.2.4-SNAPSHOT</policy.models.version>
     </properties>
 
     <modules>
