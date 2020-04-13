@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f6635a8_680cfe6e",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/XacmlMapDoubleAdapterFactory.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-04-13T18:27:31Z",
+      "side": 1,
+      "message": "What\u0027s strange is that it is not cast as a ParameterizedType. So I get class cast exceptions.",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 0
+      },
+      "revId": "4db8eaa60cbe29e34730410c5a37f3bb4354cb7f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1519e903_262a46b1",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/XacmlMapDoubleAdapterFactory.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-04-13T18:27:31Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 64,
+        "startChar": 1,
+        "endLine": 67,
+        "endChar": 0
+      },
+      "revId": "4db8eaa60cbe29e34730410c5a37f3bb4354cb7f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
