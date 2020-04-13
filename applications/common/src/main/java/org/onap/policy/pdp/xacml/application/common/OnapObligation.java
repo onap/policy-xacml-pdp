@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import com.att.research.xacml.api.AttributeAssignment;
 import com.att.research.xacml.api.Identifier;
 import com.att.research.xacml.api.Obligation;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -35,6 +36,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionType;
+import org.onap.policy.common.gson.MapDoubleAdapterFactory;
 
 @Getter
 @ToString
@@ -44,7 +46,8 @@ public class OnapObligation {
     private static final ObjectFactory factory = new ObjectFactory();
 
     @Getter(AccessLevel.NONE)
-    private static final Gson gson = new Gson();
+    private static final Gson gson =
+            new GsonBuilder().registerTypeAdapterFactory(new MapDoubleAdapterFactory()).create();
 
     private String policyId;
     private String policyType;
