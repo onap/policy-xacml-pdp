@@ -480,9 +480,25 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         if (! toscaPolicy.getProperties().containsKey(FIELD_BLACKLIST)) {
             throw new ToscaPolicyConversionException("Missing blacklist field");
         }
-        final AllOfType allOf = new AllOfType();
-        this.addMatch(allOf, toscaPolicy.getProperties().get(FIELD_BLACKLIST),
-                ToscaDictionary.ID_RESOURCE_GUARD_TARGETID);
+        //
+        // Get the blacklist, which should be an array or collection.
+        //
+        Object arrayBlacklisted = toscaPolicy.getProperties().get(FIELD_BLACKLIST);
+        if (!(arrayBlacklisted instanceof Collection)) {
+            throw new ToscaPolicyConversionException("Blacklist is not a collection");
+        }
+        //
+        // Iterate the entries and create individual AnyOf so each entry is
+        // treated as an OR.
+        //
+        TargetType target = new TargetType();
+        for (Object blacklisted : ((Collection<?>) arrayBlacklisted)) {
+            AllOfType allOf = new AllOfType();
+            this.addMatch(allOf, blacklisted, ToscaDictionary.ID_RESOURCE_GUARD_TARGETID);
+            AnyOfType anyOf = new AnyOfType();
+            anyOf.getAllOf().add(allOf);
+            target.getAnyOf().add(anyOf);
+        }
         //
         // Create our rule and add the target
         //
@@ -490,10 +506,6 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         blacklistRule.setEffect(EffectType.DENY);
         blacklistRule.setDescription("blacklist the entities");
         blacklistRule.setRuleId(policyName + ":blacklist");
-        TargetType target = new TargetType();
-        AnyOfType anyOf = new AnyOfType();
-        anyOf.getAllOf().add(allOf);
-        target.getAnyOf().add(anyOf);
         blacklistRule.setTarget(target);
         //
         // Add the rule to the policy

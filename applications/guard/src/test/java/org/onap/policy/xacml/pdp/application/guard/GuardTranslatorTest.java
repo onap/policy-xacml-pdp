@@ -300,16 +300,22 @@ public class GuardTranslatorTest {
             if (! (rule instanceof RuleType)) {
                 continue;
             }
+            assertThat(((RuleType) rule).getTarget()).isNotNull();
+            assertThat(((RuleType) rule).getTarget().getAnyOf()).hasSize(2);
             for (AnyOfType anyOf : ((RuleType)rule).getTarget().getAnyOf()) {
                 assertThat(anyOf.getAllOf()).isNotEmpty();
                 for (AllOfType allOf : anyOf.getAllOf()) {
                     assertThat(allOf.getMatch()).isNotEmpty();
+                    assertThat(allOf.getMatch()).hasSize(1);
                     for (MatchType match : allOf.getMatch()) {
-                        if (ToscaDictionary.ID_RESOURCE_GUARD_TARGETID.toString().equals(
-                                match.getAttributeDesignator().getAttributeId())) {
-                            assertThat(policy.getProperties()).containsKey(GuardTranslator.FIELD_BLACKLIST);
-                            foundBlacklist = true;
-                        }
+                        assertThat(match.getAttributeDesignator().getAttributeId())
+                                .isEqualTo(ToscaDictionary.ID_RESOURCE_GUARD_TARGETID.toString());
+                        assertThat(match.getAttributeValue().getContent()).containsAnyOf("vnf1", "vnf2");
+                        //
+                        // This just checks that policy did have a blacklist in it.
+                        //
+                        assertThat(policy.getProperties()).containsKey(GuardTranslator.FIELD_BLACKLIST);
+                        foundBlacklist = true;
                     }
                 }
             }
