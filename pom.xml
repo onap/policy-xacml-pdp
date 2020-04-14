@@ -39,8 +39,8 @@
     <description>This code implements the XACML PDP engine</description>
 
     <properties>
-        <policy.common.version>1.6.4-SNAPSHOT</policy.common.version>
-        <policy.models.version>2.2.4-SNAPSHOT</policy.models.version>
+        <policy.common.version>1.6.4</policy.common.version>
+        <policy.models.version>2.2.4</policy.models.version>
     </properties>
 
     <modules>
