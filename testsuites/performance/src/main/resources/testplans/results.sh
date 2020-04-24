@@ -26,9 +26,13 @@ if [[ ! -f $LOGFILE ]]; then
 fi
 
 echo "File being processed: " $LOGFILE
+MS=$(awk -F "," 'NR==2 { tbeg = $1 }
+    NR>1 { tend = $1 }
+    END { print tend-tbeg }' $LOGFILE)
 RES=$(awk -F "," 'NR>1 { total += $15 } END { print total/NR }' $LOGFILE)
-echo "Average Latency: " $RES
+echo "Average Latency (ms): " $RES
 LC=$(awk 'END{print NR}' $LOGFILE)
 echo "Total Requests:" $LC
-echo "Requests/sec:" $((LC/5))
+MPS=$(echo $LC $MS | awk '{ print 1000*$1/$2 }')
+echo "Measured requests/sec:" $MPS
 
