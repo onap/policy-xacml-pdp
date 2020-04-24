@@ -30,5 +30,6 @@ RES=$(awk -F "," 'NR>1 { total += $15 } END { print total/NR }' $LOGFILE)
 echo "Average Latency: " $RES
 LC=$(awk 'END{print NR}' $LOGFILE)
 echo "Total Requests:" $LC
-echo "Requests/sec:" $((LC/5))
+RPS=$(echo $RES | awk '{ print 1000/$1 }')
+echo "Supported requests/sec:" $RPS
 
