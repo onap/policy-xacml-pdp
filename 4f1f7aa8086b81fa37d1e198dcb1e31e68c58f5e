@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "584b8c99_d182d3ed",
+        "filename": "testsuites/performance/src/main/resources/testplans/results.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-05-01T16:53:38Z",
+      "side": 1,
+      "message": "if you can remove this or change to xacml",
+      "range": {
+        "startLine": 4,
+        "startChar": 1,
+        "endLine": 4,
+        "endChar": 28
+      },
+      "revId": "4f1f7aa8086b81fa37d1e198dcb1e31e68c58f5e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41bc6094_aa13455b",
+        "filename": "testsuites/performance/src/main/resources/testplans/results.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-05-01T16:53:38Z",
+      "side": 1,
+      "message": "license",
+      "range": {
+        "startLine": 6,
+        "startChar": 15,
+        "endLine": 6,
+        "endChar": 19
+      },
+      "revId": "4f1f7aa8086b81fa37d1e198dcb1e31e68c58f5e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
