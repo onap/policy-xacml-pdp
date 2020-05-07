@@ -4,6 +4,7 @@ topology_template:
     -
       native.access.control:
         type: onap.policies.native.Xacml
+        type_version: 1.0.0
         version: 1.0.0
         metadata:
           policy-id: native.access.control

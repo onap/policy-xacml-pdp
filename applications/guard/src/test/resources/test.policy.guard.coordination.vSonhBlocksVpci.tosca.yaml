@@ -4,6 +4,7 @@ topology_template:
     -
       guard.coordination.firstBlocksSecond.test:
         type: onap.policies.controlloop.guard.coordination.FirstBlocksSecond
+        type_version: 1.0.0
         version: 1.0.0
         metadata:
           policy-id : guard.coordination.firstBlocksSecond.test
