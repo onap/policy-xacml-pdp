@@ -492,13 +492,13 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         // treated as an OR.
         //
         TargetType target = new TargetType();
+        AnyOfType anyOf = new AnyOfType();
         for (Object blacklisted : ((Collection<?>) arrayBlacklisted)) {
             AllOfType allOf = new AllOfType();
             this.addMatch(allOf, blacklisted, ToscaDictionary.ID_RESOURCE_GUARD_TARGETID);
-            AnyOfType anyOf = new AnyOfType();
             anyOf.getAllOf().add(allOf);
-            target.getAnyOf().add(anyOf);
         }
+        target.getAnyOf().add(anyOf);
         //
         // Create our rule and add the target
         //

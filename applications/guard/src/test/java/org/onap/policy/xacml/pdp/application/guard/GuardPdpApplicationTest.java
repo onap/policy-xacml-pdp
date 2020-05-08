@@ -341,6 +341,15 @@ public class GuardPdpApplicationTest {
         // vfcount=0 below min of 1: should get a Deny because target IS blacklisted
         //
         requestAndCheckDecision(requestVfCount, DENY);
+        //
+        // vfcount=1 between min of 1 and max of 2: change the
+        //
+        ((Map<String, Object>) requestVfCount.getResource().get("guard")).put("target",
+                "another-vfmodule-where-root-is-true");
+        //
+        // vfcount=0 below min of 1: should get a Deny because target IS blacklisted
+        //
+        requestAndCheckDecision(requestVfCount, DENY);
     }
 
     @SuppressWarnings("unchecked")

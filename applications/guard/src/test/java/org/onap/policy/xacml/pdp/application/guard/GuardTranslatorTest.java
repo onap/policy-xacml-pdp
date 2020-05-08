@@ -301,7 +301,7 @@ public class GuardTranslatorTest {
                 continue;
             }
             assertThat(((RuleType) rule).getTarget()).isNotNull();
-            assertThat(((RuleType) rule).getTarget().getAnyOf()).hasSize(2);
+            assertThat(((RuleType) rule).getTarget().getAnyOf()).hasSize(1);
             for (AnyOfType anyOf : ((RuleType)rule).getTarget().getAnyOf()) {
                 assertThat(anyOf.getAllOf()).isNotEmpty();
                 for (AllOfType allOf : anyOf.getAllOf()) {
