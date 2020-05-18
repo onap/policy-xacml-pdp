@@ -16,6 +16,24 @@
       "revId": "8386ee9559f46605435e6cf923963adb8084f693",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "146a0f85_45638c35",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2020-05-18T17:26:41Z",
+      "side": 1,
+      "message": "Wrapped the lines at 72 characters. Fixed it in the new commit.",
+      "parentUuid": "0e225a7e_39492458",
+      "revId": "8386ee9559f46605435e6cf923963adb8084f693",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
