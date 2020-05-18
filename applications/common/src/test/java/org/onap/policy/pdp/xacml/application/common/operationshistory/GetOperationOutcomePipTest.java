@@ -189,13 +189,12 @@ public class GetOperationOutcomePipTest {
         // Use reflection to run getCountFromDB
         //
         Method method = GetOperationOutcomePip.class.getDeclaredMethod("doDatabaseQuery",
-                                                                       String.class,
                                                                        String.class);
         method.setAccessible(true);
         //
         // Test pipEngine
         //
-        String outcome = (String) method.invoke(pipEngine, "testcl1", "testtarget1");
+        String outcome = (String) method.invoke(pipEngine, "testcl1");
         assertThat(outcome).isNull();
         //
         // Insert entry
@@ -204,7 +203,7 @@ public class GetOperationOutcomePipTest {
         //
         // Test pipEngine
         //
-        outcome = (String) method.invoke(pipEngine, "testcl1", "testtarget1");
+        outcome = (String) method.invoke(pipEngine, "testcl1");
         //
         // outcome should be "1"
         //
@@ -214,25 +213,21 @@ public class GetOperationOutcomePipTest {
         //
         insertEntry("testcl1", "testtarget1", "2");
         insertEntry("testcl2", "testtarget2", "3");
-        insertEntry("testcl1", "testtarget2", "4");
         //
         // Test pipEngine
         //
-        outcome = (String) method.invoke(pipEngine, "testcl1", "testtarget1");
+        outcome = (String) method.invoke(pipEngine, "testcl1");
         assertEquals("2", outcome);
 
-        outcome = (String) method.invoke(pipEngine, "testcl2", "testtarget2");
+        outcome = (String) method.invoke(pipEngine, "testcl2");
         assertEquals("3", outcome);
-
-        outcome = (String) method.invoke(pipEngine, "testcl1", "testtarget2");
-        assertEquals("4", outcome);
 
         //
         // Shut it down
         //
         pipEngine.shutdown();
 
-        assertThat(method.invoke(pipEngine, "testcl1", "testtarget2")).isNull();
+        assertThat(method.invoke(pipEngine, "testcl1")).isNull();
     }
 
     private void insertEntry(String cl, String target, String outcome) {

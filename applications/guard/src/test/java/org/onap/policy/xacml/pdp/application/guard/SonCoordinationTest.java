@@ -275,7 +275,7 @@ public class SonCoordinationTest {
         //
         Dbao newEntry = new Dbao();
         newEntry.setActor(properties.get("actor").toString());
-        newEntry.setOperation(properties.get("recipe").toString());
+        newEntry.setOperation(properties.get("operation").toString());
         newEntry.setClosedLoopName(properties.get("clname").toString());
         newEntry.setOutcome(outcome);
         newEntry.setStarttime(Date.from(Instant.now().minusMillis(20000)));

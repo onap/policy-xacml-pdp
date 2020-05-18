@@ -7,7 +7,7 @@
     "resource": {
         "guard": {
             "actor": "SDNR",
-            "recipe": "ModifyConfig",
+            "operation": "ModifyConfig",
             "clname": "ControlLoop-vPCI-fb41f388-a5f2-11e8-98d0-529269fb1459",
             "target": "node1"
         }

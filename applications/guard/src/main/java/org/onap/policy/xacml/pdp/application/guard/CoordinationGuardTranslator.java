@@ -42,6 +42,7 @@ import java.util.stream.Stream;
 import org.apache.commons.io.IOUtils;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
+import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -157,15 +158,16 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
         /*
          * Replace function placeholders with appropriate values
          */
-        try (Stream<String> stream = Files.lines(Paths.get(xacmlProtoFilename))) {
-            return stream.map(s -> s.replace("UNIQUE_ID", uniqueId))
-                .map(s -> s.replace("CONTROL_LOOP_ONE", cLOne))
-                .map(s -> s.replace("CONTROL_LOOP_TWO", cLTwo))
-                .collect(Collectors.joining(XacmlPolicyUtils.LINE_SEPARATOR));
-        } catch (IOException e) {
-            throw new ToscaPolicyConversionException(
-                "Error while generating XACML policy for coordination directive", e);
+        String policyXml = ResourceUtils.getResourceAsString(xacmlProtoFilename);
+        if (policyXml == null) {
+            throw new ToscaPolicyConversionException("Error while generating XACML policy for coordination directive");
         }
+        policyXml = policyXml.replace("UNIQUE_ID", uniqueId);
+        policyXml = policyXml.replace("CONTROL_LOOP_ONE", cLOne);
+        policyXml = policyXml.replace("CONTROL_LOOP_TWO", cLTwo);
+
+        return policyXml;
+
     }
 
 }
