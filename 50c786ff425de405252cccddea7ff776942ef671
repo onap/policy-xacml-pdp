@@ -22,6 +22,30 @@
       "revId": "50c786ff425de405252cccddea7ff776942ef671",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0be110a8_a0bba6e5",
+        "filename": "applications/guard/src/test/java/org/onap/policy/xacml/pdp/application/guard/CoordinationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2020-05-18T16:03:05Z",
+      "side": 0,
+      "message": "That is because it tests for a scenario with two different nodes. Now that the target is removed it is irrelevant. It should get a DENY because irrespective of the node, CL1 is open, so CL2 should get a DENY. But then this case is similar to the one on lines 264 below. That is why I removed it.",
+      "parentUuid": "49c9819f_758cdf1f",
+      "range": {
+        "startLine": 254,
+        "startChar": 8,
+        "endLine": 256,
+        "endChar": 57
+      },
+      "revId": "50c786ff425de405252cccddea7ff776942ef671",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
