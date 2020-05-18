@@ -90,7 +90,7 @@ public class GetOperationOutcomePip extends StdOnapPip {
         target = getAttribute(pipFinder, PIP_REQUEST_TARGET);
 
         logger.debug("Going to query DB about: clname={}, target={}", clname, target);
-        String outcome = doDatabaseQuery(clname, target);
+        String outcome = doDatabaseQuery(clname);
         logger.debug("Query result is: {}", outcome);
 
         StdMutablePIPResponse pipResponse = new StdMutablePIPResponse();
@@ -102,8 +102,8 @@ public class GetOperationOutcomePip extends StdOnapPip {
         return new StdPIPResponse(pipResponse);
     }
 
-    private String doDatabaseQuery(String clname, String target) {
-        logger.info("Querying operations history for {} {}", clname, target);
+    private String doDatabaseQuery(String clname) {
+        logger.info("Querying operations history for {}", clname);
         //
         // Only can query if we have an EntityManager
         //
@@ -120,11 +120,9 @@ public class GetOperationOutcomePip extends StdOnapPip {
             //
             return em.createQuery("select e.outcome from Dbao e"
                                   + " where e.closedLoopName= ?1"
-                                  + " and e.target= ?2"
                                   + " order by e.endtime desc",
                                   String.class)
                 .setParameter(1, clname)
-                .setParameter(2, target)
                 .setMaxResults(1)
                 .getSingleResult();
         } catch (NoResultException e) {

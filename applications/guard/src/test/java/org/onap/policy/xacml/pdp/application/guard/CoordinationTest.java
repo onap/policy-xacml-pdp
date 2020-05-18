@@ -251,10 +251,6 @@ public class CoordinationTest {
         //
         insertOperationEvent(requestCl1Node1, OPEN);
         //
-        // Try cl2 on node2, cl1 only open on node1: should get permit
-        //
-        requestAndCheckDecision(requestCl2Node2, PERMIT);
-        //
         // Open cl2 on node2
         //
         insertOperationEvent(requestCl2Node2, OPEN);
