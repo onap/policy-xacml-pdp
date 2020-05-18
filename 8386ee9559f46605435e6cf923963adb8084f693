@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e225a7e_39492458",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-05-18T17:06:41Z",
+      "side": 1,
+      "message": "wrap lines manually please.  At one point, gerrit didn\u0027t like lines\nover 72 characters - apparently that has been relaxed.",
+      "revId": "8386ee9559f46605435e6cf923963adb8084f693",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
