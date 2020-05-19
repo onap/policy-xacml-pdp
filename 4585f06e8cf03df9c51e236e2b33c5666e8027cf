@@ -16,6 +16,24 @@
       "revId": "4585f06e8cf03df9c51e236e2b33c5666e8027cf",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e499fa9e_09b92b24",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-05-19T19:09:54Z",
+      "side": 1,
+      "message": "there should be a line between the summary and the full description. If the description is exactly the same, as Jim is pointing out, then remove the description. So yes remove line 8",
+      "parentUuid": "616f60f3_70b6879e",
+      "revId": "4585f06e8cf03df9c51e236e2b33c5666e8027cf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
