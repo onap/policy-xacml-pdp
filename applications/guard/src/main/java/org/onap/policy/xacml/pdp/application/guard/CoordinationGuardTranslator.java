@@ -62,7 +62,7 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
         // Policy name should be at the root
         //
         String type = toscaPolicy.getType();
-        String coordinationFunctionPath = "src/main/resources/coordination/function";
+        String coordinationFunctionPath = "coordination/function";
         Map<String, Object> policyProps = toscaPolicy.getProperties();
         LOGGER.debug("path = {}", coordinationFunctionPath);
         LOGGER.debug("props = {}", policyProps);
