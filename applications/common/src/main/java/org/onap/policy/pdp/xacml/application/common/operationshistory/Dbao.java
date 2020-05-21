@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,17 +24,18 @@ package org.onap.policy.pdp.xacml.application.common.operationshistory;
 
 import java.io.Serializable;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Table;
-
 import lombok.Data;
 
 @Entity
-@Table(name = "operationshistory")
+@Table(name = "operationshistory",
+                indexes = {@Index(name = "operationshistory_clreqid_index", columnList = "closedLoopName,requestId"),
+                                @Index(name = "operationshistory_target_index", columnList = "target,operation,actor")})
 @Data
 public class Dbao implements Serializable {
 
