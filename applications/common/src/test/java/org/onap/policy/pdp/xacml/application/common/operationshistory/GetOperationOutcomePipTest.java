@@ -35,8 +35,8 @@ import com.att.research.xacml.api.pip.PIPResponse;
 import com.att.research.xacml.std.pip.StdPIPResponse;
 import java.io.FileInputStream;
 import java.lang.reflect.Method;
-import java.sql.Date;
 import java.time.Instant;
+import java.util.Date;
 import java.util.Properties;
 import java.util.UUID;
 import javax.persistence.EntityManager;
@@ -199,7 +199,7 @@ public class GetOperationOutcomePipTest {
         //
         // Insert entry
         //
-        insertEntry("testcl1", "testtarget1", "1");
+        insertEntry("testcl1", "testtarget1", null, null);
         //
         // Test pipEngine
         //
@@ -207,20 +207,20 @@ public class GetOperationOutcomePipTest {
         //
         // outcome should be "1"
         //
-        assertEquals("1", outcome);
+        assertEquals("In_Progress", outcome);
         //
         // Insert more entries
         //
-        insertEntry("testcl1", "testtarget1", "2");
-        insertEntry("testcl2", "testtarget2", "3");
+        insertEntry("testcl2", "testtarget1", "Success", Date.from(Instant.now()));
+        insertEntry("testcl3", "testtarget2", "Failed", Date.from(Instant.now()));
         //
         // Test pipEngine
         //
-        outcome = (String) method.invoke(pipEngine, "testcl1");
-        assertEquals("2", outcome);
-
         outcome = (String) method.invoke(pipEngine, "testcl2");
-        assertEquals("3", outcome);
+        assertEquals("Complete", outcome);
+
+        outcome = (String) method.invoke(pipEngine, "testcl3");
+        assertEquals("Complete", outcome);
 
         //
         // Shut it down
@@ -230,7 +230,7 @@ public class GetOperationOutcomePipTest {
         assertThat(method.invoke(pipEngine, "testcl1")).isNull();
     }
 
-    private void insertEntry(String cl, String target, String outcome) {
+    private void insertEntry(String cl, String target, String outcome, Date endtime) {
         //
         // Create entry
         //
@@ -241,7 +241,7 @@ public class GetOperationOutcomePipTest {
         newEntry.setActor("Controller");
         newEntry.setOperation("operationA");
         newEntry.setStarttime(Date.from(Instant.now().minusMillis(20000)));
-        newEntry.setEndtime(Date.from(Instant.now()));
+        newEntry.setEndtime(endtime);
         newEntry.setRequestId(UUID.randomUUID().toString());
         //
         // Add entry
