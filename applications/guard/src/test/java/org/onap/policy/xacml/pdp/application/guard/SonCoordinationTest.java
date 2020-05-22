@@ -27,8 +27,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.att.research.xacml.api.Response;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Date;
 import java.time.Instant;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -65,7 +65,7 @@ import org.slf4j.LoggerFactory;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SonCoordinationTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CoordinationTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SonCoordinationTest.class);
     private static Properties properties = new Properties();
     private static File propertiesFile;
     private static RestServerParameters clientParams = new RestServerParameters();
@@ -76,8 +76,6 @@ public class SonCoordinationTest {
     private static EntityManager em;
     private static final String DENY = "Deny";
     private static final String PERMIT = "Permit";
-    private static final String OPEN = "Success";
-    private static final String CLOSE = "Closed";
 
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
@@ -233,31 +231,31 @@ public class SonCoordinationTest {
         //
         // Open vSonh on node1
         //
-        insertOperationEvent(requestVsonhNode1, OPEN);
+        long vsonhId = insertOperationEvent(requestVsonhNode1, null, null);
         //
         // Under current coordination policy vPci should get a deny
         //
         requestAndCheckDecision(requestVpciNode1, DENY);
         //
-        // Open vPci on node1
-        //
-        insertOperationEvent(requestVpciNode1, OPEN);
-        //
-        // Under current coordination policy vSonh should get a deny
-        //
-        requestAndCheckDecision(requestVsonhNode1, DENY);
-        //
         // Close vSonh on node1
         //
-        insertOperationEvent(requestVsonhNode1, CLOSE);
+        updateOperationEvent(vsonhId, "Success", Date.from(Instant.now()));
         //
         // With vSonh closed on node 1, vPci now should get a permit
         //
         requestAndCheckDecision(requestVpciNode1, PERMIT);
         //
+        // Open vPci on node1
+        //
+        long vpciId = insertOperationEvent(requestVpciNode1, null, null);
+        //
+        // Under current coordination policy vSonh should get a deny
+        //
+        requestAndCheckDecision(requestVsonhNode1, DENY);
+        //
         // Close cl1 on node1
         //
-        insertOperationEvent(requestVpciNode1, CLOSE);
+        updateOperationEvent(vpciId, "Failed",  Date.from(Instant.now()));
         //
         // With vPci closed on node 1, vSonh now should get a permit
         //
@@ -265,7 +263,7 @@ public class SonCoordinationTest {
     }
 
     @SuppressWarnings("unchecked")
-    private void insertOperationEvent(DecisionRequest request, String outcome) {
+    private long insertOperationEvent(DecisionRequest request, String outcome, Date endtime) {
         //
         // Get the properties
         //
@@ -279,11 +277,22 @@ public class SonCoordinationTest {
         newEntry.setClosedLoopName(properties.get("clname").toString());
         newEntry.setOutcome(outcome);
         newEntry.setStarttime(Date.from(Instant.now().minusMillis(20000)));
-        newEntry.setEndtime(Date.from(Instant.now()));
+        newEntry.setEndtime(endtime);
         newEntry.setRequestId(UUID.randomUUID().toString());
         newEntry.setTarget(properties.get("target").toString());
         em.getTransaction().begin();
         em.persist(newEntry);
+        em.getTransaction().commit();
+        return newEntry.getId();
+    }
+
+    private void updateOperationEvent(long id, String outcome, Date endtime) {
+        
+        Dbao updateEntry = em.find(Dbao.class, id);
+        updateEntry.setOutcome(outcome);
+        updateEntry.setEndtime(endtime);
+        em.getTransaction().begin();
+        em.persist(updateEntry);
         em.getTransaction().commit();
     }
 

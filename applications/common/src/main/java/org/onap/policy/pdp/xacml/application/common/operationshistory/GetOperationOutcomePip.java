@@ -28,6 +28,8 @@ import com.att.research.xacml.std.pip.StdPIPResponse;
 import com.google.common.base.Strings;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
+
 import javax.persistence.NoResultException;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.std.StdOnapPip;
@@ -91,7 +93,7 @@ public class GetOperationOutcomePip extends StdOnapPip {
 
         logger.debug("Going to query DB about: clname={}, target={}", clname, target);
         String outcome = doDatabaseQuery(clname);
-        logger.debug("Query result is: {}", outcome);
+        logger.info("Query result is: {}", outcome);
 
         StdMutablePIPResponse pipResponse = new StdMutablePIPResponse();
         this.addStringAttribute(pipResponse,
@@ -118,13 +120,20 @@ public class GetOperationOutcomePip extends StdOnapPip {
             //
             // We are expecting a single result
             //
-            return em.createQuery("select e.outcome from Dbao e"
+            Date result = em.createQuery("select e.endtime from Dbao e"
                                   + " where e.closedLoopName= ?1"
-                                  + " order by e.endtime desc",
-                                  String.class)
+                                  + " order by e.starttime desc",
+                                  Date.class)
                 .setParameter(1, clname)
                 .setMaxResults(1)
                 .getSingleResult();
+            
+            //Check the value of result
+            if (null == result) {
+                return ("In_Progress");
+            } else {
+                return ("Complete");
+            }
         } catch (NoResultException e) {
             logger.trace("No results", e);
         } catch (Exception e) {
