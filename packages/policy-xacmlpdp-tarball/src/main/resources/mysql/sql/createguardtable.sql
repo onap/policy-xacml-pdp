@@ -30,3 +30,10 @@ create table if not exists operationshistory (
     endtime timestamp not null default current_timestamp,
     PRIMARY KEY (id)
 );
+
+create index if not exists operationshistory_clreqid_index on
+    operationshistory(closedLoopName, requestId);
+
+create index if not exists operationshistory_target_index on
+    operationshistory(target,operation,actor);
+
