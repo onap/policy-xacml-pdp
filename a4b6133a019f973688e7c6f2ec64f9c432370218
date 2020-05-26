@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "95f1032c_ee182d6c",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/operationshistory/GetOperationOutcomePip.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2020-05-26T11:52:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "653f2770_c90161df",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 22
+      },
+      "revId": "a4b6133a019f973688e7c6f2ec64f9c432370218",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db4cced2_cbc745d2",
         "filename": "applications/common/src/test/java/org/onap/policy/pdp/xacml/application/common/operationshistory/GetOperationOutcomePipTest.java",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "a4b6133a019f973688e7c6f2ec64f9c432370218",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eba67d9e_0755cef3",
+        "filename": "applications/common/src/test/java/org/onap/policy/pdp/xacml/application/common/operationshistory/GetOperationOutcomePipTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 5305
+      },
+      "writtenOn": "2020-05-26T11:52:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db4cced2_cbc745d2",
+      "range": {
+        "startLine": 208,
+        "startChar": 29,
+        "endLine": 208,
+        "endChar": 32
+      },
+      "revId": "a4b6133a019f973688e7c6f2ec64f9c432370218",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
