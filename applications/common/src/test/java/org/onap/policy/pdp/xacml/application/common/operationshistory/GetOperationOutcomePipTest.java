@@ -35,8 +35,8 @@ import com.att.research.xacml.api.pip.PIPResponse;
 import com.att.research.xacml.std.pip.StdPIPResponse;
 import java.io.FileInputStream;
 import java.lang.reflect.Method;
-import java.sql.Date;
 import java.time.Instant;
+import java.util.Date;
 import java.util.Properties;
 import java.util.UUID;
 import javax.persistence.EntityManager;
@@ -199,28 +199,28 @@ public class GetOperationOutcomePipTest {
         //
         // Insert entry
         //
-        insertEntry("testcl1", "testtarget1", "1");
+        insertEntry("testcl1", "testtarget1", "Started");
         //
         // Test pipEngine
         //
         outcome = (String) method.invoke(pipEngine, "testcl1");
         //
-        // outcome should be "1"
+        // outcome should be "In_Progress"
         //
-        assertEquals("1", outcome);
+        assertEquals("In_Progress", outcome);
         //
         // Insert more entries
         //
-        insertEntry("testcl1", "testtarget1", "2");
-        insertEntry("testcl2", "testtarget2", "3");
+        insertEntry("testcl2", "testtarget1", "Success");
+        insertEntry("testcl3", "testtarget2", "Failed");
         //
         // Test pipEngine
         //
-        outcome = (String) method.invoke(pipEngine, "testcl1");
-        assertEquals("2", outcome);
-
         outcome = (String) method.invoke(pipEngine, "testcl2");
-        assertEquals("3", outcome);
+        assertEquals("Complete", outcome);
+
+        outcome = (String) method.invoke(pipEngine, "testcl3");
+        assertEquals("Complete", outcome);
 
         //
         // Shut it down
