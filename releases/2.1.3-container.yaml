@@ -1,0 +1,9 @@
+distribution_type: 'container'
+container_release_tag: '2.1.3'
+project: 'policy-xacml-pdp'
+log_dir: 'policy-xacml-pdp-maven-docker-stage-elalto/9/'
+ref: 8bde30591036ce240a6304a75e742b4378f70c81
+containers:
+    - name: 'policy-xacml-pdp'
+      version: '2.1.3-20200528T1852'
+
