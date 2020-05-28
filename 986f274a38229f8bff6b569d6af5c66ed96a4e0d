@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ac7fd42_ee4d35dd",
+        "filename": "releases/2.1.3-container.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-05-28T21:12:50Z",
+      "side": 1,
+      "message": "8bde30591036ce240a6304a75e742b4378f70c81 ???",
+      "range": {
+        "startLine": 5,
+        "startChar": 5,
+        "endLine": 5,
+        "endChar": 45
+      },
+      "revId": "986f274a38229f8bff6b569d6af5c66ed96a4e0d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
