@@ -57,7 +57,6 @@ public class PolicyApiCaller {
         busParams.setManaged(false);
         busParams.setPassword(params.getPassword());
         busParams.setPort(params.getPort());
-        busParams.setSerializationProvider(GsonMessageBodyHandler.class.getName());
         busParams.setUseHttps(params.isHttps());
         busParams.setUserName(params.getUserName());
 
