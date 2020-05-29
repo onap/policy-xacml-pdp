@@ -27,7 +27,6 @@ import org.onap.policy.common.endpoints.http.client.HttpClient;
 import org.onap.policy.common.endpoints.http.client.HttpClientConfigException;
 import org.onap.policy.common.endpoints.http.client.HttpClientFactoryInstance;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
-import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
@@ -57,7 +56,6 @@ public class PolicyApiCaller {
         busParams.setManaged(false);
         busParams.setPassword(params.getPassword());
         busParams.setPort(params.getPort());
-        busParams.setSerializationProvider(GsonMessageBodyHandler.class.getName());
         busParams.setUseHttps(params.isHttps());
         busParams.setUserName(params.getUserName());
 

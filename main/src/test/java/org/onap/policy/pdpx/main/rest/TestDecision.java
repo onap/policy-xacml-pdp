@@ -52,7 +52,6 @@ import org.onap.policy.common.endpoints.http.client.HttpClientConfigException;
 import org.onap.policy.common.endpoints.http.client.HttpClientFactoryInstance;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
-import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
@@ -244,7 +243,6 @@ public class TestDecision {
     private static HttpClient getNoAuthHttpClient() throws HttpClientConfigException {
         return HttpClientFactoryInstance.getClientFactory().build(BusTopicParams.builder()
                 .clientName("testDecisionClient")
-                .serializationProvider(GsonMessageBodyHandler.class.getName())
                 .useHttps(false).allowSelfSignedCerts(false).hostname("localhost").port(port)
                 .basePath("policy/pdpx/v1")
                 .userName("healthcheck").password("zb!XztG34").managed(true).build());
