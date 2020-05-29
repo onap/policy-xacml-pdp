@@ -28,7 +28,6 @@ import com.att.research.xacml.std.pip.StdPIPResponse;
 import com.google.common.base.Strings;
 import java.util.Arrays;
 import java.util.Collection;
-
 import javax.persistence.NoResultException;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.std.StdOnapPip;
@@ -117,7 +116,7 @@ public class GetOperationOutcomePip extends StdOnapPip {
             // We are expecting a single result
             //
             String result = em
-                .createQuery("select e.outcome from Dbao e" + " where e.closedLoopName= ?1"
+                .createQuery("select e.outcome from OperationsHistory e" + " where e.closedLoopName= ?1"
                     + " order by e.starttime desc", String.class)
                 .setParameter(1, clname).setMaxResults(1).getSingleResult();
 
