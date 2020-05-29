@@ -20,7 +20,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.pdp.xacml.application.common.operationshistory;
+package org.onap.policy.guard;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -37,7 +37,7 @@ import lombok.Data;
                 indexes = {@Index(name = "operationshistory_clreqid_index", columnList = "closedLoopName,requestId"),
                                 @Index(name = "operationshistory_target_index", columnList = "target,operation,actor")})
 @Data
-public class Dbao implements Serializable {
+public class OperationsHistory implements Serializable {
 
     private static final long serialVersionUID = -551420180714993577L;
 

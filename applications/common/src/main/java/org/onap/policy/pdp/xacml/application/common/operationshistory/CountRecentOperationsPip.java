@@ -145,7 +145,7 @@ public class CountRecentOperationsPip extends StdOnapPip {
             //
             // We are expecting a single result
             //
-            return em.createQuery("select count(e) from Dbao e"
+            return em.createQuery("select count(e) from OperationsHistory e"
                                   + " where e.outcome<>'Failure_Guard'"
                                   + " and e.actor= ?1"
                                   + " and e.operation= ?2"

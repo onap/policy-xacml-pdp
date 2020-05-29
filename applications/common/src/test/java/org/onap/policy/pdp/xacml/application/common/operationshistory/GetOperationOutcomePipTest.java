@@ -47,6 +47,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.onap.policy.guard.OperationsHistory;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -234,7 +235,7 @@ public class GetOperationOutcomePipTest {
         //
         // Create entry
         //
-        Dbao newEntry = new Dbao();
+        OperationsHistory newEntry = new OperationsHistory();
         newEntry.setClosedLoopName(cl);
         newEntry.setTarget(target);
         newEntry.setOutcome(outcome);

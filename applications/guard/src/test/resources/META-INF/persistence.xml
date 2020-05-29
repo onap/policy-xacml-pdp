@@ -3,7 +3,7 @@
   ============LICENSE_START=======================================================
   ONAP
   ================================================================================
-  Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+  Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 
     <persistence-unit name="OperationsHistoryPUTest" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <class>org.onap.policy.pdp.xacml.application.common.operationshistory.Dbao</class>
+        <class>org.onap.policy.guard.OperationsHistory</class>
         <properties>
             <property name="eclipselink.ddl-generation" value="create-tables" />
             <property name="eclipselink.logging.level" value="FINE" />
