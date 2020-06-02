@@ -52,6 +52,7 @@ import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
+import org.onap.policy.guard.OperationsHistory;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -60,7 +61,6 @@ import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.onap.policy.pdp.xacml.application.common.operationshistory.CountRecentOperationsPip;
-import org.onap.policy.pdp.xacml.application.common.operationshistory.Dbao;
 import org.onap.policy.pdp.xacml.xacmltest.TestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,7 +160,7 @@ public class GuardPdpApplicationTest {
     @Before
     public void startClean() throws Exception {
         em.getTransaction().begin();
-        em.createQuery("DELETE FROM Dbao").executeUpdate();
+        em.createQuery("DELETE FROM OperationsHistory").executeUpdate();
         em.getTransaction().commit();
     }
 
@@ -362,7 +362,7 @@ public class GuardPdpApplicationTest {
         //
         // Add an entry
         //
-        Dbao newEntry = new Dbao();
+        OperationsHistory newEntry = new OperationsHistory();
         newEntry.setActor(properties.get("actor").toString());
         newEntry.setOperation(properties.get("operation").toString());
         newEntry.setClosedLoopName(properties.get("clname").toString());

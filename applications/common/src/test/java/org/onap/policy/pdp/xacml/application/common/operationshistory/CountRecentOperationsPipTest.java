@@ -51,6 +51,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.onap.policy.guard.OperationsHistory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -216,7 +217,7 @@ public class CountRecentOperationsPipTest {
         //
         // create entry
         //
-        Dbao newEntry = createEntry("cl-foobar-1", "vnf-1", "SUCCESS");
+        OperationsHistory newEntry = createEntry("cl-foobar-1", "vnf-1", "SUCCESS");
         //
         // No entries yet
         //
@@ -241,7 +242,7 @@ public class CountRecentOperationsPipTest {
     @Test
     public void testStringToChronoUnit() throws PIPException {
         // not configured yet
-        Dbao newEntry = createEntry("cl-foobar-1", "vnf-1", "SUCCESS");
+        OperationsHistory newEntry = createEntry("cl-foobar-1", "vnf-1", "SUCCESS");
         assertEquals(-1, getCount(newEntry));
 
         // now configure it
@@ -266,7 +267,7 @@ public class CountRecentOperationsPipTest {
         assertEquals(-1, getCount(newEntry));
     }
 
-    private long getCount(Dbao newEntry) throws PIPException {
+    private long getCount(OperationsHistory newEntry) throws PIPException {
         responses = new LinkedList<>(Arrays.asList(resp1, resp2, resp3));
         attributes = new LinkedList<>(
                         Arrays.asList(newEntry.getActor(), newEntry.getOperation(), newEntry.getTarget()));
@@ -279,11 +280,11 @@ public class CountRecentOperationsPipTest {
         return ((Number) value.getValue()).longValue();
     }
 
-    private Dbao createEntry(String cl, String target, String outcome) {
+    private OperationsHistory createEntry(String cl, String target, String outcome) {
         //
         // Create entry
         //
-        Dbao newEntry = new Dbao();
+        OperationsHistory newEntry = new OperationsHistory();
         newEntry.setClosedLoopName(cl);
         newEntry.setTarget(target);
         newEntry.setOutcome(outcome);
