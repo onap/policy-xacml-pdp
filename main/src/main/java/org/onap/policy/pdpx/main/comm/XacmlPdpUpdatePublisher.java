@@ -92,7 +92,7 @@ public class XacmlPdpUpdatePublisher {
             }
         }
         // Return current deployed policies
-        message.setPolicies(new ArrayList<ToscaPolicy>(appManager.getToscaPolicies().keySet()));
+        message.setPolicies(new ArrayList<>(appManager.getToscaPolicies().keySet()));
         LOGGER.debug("Returning current deployed policies: {} ", message.getPolicies());
 
         // update the policy count statistic

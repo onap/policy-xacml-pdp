@@ -82,21 +82,21 @@ public class TestXacmlJsonMessageBodyHandler {
                 "src/test/resources/decisions/decision.native.request.json"));
         assertFalse(req.getCombinedDecision());
         assertFalse(req.getReturnPolicyIdList());
-        assertTrue(req.getRequestAttributes().size() == 3);
+        assertEquals(3, req.getRequestAttributes().size());
         Iterator<RequestAttributes> iter = req.getRequestAttributes().iterator();
 
         RequestAttributes firstRequestAttributes = iter.next();
-        assertTrue(firstRequestAttributes.getAttributes().size() == 1);
+        assertEquals(1, firstRequestAttributes.getAttributes().size());
         assertEquals("Julius Hibbert", firstRequestAttributes.getAttributes().iterator().next()
                 .getValues().iterator().next().getValue().toString());
 
         RequestAttributes secondRequestAttributes = iter.next();
-        assertTrue(secondRequestAttributes.getAttributes().size() == 1);
+        assertEquals(1, secondRequestAttributes.getAttributes().size());
         assertEquals("http://medico.com/record/patient/BartSimpson", secondRequestAttributes.getAttributes()
                 .iterator().next().getValues().iterator().next().getValue().toString());
 
         RequestAttributes thirdRequestAttributes = iter.next();
-        assertTrue(thirdRequestAttributes.getAttributes().size() == 1);
+        assertEquals(1, thirdRequestAttributes.getAttributes().size());
         assertEquals("read", thirdRequestAttributes.getAttributes().iterator().next()
                 .getValues().iterator().next().getValue().toString());
     }
