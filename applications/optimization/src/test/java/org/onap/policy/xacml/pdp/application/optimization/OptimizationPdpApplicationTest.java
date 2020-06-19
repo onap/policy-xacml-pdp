@@ -279,7 +279,7 @@ public class OptimizationPdpApplicationTest {
         //
         // Add US to the geography list
         //
-        ((List<String>)baseRequest.getResource().get("geography")).add("US");
+        ((List<String>) baseRequest.getResource().get("geography")).add("US");
         //
         // Ask for a decision for default US Policy
         //
@@ -301,7 +301,7 @@ public class OptimizationPdpApplicationTest {
         //
         // Add vCPE to the service list
         //
-        ((List<String>)baseRequest.getResource().get("services")).add("vCPE");
+        ((List<String>) baseRequest.getResource().get("services")).add("vCPE");
         //
         // Ask for a decision for default US policy for vCPE service
         //
@@ -324,7 +324,7 @@ public class OptimizationPdpApplicationTest {
         //
         // Add vG to the resource list
         //
-        ((List<String>)baseRequest.getResource().get("resources")).add("vG");
+        ((List<String>) baseRequest.getResource().get("resources")).add("vG");
         //
         // Ask for a decision for default US service vCPE resource vG policy
         //
@@ -347,7 +347,7 @@ public class OptimizationPdpApplicationTest {
         //
         // Add gold as a scope
         //
-        ((List<String>)baseRequest.getContext().get("subscriberName")).add("subscriber_a");
+        ((List<String>) baseRequest.getContext().get("subscriberName")).add("subscriber_a");
         //
         // Ask for a decision for specific US vCPE vG gold
         //
@@ -371,8 +371,8 @@ public class OptimizationPdpApplicationTest {
         //
         // Add platinum to the scope list: this is now gold OR platinum
         //
-        ((List<String>)baseRequest.getResource().get("scope")).remove("gold");
-        ((List<String>)baseRequest.getContext().get("subscriberName")).add("subscriber_x");
+        ((List<String>) baseRequest.getResource().get("scope")).remove("gold");
+        ((List<String>) baseRequest.getContext().get("subscriberName")).add("subscriber_x");
         //
         // Ask for a decision for specific US vCPE vG (gold or platinum)
         //
@@ -396,9 +396,9 @@ public class OptimizationPdpApplicationTest {
         //
         // Add gold as a scope
         //
-        ((List<String>)baseRequest.getResource().get("scope")).remove("gold");
-        ((List<String>)baseRequest.getResource().get("scope")).remove("platinum");
-        ((List<String>)baseRequest.getContext().get("subscriberName")).remove("subscriber_a");
+        ((List<String>) baseRequest.getResource().get("scope")).remove("gold");
+        ((List<String>) baseRequest.getResource().get("scope")).remove("platinum");
+        ((List<String>) baseRequest.getContext().get("subscriberName")).remove("subscriber_a");
         //
         // Ask for a decision for specific US vCPE vG gold
         //
@@ -552,11 +552,11 @@ public class OptimizationPdpApplicationTest {
 
     @SuppressWarnings("unchecked")
     private void cleanOutResources() {
-        ((List<String>)baseRequest.getResource().get("scope")).clear();
-        ((List<String>)baseRequest.getResource().get("services")).clear();
-        ((List<String>)baseRequest.getResource().get("resources")).clear();
-        ((List<String>)baseRequest.getResource().get("geography")).clear();
-        if (((List<String>)baseRequest.getResource().get("policy-type")) != null) {
+        ((List<String>) baseRequest.getResource().get("scope")).clear();
+        ((List<String>) baseRequest.getResource().get("services")).clear();
+        ((List<String>) baseRequest.getResource().get("resources")).clear();
+        ((List<String>) baseRequest.getResource().get("geography")).clear();
+        if (((List<String>) baseRequest.getResource().get("policy-type")) != null) {
             baseRequest.getResource().remove("policy-type");
         }
     }

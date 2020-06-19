@@ -96,7 +96,7 @@ public class XacmlPdpRestController {
                     @ResponseHeader(name = "X-ONAP-RequestID",
                             description = "Used to track REST transactions for logging purpose",
                             response = UUID.class)},
-            authorizations = @Authorization(value = "basicAuth"), tags = {"HealthCheck",},
+            authorizations = @Authorization(value = "basicAuth"), tags = {"HealthCheck", },
             extensions = {@Extension(name = "interface info",
                     properties = {@ExtensionProperty(name = "pdpx-version", value = "1.0.0"),
                             @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
@@ -128,7 +128,7 @@ public class XacmlPdpRestController {
                     @ResponseHeader(name = "X-ONAP-RequestID",
                             description = "Used to track REST transactions for logging purpose",
                             response = UUID.class)},
-            authorizations = @Authorization(value = "basicAuth"), tags = {"Statistics",},
+            authorizations = @Authorization(value = "basicAuth"), tags = {"Statistics", },
             extensions = {@Extension(name = "interface info",
                     properties = {@ExtensionProperty(name = "pdpx-version", value = "1.0.0"),
                             @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
@@ -167,7 +167,7 @@ public class XacmlPdpRestController {
                     @ResponseHeader(name = "X-ONAP-RequestID",
                             description = "Used to track REST transactions for logging purpose",
                             response = UUID.class)},
-            authorizations = @Authorization(value = "basicAuth"), tags = {"Decision",},
+            authorizations = @Authorization(value = "basicAuth"), tags = {"Decision", },
             extensions = {@Extension(name = "interface info",
                     properties = {@ExtensionProperty(name = "pdpx-version", value = "1.0.0"),
                             @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
@@ -219,7 +219,7 @@ public class XacmlPdpRestController {
                     @ResponseHeader(name = "X-ONAP-RequestID",
                             description = "Used to track REST transactions for logging purpose",
                             response = UUID.class)},
-            authorizations = @Authorization(value = "basicAuth"), tags = {"Decision",},
+            authorizations = @Authorization(value = "basicAuth"), tags = {"Decision", },
             extensions = {@Extension(name = "interface info",
                     properties = {@ExtensionProperty(name = "pdpx-version", value = "1.0.0"),
                             @ExtensionProperty(name = "last-mod-release", value = "Frankfurt")})})

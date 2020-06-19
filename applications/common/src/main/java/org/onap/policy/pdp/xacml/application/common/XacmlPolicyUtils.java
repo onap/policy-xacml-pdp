@@ -25,7 +25,6 @@ package org.onap.policy.pdp.xacml.application.common;
 import com.att.research.xacml.api.Identifier;
 import com.att.research.xacml.util.XACMLPolicyWriter;
 import com.att.research.xacml.util.XACMLProperties;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -40,13 +39,11 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
-
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.IdReferenceType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

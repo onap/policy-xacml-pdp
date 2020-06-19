@@ -25,7 +25,6 @@ package org.onap.policy.xacml.pdp.application.guard;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServiceProvider;
@@ -96,7 +95,7 @@ public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
     @Override
     protected ToscaPolicyTranslator getTranslator(String type) {
         LOGGER.debug("Policy type {}", type);
-        if ( type.contains("coordination") ) {
+        if (type.contains("coordination")) {
             LOGGER.debug("returning coordinationTranslator");
             return coordinationTranslator;
         } else {

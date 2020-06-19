@@ -26,13 +26,10 @@ import com.att.research.xacml.std.annotations.XACMLAction;
 import com.att.research.xacml.std.annotations.XACMLRequest;
 import com.att.research.xacml.std.annotations.XACMLResource;
 import com.att.research.xacml.std.annotations.XACMLSubject;
-
 import java.util.Map;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 

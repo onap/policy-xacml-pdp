@@ -25,7 +25,6 @@ package org.onap.policy.xacml.pdp.application.guard;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.util.XACMLPolicyScanner;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;

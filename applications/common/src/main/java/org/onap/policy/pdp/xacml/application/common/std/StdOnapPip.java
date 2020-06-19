@@ -34,14 +34,12 @@ import com.att.research.xacml.std.datatypes.DataTypes;
 import com.att.research.xacml.std.pip.StdMutablePIPResponse;
 import com.att.research.xacml.std.pip.StdPIPRequest;
 import com.att.research.xacml.std.pip.engines.StdConfigurableEngine;
-
 import java.math.BigInteger;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Properties;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;

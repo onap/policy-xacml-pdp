@@ -286,7 +286,7 @@ public class MatchablePolicyTypeTest implements MatchableCallback {
                 // contain potential matchables
                 //
                 if (propertyValue instanceof List) {
-                    for (Object listValue : ((List<?>)propertyValue)) {
+                    for (Object listValue : ((List<?>) propertyValue)) {
                         if (listValue instanceof Map) {
                             generateTargetType(target, matchablePolicyType, (Map<String, Object>) listValue);
                         }

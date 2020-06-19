@@ -260,8 +260,8 @@ public class GuardTranslatorTest {
             if (! (rule instanceof RuleType)) {
                 continue;
             }
-            assertThat(((RuleType)rule).getCondition()).isNotNull();
-            assertThat(((RuleType)rule).getCondition().getExpression()).isNotNull();
+            assertThat(((RuleType) rule).getCondition()).isNotNull();
+            assertThat(((RuleType) rule).getCondition().getExpression()).isNotNull();
         }
     }
 
@@ -272,7 +272,7 @@ public class GuardTranslatorTest {
             if (! (rule instanceof RuleType)) {
                 continue;
             }
-            for (AnyOfType anyOf : ((RuleType)rule).getTarget().getAnyOf()) {
+            for (AnyOfType anyOf : ((RuleType) rule).getTarget().getAnyOf()) {
                 assertThat(anyOf.getAllOf()).isNotEmpty();
                 for (AllOfType allOf : anyOf.getAllOf()) {
                     assertThat(allOf.getMatch()).isNotEmpty();
@@ -302,7 +302,7 @@ public class GuardTranslatorTest {
             }
             assertThat(((RuleType) rule).getTarget()).isNotNull();
             assertThat(((RuleType) rule).getTarget().getAnyOf()).hasSize(1);
-            for (AnyOfType anyOf : ((RuleType)rule).getTarget().getAnyOf()) {
+            for (AnyOfType anyOf : ((RuleType) rule).getTarget().getAnyOf()) {
                 assertThat(anyOf.getAllOf()).isNotEmpty();
                 for (AllOfType allOf : anyOf.getAllOf()) {
                     assertThat(allOf.getMatch()).isNotEmpty();

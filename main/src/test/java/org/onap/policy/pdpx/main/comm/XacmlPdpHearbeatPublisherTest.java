@@ -170,7 +170,7 @@ public class XacmlPdpHearbeatPublisherTest {
         // create a plain listener to test the "real" makeTimer() method
         publisher = new XacmlPdpHearbeatPublisher(client, state);
 
-        assertThatCode( () -> {
+        assertThatCode(() -> {
             publisher.start();
             publisher.restart(100L);
             publisher.terminate();

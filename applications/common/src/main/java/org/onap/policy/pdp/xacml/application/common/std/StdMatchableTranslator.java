@@ -446,7 +446,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
             // contain potential matchables
             //
             if (propertyValue instanceof List) {
-                for (Object listValue : ((List<?>)propertyValue)) {
+                for (Object listValue : ((List<?>) propertyValue)) {
                     if (listValue instanceof Map) {
                         fillTargetTypeWithMatchables(target, matchablePolicyType, (Map<String, Object>) listValue);
                     }
