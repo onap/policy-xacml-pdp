@@ -3,6 +3,7 @@
   ONAP Policy Engine - XACML PDP
   ================================================================================
   Copyright (C) 2018-2020 AT&T Intellectual Property. All rights reserved.
+  Modifications Copyright (C) 2020 Nordix Foundation.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -75,7 +76,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-ext</artifactId>
-            <version>1.8.0-beta2</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -100,7 +100,6 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20180813</version>
         </dependency>
         <dependency>
             <groupId>org.onap.policy.models</groupId>
