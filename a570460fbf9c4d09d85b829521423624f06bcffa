@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4aa1cb56_84aa1c05",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 6593
+      },
+      "writtenOn": "2020-06-25T09:39:50Z",
+      "side": 1,
+      "message": "I\u0027ve seen this in 2 repos so far, would it be worth moving up to parent?",
+      "range": {
+        "startLine": 75,
+        "startChar": 8,
+        "endLine": 79,
+        "endChar": 21
+      },
+      "revId": "a570460fbf9c4d09d85b829521423624f06bcffa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
