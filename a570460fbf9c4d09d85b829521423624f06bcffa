@@ -22,6 +22,30 @@
       "revId": "a570460fbf9c4d09d85b829521423624f06bcffa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e6b15808_2588d89f",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-06-25T12:24:52Z",
+      "side": 1,
+      "message": "Yes that would be great!",
+      "parentUuid": "4aa1cb56_84aa1c05",
+      "range": {
+        "startLine": 75,
+        "startChar": 8,
+        "endLine": 79,
+        "endChar": 21
+      },
+      "revId": "a570460fbf9c4d09d85b829521423624f06bcffa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
