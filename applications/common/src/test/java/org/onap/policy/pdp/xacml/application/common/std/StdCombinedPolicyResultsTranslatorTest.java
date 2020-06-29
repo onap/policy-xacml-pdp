@@ -116,7 +116,7 @@ public class StdCombinedPolicyResultsTranslatorTest {
         assertNotNull(decision);
 
         assertThat(decision.getPolicies()).isNotNull();
-        assertThat(decision.getPolicies().size()).isEqualTo(1);
+        assertThat(decision.getPolicies()).hasSize(1);
     }
 
     @Test

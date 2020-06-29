@@ -187,10 +187,10 @@ public class MatchablePolicyTypeTest implements MatchableCallback {
         schema.setType("string");
         property.setEntrySchema(schema);
         MatchablePropertyTypeMap mapValue = new MatchablePropertyTypeMap(property);
-        assertThat(mapValue.validate(new String("foo"))).hasSize(0);
+        assertThat(mapValue.validate("foo")).isEmpty();
 
         MatchablePropertyTypeList listValue = new MatchablePropertyTypeList(property);
-        assertThat(listValue.validate(new String("foo"))).hasSize(0);
+        assertThat(listValue.validate("foo")).isEmpty();
     }
 
     @Test

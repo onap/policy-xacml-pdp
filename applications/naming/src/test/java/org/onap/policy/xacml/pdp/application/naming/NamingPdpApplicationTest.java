@@ -176,7 +176,7 @@ public class NamingPdpApplicationTest {
         LOGGER.info("Decision {}", decision.getKey());
 
         assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies().size()).isEqualTo(0);
+        assertThat(decision.getKey().getPolicies()).isEmpty();
     }
 
     @Test
@@ -194,7 +194,7 @@ public class NamingPdpApplicationTest {
         // There is no default policy
         //
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(0);
+        assertThat(response.getPolicies()).isEmpty();
         //
         // Ask for VNF
         //
@@ -204,7 +204,7 @@ public class NamingPdpApplicationTest {
         //
         response = makeDecision();
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(1);
+        assertThat(response.getPolicies()).hasSize(1);
         //
         // Validate it
         //
@@ -227,7 +227,7 @@ public class NamingPdpApplicationTest {
             LOGGER.info("Decision Returned Policy {}", entrySet.getKey());
             assertThat(entrySet.getValue()).isInstanceOf(Map.class);
             Map<String, Object> policyContents = (Map<String, Object>) entrySet.getValue();
-            assertThat(policyContents.containsKey("properties")).isTrue();
+            assertThat(policyContents).containsKey("properties");
             assertThat(policyContents.get("properties")).isInstanceOf(Map.class);
             Map<String, Object> policyProperties = (Map<String, Object>) policyContents.get("properties");
 

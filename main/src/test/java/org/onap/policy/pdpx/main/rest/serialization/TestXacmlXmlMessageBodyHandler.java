@@ -22,7 +22,6 @@ package org.onap.policy.pdpx.main.rest.serialization;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.RequestAttributes;

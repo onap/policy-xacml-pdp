@@ -220,7 +220,7 @@ public class NativePdpApplicationTest {
         assertThat(response).isNotNull();
         Decision decision = response.getResults().iterator().next().getDecision();
         assertThat(decision).isNotNull();
-        assertThat(decision.toString()).isEqualTo(expected);
+        assertThat(decision).hasToString(expected);
         LOGGER.info("Xacml response we received {}", DOMResponse.toString(response));
     }
 }
