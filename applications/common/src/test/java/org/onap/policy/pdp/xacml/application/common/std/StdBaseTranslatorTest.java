@@ -162,7 +162,7 @@ public class StdBaseTranslatorTest {
 
         assertThat(rule.getObligationExpressions().getObligationExpression().size()).isEqualTo(1);
         assertThat(rule.getObligationExpressions().getObligationExpression().get(0)
-                .getAttributeAssignmentExpression().size()).isEqualTo(0);
+                .getAttributeAssignmentExpression()).isEmpty();
 
         //
         // Should not throw an exception
@@ -184,7 +184,7 @@ public class StdBaseTranslatorTest {
         assertNotNull(decision);
 
         assertThat(decision.getPolicies()).isNotNull();
-        assertThat(decision.getPolicies().size()).isEqualTo(0);
+        assertThat(decision.getPolicies()).isEmpty();
     }
 
     @Test
@@ -218,7 +218,7 @@ public class StdBaseTranslatorTest {
         assertNotNull(decision);
 
         assertThat(decision.getPolicies()).isNotNull();
-        assertThat(decision.getPolicies().size()).isEqualTo(0);
+        assertThat(decision.getPolicies()).isEmpty();
 
         Obligation badObligation = TestUtilsCommon.createXacmlObligation(
                 ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue(),

@@ -172,7 +172,7 @@ public class MonitoringPdpApplicationTest {
         LOGGER.info("Decision {}", decision);
 
         assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies()).hasSize(0);
+        assertThat(decision.getKey().getPolicies()).isEmpty();
         //
         // Test the branch for query params, and we have no policy anyway
         //
@@ -181,7 +181,7 @@ public class MonitoringPdpApplicationTest {
         LOGGER.info("Decision {}", decision);
 
         assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies()).hasSize(0);
+        assertThat(decision.getKey().getPolicies()).isEmpty();
         //
         // Test the branch for query params, and we have no policy anyway
         //
@@ -190,7 +190,7 @@ public class MonitoringPdpApplicationTest {
         LOGGER.info("Decision {}", decision);
 
         assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies()).hasSize(0);
+        assertThat(decision.getKey().getPolicies()).isEmpty();
     }
 
     @SuppressWarnings("unchecked")
@@ -244,8 +244,7 @@ public class MonitoringPdpApplicationTest {
         assertThat(decision.getKey()).isNotNull();
         assertThat(decision.getKey().getPolicies()).hasSize(1);
         jsonPolicy = (Map<String, Object>) decision.getKey().getPolicies().get("onap.scaleout.tca");
-        assertThat(jsonPolicy).isNotNull();
-        assertThat(jsonPolicy).doesNotContainKey("properties");
+        assertThat(jsonPolicy).isNotNull().doesNotContainKey("properties");
         //
         // Don't Ask for abbreviated results
         //
@@ -290,7 +289,7 @@ public class MonitoringPdpApplicationTest {
         LOGGER.info("Decision {}", decision.getKey());
 
         assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies()).hasSize(0);
+        assertThat(decision.getKey().getPolicies()).isEmpty();
     }
 
 }

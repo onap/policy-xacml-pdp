@@ -95,7 +95,7 @@ public class XacmlPdpApplicationManagerTest {
         // We need at least 1 policies
         //
         assertThat(completedJtst).isNotNull();
-        assertThat(completedJtst.getToscaTopologyTemplate().getPolicies().size()).isGreaterThan(0);
+        assertThat(completedJtst.getToscaTopologyTemplate().getPolicies().size()).isPositive();
         //
         // Copy test directory over of the application directories
         //
@@ -141,7 +141,7 @@ public class XacmlPdpApplicationManagerTest {
         // Test the basics from the startup
         //
         assertThat(manager).isNotNull();
-        assertThat(manager.getPolicyCount()).isEqualTo(0);
+        assertThat(manager.getPolicyCount()).isZero();
         assertThat(manager.getPolicyTypeCount()).isEqualTo(19);
         assertThat(manager.getToscaPolicies()).isEmpty();
         assertThat(manager.getToscaPolicyIdentifiers()).isEmpty();
@@ -172,11 +172,11 @@ public class XacmlPdpApplicationManagerTest {
         final ToscaPolicy policyFinal = policy;
         assertThatCode(() -> {
             manager.removeUndeployedPolicy(policyFinal);
-            assertThat(manager.getPolicyCount()).isEqualTo(0);
+            assertThat(manager.getPolicyCount()).isZero();
             manager.loadDeployedPolicy(policyFinal);
             assertThat(manager.getPolicyCount()).isEqualTo(1);
             manager.removeUndeployedPolicy(policyFinal);
-            assertThat(manager.getPolicyCount()).isEqualTo(0);
+            assertThat(manager.getPolicyCount()).isZero();
         }).doesNotThrowAnyException();
         //
         // try loading something unsupported

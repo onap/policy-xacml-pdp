@@ -208,7 +208,7 @@ public class OptimizationPdpApplicationTest {
         LOGGER.info("Decision {}", decision.getKey());
 
         assertThat(decision.getKey()).isNotNull();
-        assertThat(decision.getKey().getPolicies().size()).isEqualTo(0);
+        assertThat(decision.getKey().getPolicies()).isEmpty();
     }
 
     /**
@@ -223,15 +223,14 @@ public class OptimizationPdpApplicationTest {
         //
         List<ToscaPolicy> loadedPolicies = TestUtils.loadPolicies("src/test/resources/test-optimization-policies.yaml",
                 service);
-        assertThat(loadedPolicies).isNotNull();
-        assertThat(loadedPolicies).hasSize(14);
+        assertThat(loadedPolicies).isNotNull().hasSize(14);
         //
         // Ask for a decision for available default policies
         //
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(2);
+        assertThat(response.getPolicies()).hasSize(2);
         //
         // Validate it
         //
@@ -255,10 +254,10 @@ public class OptimizationPdpApplicationTest {
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(1);
+        assertThat(response.getPolicies()).hasSize(1);
         response.getPolicies().forEach((key, value) -> {
-            assertThat(((Map<String, Object>) value).get("type"))
-                .isEqualTo(("onap.policies.optimization.resource.HpaPolicy"));
+            assertThat(((Map<String, Object>) value)).containsEntry("type",
+                            "onap.policies.optimization.resource.HpaPolicy");
         });
         //
         // Validate it
@@ -285,7 +284,7 @@ public class OptimizationPdpApplicationTest {
         //
         DecisionResponse response = makeDecision();
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(2);
+        assertThat(response.getPolicies()).hasSize(2);
         //
         // Validate it
         //
@@ -308,7 +307,7 @@ public class OptimizationPdpApplicationTest {
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(3);
+        assertThat(response.getPolicies()).hasSize(3);
         //
         // Validate it
         //
@@ -331,7 +330,7 @@ public class OptimizationPdpApplicationTest {
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(6);
+        assertThat(response.getPolicies()).hasSize(6);
         //
         // Validate it
         //
@@ -405,7 +404,7 @@ public class OptimizationPdpApplicationTest {
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(7);
+        assertThat(response.getPolicies()).hasSize(7);
         //
         // Validate it
         //
@@ -428,7 +427,7 @@ public class OptimizationPdpApplicationTest {
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(1);
+        assertThat(response.getPolicies()).hasSize(1);
         //
         // Validate it
         //
@@ -452,7 +451,7 @@ public class OptimizationPdpApplicationTest {
         DecisionResponse response = makeDecision();
 
         assertThat(response).isNotNull();
-        assertThat(response.getPolicies().size()).isEqualTo(2);
+        assertThat(response.getPolicies()).hasSize(2);
         //
         // Validate it
         //
@@ -516,7 +515,7 @@ public class OptimizationPdpApplicationTest {
             LOGGER.info("Decision Returned Policy {}", entrySet.getKey());
             assertThat(entrySet.getValue()).isInstanceOf(Map.class);
             Map<String, Object> policyContents = (Map<String, Object>) entrySet.getValue();
-            assertThat(policyContents.containsKey("properties")).isTrue();
+            assertThat(policyContents).containsKey("properties");
             assertThat(policyContents.get("properties")).isInstanceOf(Map.class);
             Map<String, Object> policyProperties = (Map<String, Object>) policyContents.get("properties");
 

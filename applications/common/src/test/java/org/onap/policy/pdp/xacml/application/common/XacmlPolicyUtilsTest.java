@@ -207,12 +207,12 @@ public class XacmlPolicyUtilsTest {
 
     @Test
     public void testUncommonConditions() throws IOException {
-        File fileTemp = policyFolder.newFile();
+        Path fileTemp = policyFolder.newFile().toPath();
         assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
-            XacmlPolicyUtils.writePolicyFile(fileTemp.toPath(), new String("not a policy"))
+            XacmlPolicyUtils.writePolicyFile(fileTemp, "not a policy")
         );
         assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
-            XacmlPolicyUtils.constructUniquePolicyFilename(new String("not a policy"),
+            XacmlPolicyUtils.constructUniquePolicyFilename("not a policy",
                     policyFolder.getRoot().toPath())
         );
     }
@@ -313,7 +313,7 @@ public class XacmlPolicyUtilsTest {
         // Copy to this folder
         //
         File copyFolder = policyFolder.newFolder("copy");
-        assertThat(copyFolder.exists()).isTrue();
+        assertThat(copyFolder).exists();
         //
         // Mock up a properties object
         //
@@ -332,10 +332,10 @@ public class XacmlPolicyUtilsTest {
         File propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents(
                 fileProperties.toAbsolutePath().toString(), mockProperties, myCreator);
 
-        assertThat(propertiesFile.canRead()).isTrue();
+        assertThat(propertiesFile).canRead();
         assertThat(Path.of(copyFolder.getAbsolutePath(),
-                rootPath.getFileName().toString()).toFile().canRead()).isTrue();
+                rootPath.getFileName().toString()).toFile()).canRead();
         assertThat(Path.of(copyFolder.getAbsolutePath(),
-                path1.getFileName().toString()).toFile().canRead()).isTrue();
+                path1.getFileName().toString()).toFile()).canRead();
     }
 }
