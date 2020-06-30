@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2020 Nordix Foundation
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +25,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -158,39 +158,33 @@ public class TestAbbreviateDecisionResults {
      * should have been removed from the response.
      */
     @Test
-    public void testAbbreviateDecisionResult() {
+    public void testAbbreviateDecisionResult() throws HttpClientConfigException {
 
         LOGGER.info("Running testAbbreviateDecisionResult");
 
-        try {
-            // Create DecisionRequest
-            DecisionRequest request = new DecisionRequest();
-            request.setOnapName("DCAE");
-            request.setOnapComponent("PolicyHandler");
-            request.setOnapInstance("622431a4-9dea-4eae-b443-3b2164639c64");
-            request.setAction("configure");
-            Map<String, Object> resource = new HashMap<String, Object>();
-            resource.put("policy-id", "onap.scaleout.tca");
-            request.setResource(resource);
+        // Create DecisionRequest
+        DecisionRequest request = new DecisionRequest();
+        request.setOnapName("DCAE");
+        request.setOnapComponent("PolicyHandler");
+        request.setOnapInstance("622431a4-9dea-4eae-b443-3b2164639c64");
+        request.setAction("configure");
+        Map<String, Object> resource = new HashMap<String, Object>();
+        resource.put("policy-id", "onap.scaleout.tca");
+        request.setResource(resource);
 
-            // Query decision API
-            DecisionResponse response = getDecision(request);
-            LOGGER.info("Decision Response {}", response);
+        // Query decision API
+        DecisionResponse response = getDecision(request);
+        LOGGER.info("Decision Response {}", response);
 
-            assertFalse(response.getPolicies().isEmpty());
+        assertFalse(response.getPolicies().isEmpty());
 
-            @SuppressWarnings("unchecked")
-            Map<String, Object> policy = (Map<String, Object>) response.getPolicies().get("onap.scaleout.tca");
-            assertTrue(policy.containsKey("type"));
-            assertFalse(policy.containsKey("properties"));
-            assertFalse(policy.containsKey("name"));
-            assertFalse(policy.containsKey("version"));
-            assertTrue(policy.containsKey("metadata"));
-
-        } catch (Exception e) {
-            LOGGER.error("Exception {}", e);
-            fail("testAbbreviateDecisionResult failed due to: " + e.getLocalizedMessage());
-        }
+        @SuppressWarnings("unchecked")
+        Map<String, Object> policy = (Map<String, Object>) response.getPolicies().get("onap.scaleout.tca");
+        assertTrue(policy.containsKey("type"));
+        assertFalse(policy.containsKey("properties"));
+        assertFalse(policy.containsKey("name"));
+        assertFalse(policy.containsKey("version"));
+        assertTrue(policy.containsKey("metadata"));
     }
 
     private static Main startXacmlPdpService(File params) throws PolicyXacmlPdpException {
