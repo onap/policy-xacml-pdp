@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2020 Nordix Foundation
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +21,7 @@
 
 package org.onap.policy.pdpx.main.parameters;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -185,13 +187,12 @@ public class TestXacmlPdpParameterHandler {
     }
 
     @Test
-    public void testXacmlPdpInvalidOption() throws PolicyXacmlPdpException {
+    public void testXacmlPdpInvalidOption() {
         final String[] xacmlPdpConfigParameters = {"-d"};
         final XacmlPdpCommandLineArguments arguments = new XacmlPdpCommandLineArguments();
-        try {
-            arguments.parse(xacmlPdpConfigParameters);
-        } catch (final Exception exp) {
-            assertTrue(exp.getMessage().startsWith("invalid command line arguments specified"));
-        }
+        assertThatThrownBy(() ->
+            arguments.parse(xacmlPdpConfigParameters)
+        ).isInstanceOf(PolicyXacmlPdpException.class)
+        .hasMessageContaining("invalid command line arguments specified");
     }
 }

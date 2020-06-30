@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
-   Modifications Copyright (C) 2019 Nordix Foundation.
+   Modifications Copyright (C) 2019-2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -468,17 +468,12 @@ public class OptimizationPdpApplicationTest {
         //
         // Serialize it into a class
         //
-        ToscaServiceTemplate serviceTemplate;
-        try {
-            serviceTemplate = yamlCoder.decode(policyYaml, ToscaServiceTemplate.class);
-        } catch (CoderException e) {
-            throw new XacmlApplicationException("Failed to decode policy from resource file", e);
-        }
+        JpaToscaServiceTemplate jtst = new JpaToscaServiceTemplate();
+        ToscaServiceTemplate serviceTemplate = yamlCoder.decode(policyYaml, ToscaServiceTemplate.class);
+        jtst.fromAuthorative(serviceTemplate);
         //
         // Make sure all the fields are setup properly
         //
-        JpaToscaServiceTemplate jtst = new JpaToscaServiceTemplate();
-        jtst.fromAuthorative(serviceTemplate);
         ToscaServiceTemplate completedJtst = jtst.toAuthorative();
         //
         // Get the policies

@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2020 Nordix Foundation
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +33,6 @@ import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.IdentifierImpl;
 import com.att.research.xacml.util.XACMLPolicyWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -230,12 +230,9 @@ public class MatchablePolicyTypeTest implements MatchableCallback {
         //
         // Dump it out so we can see what was created
         //
-        try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
-            XACMLPolicyWriter.writePolicyFile(os, policy);
-            LOGGER.info("{}", os);
-        } catch (IOException e) {
-            LOGGER.error("Failed to create byte array stream", e);
-        }
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        XACMLPolicyWriter.writePolicyFile(os, policy);
+        LOGGER.info("{}", os);
         //
         // Sanity check - the example policy should have each possible match type plus
         // an extra one for the list and an extra one for the map.
