@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a457f191_09adaa03",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-06-30T17:11:34Z",
+      "side": 1,
+      "message": "I assume this will be deleted once it\u0027s added to policy-parent",
+      "revId": "bdb761c0f3d4f7c734e78195942037515e8ca383",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
