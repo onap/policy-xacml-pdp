@@ -211,9 +211,10 @@ public class XacmlPolicyUtilsTest {
         assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
             XacmlPolicyUtils.writePolicyFile(fileTemp, "not a policy")
         );
+
+        Path rootPath = policyFolder.getRoot().toPath();
         assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
-            XacmlPolicyUtils.constructUniquePolicyFilename("not a policy",
-                    policyFolder.getRoot().toPath())
+            XacmlPolicyUtils.constructUniquePolicyFilename("not a policy", rootPath)
         );
     }
 
