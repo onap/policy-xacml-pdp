@@ -16,6 +16,24 @@
       "revId": "bdb761c0f3d4f7c734e78195942037515e8ca383",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8c9855d_f615c6d3",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 6593
+      },
+      "writtenOn": "2020-07-01T08:24:17Z",
+      "side": 1,
+      "message": "yep ill amend this commit once parent is through",
+      "parentUuid": "a457f191_09adaa03",
+      "revId": "bdb761c0f3d4f7c734e78195942037515e8ca383",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
