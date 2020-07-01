@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "cf0fe17f_be9b798d",
+        "filename": "applications/common/src/test/java/org/onap/policy/pdp/xacml/application/common/matchable/MatchablePolicyTypeTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2020-07-01T10:44:08Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a0f12851_22f38dfa",
+      "range": {
+        "startLine": 235,
+        "startChar": 1,
+        "endLine": 239,
+        "endChar": 38
+      },
+      "revId": "5a4edd71e3cf5218b476a5e6dc99d150efed12b3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28838ff8_f307b3ec",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestAbbreviateDecisionResults.java",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "5a4edd71e3cf5218b476a5e6dc99d150efed12b3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f42a1526_be43d698",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestAbbreviateDecisionResults.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2020-07-01T10:44:08Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "28838ff8_f307b3ec",
+      "range": {
+        "startLine": 191,
+        "startChar": 11,
+        "endLine": 191,
+        "endChar": 35
+      },
+      "revId": "5a4edd71e3cf5218b476a5e6dc99d150efed12b3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
