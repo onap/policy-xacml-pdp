@@ -16,6 +16,24 @@
       "revId": "9537e7f7c455dbff93d8faaf58ce1b8e0ff04388",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23894b67_99bccc07",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/TestXacmlPdpParameterHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2020-07-01T13:02:33Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "dcc62940_cec70323",
+      "revId": "9537e7f7c455dbff93d8faaf58ce1b8e0ff04388",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
