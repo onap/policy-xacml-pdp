@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fb9b3401_8c99440f",
+        "filename": "releases/2.3.0-container.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2020-07-10T17:06:50Z",
+      "side": 1,
+      "message": "the latest job is: 387\nthe latest version is: 2.3.0-20200710T1655\n\ndon\u0027t know if it matters?",
+      "range": {
+        "startLine": 4,
+        "startChar": 53,
+        "endLine": 4,
+        "endChar": 56
+      },
+      "revId": "da8c4883a88ad8a35776214d4920331fbc534ef3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
