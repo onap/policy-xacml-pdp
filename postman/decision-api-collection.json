@@ -1,0 +1,242 @@
+{
+    "info": {
+        "_postman_id": "32ef71dd-9d51-45ba-95ca-4ef8f7e2a7a2",
+        "name": "Policy Framework Decision API",
+        "description": "This collection lists all the Decision API's supported by XACML PDP engine in ONAP Policy Framework. These API's are used to perform various decisions based on configured xacml policies. For example - guard, optimization, naming etc.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Xacml Decision - Naming",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"ONAPName\": \"SDNC\",\n  \"ONAPComponent\": \"SNDC-component\",\n  \"ONAPInstance\": \"SDNC-component-instance\",\n  \"requestId\": \"unique-request-sdnc-1\",\n  \"action\": \"naming\",\n  \"resource\": {\n      \"policy-type\": [\"onap.policies.Naming\"]\n  }\n}"
+                },
+                "url": {
+                    "raw": "{{POLICY-XACML-URL}}/policy/pdpx/v1/decision",
+                    "host": [
+                        "{{POLICY-XACML-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pdpx",
+                        "v1",
+                        "decision"
+                    ]
+                },
+                "description": "This is an API to fetch decision using the naming policy deployed in xacml pdp engine."
+            },
+            "response": []
+        },
+        {
+            "name": "Xacml Decision - Monitoring  (Using policy-id)",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"ONAPName\": \"DCAE\",\n  \"ONAPComponent\": \"PolicyHandler\",\n  \"ONAPInstance\": \"622431a4-9dea-4eae-b443-3b2164639c64\",\n  \"action\": \"configure\",\n  \"resource\": {\n      \"policy-id\": \"onap.restart.tca\"\n  }\n}"
+                },
+                "url": {
+                    "raw": "{{POLICY-XACML-URL}}/policy/pdpx/v1/decision",
+                    "host": [
+                        "{{POLICY-XACML-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pdpx",
+                        "v1",
+                        "decision"
+                    ]
+                },
+                "description": "This is an API to fetch decision using the monitoring policy deployed in xacml pdp engine."
+            },
+            "response": []
+        },
+        {
+            "name": "Xacml Decision - Monitoring (Using policy-type)",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"ONAPName\": \"DCAE\",\n  \"ONAPComponent\": \"PolicyHandler\",\n  \"ONAPInstance\": \"622431a4-9dea-4eae-b443-3b2164639c64\",\n  \"action\": \"configure\",\n  \"resource\": {\n      \"policy-type\": \"onap.policies.monitoring.cdap.tca.hi.lo.app\"\n  }\n}"
+                },
+                "url": {
+                    "raw": "{{POLICY-XACML-URL}}/policy/pdpx/v1/decision",
+                    "host": [
+                        "{{POLICY-XACML-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pdpx",
+                        "v1",
+                        "decision"
+                    ]
+                },
+                "description": "This is an API to fetch decision using the monitoring policy deployed in xacml pdp engine."
+            },
+            "response": []
+        },
+        {
+            "name": "Xacml Decision - Optimization",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"ONAPName\": \"OOF\",\n  \"ONAPComponent\": \"OOF-component\",\n  \"ONAPInstance\": \"OOF-component-instance\",\n  \"action\": \"optimize\",\n  \"resource\": {\n      \"scope\": [\"\"],\n      \"services\": [\"\"],\n      \"resources\": [\"\"],\n      \"geography\": [\"\"]\n  }\n}"
+                },
+                "url": {
+                    "raw": "{{POLICY-XACML-URL}}/policy/pdpx/v1/decision",
+                    "host": [
+                        "{{POLICY-XACML-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pdpx",
+                        "v1",
+                        "decision"
+                    ]
+                },
+                "description": "This is an API to fetch decision using the optimization policy deployed in xacml pdp engine."
+            },
+            "response": []
+        },
+        {
+            "name": "Xacml Decision - Guard",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"ONAPName\": \"Drools\",\n  \"ONAPComponent\": \"Drools-frankfurt-controller\",\n  \"ONAPInstance\": \"drools-frankfurt-controller-instance1\",\n  \"requestId\": \"unique-request-drools-1\",\n  \"action\": \"guard\",\n  \"resource\": {\n        \"guard\": {\n          \"actor\": \"SO\",\n          \"operation\": \"VF Module Create\",\n          \"clname\": \"ControlLoop-vDNS-6f37f56d-a87d-4b85-b6a9-cc953cf779b3\",\n          \"target\": \"e6130d03-56f1-4b0a-9a1d-e1b2ebc30e0e\",\n          \"vfCount\": \"1\"\n        }\n  }\n}"
+                },
+                "url": {
+                    "raw": "{{POLICY-XACML-URL}}/policy/pdpx/v1/decision",
+                    "host": [
+                        "{{POLICY-XACML-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pdpx",
+                        "v1",
+                        "decision"
+                    ]
+                },
+                "description": "This is an API to fetch decision using the guard policy deployed in xacml pdp engine."
+            },
+            "response": []
+        }
+    ],
+    "auth": {
+        "type": "basic",
+        "basic": [
+            {
+                "key": "password",
+                "value": "{{PASSWORD}}",
+                "type": "string"
+            },
+            {
+                "key": "username",
+                "value": "{{USER}}",
+                "type": "string"
+            }
+        ]
+    },
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "id": "14faaa23-7872-4b28-8090-4b1ddade86db",
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "id": "6355f726-a7f2-4a28-8027-b2d8a4f01b96",
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "id": "ada01974-e2a7-4d4c-be68-96f36cf0961d",
+            "key": "USER",
+            "value": "healthcheck",
+            "type": "string"
+        },
+        {
+            "id": "e63c4f34-938a-4dc1-85f1-44209758b886",
+            "key": "PASSWORD",
+            "value": "zb!XztG34",
+            "type": "string"
+        }
+    ],
+    "protocolProfileBehavior": {}
+}
