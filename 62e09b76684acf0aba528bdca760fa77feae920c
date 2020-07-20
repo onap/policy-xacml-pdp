@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8952bf1a_7bd73a33",
+        "filename": "postman/Policy Framework Decision API.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-07-20T21:49:06Z",
+      "side": 1,
+      "message": "This is great but could we use traditional unix filenames, ie. no namespaces? files this long and with whitespaces, are a little bi t more difficult to deal with in command line.",
+      "revId": "62e09b76684acf0aba528bdca760fa77feae920c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
