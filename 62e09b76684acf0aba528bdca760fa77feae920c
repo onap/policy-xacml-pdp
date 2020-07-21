@@ -34,6 +34,24 @@
       "revId": "62e09b76684acf0aba528bdca760fa77feae920c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab8e969d_c97e7981",
+        "filename": "postman/Policy Framework Decision API.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2020-07-21T16:38:49Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "2ad7da8c_f9eb4ee0",
+      "revId": "62e09b76684acf0aba528bdca760fa77feae920c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
