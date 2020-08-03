@@ -1,4 +1,4 @@
-#!/bin/bash -xv
+#!/bin/bash -x
 #
 # ============LICENSE_START=======================================================
 #  Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
@@ -19,9 +19,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # ============LICENSE_END=========================================================
 #
+
 JAVA_HOME=/usr/lib/jvm/java-11-openjdk/
-KEYSTORE="${POLICY_HOME}/etc/ssl/policy-keystore"
-TRUSTSTORE="${POLICY_HOME}/etc/ssl/policy-truststore"
+KEYSTORE="${KEYSTORE:-$POLICY_HOME/etc/ssl/policy-keystore}"
+TRUSTSTORE="${TRUSTSTORE:-$POLICY_HOME/etc/ssl/policy-truststore}"
+KEYSTORE_PASSWD="${KEYSTORE_PASSWD:-Pol1cy_0nap}"
+TRUSTSTORE_PASSWD="${TRUSTSTORE_PASSWD:-Pol1cy_0nap}"
 
 if [ "$#" -ge 1 ]; then
     CONFIG_FILE=$1
@@ -36,17 +39,17 @@ fi
 
 if [[ -f "${POLICY_HOME}"/etc/mounted/policy-truststore ]]; then
     echo "overriding policy-truststore"
-    cp -f "${POLICY_HOME}"/etc/mounted/policy-truststore  "${TRUSTSTORE}"
+    cp -f "${POLICY_HOME}"/etc/mounted/policy-truststore "${TRUSTSTORE}"
 fi
 
 if [[ -f "${POLICY_HOME}"/etc/mounted/policy-keystore ]]; then
     echo "overriding policy-keystore"
-    cp -f "${POLICY_HOME}"/etc/mounted/policy-keystore  "${KEYSTORE}"
+    cp -f "${POLICY_HOME}"/etc/mounted/policy-keystore "${KEYSTORE}"
 fi
 
 if [[ -f "${POLICY_HOME}"/etc/mounted/xacml.properties ]]; then
     echo "overriding xacml.properties in guards application"
-    cp -f "${POLICY_HOME}"/etc/mounted/xacml.properties  "${POLICY_HOME}"/apps/guard/
+    cp -f "${POLICY_HOME}"/etc/mounted/xacml.properties "${POLICY_HOME}"/apps/guard/
 fi
 
 if [[ -f "${POLICY_HOME}"/etc/mounted/logback.xml ]]; then
@@ -59,4 +62,4 @@ fi
 
 echo "Policy Xacml PDP config file: $CONFIG_FILE"
 
-$JAVA_HOME/bin/java -cp "${POLICY_HOME}/etc:${POLICY_HOME}/lib/*" -Dlogback.configurationFile=$POLICY_HOME/etc/logback.xml -Djavax.net.ssl.keyStore="$KEYSTORE" -Djavax.net.ssl.keyStorePassword="${KEYSTORE_PASSWD:-Pol1cy_0nap}" -Djavax.net.ssl.trustStore="$TRUSTSTORE" -Djavax.net.ssl.trustStorePassword="${TRUSTSTORE_PASSWD:-Pol1cy_0nap}" org.onap.policy.pdpx.main.startstop.Main -c $CONFIG_FILE
+$JAVA_HOME/bin/java -cp "${POLICY_HOME}/etc:${POLICY_HOME}/lib/*" -Dlogback.configurationFile="${POLICY_HOME}/etc/logback.xml" -Djavax.net.ssl.keyStore="${KEYSTORE}" -Djavax.net.ssl.keyStorePassword="${KEYSTORE_PASSWD}" -Djavax.net.ssl.trustStore="${TRUSTSTORE}" -Djavax.net.ssl.trustStorePassword="${TRUSTSTORE_PASSWD}" org.onap.policy.pdpx.main.startstop.Main -c "${CONFIG_FILE}"
