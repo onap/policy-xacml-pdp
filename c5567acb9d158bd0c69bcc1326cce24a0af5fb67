@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99266eab_32ad865c",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 594,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-08-17T23:15:29Z",
+      "side": 1,
+      "message": "add toLowerCase() ?\n\nsame question in several places below",
+      "revId": "c5567acb9d158bd0c69bcc1326cce24a0af5fb67",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
