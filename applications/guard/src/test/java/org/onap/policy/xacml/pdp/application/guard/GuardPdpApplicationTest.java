@@ -217,7 +217,7 @@ public class GuardPdpApplicationTest {
         // can support the correct policy types.
         //
         assertThat(service.supportedPolicyTypes()).isNotEmpty();
-        assertThat(service.supportedPolicyTypes().size()).isEqualTo(4);
+        assertThat(service.supportedPolicyTypes().size()).isEqualTo(5);
         assertThat(service.canSupportPolicyType(
                 new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.common.FrequencyLimiter", "1.0.0")))
                         .isTrue();
@@ -237,6 +237,8 @@ public class GuardPdpApplicationTest {
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
                 "onap.policies.controlloop.guard.coordination.FirstBlocksSecond", "1.0.1"))).isFalse();
         assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier("onap.foo", "1.0.1"))).isFalse();
+        assertThat(service.canSupportPolicyType(
+                new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.common.Filter", "1.0.0"))).isTrue();
     }
 
     @Test
@@ -350,6 +352,77 @@ public class GuardPdpApplicationTest {
         // vfcount=0 below min of 1: should get a Deny because target IS blacklisted
         //
         requestAndCheckDecision(requestVfCount, DENY);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void test6Filters() throws Exception {
+        LOGGER.info("**************** Running test6Filters ****************");
+        //
+        // Re-Load Decision Request - so we can start from scratch
+        //
+        requestVfCount =
+                gson.decode(TextFileUtils.getTextFileAsString("src/test/resources/requests/guard.vfCount.json"),
+                        DecisionRequest.class);
+        //
+        // Ensure we are a permit to start
+        //
+        requestAndCheckDecision(requestVfCount, PERMIT);
+        //
+        // Load the filter policy in with the others.
+        //
+        List<ToscaPolicy> loadedPolicies =
+                TestUtils.loadPolicies("src/test/resources/test.policy.guard.filters.yaml", service);
+        assertThat(loadedPolicies).hasSize(2);
+        //
+        // Although the region is blacklisted, the id is not
+        //
+        requestAndCheckDecision(requestVfCount, PERMIT);
+        //
+        // Put in a different vnf id
+        //
+        ((Map<String, Object>) requestVfCount.getResource().get("guard")).put("generic-vnf.vnf-id",
+                "different-vnf-id-should-be-denied");
+        //
+        // The region is blacklisted, and the id is not allowed
+        //
+        requestAndCheckDecision(requestVfCount, DENY);
+        //
+        // Let's switch to a different region
+        //
+        ((Map<String, Object>) requestVfCount.getResource().get("guard")).put("cloud-region.cloud-region-id",
+                "RegionTwo");
+        //
+        // The region is whitelisted, and the id is also allowed
+        //
+        requestAndCheckDecision(requestVfCount, PERMIT);
+        //
+        // Put in a blacklisted vnf id
+        //
+        ((Map<String, Object>) requestVfCount.getResource().get("guard")).put("generic-vnf.vnf-id",
+                "f17face5-69cb-4c88-9e0b-7426db7edddd");
+        //
+        // Although region is whitelisted,  the id is blacklisted
+        //
+        requestAndCheckDecision(requestVfCount, DENY);
+        //
+        // Let's switch to a different region
+        //
+        ((Map<String, Object>) requestVfCount.getResource().get("guard")).put("cloud-region.cloud-region-id",
+                "RegionThree");
+        //
+        // There is no filter for this region, but the id is still blacklisted
+        //
+        requestAndCheckDecision(requestVfCount, DENY);
+        //
+        // Put in a different vnf id
+        //
+        ((Map<String, Object>) requestVfCount.getResource().get("guard")).put("generic-vnf.vnf-id",
+                "different-vnf-id-should-be-permitted");
+        //
+        // There is no filter for this region, and the id is not blacklisted
+        //
+        requestAndCheckDecision(requestVfCount, PERMIT);
     }
 
     @SuppressWarnings("unchecked")

@@ -29,6 +29,7 @@ import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
 import com.att.research.xacml.api.XACML3;
+import com.att.research.xacml.std.IdentifierImpl;
 import com.att.research.xacml.std.annotations.RequestParser;
 import java.util.Collection;
 import java.util.Map;
@@ -85,9 +86,21 @@ public class GuardTranslator implements ToscaPolicyTranslator {
     //
     public static final String FIELD_BLACKLIST = "blacklist";
 
+    //
+    // filter property fields
+    //
+    public static final String FIELD_FILTER_WHITELIST = "whitelist";
+    public static final String FIELD_FILTER_ALGORITHM = "algorithm";
+    public static final String FIELD_FILTER_FILTERS = "filters";
+    public static final String FIELD_FILTER_FIELD = "field";
+    public static final String FIELD_FILTER_FUNCTION = "function";
+    public static final String FIELD_FILTER_FILTER = "filter";
+    public static final String FIELD_FILTER_BLACKLIST = "blacklist";
+
     public static final String POLICYTYPE_FREQUENCY = "onap.policies.controlloop.guard.common.FrequencyLimiter";
     public static final String POLICYTYPE_MINMAX = "onap.policies.controlloop.guard.common.MinMax";
     public static final String POLICYTYPE_BLACKLIST = "onap.policies.controlloop.guard.common.Blacklist";
+    public static final String POLICYTYPE_FILTER = "onap.policies.controlloop.guard.common.Filter";
 
     public GuardTranslator() {
         super();
@@ -132,6 +145,9 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         } else if (POLICYTYPE_BLACKLIST.equals(toscaPolicy.getType())) {
             newPolicyType.setRuleCombiningAlgId(XACML3.ID_RULE_PERMIT_UNLESS_DENY.stringValue());
             generateBlacklistRules(toscaPolicy, policyName, newPolicyType);
+        } else if (POLICYTYPE_FILTER.equals(toscaPolicy.getType())) {
+            newPolicyType.setRuleCombiningAlgId(XACML3.ID_RULE_PERMIT_UNLESS_DENY.stringValue());
+            generateFilterRules(toscaPolicy, policyName, newPolicyType);
         } else {
             throw new ToscaPolicyConversionException("Unknown guard policy type " + toscaPolicy.getType());
         }
@@ -511,6 +527,171 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         // Add the rule to the policy
         //
         newPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(blacklistRule);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected void generateFilterRules(ToscaPolicy toscaPolicy, String policyName, PolicyType newPolicyType)
+            throws ToscaPolicyConversionException {
+        //
+        // Validate the algorithm
+        //
+        if (! toscaPolicy.getProperties().containsKey(FIELD_FILTER_ALGORITHM)) {
+            throw new ToscaPolicyConversionException("Missing algorithm");
+        }
+        Object algorithm = toscaPolicy.getProperties().get(FIELD_FILTER_ALGORITHM);
+        if ("whitelist-overrides".equals(algorithm.toString())) {
+            newPolicyType.setRuleCombiningAlgId(XACML3.ID_RULE_PERMIT_OVERRIDES.stringValue());
+        } else if ("blacklist-overrides".equals(algorithm.toString())) {
+            newPolicyType.setRuleCombiningAlgId(XACML3.ID_RULE_DENY_OVERRIDES.stringValue());
+        } else {
+            throw new ToscaPolicyConversionException(
+                    "Unexpected value for algorithm, should be whitelist-overrides or blacklist-overrides");
+        }
+        //
+        // Validate the filters exist and have the right properties
+        //
+        if (! toscaPolicy.getProperties().containsKey(FIELD_FILTER_FILTERS)) {
+            throw new ToscaPolicyConversionException("Missing filters");
+        }
+        //
+        // Get the filters, which should be an array or collection.
+        //
+        Object arrayFilters = toscaPolicy.getProperties().get(FIELD_FILTER_FILTERS);
+        if (!(arrayFilters instanceof Collection)) {
+            throw new ToscaPolicyConversionException("Filters is not a collection");
+        }
+        //
+        // Iterate the filters
+        //
+        int ruleId = 1;
+        for (Object filterAttributes : ((Collection<?>) arrayFilters)) {
+            if (!(filterAttributes instanceof Map)) {
+                throw new ToscaPolicyConversionException("Filter should be a map");
+            }
+            //
+            // All fields must be there
+            //
+            String field = validateFilterPropertyField((Map<String, Object>) filterAttributes);
+            String filter = validateFilterPropertyFilter((Map<String, Object>) filterAttributes);
+            Identifier function = validateFilterPropertyFunction((Map<String, Object>) filterAttributes);
+            boolean isBlacklisted = validateFilterPropertyBlacklist((Map<String, Object>) filterAttributes);
+            //
+            // Create our filter rule
+            //
+            RuleType filterRule = createFilterRule(policyName + ":rule" + ruleId++, field, filter,
+                    function, isBlacklisted);
+            //
+            // Add the rule to the policy
+            //
+            newPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(filterRule);
+        }
+    }
+
+    private String validateFilterPropertyField(Map<String, Object> filterAttributes)
+            throws ToscaPolicyConversionException {
+        Object field = filterAttributes.get(FIELD_FILTER_FIELD);
+        if (field != null) {
+            switch (field.toString().toLowerCase()) {
+                case "generic-vnf.vnf-name":
+                case "generic-vnf.vnf-id":
+                case "generic-vnf.vnf-type":
+                case "generic-vnf.nf-naming-code":
+                case "vserver.vserver-id":
+                case "cloud-region.cloud-region-id":
+                    return field.toString();
+                default:
+                    throw new ToscaPolicyConversionException("Unexpected value for field in filter");
+            }
+        }
+        throw new ToscaPolicyConversionException("Missing \'field\' from filter");
+    }
+
+    private String validateFilterPropertyFilter(Map<String, Object> filterAttributes)
+            throws ToscaPolicyConversionException {
+        Object filter = filterAttributes.get(FIELD_FILTER_FILTER);
+        if (filter != null) {
+            return filter.toString();
+        }
+        throw new ToscaPolicyConversionException("Missing \'filter\' from filter");
+    }
+
+    private Identifier validateFilterPropertyFunction(Map<String, Object> filterAttributes)
+            throws ToscaPolicyConversionException {
+        Object function = filterAttributes.get(FIELD_FILTER_FUNCTION);
+        if (function != null) {
+            switch (function.toString().toLowerCase()) {
+                case "string-equal":
+                    return XACML3.ID_FUNCTION_STRING_EQUAL;
+                case "string-equal-ignore-case":
+                    return XACML3.ID_FUNCTION_STRING_EQUAL_IGNORE_CASE;
+                case "string-regexp-match":
+                    return XACML3.ID_FUNCTION_STRING_REGEXP_MATCH;
+                case "string-contains":
+                    return XACML3.ID_FUNCTION_STRING_CONTAINS;
+                case "string-greater-than":
+                    return XACML3.ID_FUNCTION_STRING_GREATER_THAN;
+                case "string-greater-than-or-equal":
+                    return XACML3.ID_FUNCTION_STRING_GREATER_THAN_OR_EQUAL;
+                case "string-less-than":
+                    return XACML3.ID_FUNCTION_STRING_LESS_THAN;
+                case "string-less-than-or-equal":
+                    return XACML3.ID_FUNCTION_STRING_LESS_THAN_OR_EQUAL;
+                case "string-starts-with":
+                    return XACML3.ID_FUNCTION_STRING_STARTS_WITH;
+                case "string-ends-with":
+                    return XACML3.ID_FUNCTION_STRING_ENDS_WITH;
+                default:
+                    throw new ToscaPolicyConversionException("Unexpected value for function in filter");
+            }
+        }
+        throw new ToscaPolicyConversionException("Missing \'function\' from filter");
+    }
+
+    private boolean validateFilterPropertyBlacklist(Map<String, Object> filterAttributes)
+            throws ToscaPolicyConversionException {
+        Object filter = filterAttributes.get(FIELD_FILTER_BLACKLIST);
+        if (filter != null) {
+            if ("true".equalsIgnoreCase(filter.toString())) {
+                return true;
+            }
+            if ("false".equalsIgnoreCase(filter.toString())) {
+                return false;
+            }
+            throw new ToscaPolicyConversionException("Unexpected value for blacklist in filter");
+        }
+        throw new ToscaPolicyConversionException("Missing \'blacklist\' from filter");
+    }
+
+    private RuleType createFilterRule(String ruleId, String field, String filter, Identifier function,
+            boolean isBlacklisted) {
+        RuleType rule = new RuleType();
+        rule.setRuleId(ruleId);
+
+        //
+        // Create the Match
+        //
+        MatchType matchFilter = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
+                function,
+                filter,
+                XACML3.ID_DATATYPE_STRING,
+                new IdentifierImpl(GuardPolicyRequest.PREFIX_RESOURCE_ATTRIBUTE_ID + field),
+                XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE
+                );
+        AllOfType allOf = new AllOfType();
+        allOf.getMatch().add(matchFilter);
+        AnyOfType anyOf = new AnyOfType();
+        anyOf.getAllOf().add(allOf);
+        TargetType target = new TargetType();
+        target.getAnyOf().add(anyOf);
+
+        rule.setTarget(target);
+
+        if (isBlacklisted) {
+            rule.setEffect(EffectType.DENY);
+        } else {
+            rule.setEffect(EffectType.PERMIT);
+        }
+        return rule;
     }
 
 }

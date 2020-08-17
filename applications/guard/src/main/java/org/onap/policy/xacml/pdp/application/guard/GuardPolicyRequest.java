@@ -70,6 +70,26 @@ public class GuardPolicyRequest {
     @XACMLResource(includeInResults = true, attributeId = "urn:org:onap:guard:target:vf-count")
     private Integer vfCount;
 
+    @XACMLResource(includeInResults = true, attributeId = "urn:org:onap:guard:target:generic-vnf.vnf-name")
+    private String vnfName;
+
+    @XACMLResource(includeInResults = true, attributeId = "urn:org:onap:guard:target:generic-vnf.vnf-id")
+    private String vnfId;
+
+    @XACMLResource(includeInResults = true, attributeId = "urn:org:onap:guard:target:generic-vnf.vnf-type")
+    private String vnfType;
+
+    @XACMLResource(includeInResults = true, attributeId = "urn:org:onap:guard:target:generic-vnf.nf-naming-code")
+    private String vnfNfNamingCode;
+
+    @XACMLResource(includeInResults = true, attributeId = "urn:org:onap:guard:target:vserver.vserver-id")
+    private String vserverId;
+
+    @XACMLResource(includeInResults = true, attributeId = "urn:org:onap:guard:target:cloud-region.cloud-region-id")
+    private String cloudRegionId;
+
+    public static final String PREFIX_RESOURCE_ATTRIBUTE_ID = "urn:org:onap:guard:target:";
+
     public GuardPolicyRequest() {
         super();
     }
@@ -137,6 +157,24 @@ public class GuardPolicyRequest {
             } catch (NumberFormatException e) {
                 throw new ToscaPolicyConversionException("Failed to decode vfCount", e);
             }
+        }
+        if (guard.containsKey("generic-vnf.vnf-name")) {
+            request.vnfName = guard.get("generic-vnf.vnf-name").toString();
+        }
+        if (guard.containsKey("generic-vnf.vnf-id")) {
+            request.vnfId = guard.get("generic-vnf.vnf-id").toString();
+        }
+        if (guard.containsKey("generic-vnf.vnf-type")) {
+            request.vnfType = guard.get("generic-vnf.vnf-type").toString();
+        }
+        if (guard.containsKey("generic-vnf.nf-naming-code")) {
+            request.vnfNfNamingCode = guard.get("generic-vnf.nf-naming-code").toString();
+        }
+        if (guard.containsKey("vserver.vserver-id")) {
+            request.vserverId = guard.get("vserver.vserver-id").toString();
+        }
+        if (guard.containsKey("cloud-region.cloud-region-id")) {
+            request.cloudRegionId = guard.get("cloud-region.cloud-region-id").toString();
         }
 
         return request;
