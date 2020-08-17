@@ -16,6 +16,24 @@
       "revId": "c5567acb9d158bd0c69bcc1326cce24a0af5fb67",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f06b250f_9a3ddaf1",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 594,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-08-17T23:41:03Z",
+      "side": 1,
+      "message": "Probably shouldn\u0027t happen, I\u0027ll need to change the drools-apps code to ensure these values are there correctly. But safer to go ahead and do that.",
+      "parentUuid": "99266eab_32ad865c",
+      "revId": "c5567acb9d158bd0c69bcc1326cce24a0af5fb67",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
