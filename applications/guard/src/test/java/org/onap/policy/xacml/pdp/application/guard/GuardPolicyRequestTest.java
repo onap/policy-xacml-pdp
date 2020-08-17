@@ -28,6 +28,8 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
+import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 
@@ -90,6 +92,24 @@ public class GuardPolicyRequestTest {
         decisionRequest.setResource(resources);
         assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
             GuardPolicyRequest.createInstance(decisionRequest));
+    }
+
+    @Test
+    public void testFilterResources() throws Exception {
+        StandardCoder gson = new StandardCoder();
+
+        DecisionRequest request = gson.decode(
+                TextFileUtils.getTextFileAsString("src/test/resources/requests/guard.filter.json"),
+                DecisionRequest.class);
+
+        GuardPolicyRequest guardRequest = GuardPolicyRequest.createInstance(request);
+
+        assertThat(guardRequest.getVnfName()).isEqualTo("my-name");
+        assertThat(guardRequest.getVnfId()).isEqualTo("my-id");
+        assertThat(guardRequest.getVnfType()).isEqualTo("my-type");
+        assertThat(guardRequest.getVnfNfNamingCode()).isEqualTo("my-naming-code");
+        assertThat(guardRequest.getVserverId()).isEqualTo("my-server-id");
+        assertThat(guardRequest.getCloudRegionId()).isEqualTo("my-region");
     }
 
 }

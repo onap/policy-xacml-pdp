@@ -100,6 +100,60 @@ topology_template:
               - vnf1
               - vnf2
     -
+      filter-1:
+        type: onap.policies.controlloop.guard.common.Filter
+        type_version: 1.0.0
+        version: 1.0.0
+        metadata:
+          policy-id : filter-1
+          policy-version: 1.0.0
+        properties:
+          actor: APPC
+          operation: "*"
+          id: loop-1
+          algorithm: blacklist-overrides
+          filters:
+          - field: "generic-vnf.vnf-id"
+            function: "string-equal"
+            filter: "vf-module-id-2"
+            blacklist: true
+          - field: "generic-vnf.vnf-name"
+            function: "string-equal-ignore-case"
+            filter: "vf-MODULE-id-2"
+            blacklist: true
+          - field: "generic-vnf.vnf-type"
+            function: "string-starts-with"
+            filter: "vf-module"
+            blacklist: true
+          - field: "generic-vnf.nf-naming-code"
+            function: "string-regexp-match"
+            filter: "[0-9][a-zA-Z]+"
+            blacklist: true
+          - field: "vserver.vserver-id"
+            function: "string-contains"
+            filter: "myserver"
+            blacklist: true
+          - field: "cloud-region.cloud-region-id"
+            function: "string-ends-with"
+            filter: "mycloud"
+            blacklist: false
+          - field: "cloud-region.cloud-region-id"
+            function: "string-greater-than"
+            filter: "00"
+            blacklist: false
+          - field: "cloud-region.cloud-region-id"
+            function: "string-greater-than-or-equal"
+            filter: "00"
+            blacklist: false
+          - field: "cloud-region.cloud-region-id"
+            function: "string-less-than"
+            filter: "99"
+            blacklist: false
+          - field: "cloud-region.cloud-region-id"
+            function: "string-less-than-or-equal"
+            filter: "99"
+            blacklist: false
+    -
       unknown-1:
         type: onap.policies.controlloop.guard.common.Unknown
         type_version: 1.0.0

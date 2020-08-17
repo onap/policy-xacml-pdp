@@ -59,6 +59,9 @@ public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
                 GuardTranslator.POLICYTYPE_BLACKLIST,
                 STRING_VERSION100));
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+                GuardTranslator.POLICYTYPE_FILTER,
+                STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
                 "onap.policies.controlloop.guard.coordination.FirstBlocksSecond",
                 STRING_VERSION100));
     }

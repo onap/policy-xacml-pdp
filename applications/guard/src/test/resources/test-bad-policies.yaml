@@ -1,35 +1,126 @@
 tosca_definitions_version: tosca_simple_yaml_1_1_0
 topology_template:
-  policies:
-    -
-      frequency-missing-properties:
-        type: onap.policies.controlloop.guard.common.FrequencyLimiter
-        type_version: 1.0.0
-        version: 1.0.0
-    -
-      frequency-timewindow:
-        type: onap.policies.controlloop.guard.common.FrequencyLimiter
-        type_version: 1.0.0
-        version: 1.0.0
-        properties:
+   policies:
+   -  frequency-missing-properties:
+         type: onap.policies.controlloop.guard.common.FrequencyLimiter
+         type_version: 1.0.0
+         version: 1.0.0
+   -  frequency-timewindow:
+         type: onap.policies.controlloop.guard.common.FrequencyLimiter
+         type_version: 1.0.0
+         version: 1.0.0
+         properties:
             limit: 5
             timeWindow: i am a bad value
-    -
-      minmax-notarget:
-        type: onap.policies.controlloop.guard.common.MinMax
-        type_version: 1.0.0
-        version: 1.0.0
-        properties:
-    -
-      minmax-nominmax:
-        type: onap.policies.controlloop.guard.common.MinMax
-        type_version: 1.0.0
-        version: 1.0.0
-        properties:
+   -  minmax-notarget:
+         type: onap.policies.controlloop.guard.common.MinMax
+         type_version: 1.0.0
+         version: 1.0.0
+         properties: null
+   -  minmax-nominmax:
+         type: onap.policies.controlloop.guard.common.MinMax
+         type_version: 1.0.0
+         version: 1.0.0
+         properties:
             target: foo
-    -
-      blacklist-noblacklist:
-        type: onap.policies.controlloop.guard.common.Blacklist
-        type_version: 1.0.0
-        version: 1.0.0
-        properties:
+   -  blacklist-noblacklist:
+         type: onap.policies.controlloop.guard.common.Blacklist
+         type_version: 1.0.0
+         version: 1.0.0
+         properties: null
+   -  filter-noalgorithm:
+         type: onap.policies.controlloop.guard.common.Filter
+         type_version: 1.0.0
+         version: 1.0.0
+         properties: null
+   -  filter-badalgorithm:
+         type: onap.policies.controlloop.guard.common.Filter
+         type_version: 1.0.0
+         version: 1.0.0
+         properties:
+            algorithm: idontknow
+   -  filter-nofilter:
+         type: onap.policies.controlloop.guard.common.Filter
+         type_version: 1.0.0
+         version: 1.0.0
+         properties:
+            algorithm: whitelist-overrides
+   -  filter-nocollection:
+         type: onap.policies.controlloop.guard.common.Filter
+         type_version: 1.0.0
+         version: 1.0.0
+         properties:
+            algorithm: blacklist-overrides
+            filters: vnf1
+   -  filter-noarray:
+         type: onap.policies.controlloop.guard.common.Filter
+         type_version: 1.0.0
+         version: 1.0.0
+         properties:
+            algorithm: blacklist-overrides
+            filters:
+               field: geo
+   -  filter-missingfield:
+         type: onap.policies.controlloop.guard.common.Filter
+         type_version: 1.0.0
+         version: 1.0.0
+         properties:
+            algorithm: blacklist-overrides
+            filters:
+            -  filter: foo
+   -  filter-badfield:
+         type: onap.policies.controlloop.guard.common.Filter
+         type_version: 1.0.0
+         version: 1.0.0
+         properties:
+            algorithm: blacklist-overrides
+            filters:
+            -  field: notinaai
+   -  filter-missingfilter:
+         type: onap.policies.controlloop.guard.common.Filter
+         type_version: 1.0.0
+         version: 1.0.0
+         properties:
+            algorithm: blacklist-overrides
+            filters:
+            -  field: generic-vnf.vnf-name
+   -  filter-missingfunction:
+         type: onap.policies.controlloop.guard.common.Filter
+         type_version: 1.0.0
+         version: 1.0.0
+         properties:
+            algorithm: blacklist-overrides
+            filters:
+            -  field: generic-vnf.vnf-name
+               filter: vfwl*
+   -  filter-badfunction:
+         type: onap.policies.controlloop.guard.common.Filter
+         type_version: 1.0.0
+         version: 1.0.0
+         properties:
+            algorithm: blacklist-overrides
+            filters:
+            -  field: generic-vnf.vnf-name
+               filter: vfwl*
+               function: notafunction
+   -  filter-missingblacklist:
+         type: onap.policies.controlloop.guard.common.Filter
+         type_version: 1.0.0
+         version: 1.0.0
+         properties:
+            algorithm: blacklist-overrides
+            filters:
+            -  field: generic-vnf.vnf-name
+               filter: vfwl*
+               function: string-equal
+   -  filter-badblacklist:
+         type: onap.policies.controlloop.guard.common.Filter
+         type_version: 1.0.0
+         version: 1.0.0
+         properties:
+            algorithm: blacklist-overrides
+            filters:
+            -  field: generic-vnf.vnf-name
+               filter: vfwl*
+               function: string-equal
+               blacklist: shouldbeboolean

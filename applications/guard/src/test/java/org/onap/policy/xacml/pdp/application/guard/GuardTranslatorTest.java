@@ -115,6 +115,7 @@ public class GuardTranslatorTest {
         //
         for (Map<String, ToscaPolicy> policies : completedJtst.getToscaTopologyTemplate().getPolicies()) {
             for (ToscaPolicy policy : policies.values()) {
+                LOGGER.info("Testing policy " + policy.getName());
                 if ("frequency-missing-properties".equals(policy.getName())) {
                     assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
                         translator.convertPolicy(policy)
@@ -135,6 +136,55 @@ public class GuardTranslatorTest {
                     assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
                         translator.convertPolicy(policy)
                     ).withMessageContaining("Missing blacklist");
+                } else if ("blacklist-noalgorithm".equals(policy.getName())) {
+                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
+                        translator.convertPolicy(policy)
+                    ).withMessageContaining("Missing precedence");
+                } else if ("blacklist-badalgorithm".equals(policy.getName())) {
+                    assertThatExceptionOfType(ToscaPolicyConversionException.class)
+                            .isThrownBy(() -> translator.convertPolicy(policy))
+                            .withMessageContaining(
+                                "Unexpected value for algorithm, should be whitelist-overrides or blacklist-overrides");
+                } else if ("filter-nofilter".equals(policy.getName())) {
+                    assertThatExceptionOfType(ToscaPolicyConversionException.class)
+                            .isThrownBy(() -> translator.convertPolicy(policy))
+                            .withMessageContaining("Missing filters");
+                } else if ("filter-nocollection".equals(policy.getName())) {
+                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
+                        translator.convertPolicy(policy)
+                    ).withMessageContaining("Filters is not a collection");
+                } else if ("filter-noarray".equals(policy.getName())) {
+                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
+                        translator.convertPolicy(policy)
+                    ).withMessageContaining("Filters is not a collection");
+                } else if ("filter-missingfield".equals(policy.getName())) {
+                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
+                        translator.convertPolicy(policy)
+                    ).withMessageContaining("Missing \'field\' from filter");
+                } else if ("filter-badfield".equals(policy.getName())) {
+                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
+                        translator.convertPolicy(policy)
+                    ).withMessageContaining("Unexpected value for field in filter");
+                } else if ("filter-missingfilter".equals(policy.getName())) {
+                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
+                        translator.convertPolicy(policy)
+                    ).withMessageContaining("Missing \'filter\' from filter");
+                } else if ("filter-missingfunction".equals(policy.getName())) {
+                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
+                        translator.convertPolicy(policy)
+                    ).withMessageContaining("Missing \'function\' from filter");
+                } else if ("filter-badfunction".equals(policy.getName())) {
+                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
+                        translator.convertPolicy(policy)
+                    ).withMessageContaining("Unexpected value for function in filter");
+                } else if ("filter-missingblacklist".equals(policy.getName())) {
+                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
+                        translator.convertPolicy(policy)
+                    ).withMessageContaining("Missing \'blacklist\' from filter");
+                } else if ("filter-badblacklist".equals(policy.getName())) {
+                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
+                        translator.convertPolicy(policy)
+                    ).withMessageContaining("Unexpected value for blacklist in filter");
                 }
             }
         }
@@ -190,6 +240,8 @@ public class GuardTranslatorTest {
                     validateMinMax(policy, xacmlPolicy);
                 } else if (GuardTranslator.POLICYTYPE_BLACKLIST.equals(policy.getType())) {
                     validateBlacklist(policy, xacmlPolicy);
+                } else if (GuardTranslator.POLICYTYPE_FILTER.equals(policy.getType())) {
+                    validateFilter(policy, xacmlPolicy);
                 }
             }
         }
@@ -321,5 +373,27 @@ public class GuardTranslatorTest {
             }
         }
         assertThat(foundBlacklist).isTrue();
+    }
+
+    private void validateFilter(ToscaPolicy policy, PolicyType xacmlPolicy) {
+        assertThat(xacmlPolicy.getRuleCombiningAlgId()).endsWith("-overrides");
+        for (Object rule : xacmlPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition()) {
+            if (! (rule instanceof RuleType)) {
+                continue;
+            }
+            assertThat(((RuleType) rule).getTarget()).isNotNull();
+            assertThat(((RuleType) rule).getTarget().getAnyOf()).hasSize(1);
+            for (AnyOfType anyOf : ((RuleType) rule).getTarget().getAnyOf()) {
+                assertThat(anyOf.getAllOf()).isNotEmpty();
+                for (AllOfType allOf : anyOf.getAllOf()) {
+                    assertThat(allOf.getMatch()).isNotEmpty();
+                    assertThat(allOf.getMatch()).hasSize(1);
+                    for (MatchType match : allOf.getMatch()) {
+                        assertThat(match.getAttributeDesignator().getAttributeId())
+                            .startsWith(GuardPolicyRequest.PREFIX_RESOURCE_ATTRIBUTE_ID);
+                    }
+                }
+            }
+        }
     }
 }

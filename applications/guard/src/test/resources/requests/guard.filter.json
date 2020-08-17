@@ -11,12 +11,12 @@
           "clname": "ControlLoop-vDNS-6f37f56d-a87d-4b85-b6a9-cc953cf779b3",
           "target": "e6130d03-56f1-4b0a-9a1d-e1b2ebc30e0e",
           "vfCount": "0",
-          "generic-vnf.vnf-name": "Ete_vFWCLvFWSNK_7ba1fbde_0",
-          "generic-vnf.vnf-id": "e6130d03-56f1-4b0a-9a1d-e1b2ebc30e0e",
-          "generic-vnf.vnf-type": "vFWCL 2019-05-01 15:30:/vFWCL_vFWSNK bbefb8ce-2bde 0",
-          "generic-vnf.nf-naming-code": "aabbccddee",
-          "vserver.vserver-id": "e591441a-e649-4490-82e0-07dac05d674b",
-          "cloud-region.cloud-region-id": "RegionOne"
+          "generic-vnf.vnf-name": "my-name",
+          "generic-vnf.vnf-id": "my-id",
+          "generic-vnf.vnf-type": "my-type",
+          "generic-vnf.nf-naming-code": "my-naming-code",
+          "vserver.vserver-id": "my-server-id",
+          "cloud-region.cloud-region-id": "my-region"
       }
   }
 }
