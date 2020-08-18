@@ -34,6 +34,24 @@
       "revId": "c5567acb9d158bd0c69bcc1326cce24a0af5fb67",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77a3969c_661c7eb0",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 594,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-08-18T13:20:14Z",
+      "side": 1,
+      "message": "Or maybe we want it to be case sensitive?  I\u0027m ok either way.",
+      "parentUuid": "f06b250f_9a3ddaf1",
+      "revId": "c5567acb9d158bd0c69bcc1326cce24a0af5fb67",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
