@@ -139,6 +139,13 @@ public class GuardPolicyRequest {
         //
         // Find our fields
         //
+        findFields(request, guard);
+        findFilterFields(request, guard);
+        return request;
+    }
+
+    private static GuardPolicyRequest findFields(GuardPolicyRequest request, Map<String, Object> guard)
+            throws ToscaPolicyConversionException {
         if (guard.containsKey("actor")) {
             request.actorId = guard.get("actor").toString();
         }
@@ -158,6 +165,11 @@ public class GuardPolicyRequest {
                 throw new ToscaPolicyConversionException("Failed to decode vfCount", e);
             }
         }
+
+        return request;
+    }
+
+    private static GuardPolicyRequest findFilterFields(GuardPolicyRequest request, Map<String, Object> guard) {
         if (guard.containsKey("generic-vnf.vnf-name")) {
             request.vnfName = guard.get("generic-vnf.vnf-name").toString();
         }
@@ -176,8 +188,6 @@ public class GuardPolicyRequest {
         if (guard.containsKey("cloud-region.cloud-region-id")) {
             request.cloudRegionId = guard.get("cloud-region.cloud-region-id").toString();
         }
-
         return request;
     }
-
 }

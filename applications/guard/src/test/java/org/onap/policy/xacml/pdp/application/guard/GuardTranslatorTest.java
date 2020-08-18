@@ -136,11 +136,11 @@ public class GuardTranslatorTest {
                     assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
                         translator.convertPolicy(policy)
                     ).withMessageContaining("Missing blacklist");
-                } else if ("blacklist-noalgorithm".equals(policy.getName())) {
+                } else if ("filter-noalgorithm".equals(policy.getName())) {
                     assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
                         translator.convertPolicy(policy)
-                    ).withMessageContaining("Missing precedence");
-                } else if ("blacklist-badalgorithm".equals(policy.getName())) {
+                    ).withMessageContaining("Missing algorithm");
+                } else if ("filter-badalgorithm".equals(policy.getName())) {
                     assertThatExceptionOfType(ToscaPolicyConversionException.class)
                             .isThrownBy(() -> translator.convertPolicy(policy))
                             .withMessageContaining(

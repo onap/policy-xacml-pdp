@@ -113,6 +113,9 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
      */
     public static CoordinationDirective loadCoordinationDirectiveFromFile(
         String directiveFilename) {
+        if (directiveFilename == null) {
+            return null;
+        }
         try (InputStream is = new FileInputStream(new File(directiveFilename))) {
             String contents = IOUtils.toString(is, StandardCharsets.UTF_8);
             //
@@ -142,19 +145,19 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
          */
         String xacmlProtoFilename =
             protoDir + File.separator + cd.getCoordinationFunction() + ".xml";
-        LOGGER.debug("xacmlProtoFilename={}", xacmlProtoFilename);
+        LOGGER.info("xacmlProtoFilename={}", xacmlProtoFilename);
         /*
-         * Values to be used for placeholders
+         * Values to be substituted for placeholder's
          */
         final String uniqueId = UUID.randomUUID().toString();
         final String cLOne = cd.getControlLoop(0);
         final String cLTwo = cd.getControlLoop(1);
         /*
-         * Replace function placeholders with appropriate values
+         * Replace function placeholder's with appropriate values
          */
         String policyXml = ResourceUtils.getResourceAsString(xacmlProtoFilename);
         if (policyXml == null) {
-            throw new ToscaPolicyConversionException("Error while generating XACML policy for coordination directive");
+            throw new ToscaPolicyConversionException("Unable to find prototype " + xacmlProtoFilename);
         }
         policyXml = policyXml.replace("UNIQUE_ID", uniqueId);
         policyXml = policyXml.replace("CONTROL_LOOP_ONE", cLOne);
