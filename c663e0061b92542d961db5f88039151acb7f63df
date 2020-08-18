@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3dd32d8a_66bc39ed",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/CoordinationGuardTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-08-18T21:21:16Z",
+      "side": 1,
+      "message": "I think this was correct in its original form\n\nsame comment below",
+      "range": {
+        "startLine": 150,
+        "startChar": 40,
+        "endLine": 150,
+        "endChar": 53
+      },
+      "revId": "c663e0061b92542d961db5f88039151acb7f63df",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f941663_3abd1bad",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardPolicyRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-08-18T21:21:16Z",
+      "side": 1,
+      "message": "maybe next time around we can extract a method for this.  hard to say, might look a lot uglier using lambdas to assign values to the fields",
+      "range": {
+        "startLine": 149,
+        "startChar": 8,
+        "endLine": 151,
+        "endChar": 9
+      },
+      "revId": "c663e0061b92542d961db5f88039151acb7f63df",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65781fcc_a3b12be5",
+        "filename": "applications/guard/src/test/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslatorTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-08-18T21:21:16Z",
+      "side": 1,
+      "message": "oops - good catch",
+      "range": {
+        "startLine": 139,
+        "startChar": 28,
+        "endLine": 139,
+        "endChar": 34
+      },
+      "revId": "c663e0061b92542d961db5f88039151acb7f63df",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
