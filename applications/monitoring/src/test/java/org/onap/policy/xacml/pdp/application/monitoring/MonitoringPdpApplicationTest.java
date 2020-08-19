@@ -143,15 +143,7 @@ public class MonitoringPdpApplicationTest {
         // can support the correct policy types.
         //
         assertThat(service.canSupportPolicyType(
-                new ToscaPolicyTypeIdentifier(MonitoringPdpApplication.ONAP_MONITORING_CDAP, "1.0.0"))).isTrue();
-        assertThat(service.canSupportPolicyType(
-                new ToscaPolicyTypeIdentifier(MonitoringPdpApplication.ONAP_MONITORING_APPSERVER, "1.0.0"))).isTrue();
-        assertThat(service.canSupportPolicyType(
-                new ToscaPolicyTypeIdentifier(MonitoringPdpApplication.ONAP_MONITORING_SONHANDLER, "1.0.0"))).isTrue();
-        assertThat(service.canSupportPolicyType(
-                new ToscaPolicyTypeIdentifier("onap.Monitoring", "1.0.0"))).isTrue();
-        assertThat(service.canSupportPolicyType(
-                new ToscaPolicyTypeIdentifier("onap.Monitoring", "1.5.0"))).isTrue();
+                new ToscaPolicyTypeIdentifier("onap.policies.monitoring.tcagen2", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(
                 new ToscaPolicyTypeIdentifier(
                 "onap.policies.monitoring.foobar", "1.0.1"))).isTrue();

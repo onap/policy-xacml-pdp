@@ -51,10 +51,6 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
     private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringPdpApplication.class);
 
     public static final String ONAP_MONITORING_BASE_POLICY_TYPE = "onap.Monitoring";
-    public static final String ONAP_MONITORING_CDAP = "onap.policies.monitoring.cdap.tca.hi.lo.app";
-    public static final String ONAP_MONITORING_APPSERVER =
-            "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server";
-    public static final String ONAP_MONITORING_SONHANDLER = "onap.policies.monitoring.docker.sonhandler.app";
     public static final String ONAP_MONITORING_DERIVED_POLICY_TYPE = "onap.policies.monitoring.";
 
     public static final String VERSION_100 = "1.0.0";
@@ -70,9 +66,6 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
         // By default this supports just Monitoring policy types
         //
         supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_BASE_POLICY_TYPE, VERSION_100));
-        supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_CDAP, VERSION_100));
-        supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_APPSERVER, VERSION_100));
-        supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_SONHANDLER, VERSION_100));
     }
 
     @Override
@@ -97,11 +90,7 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
         // of the policy type. Since we are only packaging a decision
         // back with a JSON payload of the property contents.
         //
-        return (policyTypeId.getName().equals(ONAP_MONITORING_BASE_POLICY_TYPE)
-                || policyTypeId.getName().equals(ONAP_MONITORING_CDAP)
-                || policyTypeId.getName().equals(ONAP_MONITORING_APPSERVER)
-                || policyTypeId.getName().equals(ONAP_MONITORING_SONHANDLER)
-                || policyTypeId.getName().startsWith(ONAP_MONITORING_DERIVED_POLICY_TYPE));
+        return policyTypeId.getName().startsWith(ONAP_MONITORING_DERIVED_POLICY_TYPE);
     }
 
     @Override
