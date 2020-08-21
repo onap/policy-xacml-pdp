@@ -2,6 +2,7 @@
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019 Nordix Foundation.
+ * Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +24,9 @@ package org.onap.policy.pdpx.main.startstop;
 
 import java.util.Arrays;
 import lombok.Getter;
+import org.onap.policy.common.utils.resources.MessageConstants;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
+import org.onap.policy.pdpx.main.PolicyXacmlPdpRuntimeException;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterHandler;
 import org.slf4j.Logger;
@@ -78,7 +81,8 @@ public class Main {
 
         // Add a shutdown hook to shut everything down in an orderly manner
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
-        LOGGER.info("Started policy xacml pdp service");
+        String successMsg = String.format(MessageConstants.START_SUCCESS_MSG, MessageConstants.POLICY_XACML_PDP);
+        LOGGER.info(successMsg);
     }
 
     /**
@@ -105,7 +109,8 @@ public class Main {
         try {
             new Main(args);
         } catch (RuntimeException | PolicyXacmlPdpException e) {
-            LOGGER.error("start of policy xacml pdp service failed", e);
+            throw new PolicyXacmlPdpRuntimeException(
+                String.format(MessageConstants.START_FAILURE_MSG, MessageConstants.POLICY_XACML_PDP), e);
         }
     }
 }
