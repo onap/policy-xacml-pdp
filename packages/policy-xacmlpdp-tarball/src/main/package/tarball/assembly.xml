@@ -122,5 +122,14 @@
             <outputDirectory>${file.separator}apps${file.separator}native</outputDirectory>
             <lineEnding>unix</lineEnding>
         </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/apps/match
+            </directory>
+            <includes>
+                <include>*.properties</include>
+            </includes>
+            <outputDirectory>${file.separator}apps${file.separator}match</outputDirectory>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
     </fileSets>
 </assembly>

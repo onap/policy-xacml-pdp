@@ -142,10 +142,10 @@ public class XacmlPdpApplicationManagerTest {
         //
         assertThat(manager).isNotNull();
         assertThat(manager.getPolicyCount()).isZero();
-        assertThat(manager.getPolicyTypeCount()).isEqualTo(17);
+        assertThat(manager.getPolicyTypeCount()).isEqualTo(18);
         assertThat(manager.getToscaPolicies()).isEmpty();
         assertThat(manager.getToscaPolicyIdentifiers()).isEmpty();
-        assertThat(manager.getToscaPolicyTypeIdents()).hasSize(17);
+        assertThat(manager.getToscaPolicyTypeIdents()).hasSize(18);
 
         assertThat(manager.findNativeApplication()).isInstanceOf(NativePdpApplication.class);
 
