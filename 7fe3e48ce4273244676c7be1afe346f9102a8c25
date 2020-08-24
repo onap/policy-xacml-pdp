@@ -46,6 +46,30 @@
       "revId": "7fe3e48ce4273244676c7be1afe346f9102a8c25",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8eb4263_b3a1534c",
+        "filename": "applications/match/src/test/java/org/onap/policy/xacml/pdp/application/match/MatchPdpApplicationTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-08-24T21:54:32Z",
+      "side": 1,
+      "message": "It implements the \"Iterable\" interface, which means it can be used in a \"for\" loop",
+      "parentUuid": "f487560f_1f2d154c",
+      "range": {
+        "startLine": 118,
+        "startChar": 6,
+        "endLine": 120,
+        "endChar": 74
+      },
+      "revId": "7fe3e48ce4273244676c7be1afe346f9102a8c25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
