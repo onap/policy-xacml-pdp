@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "915dbde4_5d1bc9ea",
+        "filename": "applications/match/src/test/java/org/onap/policy/xacml/pdp/application/match/MatchPdpApplicationTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-08-24T21:16:55Z",
+      "side": 1,
+      "message": "use \"for\" loop",
+      "range": {
+        "startLine": 118,
+        "startChar": 6,
+        "endLine": 120,
+        "endChar": 74
+      },
+      "revId": "7fe3e48ce4273244676c7be1afe346f9102a8c25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
