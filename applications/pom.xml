@@ -37,11 +37,12 @@
 
   <modules>
     <module>common</module>
-    <module>monitoring</module>
     <module>guard</module>
-    <module>optimization</module>
+    <module>match</module>
+    <module>monitoring</module>
     <module>naming</module>
     <module>native</module>
+    <module>optimization</module>
   </modules>
 
 
