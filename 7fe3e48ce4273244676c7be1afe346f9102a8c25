@@ -70,6 +70,30 @@
       "revId": "7fe3e48ce4273244676c7be1afe346f9102a8c25",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "923d1cef_d5324bfa",
+        "filename": "applications/match/src/test/java/org/onap/policy/xacml/pdp/application/match/MatchPdpApplicationTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-08-25T11:01:47Z",
+      "side": 1,
+      "message": "It impelments the iterator interface, not the iterable. I can\u0027t code it - again we went through this in an earlier review. This is a JUnit.",
+      "parentUuid": "a8eb4263_b3a1534c",
+      "range": {
+        "startLine": 118,
+        "startChar": 6,
+        "endLine": 120,
+        "endChar": 74
+      },
+      "revId": "7fe3e48ce4273244676c7be1afe346f9102a8c25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
