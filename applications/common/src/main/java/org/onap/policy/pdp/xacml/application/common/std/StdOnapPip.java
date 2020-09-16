@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +36,6 @@ import com.att.research.xacml.std.pip.StdMutablePIPResponse;
 import com.att.research.xacml.std.pip.StdPIPRequest;
 import com.att.research.xacml.std.pip.engines.StdConfigurableEngine;
 import java.math.BigInteger;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -101,13 +101,6 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
             //
             Properties emProperties = new Properties();
             emProperties.putAll(properties);
-
-            //
-            // Need to decode the password before creating the EntityManager
-            //
-            String decodedPassword = new String(Base64.getDecoder()
-                    .decode(emProperties.getProperty("javax.persistence.jdbc.password")));
-            emProperties.setProperty("javax.persistence.jdbc.password", decodedPassword);
 
             //
             // Create the entity manager factory
