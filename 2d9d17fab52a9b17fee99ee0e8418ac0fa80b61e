@@ -1,0 +1,11 @@
+Code-Review+1: Ram Krishna Verma <ram_krishna.verma@bell.ca>
+Code-Review+2: Jim Hahn <jrh3@att.com>
+Code-Review+1: Ajith Sreekumar <ajith.sreekumar@bell.ca>
+Code-Review+1: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Code-Review+1: Pamela Dragosh <pdragosh@research.att.com>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Submitted-by: Jim Hahn <jrh3@att.com>
+Submitted-at: Thu, 17 Sep 2020 17:56:01 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/xacml-pdp/+/112764
+Project: policy/xacml-pdp
+Branch: refs/heads/master
