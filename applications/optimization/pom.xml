@@ -27,7 +27,7 @@
         <version>2.3.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>optimization</artifactId>
+    <artifactId>xacml-optimization</artifactId>
 
     <name>${project.artifactId}</name>
     <description>This modules contains applications that implement policy-types for XACML PDP.</description>

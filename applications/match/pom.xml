@@ -27,7 +27,7 @@
         <version>2.3.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>match</artifactId>
+    <artifactId>xacml-match</artifactId>
 
     <name>${project.artifactId}</name>
     <description>This modules contains the Match applications.</description>

@@ -70,32 +70,32 @@
         </dependency>
         <dependency>
             <groupId>org.onap.policy.xacml-pdp.applications</groupId>
-            <artifactId>monitoring</artifactId>
+            <artifactId>xacml-monitoring</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.onap.policy.xacml-pdp.applications</groupId>
-            <artifactId>guard</artifactId>
+            <artifactId>xacml-guard</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.onap.policy.xacml-pdp.applications</groupId>
-            <artifactId>optimization</artifactId>
+            <artifactId>xacml-optimization</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.onap.policy.xacml-pdp.applications</groupId>
-            <artifactId>naming</artifactId>
+            <artifactId>xacml-naming</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.onap.policy.xacml-pdp.applications</groupId>
-            <artifactId>native</artifactId>
+            <artifactId>xacml-native</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.onap.policy.xacml-pdp.applications</groupId>
-            <artifactId>match</artifactId>
+            <artifactId>xacml-match</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

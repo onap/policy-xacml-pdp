@@ -27,7 +27,7 @@
         <version>2.3.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>naming</artifactId>
+    <artifactId>xacml-naming</artifactId>
 
     <name>${project.artifactId}</name>
     <description>This modules contains the SDNC naming applications.</description>

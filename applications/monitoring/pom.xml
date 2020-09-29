@@ -27,7 +27,7 @@
         <version>2.3.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>monitoring</artifactId>
+    <artifactId>xacml-monitoring</artifactId>
 
     <name>${project.artifactId}</name>
     <description>This modules contains applications that implement policy-types for XACML PDP.</description>

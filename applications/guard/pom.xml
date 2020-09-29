@@ -27,7 +27,7 @@
         <version>2.3.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>guard</artifactId>
+    <artifactId>xacml-guard</artifactId>
 
     <name>${project.artifactId}</name>
     <description>This modules contain an application that implements onap.Guard policy-types for XACML PDP.</description>

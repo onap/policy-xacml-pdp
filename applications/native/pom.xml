@@ -6,7 +6,7 @@
     <version>2.3.2-SNAPSHOT</version>
   </parent>
 
-  <artifactId>native</artifactId>
+  <artifactId>xacml-native</artifactId>
 
   <name>${project.artifactId}</name>
   <description>This modules contains the xacml application that evaluates native policies and requests.</description>
