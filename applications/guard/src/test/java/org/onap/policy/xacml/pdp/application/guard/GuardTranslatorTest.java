@@ -34,6 +34,7 @@ import com.att.research.xacml.std.StdStatus;
 import com.att.research.xacml.std.StdStatusCode;
 import com.att.research.xacml.util.XACMLPolicyWriter;
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 import java.util.Map;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
@@ -109,83 +110,41 @@ public class GuardTranslatorTest {
         //
         JpaToscaServiceTemplate jtst = new JpaToscaServiceTemplate();
         jtst.fromAuthorative(serviceTemplate);
-        ToscaServiceTemplate completedJtst = jtst.toAuthorative();
+        final ToscaServiceTemplate completedJtst = jtst.toAuthorative();
+        //
+        // Expected message for given policy name
+        //
+        final Map<String, String> name2message = new HashMap<>();
+        name2message.put("frequency-missing-properties", "Missing property limit");
+        name2message.put("frequency-timewindow", "timeWindow is not an integer");
+        name2message.put("minmax-notarget", "Missing target field in minmax policy");
+        name2message.put("minmax-nominmax", "Missing min or max field in minmax policy");
+        name2message.put("blacklist-noblacklist", "Missing blacklist");
+        name2message.put("filter-noalgorithm", "Missing algorithm");
+        name2message.put("filter-badalgorithm",
+                            "Unexpected value for algorithm, should be whitelist-overrides or blacklist-overrides");
+        name2message.put("filter-nofilter", "Missing filters");
+        name2message.put("filter-nocollection", "Filters is not a collection");
+        name2message.put("filter-noarray", "Filters is not a collection");
+        name2message.put("filter-missingfield", "Missing \'field\' from filter");
+        name2message.put("filter-badfield", "Unexpected value for field in filter");
+        name2message.put("filter-missingfilter", "Missing \'filter\' from filter");
+        name2message.put("filter-missingfunction", "Missing \'function\' from filter");
+        name2message.put("filter-badfunction", "Unexpected value for function in filter");
+        name2message.put("filter-missingblacklist", "Missing \'blacklist\' from filter");
+        name2message.put("filter-badblacklist", "Unexpected value for blacklist in filter");
         //
         // Get the policies
         //
         for (Map<String, ToscaPolicy> policies : completedJtst.getToscaTopologyTemplate().getPolicies()) {
             for (ToscaPolicy policy : policies.values()) {
                 LOGGER.info("Testing policy " + policy.getName());
-                if ("frequency-missing-properties".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
-                        translator.convertPolicy(policy)
-                    ).withMessageContaining("Missing property limit");
-                } else if ("frequency-timewindow".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
-                        translator.convertPolicy(policy)
-                    ).withMessageContaining("timeWindow is not an integer");
-                } else if ("minmax-notarget".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
-                        translator.convertPolicy(policy)
-                    ).withMessageContaining("Missing target field in minmax policy");
-                } else if ("minmax-nominmax".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
-                        translator.convertPolicy(policy)
-                    ).withMessageContaining("Missing min or max field in minmax policy");
-                } else if ("blacklist-noblacklist".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
-                        translator.convertPolicy(policy)
-                    ).withMessageContaining("Missing blacklist");
-                } else if ("filter-noalgorithm".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
-                        translator.convertPolicy(policy)
-                    ).withMessageContaining("Missing algorithm");
-                } else if ("filter-badalgorithm".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class)
-                            .isThrownBy(() -> translator.convertPolicy(policy))
-                            .withMessageContaining(
-                                "Unexpected value for algorithm, should be whitelist-overrides or blacklist-overrides");
-                } else if ("filter-nofilter".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class)
-                            .isThrownBy(() -> translator.convertPolicy(policy))
-                            .withMessageContaining("Missing filters");
-                } else if ("filter-nocollection".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
-                        translator.convertPolicy(policy)
-                    ).withMessageContaining("Filters is not a collection");
-                } else if ("filter-noarray".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
-                        translator.convertPolicy(policy)
-                    ).withMessageContaining("Filters is not a collection");
-                } else if ("filter-missingfield".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
-                        translator.convertPolicy(policy)
-                    ).withMessageContaining("Missing \'field\' from filter");
-                } else if ("filter-badfield".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
-                        translator.convertPolicy(policy)
-                    ).withMessageContaining("Unexpected value for field in filter");
-                } else if ("filter-missingfilter".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
-                        translator.convertPolicy(policy)
-                    ).withMessageContaining("Missing \'filter\' from filter");
-                } else if ("filter-missingfunction".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
-                        translator.convertPolicy(policy)
-                    ).withMessageContaining("Missing \'function\' from filter");
-                } else if ("filter-badfunction".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
-                        translator.convertPolicy(policy)
-                    ).withMessageContaining("Unexpected value for function in filter");
-                } else if ("filter-missingblacklist".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
-                        translator.convertPolicy(policy)
-                    ).withMessageContaining("Missing \'blacklist\' from filter");
-                } else if ("filter-badblacklist".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
-                        translator.convertPolicy(policy)
-                    ).withMessageContaining("Unexpected value for blacklist in filter");
-                }
+                String expectedMsg = name2message.get(policy.getName());
+                assertThat(expectedMsg).as(policy.getName()).isNotNull();
+
+                assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
+                    translator.convertPolicy(policy)
+                ).withMessageContaining(expectedMsg);
             }
         }
     }
