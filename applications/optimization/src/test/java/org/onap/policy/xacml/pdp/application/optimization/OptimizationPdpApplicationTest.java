@@ -224,17 +224,8 @@ public class OptimizationPdpApplicationTest {
         List<ToscaPolicy> loadedPolicies = TestUtils.loadPolicies("src/test/resources/test-optimization-policies.yaml",
                 service);
         assertThat(loadedPolicies).isNotNull().hasSize(14);
-        //
-        // Ask for a decision for available default policies
-        //
-        DecisionResponse response = makeDecision();
 
-        assertThat(response).isNotNull();
-        assertThat(response.getPolicies()).hasSize(2);
-        //
-        // Validate it
-        //
-        validateDecision(response, baseRequest);
+        validateDecisionCount(2);
     }
 
     /**
@@ -279,16 +270,8 @@ public class OptimizationPdpApplicationTest {
         // Add US to the geography list
         //
         ((List<String>) baseRequest.getResource().get("geography")).add("US");
-        //
-        // Ask for a decision for default US Policy
-        //
-        DecisionResponse response = makeDecision();
-        assertThat(response).isNotNull();
-        assertThat(response.getPolicies()).hasSize(2);
-        //
-        // Validate it
-        //
-        validateDecision(response, baseRequest);
+
+        validateDecisionCount(2);
     }
 
     /**
@@ -301,17 +284,8 @@ public class OptimizationPdpApplicationTest {
         // Add vCPE to the service list
         //
         ((List<String>) baseRequest.getResource().get("services")).add("vCPE");
-        //
-        // Ask for a decision for default US policy for vCPE service
-        //
-        DecisionResponse response = makeDecision();
 
-        assertThat(response).isNotNull();
-        assertThat(response.getPolicies()).hasSize(3);
-        //
-        // Validate it
-        //
-        validateDecision(response, baseRequest);
+        validateDecisionCount(3);
     }
 
     /**
@@ -324,17 +298,8 @@ public class OptimizationPdpApplicationTest {
         // Add vG to the resource list
         //
         ((List<String>) baseRequest.getResource().get("resources")).add("vG");
-        //
-        // Ask for a decision for default US service vCPE resource vG policy
-        //
-        DecisionResponse response = makeDecision();
 
-        assertThat(response).isNotNull();
-        assertThat(response.getPolicies()).hasSize(6);
-        //
-        // Validate it
-        //
-        validateDecision(response, baseRequest);
+        validateDecisionCount(6);
     }
 
     /**
@@ -347,18 +312,8 @@ public class OptimizationPdpApplicationTest {
         // Add gold as a scope
         //
         ((List<String>) baseRequest.getContext().get("subscriberName")).add("subscriber_a");
-        //
-        // Ask for a decision for specific US vCPE vG gold
-        //
-        DecisionResponse response = makeDecision();
 
-        assertThat(response).isNotNull();
-        assertThat(response.getPolicies()).hasSize(6);
-        assertThat(response.getAdvice()).hasSize(2);
-        //
-        // Validate it
-        //
-        validateDecision(response, baseRequest);
+        validateDecisionCount(6, 2);
     }
 
     /**
@@ -372,18 +327,8 @@ public class OptimizationPdpApplicationTest {
         //
         ((List<String>) baseRequest.getResource().get("scope")).remove("gold");
         ((List<String>) baseRequest.getContext().get("subscriberName")).add("subscriber_x");
-        //
-        // Ask for a decision for specific US vCPE vG (gold or platinum)
-        //
-        DecisionResponse response = makeDecision();
 
-        assertThat(response).isNotNull();
-        assertThat(response.getPolicies()).hasSize(8);
-        assertThat(response.getAdvice()).hasSize(2);
-        //
-        // Validate it
-        //
-        validateDecision(response, baseRequest);
+        validateDecisionCount(8, 2);
     }
 
     /**
@@ -398,17 +343,8 @@ public class OptimizationPdpApplicationTest {
         ((List<String>) baseRequest.getResource().get("scope")).remove("gold");
         ((List<String>) baseRequest.getResource().get("scope")).remove("platinum");
         ((List<String>) baseRequest.getContext().get("subscriberName")).remove("subscriber_a");
-        //
-        // Ask for a decision for specific US vCPE vG gold
-        //
-        DecisionResponse response = makeDecision();
 
-        assertThat(response).isNotNull();
-        assertThat(response.getPolicies()).hasSize(7);
-        //
-        // Validate it
-        //
-        validateDecision(response, baseRequest);
+        validateDecisionCount(7);
     }
 
     /**
@@ -421,17 +357,8 @@ public class OptimizationPdpApplicationTest {
         //
         List<String> policyTypes = Lists.newArrayList("onap.policies.optimization.resource.AffinityPolicy");
         baseRequest.getResource().put("policy-type", policyTypes);
-        //
-        // Ask for a decision for default
-        //
-        DecisionResponse response = makeDecision();
 
-        assertThat(response).isNotNull();
-        assertThat(response.getPolicies()).hasSize(1);
-        //
-        // Validate it
-        //
-        validateDecision(response, baseRequest);
+        validateDecisionCount(1);
     }
 
     /**
@@ -445,17 +372,8 @@ public class OptimizationPdpApplicationTest {
         //
         ((List<String>) baseRequest.getResource().get("policy-type"))
             .add("onap.policies.optimization.resource.HpaPolicy");
-        //
-        // Ask for a decision for default
-        //
-        DecisionResponse response = makeDecision();
 
-        assertThat(response).isNotNull();
-        assertThat(response.getPolicies()).hasSize(2);
-        //
-        // Validate it
-        //
-        validateDecision(response, baseRequest);
+        validateDecisionCount(2);
     }
 
     @Test
@@ -502,6 +420,35 @@ public class OptimizationPdpApplicationTest {
             LOGGER.info("Policy {}", entrySet.getKey());
         }
         return decision.getKey();
+    }
+
+    private void validateDecisionCount(int expectedPolicyCount) {
+        //
+        // Ask for a decision for default
+        //
+        DecisionResponse response = makeDecision();
+
+        assertThat(response).isNotNull();
+        assertThat(response.getPolicies()).hasSize(expectedPolicyCount);
+        //
+        // Validate it
+        //
+        validateDecision(response, baseRequest);
+    }
+
+    private void validateDecisionCount(int expectedPolicyCount, int expectedAdviceCount) {
+        //
+        // Ask for a decision for default
+        //
+        DecisionResponse response = makeDecision();
+
+        assertThat(response).isNotNull();
+        assertThat(response.getPolicies()).hasSize(expectedPolicyCount);
+        assertThat(response.getAdvice()).hasSize(expectedAdviceCount);
+        //
+        // Validate it
+        //
+        validateDecision(response, baseRequest);
     }
 
     @SuppressWarnings("unchecked")
