@@ -23,7 +23,6 @@
 package org.onap.policy.xacml.pdp.application.naming;
 
 import java.util.Arrays;
-import java.util.List;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdCombinedPolicyResultsTranslator;
@@ -31,29 +30,25 @@ import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServi
 
 public class NamingPdpApplication extends StdXacmlApplicationServiceProvider {
 
-    private static final ToscaPolicyTypeIdentifier supportedPolicy = new ToscaPolicyTypeIdentifier(
+    private static final ToscaPolicyTypeIdentifier namingPolicyType = new ToscaPolicyTypeIdentifier(
             "onap.policies.Naming", "1.0.0");
 
     private StdCombinedPolicyResultsTranslator translator = new StdCombinedPolicyResultsTranslator();
 
-    @Override
-    public String applicationName() {
-        return "naming";
-    }
+    /**
+     * Constructor.
+     */
+    public NamingPdpApplication() {
+        super();
 
-    @Override
-    public List<String> actionDecisionsSupported() {
-        return Arrays.asList("naming");
-    }
-
-    @Override
-    public synchronized List<ToscaPolicyTypeIdentifier> supportedPolicyTypes() {
-        return Arrays.asList(supportedPolicy);
+        applicationName = "naming";
+        actions = Arrays.asList("naming");
+        supportedPolicyTypes.add(namingPolicyType);
     }
 
     @Override
     public boolean canSupportPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
-        return supportedPolicy.equals(policyTypeId);
+        return namingPolicyType.equals(policyTypeId);
     }
 
     @Override

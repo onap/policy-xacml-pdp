@@ -28,10 +28,8 @@ import com.att.research.xacml.api.Decision;
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
@@ -66,12 +64,16 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
     public static final String ONAP_OPTIMIZATION_DERIVED_POLICY_TYPE = "onap.policies.optimization.";
 
     private OptimizationPdpApplicationTranslator translator = new OptimizationPdpApplicationTranslator();
-    private List<ToscaPolicyTypeIdentifier> supportedPolicyTypes = new ArrayList<>();
 
     /**
      * Constructor.
      */
     public OptimizationPdpApplication() {
+        super();
+
+        applicationName = "optimization";
+        actions = Arrays.asList("optimize");
+
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_AFFINITY, STRING_VERSION100));
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_DISTANCE, STRING_VERSION100));
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_HPA, STRING_VERSION100));
@@ -81,16 +83,6 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_SUBSCRIBER, STRING_VERSION100));
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_VIMFIT, STRING_VERSION100));
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_VNF, STRING_VERSION100));
-    }
-
-    @Override
-    public String applicationName() {
-        return "optimization";
-    }
-
-    @Override
-    public List<String> actionDecisionsSupported() {
-        return Arrays.asList("optimize");
     }
 
     @Override
@@ -106,11 +98,6 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
         // Let our super class do its thing
         //
         super.initialize(pathForData, policyApiParameters);
-    }
-
-    @Override
-    public synchronized List<ToscaPolicyTypeIdentifier> supportedPolicyTypes() {
-        return Collections.unmodifiableList(supportedPolicyTypes);
     }
 
     @Override

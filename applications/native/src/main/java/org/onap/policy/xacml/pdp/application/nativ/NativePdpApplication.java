@@ -25,7 +25,6 @@ package org.onap.policy.xacml.pdp.application.nativ;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
 import java.util.Arrays;
-import java.util.List;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServiceProvider;
@@ -38,28 +37,24 @@ import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServi
  */
 public class NativePdpApplication extends StdXacmlApplicationServiceProvider {
 
-    private static final ToscaPolicyTypeIdentifier supportedPolicyType = new ToscaPolicyTypeIdentifier(
+    private static final ToscaPolicyTypeIdentifier nativePolicyType = new ToscaPolicyTypeIdentifier(
             "onap.policies.native.Xacml", "1.0.0");
     private NativePdpApplicationTranslator translator = new NativePdpApplicationTranslator();
 
-    @Override
-    public String applicationName() {
-        return "native";
-    }
+    /**
+     * Constructor.
+     */
+    public NativePdpApplication() {
+        super();
 
-    @Override
-    public List<String> actionDecisionsSupported() {
-        return Arrays.asList("native");
-    }
-
-    @Override
-    public synchronized List<ToscaPolicyTypeIdentifier> supportedPolicyTypes() {
-        return Arrays.asList(supportedPolicyType);
+        applicationName = "native";
+        actions = Arrays.asList("native");
+        supportedPolicyTypes.add(nativePolicyType);
     }
 
     @Override
     public boolean canSupportPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
-        return supportedPolicyType.equals(policyTypeId);
+        return nativePolicyType.equals(policyTypeId);
     }
 
     @Override

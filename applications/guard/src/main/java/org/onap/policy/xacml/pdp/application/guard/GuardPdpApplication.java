@@ -22,9 +22,7 @@
 
 package org.onap.policy.xacml.pdp.application.guard;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServiceProvider;
@@ -40,7 +38,7 @@ import org.slf4j.LoggerFactory;
 public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(GuardPdpApplication.class);
     private static final String STRING_VERSION100 = "1.0.0";
-    private List<ToscaPolicyTypeIdentifier> supportedPolicyTypes = new ArrayList<>();
+
     private GuardTranslator guardTranslator = new GuardTranslator();
     private CoordinationGuardTranslator coordinationTranslator = new CoordinationGuardTranslator();
 
@@ -49,6 +47,11 @@ public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
      *
      */
     public GuardPdpApplication() {
+        super();
+
+        applicationName = "guard";
+        actions = Arrays.asList("guard");
+
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
                 GuardTranslator.POLICYTYPE_FREQUENCY,
                 STRING_VERSION100));
@@ -64,21 +67,6 @@ public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
         this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
                 "onap.policies.controlloop.guard.coordination.FirstBlocksSecond",
                 STRING_VERSION100));
-    }
-
-    @Override
-    public String applicationName() {
-        return "guard";
-    }
-
-    @Override
-    public List<String> actionDecisionsSupported() {
-        return Arrays.asList("guard");
-    }
-
-    @Override
-    public List<ToscaPolicyTypeIdentifier> supportedPolicyTypes() {
-        return supportedPolicyTypes;
     }
 
     @Override

@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -55,6 +56,11 @@ import org.slf4j.LoggerFactory;
 public abstract class StdXacmlApplicationServiceProvider implements XacmlApplicationServiceProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StdXacmlApplicationServiceProvider.class);
+
+    protected String applicationName = "Please Override";
+    protected List<String> actions = Collections.emptyList();
+    protected List<ToscaPolicyTypeIdentifier> supportedPolicyTypes = new ArrayList<>();
+
     private Path pathForData = null;
     @Getter
     private RestServerParameters policyApiParameters;
@@ -68,12 +74,12 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
 
     @Override
     public String applicationName() {
-        return "Please Override";
+        return applicationName;
     }
 
     @Override
     public List<String> actionDecisionsSupported() {
-        return Collections.emptyList();
+        return actions;
     }
 
     @Override
@@ -105,7 +111,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
 
     @Override
     public List<ToscaPolicyTypeIdentifier> supportedPolicyTypes() {
-        throw new UnsupportedOperationException("Please override and implement supportedPolicyTypes");
+        return supportedPolicyTypes;
     }
 
     @Override

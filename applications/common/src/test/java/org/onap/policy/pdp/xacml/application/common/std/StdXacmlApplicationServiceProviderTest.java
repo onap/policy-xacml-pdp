@@ -20,6 +20,7 @@
 
 package org.onap.policy.pdp.xacml.application.common.std;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -27,7 +28,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -181,7 +182,7 @@ public class StdXacmlApplicationServiceProviderTest {
 
     @Test
     public void testSupportedPolicyTypes() {
-        assertThatThrownBy(() -> prov.supportedPolicyTypes()).isInstanceOf(UnsupportedOperationException.class);
+        assertThat(prov.supportedPolicyTypes()).isEmpty();
     }
 
     @Test

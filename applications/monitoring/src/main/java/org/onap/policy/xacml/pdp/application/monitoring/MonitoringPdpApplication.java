@@ -23,9 +23,7 @@
 package org.onap.policy.xacml.pdp.application.monitoring;
 
 import com.att.research.xacml.api.Response;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.apache.commons.lang3.tuple.Pair;
@@ -56,31 +54,19 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
     public static final String VERSION_100 = "1.0.0";
 
     private StdCombinedPolicyResultsTranslator translator = new StdCombinedPolicyResultsTranslator();
-    private List<ToscaPolicyTypeIdentifier> supportedPolicyTypes = new ArrayList<>();
 
     /**
      * Constructor.
      */
     public MonitoringPdpApplication() {
+        super();
+
+        applicationName = "monitoring";
+        actions = Arrays.asList("configure");
         //
         // By default this supports just Monitoring policy types
         //
         supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_BASE_POLICY_TYPE, VERSION_100));
-    }
-
-    @Override
-    public String applicationName() {
-        return "monitoring";
-    }
-
-    @Override
-    public List<String> actionDecisionsSupported() {
-        return Arrays.asList("configure");
-    }
-
-    @Override
-    public synchronized List<ToscaPolicyTypeIdentifier> supportedPolicyTypes() {
-        return supportedPolicyTypes;
     }
 
     @Override

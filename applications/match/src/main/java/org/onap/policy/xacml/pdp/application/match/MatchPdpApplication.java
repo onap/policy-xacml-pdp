@@ -24,7 +24,6 @@ package org.onap.policy.xacml.pdp.application.match;
 
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.List;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
@@ -42,14 +41,15 @@ public class MatchPdpApplication extends StdXacmlApplicationServiceProvider {
 
     private StdMatchableTranslator translator = new StdMatchableTranslator();
 
-    @Override
-    public String applicationName() {
-        return "match";
-    }
+    /**
+     * Constructor.
+     */
+    public MatchPdpApplication() {
+        super();
 
-    @Override
-    public List<String> actionDecisionsSupported() {
-        return Arrays.asList("match");
+        applicationName = "match";
+        actions = Arrays.asList("match");
+        supportedPolicyTypes.add(supportedPolicy);
     }
 
     @Override
@@ -65,11 +65,6 @@ public class MatchPdpApplication extends StdXacmlApplicationServiceProvider {
         // Let our super class do its thing
         //
         super.initialize(pathForData, policyApiParameters);
-    }
-
-    @Override
-    public synchronized List<ToscaPolicyTypeIdentifier> supportedPolicyTypes() {
-        return Arrays.asList(supportedPolicy);
     }
 
     @Override
