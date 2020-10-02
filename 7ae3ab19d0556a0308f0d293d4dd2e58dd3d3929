@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "de3b7f2e_5e58c1fa",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdXacmlApplicationServiceProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-02T14:29:53Z",
+      "side": 1,
+      "message": "could make these final and pass the value into the constructor",
+      "revId": "7ae3ab19d0556a0308f0d293d4dd2e58dd3d3929",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c199508_b63653c5",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdXacmlApplicationServiceProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-02T14:29:53Z",
+      "side": 1,
+      "message": "could make the default simply:\n\n  return supportedPolicyTypes.contains(policyTypeId)\n\nthen override in the cases where that is insufficient (i.e., match \u0026 monitor)",
+      "revId": "7ae3ab19d0556a0308f0d293d4dd2e58dd3d3929",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
