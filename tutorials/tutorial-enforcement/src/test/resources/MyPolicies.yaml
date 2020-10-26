@@ -1,0 +1,14 @@
+tosca_definitions_version: tosca_simple_yaml_1_1_0
+topology_template:
+   policies:
+     -
+       policy1:
+           type: onap.policies.monitoring.MyAnalytic
+           type_version: 1.0.0
+           version: 1.0.0
+           name: policy1
+           metadata:
+             policy-id: policy1
+             policy-version: 1.0.0
+           properties:
+             myProperty: value1
