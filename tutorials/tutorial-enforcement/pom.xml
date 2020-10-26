@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.onap.policy.xacml-pdp</groupId>
+    <artifactId>xacml-tutorials</artifactId>
+    <version>2.3.2-SNAPSHOT</version>
+  </parent>
+
+	<groupId>org.onap.policy.tutorial</groupId>
+	<artifactId>tutorial-xacml-enforcement</artifactId>
+	<packaging>jar</packaging>
+
+	<name>tutorial-xacml-enforcement</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.onap.policy.models</groupId>
+			<artifactId>policy-models-decisions</artifactId>
+            <version>${policy.models.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.onap.policy.models</groupId>
+			<artifactId>policy-models-pap</artifactId>
+            <version>${policy.models.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.onap.policy.common</groupId>
+			<artifactId>policy-endpoints</artifactId>
+            <version>${policy.common.version}</version>
+		</dependency>
+	</dependencies>
+
+</project>
