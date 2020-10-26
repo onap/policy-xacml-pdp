@@ -51,6 +51,7 @@
         <module>packages</module>
         <module>testsuites</module>
         <module>xacml-test</module>
+        <module>tutorials</module>
     </modules>
 
     <dependencies>
