@@ -1,0 +1,370 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ba2e131_7f6e269b",
+        "filename": "tutorials/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-26T14:44:48Z",
+      "side": 1,
+      "message": "spaces",
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c95173b2_1991567f",
+        "filename": "tutorials/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-26T14:44:48Z",
+      "side": 1,
+      "message": "2.3.4",
+      "range": {
+        "startLine": 28,
+        "startChar": 17,
+        "endLine": 28,
+        "endChar": 22
+      },
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31e995bc_f3756602",
+        "filename": "tutorials/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-26T14:44:48Z",
+      "side": 1,
+      "message": "tabs",
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ceaa0d38_336cc3d7",
+        "filename": "tutorials/tutorial-enforcement/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-26T14:44:48Z",
+      "side": 1,
+      "message": "2.3.4",
+      "range": {
+        "startLine": 9,
+        "startChar": 13,
+        "endLine": 9,
+        "endChar": 18
+      },
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21ba90f3_87c70fdb",
+        "filename": "tutorials/tutorial-enforcement/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-26T14:44:48Z",
+      "side": 1,
+      "message": "tabs",
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fcb087d_34e6a9aa",
+        "filename": "tutorials/tutorial-enforcement/src/main/docker/README.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-26T14:44:48Z",
+      "side": 1,
+      "message": "want to add?\n\n  Should return...",
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c637af3_805d538a",
+        "filename": "tutorials/tutorial-enforcement/src/main/docker/config/db/db.conf",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-26T14:44:48Z",
+      "side": 1,
+      "message": "2020",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 22
+      },
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d33f04af_4c5fe000",
+        "filename": "tutorials/tutorial-enforcement/src/main/docker/config/sim/simParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-26T14:44:48Z",
+      "side": 1,
+      "message": "should be able to delete this section now",
+      "range": {
+        "startLine": 5,
+        "startChar": 8,
+        "endLine": 8,
+        "endChar": 9
+      },
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45aafb3d_3ed8b16c",
+        "filename": "tutorials/tutorial-enforcement/src/main/java/org/onap/policy/tutorial/policyenforcement/App.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-26T14:44:48Z",
+      "side": 1,
+      "message": "could just use Map.of()",
+      "range": {
+        "startLine": 82,
+        "startChar": 7,
+        "endLine": 83,
+        "endChar": 54
+      },
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b8d9ef4_0809313c",
+        "filename": "tutorials/tutorial-enforcement/src/main/java/org/onap/policy/tutorial/policyenforcement/App.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-26T14:44:48Z",
+      "side": 1,
+      "message": "maybe use this?\n\n  /**\n\nsame question below",
+      "range": {
+        "startLine": 147,
+        "startChar": 4,
+        "endLine": 147,
+        "endChar": 6
+      },
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b42ebf3_9a05ff50",
+        "filename": "tutorials/tutorial-enforcement/src/test/resources/MyPolicies.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-26T14:44:48Z",
+      "side": 1,
+      "message": "spaces",
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5715b641_504689b3",
+        "filename": "tutorials/tutorial-xacml-application/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-26T14:44:48Z",
+      "side": 1,
+      "message": "2.3.4",
+      "range": {
+        "startLine": 29,
+        "startChar": 13,
+        "endLine": 29,
+        "endChar": 18
+      },
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04a6a5a7_89072592",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/config/db/db.conf",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-26T14:44:48Z",
+      "side": 1,
+      "message": "2020",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 22
+      },
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f02df752_89b9124a",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/config/sim/simParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-26T14:44:48Z",
+      "side": 1,
+      "message": "should be able to delete this",
+      "range": {
+        "startLine": 5,
+        "startChar": 8,
+        "endLine": 8,
+        "endChar": 9
+      },
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec360c8d_9bb04aeb",
+        "filename": "tutorials/tutorial-xacml-application/src/main/java/org/onap/policy/tutorial/tutorial/TutorialRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-26T14:44:48Z",
+      "side": 1,
+      "message": "spaces",
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6be3cf37_9e29be65",
+        "filename": "tutorials/tutorial-xacml-application/src/main/java/org/onap/policy/tutorial/tutorial/TutorialTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-26T14:44:48Z",
+      "side": 1,
+      "message": "should this field be thread-safe?  (e.g., use AtomicInteger, perhaps)",
+      "range": {
+        "startLine": 123,
+        "startChar": 12,
+        "endLine": 123,
+        "endChar": 22
+      },
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "570c5f55_52f4b41b",
+        "filename": "tutorials/tutorial-xacml-application/src/test/java/org/onap/policy/tutorial/tutorial/TutorialApplicationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-26T14:44:48Z",
+      "side": 1,
+      "message": "space",
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9a252d1_8569f03f",
+        "filename": "tutorials/tutorial-xacml-application/src/test/java/org/onap/policy/tutorial/tutorial/TutorialApplicationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-26T14:44:48Z",
+      "side": 1,
+      "message": "can probably use a for-loop here",
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
