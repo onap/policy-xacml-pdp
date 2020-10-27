@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0cb128b9_73a6ec0c",
+        "filename": "tutorials/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-27T18:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ba2e131_7f6e269b",
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c95173b2_1991567f",
         "filename": "tutorials/pom.xml",
         "patchSetId": 1
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "dcaa89a5_107b06e0",
+        "filename": "tutorials/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-27T18:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c95173b2_1991567f",
+      "range": {
+        "startLine": 28,
+        "startChar": 17,
+        "endLine": 28,
+        "endChar": 22
+      },
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "31e995bc_f3756602",
         "filename": "tutorials/pom.xml",
         "patchSetId": 1
@@ -56,6 +98,24 @@
       "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76b640b1_7f7a0814",
+        "filename": "tutorials/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-27T18:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31e995bc_f3756602",
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -82,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "fdff1b16_92ba97fe",
+        "filename": "tutorials/tutorial-enforcement/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-27T18:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ceaa0d38_336cc3d7",
+      "range": {
+        "startLine": 9,
+        "startChar": 13,
+        "endLine": 9,
+        "endChar": 18
+      },
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "21ba90f3_87c70fdb",
         "filename": "tutorials/tutorial-enforcement/pom.xml",
         "patchSetId": 1
@@ -99,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "6af9f798_d37f795e",
+        "filename": "tutorials/tutorial-enforcement/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-27T18:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21ba90f3_87c70fdb",
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7fcb087d_34e6a9aa",
         "filename": "tutorials/tutorial-enforcement/src/main/docker/README.txt",
         "patchSetId": 1
@@ -113,6 +215,24 @@
       "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b34c6de6_d4e5c9e1",
+        "filename": "tutorials/tutorial-enforcement/src/main/docker/README.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-27T18:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7fcb087d_34e6a9aa",
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -139,6 +259,30 @@
     },
     {
       "key": {
+        "uuid": "f82137f9_5bd0f983",
+        "filename": "tutorials/tutorial-enforcement/src/main/docker/config/db/db.conf",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-27T18:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c637af3_805d538a",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 22
+      },
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d33f04af_4c5fe000",
         "filename": "tutorials/tutorial-enforcement/src/main/docker/config/sim/simParameters.json",
         "patchSetId": 1
@@ -159,6 +303,30 @@
       "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6dc89bd4_90a9d118",
+        "filename": "tutorials/tutorial-enforcement/src/main/docker/config/sim/simParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-27T18:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d33f04af_4c5fe000",
+      "range": {
+        "startLine": 5,
+        "startChar": 8,
+        "endLine": 8,
+        "endChar": 9
+      },
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -208,6 +376,30 @@
     },
     {
       "key": {
+        "uuid": "b3f38dc8_9c788ab5",
+        "filename": "tutorials/tutorial-enforcement/src/main/java/org/onap/policy/tutorial/policyenforcement/App.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-27T18:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1b8d9ef4_0809313c",
+      "range": {
+        "startLine": 147,
+        "startChar": 4,
+        "endLine": 147,
+        "endChar": 6
+      },
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b42ebf3_9a05ff50",
         "filename": "tutorials/tutorial-enforcement/src/test/resources/MyPolicies.yaml",
         "patchSetId": 1
@@ -222,6 +414,24 @@
       "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0dbbd312_39a01cf9",
+        "filename": "tutorials/tutorial-enforcement/src/test/resources/MyPolicies.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-27T18:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b42ebf3_9a05ff50",
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -248,6 +458,30 @@
     },
     {
       "key": {
+        "uuid": "3bd1bd97_fca7019e",
+        "filename": "tutorials/tutorial-xacml-application/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-27T18:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5715b641_504689b3",
+      "range": {
+        "startLine": 29,
+        "startChar": 13,
+        "endLine": 29,
+        "endChar": 18
+      },
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04a6a5a7_89072592",
         "filename": "tutorials/tutorial-xacml-application/src/main/docker/config/db/db.conf",
         "patchSetId": 1
@@ -268,6 +502,30 @@
       "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98e1c414_328bdbd3",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/config/db/db.conf",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-27T18:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04a6a5a7_89072592",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 22
+      },
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -294,6 +552,30 @@
     },
     {
       "key": {
+        "uuid": "ca65c0e1_335e45d6",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/config/sim/simParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-27T18:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f02df752_89b9124a",
+      "range": {
+        "startLine": 5,
+        "startChar": 8,
+        "endLine": 8,
+        "endChar": 9
+      },
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ec360c8d_9bb04aeb",
         "filename": "tutorials/tutorial-xacml-application/src/main/java/org/onap/policy/tutorial/tutorial/TutorialRequest.java",
         "patchSetId": 1
@@ -308,6 +590,24 @@
       "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "425c2c7f_53797f8c",
+        "filename": "tutorials/tutorial-xacml-application/src/main/java/org/onap/policy/tutorial/tutorial/TutorialRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-27T18:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec360c8d_9bb04aeb",
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -351,6 +651,24 @@
     },
     {
       "key": {
+        "uuid": "947030be_4b4d11e8",
+        "filename": "tutorials/tutorial-xacml-application/src/test/java/org/onap/policy/tutorial/tutorial/TutorialApplicationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-27T18:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "570c5f55_52f4b41b",
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9a252d1_8569f03f",
         "filename": "tutorials/tutorial-xacml-application/src/test/java/org/onap/policy/tutorial/tutorial/TutorialApplicationTest.java",
         "patchSetId": 1
@@ -365,6 +683,24 @@
       "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0b23bbf_897a0ec4",
+        "filename": "tutorials/tutorial-xacml-application/src/test/java/org/onap/policy/tutorial/tutorial/TutorialApplicationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-10-27T18:02:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9a252d1_8569f03f",
+      "revId": "5974e71cb7655515e43f835459d35d10f2ed9fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
