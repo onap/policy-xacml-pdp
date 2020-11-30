@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +25,8 @@ package org.onap.policy.pdp.xacml.application.common.matchable;
 
 import com.att.research.xacml.api.Identifier;
 import com.att.research.xacml.api.XACML3;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaEntrySchema;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaSchemaDefinition;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
 
@@ -35,7 +36,7 @@ public class MatchablePropertyTypeBoolean extends MatchablePropertyTypeBase<Bool
         super(inProperty);
     }
 
-    public MatchablePropertyTypeBoolean(ToscaEntrySchema toscaSchema) {
+    public MatchablePropertyTypeBoolean(ToscaSchemaDefinition toscaSchema) {
         super(toscaSchema);
     }
 

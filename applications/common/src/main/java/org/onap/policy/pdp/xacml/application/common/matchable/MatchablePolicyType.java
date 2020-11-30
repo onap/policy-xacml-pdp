@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +30,10 @@ import java.util.function.Function;
 import lombok.Getter;
 import lombok.NonNull;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaEntrySchema;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaSchemaDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +59,7 @@ public class MatchablePolicyType {
             TOSCA_PRIMITIVE_TIMESTAMP, MatchablePropertyTypeTimestamp::new
             );
 
-    private static final Map<String, Function<ToscaEntrySchema, MatchablePropertyTypeBase<?>>>
+    private static final Map<String, Function<ToscaSchemaDefinition, MatchablePropertyTypeBase<?>>>
         mapPrimitivesSchema = Map.of(
             TOSCA_PRIMITIVE_STRING, MatchablePropertyTypeString::new,
             TOSCA_PRIMITIVE_INTEGER, MatchablePropertyTypeInteger::new,
@@ -110,7 +111,7 @@ public class MatchablePolicyType {
      *
      * @param properties Map of ToscaProperties to scan
      * @param matchables Found matchables will be put into this list
-     * @param callback Callback routine for finding Policy Types and Data Types
+     * @param callback   Callback routine for finding Policy Types and Data Types
      */
     public static void scanProperties(Map<String, ToscaProperty> properties, Map<String, MatchableProperty> matchables,
             MatchableCallback callback) {
@@ -144,7 +145,7 @@ public class MatchablePolicyType {
     /**
      * handlePrimitive - handles a primitive type only if its matchable.
      *
-     * @param property String containing property name
+     * @param property      String containing property name
      * @param toscaProperty ToscaProperty object
      * @return MatchableProperty object
      */
@@ -164,13 +165,13 @@ public class MatchablePolicyType {
      * handlePrimitive from a schema. Note that a ToscaEntrySchema does NOT have a metadata section
      * so you cannot check if its matchable.
      *
-     * @param property String containing property name
+     * @param property    String containing property name
      * @param toscaSchema ToscaSchema
      * @return MatchableProperty object
      */
-    public static MatchableProperty handlePrimitive(String property, ToscaEntrySchema toscaSchema) {
-        Function<ToscaEntrySchema, MatchablePropertyTypeBase<?>> function =
-                mapPrimitivesSchema.get(toscaSchema.getType());
+    public static MatchableProperty handlePrimitive(String property, ToscaSchemaDefinition toscaSchema) {
+        Function<ToscaSchemaDefinition, MatchablePropertyTypeBase<?>> function =
+            mapPrimitivesSchema.get(toscaSchema.getType());
         if (function != null) {
             return new MatchableProperty(property, function.apply(toscaSchema));
         }
@@ -180,15 +181,16 @@ public class MatchablePolicyType {
     /**
      * handleList - iterates a list looking for matchables.
      *
-     * @param property String containing property name
+     * @param property      String containing property name
      * @param toscaProperty ToscaProperty object
-     * @param matchables list of matchables to add to
-     * @param callback MatchableCallback to retrieve Data Types
+     * @param matchables    list of matchables to add to
+     * @param callback      MatchableCallback to retrieve Data Types
      * @return MatchableProperty object
      */
     public static MatchableProperty handleList(@NonNull String property, @NonNull ToscaProperty toscaProperty,
-            Map<String, MatchableProperty> matchables, @NonNull MatchableCallback callback) {
-        if (! TOSCA_TYPE_LIST.equals(toscaProperty.getType())) {
+                                               Map<String, MatchableProperty> matchables,
+                                               @NonNull MatchableCallback callback) {
+        if (!TOSCA_TYPE_LIST.equals(toscaProperty.getType())) {
             throw new IllegalArgumentException("must be a list");
         }
         //
@@ -219,15 +221,16 @@ public class MatchablePolicyType {
     /**
      * handleMap - iterates a map looking for matchables.
      *
-     * @param property String containing property name
+     * @param property      String containing property name
      * @param toscaProperty ToscaProperty object
-     * @param matchables list of matchables to add to
-     * @param callback MatchableCallback to retrieve Data Types
+     * @param matchables    list of matchables to add to
+     * @param callback      MatchableCallback to retrieve Data Types
      * @return MatchableProperty object
      */
     public static MatchableProperty handleMap(@NonNull String property, @NonNull ToscaProperty toscaProperty,
-            Map<String, MatchableProperty> matchables, @NonNull MatchableCallback callback) {
-        if (! TOSCA_TYPE_MAP.equals(toscaProperty.getType())) {
+                                              Map<String, MatchableProperty> matchables,
+                                              @NonNull MatchableCallback callback) {
+        if (!TOSCA_TYPE_MAP.equals(toscaProperty.getType())) {
             throw new IllegalArgumentException("must be a map");
         }
         //
@@ -259,11 +262,11 @@ public class MatchablePolicyType {
      * scanDatatype - scans a datatypes schema properties for matchables.
      *
      * @param toscaProperty ToscaProperty object
-     * @param matchables list of matchables to add to
-     * @param callback MatchableCallback to retrieve Data Types
+     * @param matchables    list of matchables to add to
+     * @param callback      MatchableCallback to retrieve Data Types
      */
     public static void scanDatatype(@NonNull ToscaProperty toscaProperty, Map<String, MatchableProperty> matchables,
-            @NonNull MatchableCallback callback) {
+                                    @NonNull MatchableCallback callback) {
         //
         // Don't check for matchable property, as that does not make sense to support right now. But we need to
         // scan the datatype for matchable properties.
@@ -287,11 +290,12 @@ public class MatchablePolicyType {
      * scanDatatypes - scans a datatype schema for matchables.
      *
      * @param toscaSchema ToscaEntrySchema
-     * @param matchables list of matchables to add to
-     * @param callback MatchableCallback object for retrieving other data types
+     * @param matchables  list of matchables to add to
+     * @param callback    MatchableCallback object for retrieving other data types
      */
-    public static void scanDatatype(@NonNull ToscaEntrySchema toscaSchema, Map<String, MatchableProperty> matchables,
-            @NonNull MatchableCallback callback) {
+    public static void scanDatatype(@NonNull ToscaSchemaDefinition toscaSchema,
+                                    Map<String, MatchableProperty> matchables,
+                                    @NonNull MatchableCallback callback) {
         //
         // Don't check for matchable property, as that does not make sense to support right now. But we need to
         // scan the datatype for matchable properties.
@@ -337,4 +341,5 @@ public class MatchablePolicyType {
         }
         return "true".equalsIgnoreCase(isMatchable);
     }
+
 }
