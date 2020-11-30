@@ -42,4 +42,4 @@ RUN chown -R policy:policy * && chmod 755 bin/*.sh && chmod 755 mysql/bin/*.sh
 
 USER policy
 WORKDIR $POLICY_HOME/bin
-ENTRYPOINT [ "bash", "./policy-pdpx.sh" ]
+ENTRYPOINT [ "./policy-pdpx.sh" ]

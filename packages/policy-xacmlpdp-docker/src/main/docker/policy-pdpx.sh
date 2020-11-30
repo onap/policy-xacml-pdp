@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/usr/bin/env ash
 #
 # ============LICENSE_START=======================================================
 #  Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
@@ -32,27 +32,26 @@ else
     CONFIG_FILE=${CONFIG_FILE}
 fi
 
-if [ -z "$CONFIG_FILE" ]
-  then
+if [ -z "$CONFIG_FILE" ]; then
     CONFIG_FILE="${POLICY_HOME}/etc/defaultConfig.json"
 fi
 
-if [[ -f "${POLICY_HOME}"/etc/mounted/policy-truststore ]]; then
+if [ -f "${POLICY_HOME}/etc/mounted/policy-truststore" ]; then
     echo "overriding policy-truststore"
     cp -f "${POLICY_HOME}"/etc/mounted/policy-truststore "${TRUSTSTORE}"
 fi
 
-if [[ -f "${POLICY_HOME}"/etc/mounted/policy-keystore ]]; then
+if [ -f "${POLICY_HOME}/etc/mounted/policy-keystore" ]; then
     echo "overriding policy-keystore"
     cp -f "${POLICY_HOME}"/etc/mounted/policy-keystore "${KEYSTORE}"
 fi
 
-if [[ -f "${POLICY_HOME}"/etc/mounted/xacml.properties ]]; then
+if [ -f "${POLICY_HOME}/etc/mounted/xacml.properties" ]; then
     echo "overriding xacml.properties in guards application"
     cp -f "${POLICY_HOME}"/etc/mounted/xacml.properties "${POLICY_HOME}"/apps/guard/
 fi
 
-if [[ -f "${POLICY_HOME}"/etc/mounted/logback.xml ]]; then
+if [ -f "${POLICY_HOME}/etc/mounted/logback.xml" ]; then
     echo "overriding logback.xml"
     cp -f "${POLICY_HOME}"/etc/mounted/logback.xml "${POLICY_HOME}"/etc/
 fi
