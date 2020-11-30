@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env ash
 #
 # ============LICENSE_START=======================================================
 #  Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
 #  Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
+#  Modifications Copyright (C) 2020 AT&T.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,8 +26,7 @@ SQL_FILE="${POLICY_HOME}/mysql/sql/createguardtable.sql"
 sed 's/\\//g' "${POLICY_HOME}"/apps/guard/xacml.properties > /tmp/temp.xacml.properties
 
 # Remove temp file
-if [ ! -f /tmp/temp.xacml.properties ]
-  then
+if [ ! -f /tmp/temp.xacml.properties ]; then
     echo "Temporary guard xacml properties file not found!"
     exit 1
 fi
@@ -39,20 +39,17 @@ DB_PASSWORD=$(awk -F= '$1 == "javax.persistence.jdbc.password" { print $2 }' /tm
 # Remove temp file
 rm /tmp/temp.xacml.properties
 
-if [ -z "$DB_HOSTNAME" ]
-  then
+if [ -z "$DB_HOSTNAME" ]; then
     echo "No Mariadb host provided in guard xacml.properties."
     exit 2
 fi
 
-if [ -z "$DB_USERNAME" ]
-  then
+if [ -z "$DB_USERNAME" ]; then
     echo "No Mariadb username provided in guard xacml.properties."
     exit 2
 fi
 
-if [ -z "$DB_PASSWORD" ]
-  then
+if [ -z "$DB_PASSWORD" ]; then
     echo "No Mariadb password provided in guard xacml.properties."
     exit 2
 fi
