@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +27,8 @@ import com.att.research.xacml.api.Identifier;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.datatypes.ISO8601DateTime;
 import java.text.ParseException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaEntrySchema;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaSchemaDefinition;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
 
@@ -37,7 +38,7 @@ public class MatchablePropertyTypeTimestamp extends MatchablePropertyTypeBase<IS
         super(inProperty);
     }
 
-    public MatchablePropertyTypeTimestamp(ToscaEntrySchema toscaSchema) {
+    public MatchablePropertyTypeTimestamp(ToscaSchemaDefinition toscaSchema) {
         super(toscaSchema);
     }
 

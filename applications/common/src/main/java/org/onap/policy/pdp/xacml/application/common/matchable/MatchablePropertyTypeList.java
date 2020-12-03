@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +27,8 @@ import com.att.research.xacml.api.Identifier;
 import java.util.Collections;
 import java.util.List;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaEntrySchema;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaSchemaDefinition;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
 
@@ -42,7 +43,7 @@ public class MatchablePropertyTypeList extends MatchablePropertyTypeBase<List<Ma
     public MatchablePropertyTypeList(ToscaProperty toscaProperty) {
         super(toscaProperty);
 
-        ToscaEntrySchema schema = toscaProperty.getEntrySchema();
+        ToscaSchemaDefinition schema = toscaProperty.getEntrySchema();
         this.primitiveProperty = MatchablePolicyType.handlePrimitive(schema.getType(), schema);
     }
 

@@ -48,10 +48,10 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaEntrySchema;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaSchemaDefinition;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
@@ -128,7 +128,7 @@ public class MatchablePolicyTypeTest implements MatchableCallback {
         //
         // Unlikely these would be called - just get code coverage on them
         //
-        ToscaEntrySchema schema = new ToscaEntrySchema();
+        ToscaSchemaDefinition schema = new ToscaSchemaDefinition();
         schema.setType("integer");
         assertThat(MatchablePolicyType.handlePrimitive("foo", schema)).isNotNull();
         schema.setType("float");
@@ -183,7 +183,7 @@ public class MatchablePolicyTypeTest implements MatchableCallback {
         assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
             timestampValue.validate("foo"));
 
-        ToscaEntrySchema schema = new ToscaEntrySchema();
+        ToscaSchemaDefinition schema = new ToscaSchemaDefinition();
         schema.setType("string");
         property.setEntrySchema(schema);
         MatchablePropertyTypeMap mapValue = new MatchablePropertyTypeMap(property);
