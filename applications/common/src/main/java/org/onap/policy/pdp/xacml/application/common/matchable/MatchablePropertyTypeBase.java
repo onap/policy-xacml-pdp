@@ -32,11 +32,11 @@ public abstract class MatchablePropertyTypeBase<T> implements MatchablePropertyT
     private ToscaProperty toscaProperty;
     private ToscaSchemaDefinition toscaSchema;
 
-    public MatchablePropertyTypeBase(ToscaProperty inProperty) {
+    protected MatchablePropertyTypeBase(ToscaProperty inProperty) {
         this.toscaProperty = inProperty;
     }
 
-    public MatchablePropertyTypeBase(ToscaSchemaDefinition inSchema) {
+    protected MatchablePropertyTypeBase(ToscaSchemaDefinition inSchema) {
         this.toscaSchema = inSchema;
     }
 

@@ -68,7 +68,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
     private PDPEngine pdpEngine = null;
     private Map<ToscaPolicy, Path> mapLoadedPolicies = new HashMap<>();
 
-    public StdXacmlApplicationServiceProvider() {
+    protected StdXacmlApplicationServiceProvider() {
         super();
     }
 

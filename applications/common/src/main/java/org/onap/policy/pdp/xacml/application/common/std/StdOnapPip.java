@@ -70,7 +70,7 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
     protected String issuer;
     protected boolean shutdown = false;
 
-    public StdOnapPip() {
+    protected StdOnapPip() {
         super();
     }
 
