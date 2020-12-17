@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -128,6 +129,12 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         // There should be a metadata section
         //
         this.fillMetadataSection(newPolicyType, toscaPolicy.getMetadata());
+        //
+        // There should be properties metadata section
+        //
+        if (toscaPolicy.getProperties() == null) {
+            throw new ToscaPolicyConversionException("no properties specified on guard policy: " + policyName);
+        }
         //
         // Generate the TargetType - add true if not blacklist
         //

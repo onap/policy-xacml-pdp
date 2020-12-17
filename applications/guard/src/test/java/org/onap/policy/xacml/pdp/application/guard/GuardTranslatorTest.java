@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +36,7 @@ import com.att.research.xacml.std.StdStatusCode;
 import com.att.research.xacml.util.XACMLPolicyWriter;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
@@ -204,6 +206,16 @@ public class GuardTranslatorTest {
                 }
             }
         }
+
+        ToscaPolicy testPol = completedJtst.getToscaTopologyTemplate().getPolicies().get(0).values().iterator().next();
+
+        testPol.setProperties(new LinkedHashMap<>());
+        assertThatExceptionOfType(ToscaPolicyConversionException.class)
+                .isThrownBy(() -> translator.convertPolicy(testPol));
+
+        testPol.setProperties(null);
+        assertThatExceptionOfType(ToscaPolicyConversionException.class)
+                .isThrownBy(() -> translator.convertPolicy(testPol));
     }
 
     private void validateCommon(ToscaPolicy policy, PolicyType xacmlPolicy) {

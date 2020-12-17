@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
+import org.apache.commons.collections4.MapUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -86,7 +88,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
     private String getNativeXacmlPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
 
         Map<String, Object> propertyMap = toscaPolicy.getProperties();
-        if (propertyMap.isEmpty() || !propertyMap.containsKey(POLICY)) {
+        if (MapUtils.isEmpty(propertyMap) || !propertyMap.containsKey(POLICY)) {
             throw new ToscaPolicyConversionException("no xacml native policy found in the tosca policy");
         }
 

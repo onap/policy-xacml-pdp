@@ -5,6 +5,8 @@ topology_template:
          type: onap.policies.controlloop.guard.common.FrequencyLimiter
          type_version: 1.0.0
          version: 1.0.0
+         properties:
+            badProperty: badValue
    -  frequency-timewindow:
          type: onap.policies.controlloop.guard.common.FrequencyLimiter
          type_version: 1.0.0
@@ -16,7 +18,8 @@ topology_template:
          type: onap.policies.controlloop.guard.common.MinMax
          type_version: 1.0.0
          version: 1.0.0
-         properties: null
+         properties:
+            badProperty: badValue
    -  minmax-nominmax:
          type: onap.policies.controlloop.guard.common.MinMax
          type_version: 1.0.0
@@ -27,12 +30,14 @@ topology_template:
          type: onap.policies.controlloop.guard.common.Blacklist
          type_version: 1.0.0
          version: 1.0.0
-         properties: null
+         properties:
+            badProperty: badValue
    -  filter-noalgorithm:
          type: onap.policies.controlloop.guard.common.Filter
          type_version: 1.0.0
          version: 1.0.0
-         properties: null
+         properties:
+            badProperty: badValue
    -  filter-badalgorithm:
          type: onap.policies.controlloop.guard.common.Filter
          type_version: 1.0.0
