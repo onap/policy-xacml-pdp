@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +33,7 @@ import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.IdentifierImpl;
 import com.att.research.xacml.std.annotations.RequestParser;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
@@ -129,10 +131,17 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         //
         this.fillMetadataSection(newPolicyType, toscaPolicy.getMetadata());
         //
+        // There should be properties metadata section
+        //
+        if (toscaPolicy.getProperties() == null) {
+            toscaPolicy.setProperties(new LinkedHashMap<>());
+        }
+        this.fillMetadataSection(newPolicyType, toscaPolicy.getMetadata());
+        //
         // Generate the TargetType - add true if not blacklist
         //
         newPolicyType.setTarget(this.generateTargetType(toscaPolicy.getProperties(),
-                ! POLICYTYPE_BLACKLIST.equals(toscaPolicy.getType())));
+                !POLICYTYPE_BLACKLIST.equals(toscaPolicy.getType())));
         //
         // Add specific's per guard policy type
         //
@@ -221,8 +230,8 @@ public class GuardTranslator implements ToscaPolicyTranslator {
     }
 
     /**
-     * Generate the targettype for the policy. Optional to add MatchType for the target. eg. the
-     * blacklist policy type uses the target in a different manner.
+     * Generate the targettype for the policy. Optional to add MatchType for the target. eg. the blacklist policy type
+     * uses the target in a different manner.
      *
      * @param properties TOSCA properties object
      * @param addTargets true to go ahead and add target to the match list.
@@ -272,12 +281,8 @@ public class GuardTranslator implements ToscaPolicyTranslator {
                 //
                 // Exact match
                 //
-                MatchType match = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
-                    XACML3.ID_FUNCTION_STRING_EQUAL,
-                    value,
-                    XACML3.ID_DATATYPE_STRING,
-                    attributeId,
-                    XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
+                MatchType match = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(XACML3.ID_FUNCTION_STRING_EQUAL,
+                        value, XACML3.ID_DATATYPE_STRING, attributeId, XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
 
                 allOf.getMatch().add(match);
             }
@@ -285,12 +290,8 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         }
         if (value instanceof Collection) {
             ((Collection<String>) value).forEach(val -> {
-                MatchType match = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
-                        XACML3.ID_FUNCTION_STRING_EQUAL,
-                        val,
-                        XACML3.ID_DATATYPE_STRING,
-                        attributeId,
-                        XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
+                MatchType match = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(XACML3.ID_FUNCTION_STRING_EQUAL,
+                        val, XACML3.ID_DATATYPE_STRING, attributeId, XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
 
                 allOf.getMatch().add(match);
             });
@@ -299,27 +300,20 @@ public class GuardTranslator implements ToscaPolicyTranslator {
     }
 
     @SuppressWarnings("rawtypes")
-    protected void addTimeRangeMatch(AllOfType allOf, Object timeRange)
-            throws ToscaPolicyConversionException {
-        if (! (timeRange instanceof Map)) {
+    protected void addTimeRangeMatch(AllOfType allOf, Object timeRange) throws ToscaPolicyConversionException {
+        if (!(timeRange instanceof Map)) {
             throw new ToscaPolicyConversionException("timeRange is not a map object " + timeRange.getClass());
         }
 
         MatchType matchStart = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
-                XACML3.ID_FUNCTION_TIME_GREATER_THAN_OR_EQUAL,
-                ((Map) timeRange).get("start_time").toString(),
-                XACML3.ID_DATATYPE_TIME,
-                XACML3.ID_ENVIRONMENT_CURRENT_TIME,
-                XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
+                XACML3.ID_FUNCTION_TIME_GREATER_THAN_OR_EQUAL, ((Map) timeRange).get("start_time").toString(),
+                XACML3.ID_DATATYPE_TIME, XACML3.ID_ENVIRONMENT_CURRENT_TIME, XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
 
         allOf.getMatch().add(matchStart);
 
         MatchType matchEnd = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
-                XACML3.ID_FUNCTION_TIME_LESS_THAN_OR_EQUAL,
-                ((Map) timeRange).get("end_time").toString(),
-                XACML3.ID_DATATYPE_TIME,
-                XACML3.ID_ENVIRONMENT_CURRENT_TIME,
-                XACML3.ID_ATTRIBUTE_CATEGORY_ENVIRONMENT);
+                XACML3.ID_FUNCTION_TIME_LESS_THAN_OR_EQUAL, ((Map) timeRange).get("end_time").toString(),
+                XACML3.ID_DATATYPE_TIME, XACML3.ID_ENVIRONMENT_CURRENT_TIME, XACML3.ID_ATTRIBUTE_CATEGORY_ENVIRONMENT);
 
         allOf.getMatch().add(matchEnd);
     }
@@ -329,21 +323,21 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         //
         // We must have the limit
         //
-        if (! toscaPolicy.getProperties().containsKey(FIELD_LIMIT)) {
+        if (!toscaPolicy.getProperties().containsKey(FIELD_LIMIT)) {
             throw new ToscaPolicyConversionException("Missing property limit");
         }
         //
         // See if its possible to generate a count
         //
-        Integer limit = ToscaPolicyTranslatorUtils.parseInteger(
-                toscaPolicy.getProperties().get(FIELD_LIMIT).toString());
+        Integer limit =
+                ToscaPolicyTranslatorUtils.parseInteger(toscaPolicy.getProperties().get(FIELD_LIMIT).toString());
         if (limit == null) {
             throw new ToscaPolicyConversionException("Missing limit value");
         }
         String timeWindow = null;
         if (toscaPolicy.getProperties().containsKey(FIELD_TIMEWINDOW)) {
-            Integer intTimeWindow = ToscaPolicyTranslatorUtils.parseInteger(
-                    toscaPolicy.getProperties().get(FIELD_TIMEWINDOW).toString());
+            Integer intTimeWindow = ToscaPolicyTranslatorUtils
+                    .parseInteger(toscaPolicy.getProperties().get(FIELD_TIMEWINDOW).toString());
             if (intTimeWindow == null) {
                 throw new ToscaPolicyConversionException("timeWindow is not an integer");
             }
@@ -390,9 +384,8 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         // Setup issuer - used by the operations PIP to determine
         // how to do the database query.
         //
-        String issuer = ToscaDictionary.GUARD_ISSUER_PREFIX
-            + CountRecentOperationsPip.ISSUER_NAME
-            + ":tw:" + timeWindow + ":" + timeUnits;
+        String issuer = ToscaDictionary.GUARD_ISSUER_PREFIX + CountRecentOperationsPip.ISSUER_NAME + ":tw:" + timeWindow
+                + ":" + timeUnits;
         designator.setIssuer(issuer);
 
         AttributeValueType valueLimit = new AttributeValueType();
@@ -425,15 +418,12 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         //
         // Add the target
         //
-        if (! toscaPolicy.getProperties().containsKey(FIELD_TARGET)) {
+        if (!toscaPolicy.getProperties().containsKey(FIELD_TARGET)) {
             throw new ToscaPolicyConversionException("Missing target field in minmax policy");
         }
-        MatchType matchTarget = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
-                XACML3.ID_FUNCTION_STRING_EQUAL,
-                toscaPolicy.getProperties().get(FIELD_TARGET).toString(),
-                XACML3.ID_DATATYPE_STRING,
-                ToscaDictionary.ID_RESOURCE_GUARD_TARGETID,
-                XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
+        MatchType matchTarget = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(XACML3.ID_FUNCTION_STRING_EQUAL,
+                toscaPolicy.getProperties().get(FIELD_TARGET).toString(), XACML3.ID_DATATYPE_STRING,
+                ToscaDictionary.ID_RESOURCE_GUARD_TARGETID, XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
         //
         // For the min, if the # of instances is less than the minimum
         // then allow the scale.
@@ -442,27 +432,21 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         if (toscaPolicy.getProperties().containsKey(FIELD_MIN)) {
             min = ToscaPolicyTranslatorUtils.parseInteger(toscaPolicy.getProperties().get(FIELD_MIN).toString());
             MatchType matchMin = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
-                    XACML3.ID_FUNCTION_INTEGER_GREATER_THAN,
-                    min.toString(),
-                    XACML3.ID_DATATYPE_INTEGER,
-                    ToscaDictionary.ID_RESOURCE_GUARD_VFCOUNT,
-                    XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
+                    XACML3.ID_FUNCTION_INTEGER_GREATER_THAN, min.toString(), XACML3.ID_DATATYPE_INTEGER,
+                    ToscaDictionary.ID_RESOURCE_GUARD_VFCOUNT, XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
 
-            newPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(
-                    generateMinMaxRule(matchTarget, matchMin, policyName + ":minrule", "check minimum"));
+            newPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition()
+                    .add(generateMinMaxRule(matchTarget, matchMin, policyName + ":minrule", "check minimum"));
         }
         Integer max = null;
         if (toscaPolicy.getProperties().containsKey(FIELD_MAX)) {
             max = ToscaPolicyTranslatorUtils.parseInteger(toscaPolicy.getProperties().get(FIELD_MAX).toString());
             MatchType matchMax = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
-                    XACML3.ID_FUNCTION_INTEGER_GREATER_THAN,
-                    max.toString(),
-                    XACML3.ID_DATATYPE_INTEGER,
-                    ToscaDictionary.ID_RESOURCE_GUARD_VFCOUNT,
-                    XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
+                    XACML3.ID_FUNCTION_INTEGER_GREATER_THAN, max.toString(), XACML3.ID_DATATYPE_INTEGER,
+                    ToscaDictionary.ID_RESOURCE_GUARD_VFCOUNT, XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
 
-            newPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(
-                    generateMinMaxRule(matchTarget, matchMax, policyName + ":maxrule", "check maximum"));
+            newPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition()
+                    .add(generateMinMaxRule(matchTarget, matchMax, policyName + ":maxrule", "check maximum"));
         }
         //
         // Do we have at least a min or max?
@@ -493,7 +477,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         //
         // Validate the blacklist exists
         //
-        if (! toscaPolicy.getProperties().containsKey(FIELD_BLACKLIST)) {
+        if (!toscaPolicy.getProperties().containsKey(FIELD_BLACKLIST)) {
             throw new ToscaPolicyConversionException("Missing blacklist field");
         }
         //
@@ -535,7 +519,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         //
         // Validate the algorithm
         //
-        if (! toscaPolicy.getProperties().containsKey(FIELD_FILTER_ALGORITHM)) {
+        if (!toscaPolicy.getProperties().containsKey(FIELD_FILTER_ALGORITHM)) {
             throw new ToscaPolicyConversionException("Missing algorithm");
         }
         Object algorithm = toscaPolicy.getProperties().get(FIELD_FILTER_ALGORITHM);
@@ -550,7 +534,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         //
         // Validate the filters exist and have the right properties
         //
-        if (! toscaPolicy.getProperties().containsKey(FIELD_FILTER_FILTERS)) {
+        if (!toscaPolicy.getProperties().containsKey(FIELD_FILTER_FILTERS)) {
             throw new ToscaPolicyConversionException("Missing filters");
         }
         //
@@ -578,8 +562,8 @@ public class GuardTranslator implements ToscaPolicyTranslator {
             //
             // Create our filter rule
             //
-            RuleType filterRule = createFilterRule(policyName + ":rule" + ruleId++, field, filter,
-                    function, isBlacklisted);
+            RuleType filterRule =
+                    createFilterRule(policyName + ":rule" + ruleId++, field, filter, function, isBlacklisted);
             //
             // Add the rule to the policy
             //
@@ -670,13 +654,9 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         //
         // Create the Match
         //
-        MatchType matchFilter = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
-                function,
-                filter,
-                XACML3.ID_DATATYPE_STRING,
-                new IdentifierImpl(GuardPolicyRequest.PREFIX_RESOURCE_ATTRIBUTE_ID + field),
-                XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE
-                );
+        MatchType matchFilter = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(function, filter,
+                XACML3.ID_DATATYPE_STRING, new IdentifierImpl(GuardPolicyRequest.PREFIX_RESOURCE_ATTRIBUTE_ID + field),
+                XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
         AllOfType allOf = new AllOfType();
         allOf.getMatch().add(matchFilter);
         AnyOfType anyOf = new AnyOfType();
