@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d5fca147_4ca8e37b",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-12-17T17:53:29Z",
+      "side": 1,
+      "message": "Wondering if it is better to abort processing here (throw ToscaPolicyConversionException)? \nNot sure if it would make sense to have no properties for guard policies, similar to the code that your touched on the other file.\nIt would be good to get Pam\u0027s feedback too.",
+      "parentUuid": "31eeedd0_1935c88c",
+      "range": {
+        "startLine": 134,
+        "startChar": 1,
+        "endLine": 139,
+        "endChar": 10
+      },
+      "revId": "dcd545360e98ec8dc66ddc9b00e4195408575ecf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2817087c_f0e624a5",
         "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
         "patchSetId": 2
