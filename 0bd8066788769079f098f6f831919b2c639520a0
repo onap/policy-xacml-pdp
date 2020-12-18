@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e0f6b36d_bd7fd81f",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-12-18T00:34:14Z",
+      "side": 0,
+      "message": "ugh I hate the formatting being changed for these - its visually easier for me to see.",
+      "range": {
+        "startLine": 275,
+        "startChar": 15,
+        "endLine": 280,
+        "endChar": 59
+      },
+      "revId": "0bd8066788769079f098f6f831919b2c639520a0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "17c982f5_ae233b74",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-12-18T00:34:14Z",
+      "side": 1,
+      "message": "Yeah better to throw ToscaPolicyConversionException. These policy types there is an expectation that there are properties, so may be better to just throw this right away.",
+      "parentUuid": "d5fca147_4ca8e37b",
+      "range": {
+        "startLine": 134,
+        "startChar": 1,
+        "endLine": 139,
+        "endChar": 10
+      },
+      "revId": "dcd545360e98ec8dc66ddc9b00e4195408575ecf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2817087c_f0e624a5",
         "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
         "patchSetId": 2
