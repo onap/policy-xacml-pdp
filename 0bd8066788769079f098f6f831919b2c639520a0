@@ -46,6 +46,30 @@
       "revId": "0bd8066788769079f098f6f831919b2c639520a0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e9533f7_a53cab06",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-12-21T16:37:48Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "7e8389db_0351d9d2",
+      "range": {
+        "startLine": 275,
+        "startChar": 15,
+        "endLine": 280,
+        "endChar": 59
+      },
+      "revId": "0bd8066788769079f098f6f831919b2c639520a0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

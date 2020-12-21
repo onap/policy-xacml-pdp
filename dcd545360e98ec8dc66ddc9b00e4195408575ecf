@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "c9f37e4e_61f8ae75",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-12-21T16:37:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d11470cc_bc1f85dc",
+      "range": {
+        "startLine": 134,
+        "startChar": 1,
+        "endLine": 139,
+        "endChar": 10
+      },
+      "revId": "dcd545360e98ec8dc66ddc9b00e4195408575ecf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2817087c_f0e624a5",
         "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
         "patchSetId": 2
