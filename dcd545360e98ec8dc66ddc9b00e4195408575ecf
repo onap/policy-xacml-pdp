@@ -117,6 +117,30 @@
       "revId": "dcd545360e98ec8dc66ddc9b00e4195408575ecf",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2ac28a9_8a2a22b0",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-12-21T15:27:55Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2817087c_f0e624a5",
+      "range": {
+        "startLine": 91,
+        "startChar": 12,
+        "endLine": 91,
+        "endChar": 41
+      },
+      "revId": "dcd545360e98ec8dc66ddc9b00e4195408575ecf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
