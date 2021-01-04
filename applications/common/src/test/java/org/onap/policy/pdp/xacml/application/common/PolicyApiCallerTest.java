@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,8 +51,8 @@ import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.properties.PolicyEndPointProperties;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.onap.policy.common.utils.network.NetworkUtil;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -138,22 +139,22 @@ public class PolicyApiCallerTest {
     @Test
     public void testGetPolicyType() throws Exception {
 
-        assertNotNull(api.getPolicyType(new ToscaPolicyTypeIdentifier(MY_TYPE, MY_VERSION)));
+        assertNotNull(api.getPolicyType(new ToscaConceptIdentifier(MY_TYPE, MY_VERSION)));
 
-        assertThatThrownBy(() -> api.getPolicyType(new ToscaPolicyTypeIdentifier(INVALID_TYPE, MY_VERSION)))
+        assertThatThrownBy(() -> api.getPolicyType(new ToscaConceptIdentifier(INVALID_TYPE, MY_VERSION)))
                         .isInstanceOf(PolicyApiException.class);
 
-        assertThatThrownBy(() -> api.getPolicyType(new ToscaPolicyTypeIdentifier(UNKNOWN_TYPE, MY_VERSION)))
+        assertThatThrownBy(() -> api.getPolicyType(new ToscaConceptIdentifier(UNKNOWN_TYPE, MY_VERSION)))
                         .isInstanceOf(NotFoundException.class);
 
-        assertThatThrownBy(() -> api.getPolicyType(new ToscaPolicyTypeIdentifier(NOT_A_TYPE, MY_VERSION)))
+        assertThatThrownBy(() -> api.getPolicyType(new ToscaConceptIdentifier(NOT_A_TYPE, MY_VERSION)))
                         .isInstanceOf(PolicyApiException.class);
 
         // connect to a port that has no server
         when(clientParams.getPort()).thenReturn(NetworkUtil.allocPort());
         api = new PolicyApiCaller(clientParams);
 
-        assertThatThrownBy(() -> api.getPolicyType(new ToscaPolicyTypeIdentifier(MY_TYPE, MY_VERSION)))
+        assertThatThrownBy(() -> api.getPolicyType(new ToscaConceptIdentifier(MY_TYPE, MY_VERSION)))
                         .isInstanceOf(PolicyApiException.class);
     }
 

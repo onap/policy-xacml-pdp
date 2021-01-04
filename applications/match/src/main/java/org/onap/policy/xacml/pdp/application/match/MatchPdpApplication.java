@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +26,7 @@ package org.onap.policy.xacml.pdp.application.match;
 import java.nio.file.Path;
 import java.util.Arrays;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.std.StdMatchableTranslator;
@@ -36,7 +37,7 @@ public class MatchPdpApplication extends StdXacmlApplicationServiceProvider {
     public static final String ONAP_MATCH_BASE_POLICY_TYPE = "onap.policies.Match";
     public static final String ONAP_MATCH_DERIVED_POLICY_TYPE = "onap.policies.match.";
 
-    private static final ToscaPolicyTypeIdentifier supportedPolicy = new ToscaPolicyTypeIdentifier(
+    private static final ToscaConceptIdentifier supportedPolicy = new ToscaConceptIdentifier(
             ONAP_MATCH_BASE_POLICY_TYPE, "1.0.0");
 
     private StdMatchableTranslator translator = new StdMatchableTranslator();
@@ -68,7 +69,7 @@ public class MatchPdpApplication extends StdXacmlApplicationServiceProvider {
     }
 
     @Override
-    public boolean canSupportPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
+    public boolean canSupportPolicyType(ToscaConceptIdentifier policyTypeId) {
         return policyTypeId.getName().startsWith(ONAP_MATCH_DERIVED_POLICY_TYPE);
     }
 

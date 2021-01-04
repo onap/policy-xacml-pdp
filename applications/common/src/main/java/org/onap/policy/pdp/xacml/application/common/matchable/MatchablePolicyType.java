@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020 Nordix Foundation.
+ * Modifications Copyright (C) 2020-2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@ import java.util.Map.Entry;
 import java.util.function.Function;
 import lombok.Getter;
 import lombok.NonNull;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaSchemaDefinition;
@@ -69,11 +69,11 @@ public class MatchablePolicyType {
             );
     //@formatter:on
 
-    ToscaPolicyIdentifier policyId;
+    ToscaConceptIdentifier policyId;
     Map<String, MatchableProperty> matchables = new HashMap<>();
 
     public MatchablePolicyType(@NonNull ToscaPolicyType policyType, @NonNull MatchableCallback callback) {
-        this.policyId = new ToscaPolicyIdentifier(policyType.getName(), policyType.getVersion());
+        this.policyId = new ToscaConceptIdentifier(policyType.getName(), policyType.getVersion());
         scanPolicyType(policyType, callback);
     }
 

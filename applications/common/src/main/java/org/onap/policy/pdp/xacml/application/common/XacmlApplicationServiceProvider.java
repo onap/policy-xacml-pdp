@@ -2,6 +2,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +30,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 
 /**
  * This interface is how the XACML REST controller can communicate
@@ -73,7 +74,7 @@ public interface XacmlApplicationServiceProvider {
      *
      * @return List of Strings (eg. "onap.policy.foo.bar")
      */
-    List<ToscaPolicyTypeIdentifier>     supportedPolicyTypes();
+    List<ToscaConceptIdentifier>     supportedPolicyTypes();
 
     /**
      * Asks whether the application can support the incoming
@@ -82,7 +83,7 @@ public interface XacmlApplicationServiceProvider {
      * @param toscaPolicyId Identifier for policy type
      * @return true if supported
      */
-    boolean          canSupportPolicyType(ToscaPolicyTypeIdentifier toscaPolicyId);
+    boolean          canSupportPolicyType(ToscaConceptIdentifier toscaPolicyId);
 
     /**
      * Load a Tosca Policy.

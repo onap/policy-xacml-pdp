@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,10 +57,10 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 import org.onap.policy.pdp.xacml.application.common.OnapObligation;
@@ -87,8 +88,8 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
     private static final Logger LOGGER = LoggerFactory.getLogger(StdMatchableTranslator.class);
     private static final StandardYamlCoder standardYamlCoder = new StandardYamlCoder();
 
-    private final Map<ToscaPolicyTypeIdentifier, ToscaServiceTemplate> matchablePolicyTypes = new HashMap<>();
-    private final Map<ToscaPolicyTypeIdentifier, MatchablePolicyType> matchableCache = new HashMap<>();
+    private final Map<ToscaConceptIdentifier, ToscaServiceTemplate> matchablePolicyTypes = new HashMap<>();
+    private final Map<ToscaConceptIdentifier, MatchablePolicyType> matchableCache = new HashMap<>();
 
     @Setter
     private RestServerParameters apiRestParameters;
@@ -324,7 +325,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
 
     @Override
     public ToscaPolicyType retrievePolicyType(String derivedFrom) {
-        ToscaServiceTemplate template = this.findPolicyType(new ToscaPolicyTypeIdentifier(derivedFrom, "1.0.0"));
+        ToscaServiceTemplate template = this.findPolicyType(new ToscaConceptIdentifier(derivedFrom, "1.0.0"));
         if (template == null) {
             LOGGER.error("Could not retrieve Policy Type {}", derivedFrom);
             return null;
@@ -469,14 +470,14 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
     }
 
     /**
-     * findPolicyType - given the ToscaPolicyTypeIdentifier, finds it in memory, or
+     * findPolicyType - given the ToscaConceptIdentifier, finds it in memory, or
      * then tries to find it either locally on disk or pull it from the Policy
      * Lifecycle API the given TOSCA Policy Type.
      *
-     * @param policyTypeId ToscaPolicyTypeIdentifier to find
+     * @param policyTypeId ToscaConceptIdentifier to find
      * @return ToscaPolicyType object. Can be null if failure.
      */
-    private ToscaServiceTemplate findPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
+    private ToscaServiceTemplate findPolicyType(ToscaConceptIdentifier policyTypeId) {
         //
         // Is it loaded in memory?
         //
@@ -500,14 +501,14 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
     }
 
     /**
-     * loadPolicyType - Tries to load the given ToscaPolicyTypeIdentifier from local
+     * loadPolicyType - Tries to load the given ToscaConceptIdentifier from local
      * storage. If it does not exist, will then attempt to pull from Policy Lifecycle
      * API.
      *
-     * @param policyTypeId ToscaPolicyTypeIdentifier input
+     * @param policyTypeId ToscaConceptIdentifier input
      * @return ToscaPolicyType object. Null if failure.
      */
-    private ToscaServiceTemplate loadPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
+    private ToscaServiceTemplate loadPolicyType(ToscaConceptIdentifier policyTypeId) {
         //
         // Construct what the file name should be
         //
@@ -559,14 +560,14 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
     }
 
     /**
-     * pullPolicyType - pulls the given ToscaPolicyTypeIdentifier from the Policy Lifecycle API.
+     * pullPolicyType - pulls the given ToscaConceptIdentifier from the Policy Lifecycle API.
      * If successful, will store it locally given the policyTypePath.
      *
-     * @param policyTypeId ToscaPolicyTypeIdentifier
+     * @param policyTypeId ToscaConceptIdentifier
      * @param policyTypePath Path object to store locally
      * @return ToscaPolicyType object. Null if failure.
      */
-    private synchronized ToscaServiceTemplate pullPolicyType(ToscaPolicyTypeIdentifier policyTypeId,
+    private synchronized ToscaServiceTemplate pullPolicyType(ToscaConceptIdentifier policyTypeId,
             Path policyTypePath) {
         //
         // This is what we return
@@ -600,10 +601,10 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
      * constructLocalFilePath - common method to ensure the name of the local file for the
      * policy type is the same.
      *
-     * @param policyTypeId ToscaPolicyTypeIdentifier
+     * @param policyTypeId ToscaConceptIdentifier
      * @return Path object
      */
-    private Path constructLocalFilePath(ToscaPolicyTypeIdentifier policyTypeId) {
+    private Path constructLocalFilePath(ToscaConceptIdentifier policyTypeId) {
         return Paths.get(this.pathForData.toAbsolutePath().toString(), policyTypeId.getName() + "-"
                 + policyTypeId.getVersion() + ".yaml");
     }

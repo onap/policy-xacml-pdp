@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +43,7 @@ import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.models.pdp.enums.PdpHealthStatus;
 import org.onap.policy.models.pdp.enums.PdpResponseStatus;
 import org.onap.policy.models.pdp.enums.PdpState;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
 
@@ -58,8 +59,8 @@ public class XacmlStateTest {
     @Mock
     private XacmlPdpActivator act;
 
-    private ToscaPolicyTypeIdentifier ident1;
-    private ToscaPolicyTypeIdentifier ident2;
+    private ToscaConceptIdentifier ident1;
+    private ToscaConceptIdentifier ident2;
 
     private String hostName;
 
@@ -74,8 +75,8 @@ public class XacmlStateTest {
 
         hostName = NetworkUtil.getHostname();
 
-        ident1 = new ToscaPolicyTypeIdentifier("nameA", "typeA");
-        ident2 = new ToscaPolicyTypeIdentifier("nameB", "typeB");
+        ident1 = new ToscaConceptIdentifier("nameA", "typeA");
+        ident2 = new ToscaConceptIdentifier("nameB", "typeB");
 
         when(appmgr.getToscaPolicyTypeIdents()).thenReturn(Arrays.asList(ident1, ident2));
 

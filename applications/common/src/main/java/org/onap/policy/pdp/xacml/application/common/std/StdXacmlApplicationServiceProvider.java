@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,8 +44,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
@@ -59,7 +60,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
 
     protected String applicationName = "Please Override";
     protected List<String> actions = Collections.emptyList();
-    protected List<ToscaPolicyTypeIdentifier> supportedPolicyTypes = new ArrayList<>();
+    protected List<ToscaConceptIdentifier> supportedPolicyTypes = new ArrayList<>();
 
     private Path pathForData = null;
     @Getter
@@ -110,12 +111,12 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
     }
 
     @Override
-    public List<ToscaPolicyTypeIdentifier> supportedPolicyTypes() {
+    public List<ToscaConceptIdentifier> supportedPolicyTypes() {
         return supportedPolicyTypes;
     }
 
     @Override
-    public boolean canSupportPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
+    public boolean canSupportPolicyType(ToscaConceptIdentifier policyTypeId) {
         throw new UnsupportedOperationException("Please override and implement canSupportPolicyType");
     }
 

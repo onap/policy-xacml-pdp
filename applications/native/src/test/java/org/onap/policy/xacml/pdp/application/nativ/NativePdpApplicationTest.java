@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,8 +43,8 @@ import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.common.utils.resources.TextFileUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
@@ -130,9 +131,9 @@ public class NativePdpApplicationTest {
         assertThat(translator.convertResponse(null)).isNull();
 
         NativePdpApplication application = new NativePdpApplication();
-        assertThat(application.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+        assertThat(application.canSupportPolicyType(new ToscaConceptIdentifier(
             "onap.policies.native.Xacml", "1.0.0"))).isTrue();
-        assertThat(application.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+        assertThat(application.canSupportPolicyType(new ToscaConceptIdentifier(
                 "onap.policies.native.SomethingElse", "1.0.0"))).isFalse();
         assertThat(application.actionDecisionsSupported()).contains("native");
     }

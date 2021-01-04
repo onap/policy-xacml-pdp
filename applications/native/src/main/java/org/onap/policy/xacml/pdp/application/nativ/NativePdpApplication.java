@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +26,7 @@ package org.onap.policy.xacml.pdp.application.nativ;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
 import java.util.Arrays;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServiceProvider;
 
@@ -37,7 +38,7 @@ import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServi
  */
 public class NativePdpApplication extends StdXacmlApplicationServiceProvider {
 
-    private static final ToscaPolicyTypeIdentifier nativePolicyType = new ToscaPolicyTypeIdentifier(
+    private static final ToscaConceptIdentifier nativePolicyType = new ToscaConceptIdentifier(
             "onap.policies.native.Xacml", "1.0.0");
     private NativePdpApplicationTranslator translator = new NativePdpApplicationTranslator();
 
@@ -53,7 +54,7 @@ public class NativePdpApplication extends StdXacmlApplicationServiceProvider {
     }
 
     @Override
-    public boolean canSupportPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
+    public boolean canSupportPolicyType(ToscaConceptIdentifier policyTypeId) {
         return nativePolicyType.equals(policyTypeId);
     }
 
