@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +24,14 @@
 package org.onap.policy.xacml.pdp.application.naming;
 
 import java.util.Arrays;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdCombinedPolicyResultsTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServiceProvider;
 
 public class NamingPdpApplication extends StdXacmlApplicationServiceProvider {
 
-    private static final ToscaPolicyTypeIdentifier namingPolicyType = new ToscaPolicyTypeIdentifier(
+    private static final ToscaConceptIdentifier namingPolicyType = new ToscaConceptIdentifier(
             "onap.policies.Naming", "1.0.0");
 
     private StdCombinedPolicyResultsTranslator translator = new StdCombinedPolicyResultsTranslator();
@@ -47,7 +48,7 @@ public class NamingPdpApplication extends StdXacmlApplicationServiceProvider {
     }
 
     @Override
-    public boolean canSupportPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
+    public boolean canSupportPolicyType(ToscaConceptIdentifier policyTypeId) {
         return namingPolicyType.equals(policyTypeId);
     }
 

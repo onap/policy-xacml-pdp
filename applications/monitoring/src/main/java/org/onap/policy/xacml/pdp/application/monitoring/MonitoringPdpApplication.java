@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +30,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdCombinedPolicyResultsTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServiceProvider;
@@ -66,11 +67,11 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
         //
         // By default this supports just Monitoring policy types
         //
-        supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(ONAP_MONITORING_BASE_POLICY_TYPE, VERSION_100));
+        supportedPolicyTypes.add(new ToscaConceptIdentifier(ONAP_MONITORING_BASE_POLICY_TYPE, VERSION_100));
     }
 
     @Override
-    public boolean canSupportPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
+    public boolean canSupportPolicyType(ToscaConceptIdentifier policyTypeId) {
         //
         // For Monitoring, we will attempt to support all versions
         // of the policy type. Since we are only packaging a decision

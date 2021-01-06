@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +55,7 @@ import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
@@ -160,9 +161,9 @@ public class NamingPdpApplicationTest {
         // Ensure it has the supported policy types and
         // can support the correct policy types.
         //
-        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+        assertThat(service.canSupportPolicyType(new ToscaConceptIdentifier(
                 "onap.policies.Naming", "1.0.0"))).isTrue();
-        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+        assertThat(service.canSupportPolicyType(new ToscaConceptIdentifier(
                 "onap.foobar", "1.0.0"))).isFalse();
     }
 

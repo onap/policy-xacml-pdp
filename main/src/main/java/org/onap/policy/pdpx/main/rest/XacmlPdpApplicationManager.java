@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,9 +35,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.slf4j.Logger;
@@ -51,7 +51,7 @@ public class XacmlPdpApplicationManager {
 
     private ServiceLoader<XacmlApplicationServiceProvider> applicationLoader;
     private Map<String, XacmlApplicationServiceProvider> providerActionMap = new HashMap<>();
-    private List<ToscaPolicyTypeIdentifier> toscaPolicyTypeIdents = new ArrayList<>();
+    private List<ToscaConceptIdentifier> toscaPolicyTypeIdents = new ArrayList<>();
     private Map<ToscaPolicy, XacmlApplicationServiceProvider> mapLoadedPolicies = new HashMap<>();
 
 
@@ -136,14 +136,14 @@ public class XacmlPdpApplicationManager {
      *
      * @return list of ToscaPolicyIdentifier
      */
-    public List<ToscaPolicyIdentifier> getToscaPolicyIdentifiers() {
+    public List<ToscaConceptIdentifier> getToscaPolicyIdentifiers() {
         //
         // converting map to return List of ToscaPolicyIdentiers
         //
         return mapLoadedPolicies.keySet().stream().map(ToscaPolicy::getIdentifier).collect(Collectors.toList());
     }
 
-    public List<ToscaPolicyTypeIdentifier> getToscaPolicyTypeIdents() {
+    public List<ToscaConceptIdentifier> getToscaPolicyTypeIdents() {
         return toscaPolicyTypeIdents;
     }
 

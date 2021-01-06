@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +21,14 @@ package org.onap.policy.tutorial.tutorial;
 
 import java.util.Arrays;
 import java.util.List;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServiceProvider;
 
 public class TutorialApplication extends StdXacmlApplicationServiceProvider {
 
-    private final ToscaPolicyTypeIdentifier supportedPolicyType =
-            new ToscaPolicyTypeIdentifier("onap.policies.Authorization", "1.0.0");
+    private final ToscaConceptIdentifier supportedPolicyType =
+            new ToscaConceptIdentifier("onap.policies.Authorization", "1.0.0");
     private final TutorialTranslator translator = new TutorialTranslator();
 
     @Override
@@ -41,12 +42,12 @@ public class TutorialApplication extends StdXacmlApplicationServiceProvider {
     }
 
     @Override
-    public synchronized List<ToscaPolicyTypeIdentifier> supportedPolicyTypes() {
+    public synchronized List<ToscaConceptIdentifier> supportedPolicyTypes() {
         return Arrays.asList(supportedPolicyType);
     }
 
     @Override
-    public boolean canSupportPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
+    public boolean canSupportPolicyType(ToscaConceptIdentifier policyTypeId) {
         return supportedPolicyType.equals(policyTypeId);
     }
 

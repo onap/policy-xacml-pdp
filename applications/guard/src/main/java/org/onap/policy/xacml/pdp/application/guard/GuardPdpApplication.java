@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +24,7 @@
 package org.onap.policy.xacml.pdp.application.guard;
 
 import java.util.Arrays;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.std.StdXacmlApplicationServiceProvider;
 import org.slf4j.Logger;
@@ -52,30 +53,30 @@ public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
         applicationName = "guard";
         actions = Arrays.asList("guard");
 
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+        this.supportedPolicyTypes.add(new ToscaConceptIdentifier(
                 GuardTranslator.POLICYTYPE_FREQUENCY,
                 STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+        this.supportedPolicyTypes.add(new ToscaConceptIdentifier(
                 GuardTranslator.POLICYTYPE_MINMAX,
                 STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+        this.supportedPolicyTypes.add(new ToscaConceptIdentifier(
                 GuardTranslator.POLICYTYPE_BLACKLIST,
                 STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+        this.supportedPolicyTypes.add(new ToscaConceptIdentifier(
                 GuardTranslator.POLICYTYPE_FILTER,
                 STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(
+        this.supportedPolicyTypes.add(new ToscaConceptIdentifier(
                 "onap.policies.controlloop.guard.coordination.FirstBlocksSecond",
                 STRING_VERSION100));
     }
 
     @Override
-    public boolean canSupportPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
+    public boolean canSupportPolicyType(ToscaConceptIdentifier policyTypeId) {
         //
         // For the time being, restrict this if the version isn't known.
         // Could be too difficult to support changing of versions dynamically.
         //
-        for (ToscaPolicyTypeIdentifier supported : this.supportedPolicyTypes) {
+        for (ToscaConceptIdentifier supported : this.supportedPolicyTypes) {
             if (policyTypeId.equals(supported)) {
                 return true;
             }

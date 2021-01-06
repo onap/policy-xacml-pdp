@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,8 +56,8 @@ import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.guard.OperationsHistory;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
@@ -219,26 +220,26 @@ public class GuardPdpApplicationTest {
         assertThat(service.supportedPolicyTypes()).isNotEmpty();
         assertThat(service.supportedPolicyTypes().size()).isEqualTo(5);
         assertThat(service.canSupportPolicyType(
-                new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.common.FrequencyLimiter", "1.0.0")))
+                new ToscaConceptIdentifier("onap.policies.controlloop.guard.common.FrequencyLimiter", "1.0.0")))
                         .isTrue();
         assertThat(service.canSupportPolicyType(
-                new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.common.FrequencyLimiter", "1.0.1")))
+                new ToscaConceptIdentifier("onap.policies.controlloop.guard.common.FrequencyLimiter", "1.0.1")))
                         .isFalse();
         assertThat(service.canSupportPolicyType(
-                new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.common.MinMax", "1.0.0"))).isTrue();
+                new ToscaConceptIdentifier("onap.policies.controlloop.guard.common.MinMax", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(
-                new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.common.MinMax", "1.0.1"))).isFalse();
+                new ToscaConceptIdentifier("onap.policies.controlloop.guard.common.MinMax", "1.0.1"))).isFalse();
         assertThat(service.canSupportPolicyType(
-                new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.common.Blacklist", "1.0.0"))).isTrue();
+                new ToscaConceptIdentifier("onap.policies.controlloop.guard.common.Blacklist", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(
-                new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.common.Blacklist", "1.0.1"))).isFalse();
-        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+                new ToscaConceptIdentifier("onap.policies.controlloop.guard.common.Blacklist", "1.0.1"))).isFalse();
+        assertThat(service.canSupportPolicyType(new ToscaConceptIdentifier(
                 "onap.policies.controlloop.guard.coordination.FirstBlocksSecond", "1.0.0"))).isTrue();
-        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier(
+        assertThat(service.canSupportPolicyType(new ToscaConceptIdentifier(
                 "onap.policies.controlloop.guard.coordination.FirstBlocksSecond", "1.0.1"))).isFalse();
-        assertThat(service.canSupportPolicyType(new ToscaPolicyTypeIdentifier("onap.foo", "1.0.1"))).isFalse();
+        assertThat(service.canSupportPolicyType(new ToscaConceptIdentifier("onap.foo", "1.0.1"))).isFalse();
         assertThat(service.canSupportPolicyType(
-                new ToscaPolicyTypeIdentifier("onap.policies.controlloop.guard.common.Filter", "1.0.0"))).isTrue();
+                new ToscaConceptIdentifier("onap.policies.controlloop.guard.common.Filter", "1.0.0"))).isTrue();
     }
 
     @Test

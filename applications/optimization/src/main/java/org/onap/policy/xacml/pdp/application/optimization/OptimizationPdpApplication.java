@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +37,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
@@ -74,15 +75,15 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
         applicationName = "optimization";
         actions = Arrays.asList("optimize");
 
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_AFFINITY, STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_DISTANCE, STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_HPA, STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_OPTIMIZATION, STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_PCI, STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_QUERY, STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_SUBSCRIBER, STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_VIMFIT, STRING_VERSION100));
-        this.supportedPolicyTypes.add(new ToscaPolicyTypeIdentifier(POLICYTYPE_VNF, STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaConceptIdentifier(POLICYTYPE_AFFINITY, STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaConceptIdentifier(POLICYTYPE_DISTANCE, STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaConceptIdentifier(POLICYTYPE_HPA, STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaConceptIdentifier(POLICYTYPE_OPTIMIZATION, STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaConceptIdentifier(POLICYTYPE_PCI, STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaConceptIdentifier(POLICYTYPE_QUERY, STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaConceptIdentifier(POLICYTYPE_SUBSCRIBER, STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaConceptIdentifier(POLICYTYPE_VIMFIT, STRING_VERSION100));
+        this.supportedPolicyTypes.add(new ToscaConceptIdentifier(POLICYTYPE_VNF, STRING_VERSION100));
     }
 
     @Override
@@ -101,12 +102,12 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
     }
 
     @Override
-    public boolean canSupportPolicyType(ToscaPolicyTypeIdentifier policyTypeId) {
+    public boolean canSupportPolicyType(ToscaConceptIdentifier policyTypeId) {
         //
         // For the time being, restrict this if the version isn't known.
         // Could be too difficult to support changing of versions dynamically.
         //
-        for (ToscaPolicyTypeIdentifier supported : this.supportedPolicyTypes) {
+        for (ToscaConceptIdentifier supported : this.supportedPolicyTypes) {
             if (policyTypeId.equals(supported)) {
                 LOGGER.info("optimization can support {}", supported);
                 return true;
