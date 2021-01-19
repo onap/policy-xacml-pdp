@@ -2,7 +2,7 @@
   ============LICENSE_START=======================================================
   ONAP
   ================================================================================
-  Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+  Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@
         <dependency>
             <groupId>com.att.research.xacml</groupId>
             <artifactId>xacml-pdp</artifactId>
-            <version>2.2.0</version>
+            <version>3.0</version>
         </dependency>
     </dependencies>
 </project>
