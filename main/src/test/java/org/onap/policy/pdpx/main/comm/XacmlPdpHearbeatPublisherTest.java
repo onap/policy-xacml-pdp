@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,12 +39,14 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.pdpx.main.XacmlState;
 
+@RunWith(MockitoJUnitRunner.class)
 public class XacmlPdpHearbeatPublisherTest {
 
     private static final long INTERVAL1 = 1000L;
@@ -79,8 +81,6 @@ public class XacmlPdpHearbeatPublisherTest {
      */
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-
         when(state.genHeartbeat()).thenReturn(status);
 
         timers = new LinkedList<>(Arrays.asList(timer1, timer2));

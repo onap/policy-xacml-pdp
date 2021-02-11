@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,6 @@ package org.onap.policy.pdp.xacml.application.common.operationshistory;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import com.att.research.xacml.api.Attribute;
@@ -49,12 +47,14 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.onap.policy.guard.OperationsHistory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@RunWith(MockitoJUnitRunner.class)
 public class CountRecentOperationsPipTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(CountRecentOperationsPipTest.class);
 
@@ -133,8 +133,6 @@ public class CountRecentOperationsPipTest {
      */
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-
         when(pipRequest.getIssuer()).thenReturn("urn:org:onap:xacml:guard:tw:1:hour");
 
         pipEngine = new MyPip();
@@ -144,16 +142,8 @@ public class CountRecentOperationsPipTest {
             properties.load(is);
         }
 
-        when(pipFinder.getMatchingAttributes(any(), eq(pipEngine))).thenReturn(resp1, resp2, resp3);
-
         responses = new LinkedList<>(Arrays.asList(resp1, resp2, resp3));
         attributes = new LinkedList<>(Arrays.asList(ACTOR, RECIPE, TARGET));
-
-        when(resp1.getStatus()).thenReturn(okStatus);
-        when(resp2.getStatus()).thenReturn(okStatus);
-        when(resp3.getStatus()).thenReturn(okStatus);
-
-        when(okStatus.isOk()).thenReturn(true);
     }
 
     @Test

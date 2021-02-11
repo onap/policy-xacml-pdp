@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,12 +29,12 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.pdp.concepts.PdpResponseDetails;
 import org.onap.policy.models.pdp.concepts.PdpStateChange;
@@ -43,10 +43,10 @@ import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.models.pdp.enums.PdpHealthStatus;
 import org.onap.policy.models.pdp.enums.PdpResponseStatus;
 import org.onap.policy.models.pdp.enums.PdpState;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
 
+@RunWith(MockitoJUnitRunner.class)
 public class XacmlStateTest {
     private static final String PDP_TYPE = "xacml";
     private static final String GROUP = "my-group";
@@ -59,9 +59,6 @@ public class XacmlStateTest {
     @Mock
     private XacmlPdpActivator act;
 
-    private ToscaConceptIdentifier ident1;
-    private ToscaConceptIdentifier ident2;
-
     private String hostName;
 
     private XacmlState state;
@@ -71,14 +68,7 @@ public class XacmlStateTest {
      */
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-
         hostName = NetworkUtil.getHostname();
-
-        ident1 = new ToscaConceptIdentifier("nameA", "typeA");
-        ident2 = new ToscaConceptIdentifier("nameB", "typeB");
-
-        when(appmgr.getToscaPolicyTypeIdents()).thenReturn(Arrays.asList(ident1, ident2));
 
         XacmlPdpActivator.setCurrent(act);
 

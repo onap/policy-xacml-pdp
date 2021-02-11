@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,9 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
@@ -41,6 +42,7 @@ import org.onap.policy.pdpx.main.comm.XacmlPdpUpdatePublisher;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
 import org.powermock.reflect.Whitebox;
 
+@RunWith(MockitoJUnitRunner.class)
 public class XacmlPdpUpdateListenerTest {
     private static final String EXPECTED_EXCEPTION = "expected exception";
     private static final String TOPIC = "my-topic";
@@ -70,8 +72,6 @@ public class XacmlPdpUpdateListenerTest {
      */
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-
         listener = new MyListener(client, state, heartbeat, appmgr);
         update = new PdpUpdate();
 

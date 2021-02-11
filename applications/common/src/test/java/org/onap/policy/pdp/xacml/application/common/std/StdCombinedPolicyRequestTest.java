@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,10 +32,12 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 
+@RunWith(MockitoJUnitRunner.class)
 public class StdCombinedPolicyRequestTest {
     private static final String ACTION = "my-action";
     private static final String ONAP_NAME = "my-name";
@@ -56,8 +58,6 @@ public class StdCombinedPolicyRequestTest {
      */
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-
         resources = new TreeMap<>();
 
         when(decreq.getResource()).thenReturn(resources);

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@
 package org.onap.policy.pdpx.main.comm;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.startsWith;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.startsWith;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -34,8 +34,9 @@ import java.util.List;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
@@ -50,6 +51,7 @@ import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 /**
  * Initializes objects, including the publisher.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class XacmlPdpUpdatePublisherTest {
 
     private static final int NEW_COUNT = 4;
@@ -104,8 +106,6 @@ public class XacmlPdpUpdatePublisherTest {
      */
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-
         Map<ToscaPolicy, XacmlApplicationServiceProvider> deployedPolicies = new HashMap<>();
         deployedPolicies.put(deployed1, null);
         deployedPolicies.put(deployed2, null);

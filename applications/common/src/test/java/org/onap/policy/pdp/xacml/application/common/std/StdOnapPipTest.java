@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,10 +48,12 @@ import java.util.Iterator;
 import java.util.Properties;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 
+@RunWith(MockitoJUnitRunner.class)
 public class StdOnapPipTest {
     private static final String EXPECTED_EXCEPTION = "expected exception";
     private static final String MY_ID = "my-id";
@@ -81,8 +83,6 @@ public class StdOnapPipTest {
      */
     @Before
     public void setUp() throws PIPException {
-        MockitoAnnotations.initMocks(this);
-
         resp = new StdMutablePIPResponse();
 
         when(request.getIssuer()).thenReturn(ISSUER);

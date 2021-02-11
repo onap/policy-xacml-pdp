@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,13 +45,15 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.onap.policy.guard.OperationsHistory;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@RunWith(MockitoJUnitRunner.class)
 public class GetOperationOutcomePipTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(GetOperationOutcomePipTest.class);
     private static final String TEST_PROPERTIES = "src/test/resources/test.properties";
@@ -119,8 +121,6 @@ public class GetOperationOutcomePipTest {
      */
     @Before
     public void setupEngine() throws Exception {
-        MockitoAnnotations.initMocks(this);
-
         when(pipRequest.getIssuer()).thenReturn("urn:org:onap:xacml:guard:tw:1:hour");
         //
         // Create instance
