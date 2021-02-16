@@ -56,12 +56,12 @@ public class XacmlState {
     /**
      * Constructs the object, initializing the state.
      */
-    public XacmlState(XacmlPdpApplicationManager appManager, String pdpGroupName) {
+    public XacmlState(XacmlPdpApplicationManager appManager, String pdpGroupName, String pdpType) {
         this.appManager = appManager;
 
         this.status = new PdpStatus();
         this.status.setName(NetworkUtil.getHostname());
-        this.status.setPdpType("xacml");
+        this.status.setPdpType(pdpType);
         this.status.setState(PdpState.PASSIVE);
         this.status.setPolicies(Collections.emptyList());
         this.status.setPdpGroup(pdpGroupName);

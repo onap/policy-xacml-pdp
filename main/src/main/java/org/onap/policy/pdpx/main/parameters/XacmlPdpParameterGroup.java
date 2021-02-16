@@ -45,6 +45,7 @@ public class XacmlPdpParameterGroup implements ParameterGroup {
     private String name;
 
     private String pdpGroup;
+    private String pdpType;
     private RestServerParameters restServerParameters;
     private RestServerParameters policyApiParameters;
     private TopicParameterGroup topicParameterGroup;
@@ -56,11 +57,12 @@ public class XacmlPdpParameterGroup implements ParameterGroup {
      * @param name the parameter group name
      * @param pdpGroup the pdp group name
      */
-    public XacmlPdpParameterGroup(final String name, final String pdpGroup,
+    public XacmlPdpParameterGroup(final String name, final String pdpGroup, final String pdpType,
             final RestServerParameters restServerParameters, final RestServerParameters policyApiParameters,
             final TopicParameterGroup topicParameterGroup, final String applicationPath) {
         this.name = name;
         this.pdpGroup = pdpGroup;
+        this.pdpType = pdpType;
         this.restServerParameters = restServerParameters;
         this.policyApiParameters = policyApiParameters;
         this.topicParameterGroup = topicParameterGroup;
@@ -80,6 +82,9 @@ public class XacmlPdpParameterGroup implements ParameterGroup {
         }
         if (!ParameterValidationUtils.validateStringParameter(pdpGroup)) {
             validationResult.setResult("pdpGroup", ValidationStatus.INVALID, "must be a non-blank string");
+        }
+        if (!ParameterValidationUtils.validateStringParameter(pdpType)) {
+            validationResult.setResult("pdpType", ValidationStatus.INVALID, "must be a non-blank string");
         }
         if (restServerParameters == null) {
             validationResult.setResult(PARAM_REST_SERVER, ValidationStatus.INVALID,

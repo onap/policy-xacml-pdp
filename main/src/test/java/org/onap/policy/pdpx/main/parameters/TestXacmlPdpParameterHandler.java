@@ -102,6 +102,8 @@ public class TestXacmlPdpParameterHandler {
                         + "must be a non-blank string\n"
                         + "  field \"pdpGroup\" type \"java.lang.String\" value \"null\" INVALID, "
                         + "must be a non-blank string\n"
+                        + "  field \"pdpType\" type \"java.lang.String\" value \"null\" INVALID, "
+                        + "must be a non-blank string\n"
                         + "  field \"applicationPath\" type \"java.lang.String\" value \"null\" INVALID, "
                         + "must have application path for applications to store policies and data.\n");
     }
@@ -116,6 +118,7 @@ public class TestXacmlPdpParameterHandler {
         final XacmlPdpParameterGroup parGroup = new XacmlPdpParameterHandler().getParameters(minArguments);
         assertEquals(CommonTestData.PDPX_PARAMETER_GROUP_NAME, parGroup.getName());
         assertEquals(CommonTestData.PDPX_GROUP, parGroup.getPdpGroup());
+        assertEquals(CommonTestData.PDPX_TYPE, parGroup.getPdpType());
     }
 
     @Test
@@ -151,6 +154,17 @@ public class TestXacmlPdpParameterHandler {
 
         assertThatThrownBy(() -> new XacmlPdpParameterHandler().getParameters(arguments)).hasMessageContaining(
                 "field \"pdpGroup\" type \"java.lang.String\" value \" \" INVALID, must be a non-blank string");
+    }
+
+    @Test
+    public void testXacmlPdpParameterGroup_InvalidPdpType() throws PolicyXacmlPdpException {
+        final String[] xacmlPdpConfigParameters = {"-c", "parameters/XacmlPdpConfigParameters_InvalidPdpType.json"};
+
+        final XacmlPdpCommandLineArguments arguments = new XacmlPdpCommandLineArguments();
+        arguments.parse(xacmlPdpConfigParameters);
+
+        assertThatThrownBy(() -> new XacmlPdpParameterHandler().getParameters(arguments)).hasMessageContaining(
+                "field \"pdpType\" type \"java.lang.String\" value \"\" INVALID, must be a non-blank string");
     }
 
     @Test

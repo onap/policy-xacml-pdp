@@ -61,6 +61,7 @@ public class CommonTestData {
 
     public static final String PDPX_PARAMETER_GROUP_NAME = "XacmlPdpParameters";
     public static final String PDPX_GROUP = "XacmlPdpGroup";
+    public static final String PDPX_TYPE = "xacml";
     public static final List<TopicParameters> TOPIC_PARAMS =
                     Collections.unmodifiableList(Arrays.asList(getTopicParams()));
 

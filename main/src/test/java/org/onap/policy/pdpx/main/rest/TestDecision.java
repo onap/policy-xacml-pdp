@@ -109,7 +109,7 @@ public class TestDecision {
         TopicParameterGroup topicParameterGroup =
                         testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
         XacmlPdpParameterGroup params =
-                new XacmlPdpParameterGroup("XacmlPdpParameters", "XacmlPdpGroup", rest, policyApiParameters,
+                new XacmlPdpParameterGroup("XacmlPdpParameters", "XacmlPdpGroup", "xacml", rest, policyApiParameters,
                         topicParameterGroup, apps.getAbsolutePath());
         final Gson gson = new GsonBuilder().create();
         File fileParams = appsFolder.newFile("params.json");

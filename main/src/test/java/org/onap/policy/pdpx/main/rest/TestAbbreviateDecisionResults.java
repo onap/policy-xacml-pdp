@@ -120,7 +120,7 @@ public class TestAbbreviateDecisionResults {
         TopicParameterGroup topicParameterGroup = testData.toObject(testData.getTopicParametersMap(false),
                 TopicParameterGroup.class);
         XacmlPdpParameterGroup params =
-                new XacmlPdpParameterGroup("XacmlPdpParameters", "XacmlPdpGroup", rest, policyApiParameters,
+                new XacmlPdpParameterGroup("XacmlPdpParameters", "XacmlPdpGroup", "xacml", rest, policyApiParameters,
                 topicParameterGroup, apps.getAbsolutePath());
         StandardCoder gson = new StandardCoder();
         File fileParams = appsFolder.newFile("params.json");
