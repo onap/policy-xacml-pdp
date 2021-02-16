@@ -166,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "13a284fd_75dce1c6",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestAbbreviateDecisionResults.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-02-16T21:55:24Z",
+      "side": 1,
+      "message": "Not available in this test",
+      "parentUuid": "a50d7700_4ae4aa3a",
+      "range": {
+        "startLine": 123,
+        "startChar": 82,
+        "endLine": 123,
+        "endChar": 89
+      },
+      "revId": "b84e5ac63a95b65b333684250c03a3e4f2537dbc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "689e5ecd_93b590cc",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestDecision.java",
         "patchSetId": 1
@@ -177,6 +201,30 @@
       "writtenOn": "2021-02-16T21:52:49Z",
       "side": 1,
       "message": "same question",
+      "range": {
+        "startLine": 112,
+        "startChar": 82,
+        "endLine": 112,
+        "endChar": 88
+      },
+      "revId": "b84e5ac63a95b65b333684250c03a3e4f2537dbc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f914131f_7decf2fd",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestDecision.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-02-16T21:55:24Z",
+      "side": 1,
+      "message": "Class Not available in this test",
+      "parentUuid": "689e5ecd_93b590cc",
       "range": {
         "startLine": 112,
         "startChar": 82,
