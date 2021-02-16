@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5a96dd11_56997e6e",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/TestXacmlPdpParameterGroup.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-02-16T21:54:47Z",
+      "side": 1,
+      "message": "not for this one",
+      "parentUuid": "397296e1_f3828a3c",
+      "range": {
+        "startLine": 66,
+        "startChar": 60,
+        "endLine": 66,
+        "endChar": 65
+      },
+      "revId": "b84e5ac63a95b65b333684250c03a3e4f2537dbc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "68813af2_215b3cb6",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/TestXacmlPdpParameterGroup.java",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "57adbdec_66fa6c40",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/TestXacmlPdpParameterGroup.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-02-16T21:54:47Z",
+      "side": 1,
+      "message": "not for this one.",
+      "parentUuid": "68813af2_215b3cb6",
+      "range": {
+        "startLine": 75,
+        "startChar": 22,
+        "endLine": 75,
+        "endChar": 27
+      },
+      "revId": "b84e5ac63a95b65b333684250c03a3e4f2537dbc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0383fc6a_82e5347c",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/TestXacmlPdpParameterGroup.java",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2021-02-16T21:52:49Z",
       "side": 1,
       "message": "trailing space",
+      "range": {
+        "startLine": 107,
+        "startChar": 105,
+        "endLine": 107,
+        "endChar": 106
+      },
+      "revId": "b84e5ac63a95b65b333684250c03a3e4f2537dbc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27979bc9_d549058a",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/TestXacmlPdpParameterGroup.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-02-16T21:54:47Z",
+      "side": 1,
+      "message": "already fixed",
+      "parentUuid": "0383fc6a_82e5347c",
       "range": {
         "startLine": 107,
         "startChar": 105,
