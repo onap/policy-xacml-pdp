@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,7 +97,7 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
             stats.setTotalPolicyTypesCount(appmgr.getPolicyTypeCount());
             stats.setTotalPolicyCount(appmgr.getPolicyCount());
 
-            state = new XacmlState(appmgr, xacmlPdpParameterGroup.getPdpGroup());
+            state = new XacmlState(appmgr, xacmlPdpParameterGroup.getPdpGroup(), xacmlPdpParameterGroup.getPdpType());
 
             this.xacmlPdpParameterGroup = xacmlPdpParameterGroup;
             this.msgDispatcher = new MessageTypeDispatcher(MSG_TYPE_NAMES);
