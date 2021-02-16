@@ -48,7 +48,7 @@ import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
 
 @RunWith(MockitoJUnitRunner.class)
 public class XacmlStateTest {
-    private static final String PDP_TYPE = "xacml";
+    private static final String PDP_TYPE = "xacml-flavor";
     private static final String GROUP = "my-group";
     private static final String SUBGROUP = "my-subgroup";
     private static final PdpState STATE = PdpState.SAFE;
@@ -72,7 +72,7 @@ public class XacmlStateTest {
 
         XacmlPdpActivator.setCurrent(act);
 
-        state = new XacmlState(appmgr, GROUP);
+        state = new XacmlState(appmgr, GROUP, PDP_TYPE);
     }
 
     @AfterClass
