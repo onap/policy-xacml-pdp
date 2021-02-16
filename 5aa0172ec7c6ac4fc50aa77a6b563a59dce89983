@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7c02255_d4094ff4",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/TestXacmlPdpParameterGroup.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-02-16T22:08:35Z",
+      "side": 1,
+      "message": "definitely there - weird",
+      "range": {
+        "startLine": 107,
+        "startChar": 105,
+        "endLine": 107,
+        "endChar": 106
+      },
+      "revId": "5aa0172ec7c6ac4fc50aa77a6b563a59dce89983",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
