@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "a3bdbf9d_e822b751",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/TestXacmlPdpParameterGroup.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-16T21:58:47Z",
+      "side": 1,
+      "message": "there were two lines with a trailing space - one has been fixed, but this line still appears to have a trailing space",
+      "parentUuid": "27979bc9_d549058a",
+      "range": {
+        "startLine": 107,
+        "startChar": 105,
+        "endLine": 107,
+        "endChar": 106
+      },
+      "revId": "b84e5ac63a95b65b333684250c03a3e4f2537dbc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a50d7700_4ae4aa3a",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestAbbreviateDecisionResults.java",
         "patchSetId": 1
