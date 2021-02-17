@@ -14,6 +14,48 @@ topology_template:
          properties:
             limit: 5
             timeWindow: i am a bad value
+   -  frequency-badtimerange_start:
+         type: onap.policies.controlloop.guard.common.FrequencyLimiter
+         type_version: 1.0.0
+         version: 1.0.0
+         properties:
+          actor: APPC
+          operation: Restart
+          timeRange:
+            startTime: 08:00:00Z
+            end_time: 23:59:59Z
+          id: loop-3
+          timeWindow: 8
+          timeUnits: hour
+          limit: 0
+   -  frequency-badtimerange_end:
+         type: onap.policies.controlloop.guard.common.FrequencyLimiter
+         type_version: 1.0.0
+         version: 1.0.0
+         properties:
+          actor: APPC
+          operation: Restart
+          timeRange:
+            start_time: 08:00:00Z
+            endTime: 23:59:59Z
+          id: loop-3
+          timeWindow: 8
+          timeUnits: hour
+          limit: 0
+   -  frequency-badtimerange_value:
+         type: onap.policies.controlloop.guard.common.FrequencyLimiter
+         type_version: 1.0.0
+         version: 1.0.0
+         properties:
+          actor: APPC
+          operation: Restart
+          timeRange:
+            start_time: 99:99:99
+            end_time: 23:59:59Z
+          id: loop-3
+          timeWindow: 8
+          timeUnits: hour
+          limit: 0
    -  minmax-notarget:
          type: onap.policies.controlloop.guard.common.MinMax
          type_version: 1.0.0

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,14 @@
 package org.onap.policy.xacml.pdp.application.guard;
 
 import com.att.research.xacml.std.annotations.XACMLAction;
+import com.att.research.xacml.std.annotations.XACMLEnvironment;
 import com.att.research.xacml.std.annotations.XACMLRequest;
 import com.att.research.xacml.std.annotations.XACMLResource;
 import com.att.research.xacml.std.annotations.XACMLSubject;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.ZoneOffset;
 import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
@@ -54,6 +59,20 @@ public class GuardPolicyRequest {
 
     @XACMLAction
     private String action = STR_GUARD;
+
+    @XACMLEnvironment(includeInResults = true, 
+            attributeId = "urn:oasis:names:tc:xacml:1.0:environment:current-dateTime")
+    private OffsetDateTime currentDateTime;
+
+    @XACMLEnvironment(includeInResults = true, attributeId = "urn:oasis:names:tc:xacml:1.0:environment:current-date")
+    private LocalDate currentDate;
+
+    @XACMLEnvironment(includeInResults = true, attributeId = "urn:oasis:names:tc:xacml:1.0:environment:current-time")
+    private OffsetTime currentTime;
+
+    @XACMLEnvironment(includeInResults = true, attributeId = "urn:org:onap:guard:timezone",
+            datatype = "urn:com:att:research:datatype:zone-offset")
+    private ZoneOffset timeZone;
 
     @XACMLResource(includeInResults = true, attributeId = "urn:org:onap:guard:clname:clname-id")
     private String clnameId;
@@ -115,6 +134,10 @@ public class GuardPolicyRequest {
         request.onapComponent = decisionRequest.getOnapComponent();
         request.onapInstance = decisionRequest.getOnapInstance();
         request.requestId = decisionRequest.getRequestId();
+        request.currentDateTime = decisionRequest.getCurrentDateTime();
+        request.currentDate = decisionRequest.getCurrentDate();
+        request.currentTime = decisionRequest.getCurrentTime();
+        request.timeZone = decisionRequest.getTimeZone();
         //
         // Now pull from the resources
         //
