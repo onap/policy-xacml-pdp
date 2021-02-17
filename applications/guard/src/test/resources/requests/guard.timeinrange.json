@@ -1,0 +1,15 @@
+{
+  "ONAPName": "Policy",
+  "ONAPComponent": "drools-pdp",
+  "ONAPInstance": "usecase-template",
+  "requestId": "unique-request-id-1",
+  "action": "guard",
+  "resource": {
+      "guard": {
+          "actor": "ACTOR",
+          "operation": "OPERATION",
+          "clname": "LOOP",
+          "target": "vnf1"
+      }
+  }
+}

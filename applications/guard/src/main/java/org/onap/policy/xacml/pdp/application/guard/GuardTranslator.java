@@ -32,6 +32,8 @@ import com.att.research.xacml.api.Result;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.IdentifierImpl;
 import com.att.research.xacml.std.annotations.RequestParser;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
 import java.util.Collection;
 import java.util.Map;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
@@ -46,6 +48,9 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableDefinitionType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
+import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -103,6 +108,11 @@ public class GuardTranslator implements ToscaPolicyTranslator {
     public static final String POLICYTYPE_BLACKLIST = "onap.policies.controlloop.guard.common.Blacklist";
     public static final String POLICYTYPE_FILTER = "onap.policies.controlloop.guard.common.Filter";
 
+    //
+    // Variable definitions
+    //
+    private static final String VARIABLE_TIMEINRANGE = "timeInRange";
+
     public GuardTranslator() {
         super();
     }
@@ -158,7 +168,53 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         } else {
             throw new ToscaPolicyConversionException("Unknown guard policy type " + toscaPolicy.getType());
         }
+        //
+        // Add in our variable definition
+        //
+        if (toscaPolicy.getProperties().containsKey(FIELD_TIMERANGE)) {
+            VariableReferenceType variable = this.createTimeRangeVariable(
+                    toscaPolicy.getProperties().get(FIELD_TIMERANGE), newPolicyType);
+            //
+            // Update all the rules to have conditions for this variable
+            //
+            this.addVariableToConditionTypes(variable, newPolicyType);
+        }
         return newPolicyType;
+    }
+
+    /**
+     * This method iterates through all the existing rules, adding in a conditionType that will test
+     * whether the Variable is true or false. Any existing ConditionType will be updated to AND with the
+     * Variable.
+     *
+     * @param variable VariableDefinitionType to add
+     * @param newPolicyType PolicyType that will be updated
+     */
+    private void addVariableToConditionTypes(VariableReferenceType variable,
+            PolicyType newPolicyType) {
+        //
+        // Iterate through the rules
+        //
+        for (Object objectType : newPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition()) {
+            if (objectType instanceof RuleType) {
+                RuleType rule = (RuleType) objectType;
+                if (rule.getCondition() == null) {
+                    //
+                    // No condition already, just create and add a new one
+                    //
+                    ConditionType condition = new ConditionType();
+                    condition.setExpression(new ObjectFactory().createVariableReference(variable));
+                    rule.setCondition(condition);
+                } else {
+                    //
+                    // Need to create a new ConditionType that treats all the expressions as an AND
+                    // with the Variable.
+                    //
+                    rule.setCondition(ToscaPolicyTranslatorUtils.addVariableToCondition(rule.getCondition(), variable,
+                            XACML3.ID_FUNCTION_AND));
+                }
+            }
+        }
     }
 
     /**
@@ -254,9 +310,6 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         if (properties.containsKey(FIELD_CONTROLLOOP)) {
             addMatch(allOf, properties.get(FIELD_CONTROLLOOP), ToscaDictionary.ID_RESOURCE_GUARD_CLNAME);
         }
-        if (properties.containsKey(FIELD_TIMERANGE)) {
-            addTimeRangeMatch(allOf, properties.get(FIELD_TIMERANGE));
-        }
         //
         // Create target
         //
@@ -329,6 +382,79 @@ public class GuardTranslator implements ToscaPolicyTranslator {
                 XACML3.ID_ATTRIBUTE_CATEGORY_ENVIRONMENT);
 
         allOf.getMatch().add(matchEnd);
+    }
+
+    @SuppressWarnings("rawtypes")
+    protected VariableReferenceType createTimeRangeVariable(Object timeRange, PolicyType newPolicyType)
+            throws ToscaPolicyConversionException {
+        //
+        // Sanity check the properties
+        //
+        if (! (timeRange instanceof Map)) {
+            throw new ToscaPolicyConversionException("timeRange is not a map object " + timeRange.getClass());
+        }
+        String startTimestamp;
+        String endTimestamp;
+        try {
+            startTimestamp = ((Map) timeRange).get("start_time").toString();
+            endTimestamp = ((Map) timeRange).get("end_time").toString();
+            if (StringUtils.isBlank(startTimestamp) || StringUtils.isBlank(endTimestamp)) {
+                throw new ToscaPolicyConversionException("Missing timeRange start_time property");
+            }
+            if (StringUtils.isBlank(endTimestamp)) {
+                throw new ToscaPolicyConversionException("Missing timeRange end_time property");
+            }
+        } catch (Exception e) {
+            throw new ToscaPolicyConversionException("Invalid timeRange", e);
+        }
+        //
+        // Should also be parseable as an ISO8601 timestamp
+        //
+        Object startTimeObject = parseTimestamp(startTimestamp);
+        Object endTimeObject = parseTimestamp(endTimestamp);
+        //
+        // They should be the same object types. We cannot establish a range
+        // between an OffsetDateTime and an OffsetTime
+        //
+        if (! startTimeObject.getClass().equals(endTimeObject.getClass())) {
+            throw new ToscaPolicyConversionException("start_time and end_time class types do not match");
+        }
+        //
+        // Create the inner timeInRange ApplyType
+        //
+        ApplyType timeInRange = ToscaPolicyTranslatorUtils.generateTimeInRange(startTimestamp, endTimestamp, true);
+        VariableDefinitionType variable = new VariableDefinitionType();
+        variable.setVariableId(VARIABLE_TIMEINRANGE);
+        variable.setExpression(new ObjectFactory().createApply(timeInRange));
+        //
+        // Add it to the policy
+        //
+        newPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(variable);
+        //
+        // Create and return the reference to the variable
+        //
+        VariableReferenceType reference = new VariableReferenceType();
+        reference.setVariableId(variable.getVariableId());
+        return reference;
+    }
+
+    private Object parseTimestamp(String string) throws ToscaPolicyConversionException {
+        //
+        // First see if it is a full datetime object
+        //
+        try {
+            return OffsetDateTime.parse(string);
+        } catch (Exception e) {
+            LOGGER.warn("timestamp {} could not be parsed. This may not be an error.", string, e);
+        }
+        //
+        // May only be a time object
+        //
+        try {
+            return OffsetTime.parse(string);
+        } catch (Exception e) {
+            throw new ToscaPolicyConversionException("timestamp " + string + " could not be parsed ", e);
+        }
     }
 
     protected void generateFrequencyRules(ToscaPolicy toscaPolicy, String policyName, PolicyType newPolicyType)
