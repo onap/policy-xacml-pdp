@@ -317,7 +317,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
                 ((Map) timeRange).get("start_time").toString(),
                 XACML3.ID_DATATYPE_TIME,
                 XACML3.ID_ENVIRONMENT_CURRENT_TIME,
-                XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
+                XACML3.ID_ATTRIBUTE_CATEGORY_ENVIRONMENT);
 
         allOf.getMatch().add(matchStart);
 
