@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,6 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.att.research.xacml.api.Decision;
 import com.att.research.xacml.api.Request;
-import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.StdMutableResponse;
 import com.att.research.xacml.std.StdMutableResult;
 import com.att.research.xacml.std.StdStatus;
@@ -43,6 +42,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableDefinitionType;
 import org.junit.Test;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
@@ -119,6 +119,9 @@ public class GuardTranslatorTest {
         final Map<String, String> name2message = new HashMap<>();
         name2message.put("frequency-missing-properties", "Missing property limit");
         name2message.put("frequency-timewindow", "timeWindow is not an integer");
+        name2message.put("frequency-badtimerange_start", "Invalid timeRange");
+        name2message.put("frequency-badtimerange_end", "Invalid timeRange");
+        name2message.put("frequency-badtimerange_value", "timestamp 99:99:99 could not be parsed");
         name2message.put("minmax-notarget", "Missing target field in minmax policy");
         name2message.put("minmax-nominmax", "Missing min or max field in minmax policy");
         name2message.put("blacklist-noblacklist", "Missing blacklist");
@@ -223,7 +226,7 @@ public class GuardTranslatorTest {
         boolean foundOperation = false;
         boolean foundTarget = false;
         boolean foundControlLoop = false;
-        boolean foundTimeRange = false;
+        //boolean foundTimeRange = false;
 
         assertThat(xacmlPolicy.getTarget()).isNotNull();
         assertThat(xacmlPolicy.getTarget().getAnyOf()).isNotEmpty();
@@ -257,11 +260,13 @@ public class GuardTranslatorTest {
                             assertThat(policy.getProperties()).containsKey(GuardTranslator.FIELD_CONTROLLOOP);
                             foundControlLoop = true;
                         }
+                        /*
                         if (XACML3.ID_ENVIRONMENT_CURRENT_TIME.toString().equals(
                                 match.getAttributeDesignator().getAttributeId())) {
                             assertThat(policy.getProperties()).containsKey(GuardTranslator.FIELD_TIMERANGE);
                             foundTimeRange = true;
                         }
+                        */
                     }
                 }
             }
@@ -274,7 +279,8 @@ public class GuardTranslatorTest {
             assertThat(foundControlLoop).isTrue();
         }
         if (policy.getProperties().containsKey(GuardTranslator.FIELD_TIMERANGE)) {
-            assertThat(foundTimeRange).isTrue();
+            assertThat(xacmlPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition())
+                .hasAtLeastOneElementOfType(VariableDefinitionType.class);
         }
     }
 
