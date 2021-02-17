@@ -29,9 +29,11 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.ConditionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -114,7 +116,7 @@ public final class ToscaPolicyTranslatorUtils {
      * @param end ISO8601 timestamp
      * @return ApplyType
      */
-    public static ApplyType generateTimeInRange(String start, String end) {
+    public static ApplyType generateTimeInRange(String start, String end, boolean useRecurringFunction) {
         if (StringUtils.isBlank(start) || StringUtils.isBlank(end)) {
             return null;
         }
@@ -140,7 +142,11 @@ public final class ToscaPolicyTranslatorUtils {
 
         ApplyType applyTimeInRange = new ApplyType();
         applyTimeInRange.setDescription("return true if current time is in range.");
-        applyTimeInRange.setFunctionId(XACML3.ID_FUNCTION_TIME_IN_RANGE.stringValue());
+        if (useRecurringFunction) {
+            applyTimeInRange.setFunctionId(XACML3.ID_FUNCTION_TIME_IN_RECURRING_RANGE.stringValue());
+        } else {
+            applyTimeInRange.setFunctionId(XACML3.ID_FUNCTION_TIME_IN_RANGE.stringValue());
+        }
         applyTimeInRange.getExpression().add(factory.createApply(applyOneAndOnly));
         applyTimeInRange.getExpression().add(factory.createAttributeValue(valueStart));
         applyTimeInRange.getExpression().add(factory.createAttributeValue(valueEnd));
@@ -213,5 +219,25 @@ public final class ToscaPolicyTranslatorUtils {
             target.getAnyOf().add(anyOf);
         }
         return target;
+    }
+
+    /**
+     * For an existing ConditionType, this method adds in a check for a variable. You must specify
+     * the function that compares the existing ConditionType's expression against the Variable.
+     *
+     * @param condition Existing ConditionType to use
+     * @param variable VariableReferenceType to use
+     * @param functionId XACML 3.0 identifier for the function
+     * @return a new ConditionType
+     */
+    public static ConditionType addVariableToCondition(ConditionType condition, VariableReferenceType variable,
+            Identifier functionId) {
+        ApplyType applyFunction = new ApplyType();
+        applyFunction.setFunctionId(functionId.stringValue());
+        applyFunction.getExpression().add(condition.getExpression());
+        applyFunction.getExpression().add(factory.createVariableReference(variable));
+        ConditionType newCondition = new ConditionType();
+        newCondition.setExpression(factory.createApply(applyFunction));
+        return newCondition;
     }
 }

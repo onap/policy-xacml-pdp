@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,6 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Date;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -424,6 +425,67 @@ public class GuardPdpApplicationTest {
         // There is no filter for this region, and the id is not blacklisted
         //
         requestAndCheckDecision(requestVfCount, PERMIT);
+    }
+
+    @Test
+    public void test7TimeInRange() throws Exception {
+        LOGGER.info("**************** Running test7TimeInRange ****************");
+        //
+        // Re-Load Decision Request - so we can start from scratch
+        //
+        DecisionRequest requestInRange =
+                gson.decode(TextFileUtils.getTextFileAsString("src/test/resources/requests/guard.timeinrange.json"),
+                        DecisionRequest.class);
+        //
+        // Load the test policy in with the others.
+        //
+        List<ToscaPolicy> loadedPolicies =
+                TestUtils.loadPolicies("src/test/resources/test-time-in-range.yaml", service);
+        assertThat(loadedPolicies).hasSize(1);
+        //
+        // Mock what the current date and time is. Set to 12 Noon
+        // We actually do not care about time zone or the date yet, but these are here
+        // for future.
+        //
+        OffsetDateTime offsetDateTime = OffsetDateTime.parse("2020-01-01T12:00:00+05:00");
+        requestInRange.setCurrentDateTime(offsetDateTime);
+        requestInRange.setCurrentDate(offsetDateTime.toLocalDate());
+        requestInRange.setCurrentTime(offsetDateTime.toOffsetTime());
+        requestInRange.setTimeZone(offsetDateTime.getOffset());
+
+        requestAndCheckDecision(requestInRange, PERMIT);
+
+        offsetDateTime = OffsetDateTime.parse("2020-01-01T07:59:59+05:00");
+        requestInRange.setCurrentDateTime(offsetDateTime);
+        requestInRange.setCurrentDate(offsetDateTime.toLocalDate());
+        requestInRange.setCurrentTime(offsetDateTime.toOffsetTime());
+        requestInRange.setTimeZone(offsetDateTime.getOffset());
+
+        requestAndCheckDecision(requestInRange, DENY);
+
+        offsetDateTime = OffsetDateTime.parse("2020-01-01T08:00:00+05:00");
+        requestInRange.setCurrentDateTime(offsetDateTime);
+        requestInRange.setCurrentDate(offsetDateTime.toLocalDate());
+        requestInRange.setCurrentTime(offsetDateTime.toOffsetTime());
+        requestInRange.setTimeZone(offsetDateTime.getOffset());
+
+        requestAndCheckDecision(requestInRange, PERMIT);
+
+        offsetDateTime = OffsetDateTime.parse("2020-01-01T23:59:59+05:00");
+        requestInRange.setCurrentDateTime(offsetDateTime);
+        requestInRange.setCurrentDate(offsetDateTime.toLocalDate());
+        requestInRange.setCurrentTime(offsetDateTime.toOffsetTime());
+        requestInRange.setTimeZone(offsetDateTime.getOffset());
+
+        requestAndCheckDecision(requestInRange, PERMIT);
+
+        offsetDateTime = OffsetDateTime.parse("2020-01-01T00:00:00+05:00");
+        requestInRange.setCurrentDateTime(offsetDateTime);
+        requestInRange.setCurrentDate(offsetDateTime.toLocalDate());
+        requestInRange.setCurrentTime(offsetDateTime.toOffsetTime());
+        requestInRange.setTimeZone(offsetDateTime.getOffset());
+
+        requestAndCheckDecision(requestInRange, DENY);
     }
 
     @SuppressWarnings("unchecked")
