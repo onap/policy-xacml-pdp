@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -317,7 +317,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
                 ((Map) timeRange).get("start_time").toString(),
                 XACML3.ID_DATATYPE_TIME,
                 XACML3.ID_ENVIRONMENT_CURRENT_TIME,
-                XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
+                XACML3.ID_ATTRIBUTE_CATEGORY_ENVIRONMENT);
 
         allOf.getMatch().add(matchStart);
 
