@@ -178,6 +178,24 @@
     },
     {
       "key": {
+        "uuid": "da1a68e5_80ab456e",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-18T16:37:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7964b345_d3704836",
+      "revId": "bda5e936d3f3261e229aba4945892d541810d142",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "408a1a27_b698809e",
         "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
         "patchSetId": 4
@@ -245,6 +263,24 @@
       "revId": "bda5e936d3f3261e229aba4945892d541810d142",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "472f60c7_cae64da4",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-18T16:37:49Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "92386511_c0c497da",
+      "revId": "bda5e936d3f3261e229aba4945892d541810d142",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
