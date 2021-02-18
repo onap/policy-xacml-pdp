@@ -1,0 +1,124 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3067ff92_2d89ea9e",
+        "filename": "applications/common/src/test/java/org/onap/policy/pdp/xacml/application/common/ToscaPolicyTranslatorUtilsTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-18T16:07:55Z",
+      "side": 1,
+      "message": "if this is a list, then I think you can just assertThat(xxx).hasSize(3)",
+      "range": {
+        "startLine": 58,
+        "startChar": 25,
+        "endLine": 58,
+        "endChar": 38
+      },
+      "revId": "bda5e936d3f3261e229aba4945892d541810d142",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc6b9dbb_08110696",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-18T16:07:55Z",
+      "side": 1,
+      "message": "maybe use get() and then check for null, thus avoiding the need for a second look-up on line 176",
+      "range": {
+        "startLine": 174,
+        "startChar": 12,
+        "endLine": 174,
+        "endChar": 68
+      },
+      "revId": "bda5e936d3f3261e229aba4945892d541810d142",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d14e1f1_a65c51ec",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-18T16:07:55Z",
+      "side": 1,
+      "message": "delete this",
+      "range": {
+        "startLine": 401,
+        "startChar": 51,
+        "endLine": 401,
+        "endChar": 88
+      },
+      "revId": "bda5e936d3f3261e229aba4945892d541810d142",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd4f2311_019deb60",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-18T16:07:55Z",
+      "side": 1,
+      "message": "could cath ToscaPolicyConversionException first and just re-throw it, thus avoiding wrapping it in another ToscaPolicyConversionException",
+      "revId": "bda5e936d3f3261e229aba4945892d541810d142",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "408a1a27_b698809e",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-18T16:07:55Z",
+      "side": 1,
+      "message": "nice!",
+      "revId": "bda5e936d3f3261e229aba4945892d541810d142",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d1a61742_de597a63",
+        "filename": "applications/guard/src/main/java/org/onap/policy/xacml/pdp/application/guard/GuardTranslator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-18T16:07:55Z",
+      "side": 1,
+      "message": "is there any way to check which it might be, so-as to avoid logging the exception if it\u0027s really just an OffsetTime?",
+      "revId": "bda5e936d3f3261e229aba4945892d541810d142",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
