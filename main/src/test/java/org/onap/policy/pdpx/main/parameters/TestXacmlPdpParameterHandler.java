@@ -135,7 +135,7 @@ public class TestXacmlPdpParameterHandler {
     }
 
     @Test
-    public void testXacmlPdpParameterGroup_InvalidName() throws PolicyXacmlPdpException {
+    public void testXacmlPdpParameterGroup_Invalid() throws PolicyXacmlPdpException {
         final String[] xacmlPdpConfigParameters = {"-c", "parameters/XacmlPdpConfigParameters_InvalidName.json"};
 
         final XacmlPdpCommandLineArguments arguments = new XacmlPdpCommandLineArguments();
@@ -143,24 +143,15 @@ public class TestXacmlPdpParameterHandler {
 
         assertThatThrownBy(() -> new XacmlPdpParameterHandler().getParameters(arguments)).hasMessageContaining(
                 "field \"name\" type \"java.lang.String\" value \" \" INVALID, must be a non-blank string");
-    }
+        xacmlPdpConfigParameters[1] = "parameters/XacmlPdpConfigParameters_InvalidPdpGroup.json";
 
-    @Test
-    public void testXacmlPdpParameterGroup_InvalidPdpGroup() throws PolicyXacmlPdpException {
-        final String[] xacmlPdpConfigParameters = {"-c", "parameters/XacmlPdpConfigParameters_InvalidPdpGroup.json"};
-
-        final XacmlPdpCommandLineArguments arguments = new XacmlPdpCommandLineArguments();
         arguments.parse(xacmlPdpConfigParameters);
 
         assertThatThrownBy(() -> new XacmlPdpParameterHandler().getParameters(arguments)).hasMessageContaining(
                 "field \"pdpGroup\" type \"java.lang.String\" value \" \" INVALID, must be a non-blank string");
-    }
 
-    @Test
-    public void testXacmlPdpParameterGroup_InvalidPdpType() throws PolicyXacmlPdpException {
-        final String[] xacmlPdpConfigParameters = {"-c", "parameters/XacmlPdpConfigParameters_InvalidPdpType.json"};
+        xacmlPdpConfigParameters[1] = "parameters/XacmlPdpConfigParameters_InvalidPdpType.json";
 
-        final XacmlPdpCommandLineArguments arguments = new XacmlPdpCommandLineArguments();
         arguments.parse(xacmlPdpConfigParameters);
 
         assertThatThrownBy(() -> new XacmlPdpParameterHandler().getParameters(arguments)).hasMessageContaining(

@@ -2,7 +2,7 @@
   ============LICENSE_START=======================================================
   ONAP Policy Engine - XACML PDP
   ================================================================================
-  Copyright (C) 2018-2020 AT&T Intellectual Property. All rights reserved.
+  Copyright (C) 2018-2021 AT&T Intellectual Property. All rights reserved.
   Modifications Copyright (C) 2020 Nordix Foundation.
   Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
   ================================================================================
@@ -43,6 +43,7 @@
     <properties>
         <policy.common.version>1.8.0-SNAPSHOT</policy.common.version>
         <policy.models.version>2.4.0-SNAPSHOT</policy.models.version>
+        <jacoco.dataFile>${project.basedir}/target/code-coverage/jacoco-ut.exec</jacoco.dataFile>
     </properties>
 
     <modules>
