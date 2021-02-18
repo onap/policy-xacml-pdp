@@ -33,6 +33,10 @@
     <name>${project.artifactId}</name>
     <description>The main module of Policy PDP-X that handles startup, lifecycle management, and parameters.</description>
 
+    <properties>
+        <jacoco.dataFile>${project.basedir}/../target/code-coverage/jacoco-ut.exec</jacoco.dataFile>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.onap.policy.common</groupId>

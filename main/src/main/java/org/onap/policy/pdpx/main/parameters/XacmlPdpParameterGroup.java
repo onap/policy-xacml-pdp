@@ -41,6 +41,8 @@ public class XacmlPdpParameterGroup implements ParameterGroup {
     private static final String PARAM_TOPIC_PARAMETER_GROUP = "topicParameterGroup";
     private static final String PARAM_APPLICATION_PATH = "applicationPath";
 
+    private static final String ERROR_MSG = "must be a non-blank string";
+
     @Setter
     private String name;
 
@@ -78,13 +80,13 @@ public class XacmlPdpParameterGroup implements ParameterGroup {
     public GroupValidationResult validate() {
         final GroupValidationResult validationResult = new GroupValidationResult(this);
         if (!ParameterValidationUtils.validateStringParameter(name)) {
-            validationResult.setResult("name", ValidationStatus.INVALID, "must be a non-blank string");
+            validationResult.setResult("name", ValidationStatus.INVALID, ERROR_MSG);
         }
         if (!ParameterValidationUtils.validateStringParameter(pdpGroup)) {
-            validationResult.setResult("pdpGroup", ValidationStatus.INVALID, "must be a non-blank string");
+            validationResult.setResult("pdpGroup", ValidationStatus.INVALID, ERROR_MSG);
         }
         if (!ParameterValidationUtils.validateStringParameter(pdpType)) {
-            validationResult.setResult("pdpType", ValidationStatus.INVALID, "must be a non-blank string");
+            validationResult.setResult("pdpType", ValidationStatus.INVALID, ERROR_MSG);
         }
         if (restServerParameters == null) {
             validationResult.setResult(PARAM_REST_SERVER, ValidationStatus.INVALID,

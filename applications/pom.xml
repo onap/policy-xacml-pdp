@@ -32,7 +32,7 @@
   <artifactId>applications</artifactId>
 
   <properties>
-    <jacoco.dataFile>${project.basedir}/../../../target/code-coverage/jacoco-ut.exec</jacoco.dataFile>
+    <jacoco.dataFile>${project.basedir}/../../target/code-coverage/jacoco-ut.exec</jacoco.dataFile>
   </properties>
 
   <modules>
