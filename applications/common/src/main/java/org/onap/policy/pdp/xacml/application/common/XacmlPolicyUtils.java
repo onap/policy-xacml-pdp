@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.IdReferenceType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
@@ -56,6 +57,15 @@ public class XacmlPolicyUtils {
 
     private static final String DOT_FILE_SUFFIX = ".file";
     private static final String NOT_FOUND_MESSAGE = "NOT FOUND";
+
+    /**
+     * Function that sanitizes a file name, if the OS is Windows, so that it's a valid
+     * file name. Does nothing for other OSs.
+     */
+    private static final Function<String, String> SANITIZE_FILE_NAME =
+                    System.getProperty("os.name").startsWith("Windows")
+                    ? filename -> filename.replace(':', '_')
+                    : filename -> filename;
 
     private XacmlPolicyUtils() {
         super();
@@ -371,7 +381,7 @@ public class XacmlPolicyUtils {
         //
         // Construct the Path
         //
-        return Paths.get(path.toAbsolutePath().toString(), filename);
+        return Paths.get(path.toAbsolutePath().toString(), SANITIZE_FILE_NAME.apply(filename));
     }
 
     /**
