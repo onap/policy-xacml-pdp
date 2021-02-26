@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "80fbc8ec_931729be",
+        "filename": "csit/plans/setup.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-26T18:55:19Z",
+      "side": 1,
+      "message": "not sure if need to add SIM_IP to the robot variables - probably not",
+      "revId": "8b9ba8597428c807205e049612cafb8d2886c1e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
