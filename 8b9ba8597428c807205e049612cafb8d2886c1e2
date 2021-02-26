@@ -34,6 +34,24 @@
       "revId": "8b9ba8597428c807205e049612cafb8d2886c1e2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca7ce672_7a67237d",
+        "filename": "csit/plans/setup.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-26T19:28:48Z",
+      "side": 1,
+      "message": "they use make_topic \u0026 wait_topic, which depend on SIM_IP.  However, as long as the robot framework leaves the environment intact when it invokes those two scripts, then it should be OK.",
+      "parentUuid": "d34c7031_3067589b",
+      "revId": "8b9ba8597428c807205e049612cafb8d2886c1e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
