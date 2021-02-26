@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ab3a350_1e00922b",
+        "filename": "csit/plans/setup.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-26T15:59:51Z",
+      "side": 1,
+      "message": "per previous discussion, this should be changed to SIM_IP and be exported",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 8
+      },
+      "revId": "01d136f65d10ff1ec740656df1a964cf9494d39c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56b81ede_a1db7b20",
+        "filename": "csit/tests/xacml-pdp-test.robot",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-26T15:59:51Z",
+      "side": 1,
+      "message": "202",
+      "range": {
+        "startLine": 86,
+        "startChar": 59,
+        "endLine": 86,
+        "endChar": 62
+      },
+      "revId": "01d136f65d10ff1ec740656df1a964cf9494d39c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "406db3b8_ca42b9d0",
+        "filename": "csit/tests/xacml-pdp-test.robot",
+        "patchSetId": 1
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-26T15:59:51Z",
+      "side": 1,
+      "message": "202",
+      "range": {
+        "startLine": 205,
+        "startChar": 59,
+        "endLine": 205,
+        "endChar": 62
+      },
+      "revId": "01d136f65d10ff1ec740656df1a964cf9494d39c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
