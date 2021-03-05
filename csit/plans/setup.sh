@@ -24,7 +24,7 @@ pip uninstall -y docker
 pip install -U docker==2.7.0
 
 sudo apt-get -y install libxml2-utils
-bash ${SCRIPTS}/policy/get-models-examples.sh
+bash ${SCRIPTS}/get-models-examples.sh
 
 source ${SCRIPTS}/detmVers.sh
 
