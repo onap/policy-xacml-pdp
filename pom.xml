@@ -42,7 +42,7 @@
 
     <properties>
         <policy.common.version>1.8.0</policy.common.version>
-        <policy.models.version>2.4.0</policy.models.version>
+        <policy.models.version>2.4.1</policy.models.version>
         <jacoco.dataFile>${project.basedir}/target/code-coverage/jacoco-ut.exec</jacoco.dataFile>
     </properties>
 
