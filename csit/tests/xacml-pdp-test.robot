@@ -81,6 +81,7 @@ DeployPolicies
      ${session}=    Create Session      policy  https://${POLICY_PAP_IP}:6969   auth=${auth}
      ${headers}=  Create Dictionary     Accept=application/json    Content-Type=application/json
      ${resp}=   Post Request   policy  /policy/pap/v1/pdps/policies  data=${postjson}   headers=${headers}
+     Sleep      5s
      Log    Received response from policy5 ${resp.text}
      ${postjsonobject}   To Json    ${postjson}
      Should Be Equal As Strings    ${resp.status_code}     202
