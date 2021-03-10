@@ -52,6 +52,24 @@
       "revId": "337692b3c7852254e7b4579022cf3add70a5dc63",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8a113f8_a8bf590f",
+        "filename": "csit/tests/xacml-pdp-test.robot",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-03-10T15:23:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4f2cd002_8cfd77d8",
+      "revId": "337692b3c7852254e7b4579022cf3add70a5dc63",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
