@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019-2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,7 +48,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
+import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
@@ -76,7 +76,7 @@ public class OptimizationPdpApplicationTest {
     private static XacmlApplicationServiceProvider service;
     private static StandardCoder gson = new StandardCoder();
     private static DecisionRequest baseRequest;
-    private static RestServerParameters clientParams;
+    private static BusTopicParams clientParams;
     private static String[] listPolicyTypeFiles = {
         "onap.policies.Optimization",
         "onap.policies.optimization.Resource",
@@ -101,8 +101,8 @@ public class OptimizationPdpApplicationTest {
      */
     @BeforeClass
     public static void setUp() throws Exception {
-        clientParams = mock(RestServerParameters.class);
-        when(clientParams.getHost()).thenReturn("localhost");
+        clientParams = mock(BusTopicParams.class);
+        when(clientParams.getHostname()).thenReturn("localhost");
         when(clientParams.getPort()).thenReturn(6969);
         //
         // Load Single Decision Request

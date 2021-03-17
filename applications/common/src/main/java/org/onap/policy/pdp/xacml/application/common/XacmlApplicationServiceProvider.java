@@ -1,7 +1,7 @@
 /* ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
+import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -66,7 +66,7 @@ public interface XacmlApplicationServiceProvider {
      * @param pathForData Local Path
      * @param policyApiParameters API rest parameters
      */
-    void             initialize(Path pathForData, RestServerParameters policyApiParameters)
+    void             initialize(Path pathForData, BusTopicParams policyApiParameters)
             throws XacmlApplicationException;
 
     /**

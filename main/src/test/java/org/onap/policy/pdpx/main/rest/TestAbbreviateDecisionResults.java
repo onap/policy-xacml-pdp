@@ -84,7 +84,7 @@ public class TestAbbreviateDecisionResults {
     private static File propertiesFile;
     private static XacmlApplicationServiceProvider service;
 
-    private static RestServerParameters policyApiParameters;
+    private static BusTopicParams policyApiParameters;
 
     @ClassRule
     public static final TemporaryFolder appsFolder = new TemporaryFolder();
@@ -116,7 +116,7 @@ public class TestAbbreviateDecisionResults {
         // Create parameters for XacmlPdPService
         RestServerParameters rest = testData.toObject(testData.getRestServerParametersMap(port),
                 RestServerParameters.class);
-        policyApiParameters = testData.toObject(testData.getPolicyApiParametersMap(false), RestServerParameters.class);
+        policyApiParameters = testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
         TopicParameterGroup topicParameterGroup = testData.toObject(testData.getTopicParametersMap(false),
                 TopicParameterGroup.class);
         XacmlPdpParameterGroup params =

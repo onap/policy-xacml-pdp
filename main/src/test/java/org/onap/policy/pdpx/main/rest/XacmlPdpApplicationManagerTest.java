@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
+import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
 public class XacmlPdpApplicationManagerTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpApplicationManagerTest.class);
     private static final StandardYamlCoder yamlCoder = new StandardYamlCoder();
-    private static final RestServerParameters params = new RestServerParameters();
+    private static final BusTopicParams params = new BusTopicParams();
     private static Path appsDirectory;
     private static ToscaServiceTemplate completedJtst;
 
@@ -70,7 +70,7 @@ public class XacmlPdpApplicationManagerTest {
         //
         // No need to do more than this
         //
-        params.setName("policyApiParameters");
+        params.setClientName("policyApiParameters");
         //
         // Load an example policy
         //

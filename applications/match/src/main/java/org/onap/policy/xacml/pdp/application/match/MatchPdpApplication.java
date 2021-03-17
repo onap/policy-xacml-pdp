@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,7 @@ package org.onap.policy.xacml.pdp.application.match;
 
 import java.nio.file.Path;
 import java.util.Arrays;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
+import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
@@ -54,7 +54,7 @@ public class MatchPdpApplication extends StdXacmlApplicationServiceProvider {
     }
 
     @Override
-    public void initialize(Path pathForData, RestServerParameters policyApiParameters)
+    public void initialize(Path pathForData, BusTopicParams policyApiParameters)
             throws XacmlApplicationException {
         //
         // Store our API parameters and path for translator so it

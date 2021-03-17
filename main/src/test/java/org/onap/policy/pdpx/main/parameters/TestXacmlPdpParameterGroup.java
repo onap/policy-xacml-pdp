@@ -22,6 +22,7 @@
 
 package org.onap.policy.pdpx.main.parameters;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -32,6 +33,7 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.onap.policy.common.parameters.GroupValidationResult;
@@ -57,8 +59,8 @@ public class TestXacmlPdpParameterGroup {
     public void testXacmlPdpParameterGroup() throws IOException {
         final RestServerParameters restServerParameters =
             testData.toObject(testData.getRestServerParametersMap(false), RestServerParameters.class);
-        final RestServerParameters policyApiParameters =
-                        testData.toObject(testData.getPolicyApiParametersMap(false), RestServerParameters.class);
+        final BusTopicParams policyApiParameters =
+                        testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
         final TopicParameterGroup topicParameterGroup =
             testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
         final XacmlPdpParameterGroup pdpxParameters =
@@ -66,6 +68,7 @@ public class TestXacmlPdpParameterGroup {
                                 CommonTestData.PDPX_GROUP, "flavor", restServerParameters, policyApiParameters,
                                 topicParameterGroup, applicationPath.getAbsolutePath());
         final GroupValidationResult validationResult = pdpxParameters.validate();
+        assertThat(validationResult.getResult()).isNull();
         assertTrue(validationResult.isValid());
         assertEquals(restServerParameters.getHost(), pdpxParameters.getRestServerParameters().getHost());
         assertEquals(restServerParameters.getPort(), pdpxParameters.getRestServerParameters().getPort());
@@ -81,8 +84,8 @@ public class TestXacmlPdpParameterGroup {
     public void testXacmlPdpParameterGroup_NullParameterGroupName() {
         final RestServerParameters restServerParameters =
             testData.toObject(testData.getRestServerParametersMap(false), RestServerParameters.class);
-        final RestServerParameters policyApiParameters =
-                        testData.toObject(testData.getPolicyApiParametersMap(false), RestServerParameters.class);
+        final BusTopicParams policyApiParameters =
+                        testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
         final TopicParameterGroup topicParameterGroup =
             testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
         final XacmlPdpParameterGroup pdpxParameters = new XacmlPdpParameterGroup(null, CommonTestData.PDPX_GROUP,
@@ -99,8 +102,8 @@ public class TestXacmlPdpParameterGroup {
     public void testXacmlPdpParameterGroup_EmptyParameterGroupName() {
         final RestServerParameters restServerParameters =
             testData.toObject(testData.getRestServerParametersMap(false), RestServerParameters.class);
-        final RestServerParameters policyApiParameters =
-                        testData.toObject(testData.getPolicyApiParametersMap(false), RestServerParameters.class);
+        final BusTopicParams policyApiParameters =
+                        testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
         final TopicParameterGroup topicParameterGroup =
             testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
         final XacmlPdpParameterGroup pdpxParameters = new XacmlPdpParameterGroup("", CommonTestData.PDPX_GROUP,
@@ -117,8 +120,8 @@ public class TestXacmlPdpParameterGroup {
     public void testXacmlPdpParameterGroup_NullPdpGroup() {
         final RestServerParameters restServerParameters =
             testData.toObject(testData.getRestServerParametersMap(false), RestServerParameters.class);
-        final RestServerParameters policyApiParameters =
-                        testData.toObject(testData.getPolicyApiParametersMap(false), RestServerParameters.class);
+        final BusTopicParams policyApiParameters =
+                        testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
         final TopicParameterGroup topicParameterGroup =
             testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
         final XacmlPdpParameterGroup pdpxParameters =
@@ -136,8 +139,8 @@ public class TestXacmlPdpParameterGroup {
     public void testXacmlPdpParameterGroup_EmptyPdpGroup() {
         final RestServerParameters restServerParameters =
             testData.toObject(testData.getRestServerParametersMap(false), RestServerParameters.class);
-        final RestServerParameters policyApiParameters =
-                        testData.toObject(testData.getPolicyApiParametersMap(false), RestServerParameters.class);
+        final BusTopicParams policyApiParameters =
+                        testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
         final TopicParameterGroup topicParameterGroup =
             testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
         final XacmlPdpParameterGroup pdpxParameters =
@@ -155,8 +158,8 @@ public class TestXacmlPdpParameterGroup {
     public void testXacmlPdpParameterGroup_EmptyRestServerParameters() {
         final RestServerParameters restServerParameters =
             testData.toObject(testData.getRestServerParametersMap(true), RestServerParameters.class);
-        final RestServerParameters policyApiParameters =
-                        testData.toObject(testData.getPolicyApiParametersMap(false), RestServerParameters.class);
+        final BusTopicParams policyApiParameters =
+                        testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
         final TopicParameterGroup topicParameterGroup =
             testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
         final XacmlPdpParameterGroup pdpxParameters =
@@ -173,8 +176,8 @@ public class TestXacmlPdpParameterGroup {
     public void testXacmlPdpParameterGroup_EmptyPolicyApiParameters() {
         final RestServerParameters restServerParameters =
             testData.toObject(testData.getRestServerParametersMap(false), RestServerParameters.class);
-        final RestServerParameters policyApiParameters =
-                        testData.toObject(testData.getPolicyApiParametersMap(true), RestServerParameters.class);
+        final BusTopicParams policyApiParameters =
+                        testData.toObject(testData.getPolicyApiParametersMap(true), BusTopicParams.class);
         final TopicParameterGroup topicParameterGroup =
             testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
         final XacmlPdpParameterGroup pdpxParameters =
@@ -183,16 +186,16 @@ public class TestXacmlPdpParameterGroup {
                         topicParameterGroup, applicationPath.getAbsolutePath());
         final GroupValidationResult validationResult = pdpxParameters.validate();
         assertFalse(validationResult.isValid());
-        assertTrue(validationResult.getResult()
-                .contains("parameter group \"policyApiParameters\""));
+        assertThat(validationResult.getResult())
+                .contains("field \"policyApiParameters\"");
     }
 
     @Test
     public void testXacmlPdpParameterGroup_EmptyTopicParameterGroup() {
         final RestServerParameters restServerParameters =
             testData.toObject(testData.getRestServerParametersMap(false), RestServerParameters.class);
-        final RestServerParameters policyApiParameters =
-                        testData.toObject(testData.getPolicyApiParametersMap(false), RestServerParameters.class);
+        final BusTopicParams policyApiParameters =
+                        testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
         final TopicParameterGroup topicParameterGroup =
             testData.toObject(testData.getTopicParametersMap(true), TopicParameterGroup.class);
         final XacmlPdpParameterGroup pdpxParameters =

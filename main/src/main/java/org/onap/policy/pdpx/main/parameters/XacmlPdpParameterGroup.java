@@ -23,6 +23,8 @@ package org.onap.policy.pdpx.main.parameters;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.onap.policy.common.parameters.GroupValidationResult;
@@ -49,7 +51,7 @@ public class XacmlPdpParameterGroup implements ParameterGroup {
     private String pdpGroup;
     private String pdpType;
     private RestServerParameters restServerParameters;
-    private RestServerParameters policyApiParameters;
+    private BusTopicParams policyApiParameters;
     private TopicParameterGroup topicParameterGroup;
     private String applicationPath;
 
@@ -60,7 +62,7 @@ public class XacmlPdpParameterGroup implements ParameterGroup {
      * @param pdpGroup the pdp group name
      */
     public XacmlPdpParameterGroup(final String name, final String pdpGroup, final String pdpType,
-            final RestServerParameters restServerParameters, final RestServerParameters policyApiParameters,
+            final RestServerParameters restServerParameters, final BusTopicParams policyApiParameters,
             final TopicParameterGroup topicParameterGroup, final String applicationPath) {
         this.name = name;
         this.pdpGroup = pdpGroup;
@@ -96,11 +98,10 @@ public class XacmlPdpParameterGroup implements ParameterGroup {
         }
         if (policyApiParameters == null) {
             validationResult.setResult(PARAM_POLICY_API, ValidationStatus.INVALID,
-                    "must have policyApiParameters to configure xacml pdp rest server");
-        } else {
-            // set the name - this only really matters for validation messages
-            policyApiParameters.setName(PARAM_POLICY_API);
-            validationResult.setResult(PARAM_POLICY_API, policyApiParameters.validate());
+                            "must have policyApiParameters to configure xacml pdp rest server");
+        } else if (StringUtils.isBlank(policyApiParameters.getHostname())) {
+            validationResult.setResult(PARAM_POLICY_API, ValidationStatus.INVALID,
+                            "must have hostname to configure xacml pdp api client");
         }
         if (topicParameterGroup == null) {
             validationResult.setResult(PARAM_TOPIC_PARAMETER_GROUP, ValidationStatus.INVALID,
