@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -51,7 +51,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import org.apache.commons.lang3.tuple.Pair;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
+import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
@@ -92,7 +92,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
     private final Map<ToscaConceptIdentifier, MatchablePolicyType> matchableCache = new HashMap<>();
 
     @Setter
-    private RestServerParameters apiRestParameters;
+    private BusTopicParams apiRestParameters;
     @Setter
     private Path pathForData;
 
@@ -579,7 +579,6 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
             policyTemplate = api.getPolicyType(policyTypeId);
         } catch (PolicyApiException e) {
             LOGGER.error("Failed to make API call", e);
-            LOGGER.error("parameters: {} ", this.apiRestParameters);
             return null;
         }
         LOGGER.info("Successfully pulled {}", policyTypeId);

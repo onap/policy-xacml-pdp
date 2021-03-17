@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,6 @@ import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.endpoints.http.client.HttpClient;
 import org.onap.policy.common.endpoints.http.client.HttpClientConfigException;
 import org.onap.policy.common.endpoints.http.client.HttpClientFactoryInstance;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
@@ -50,20 +49,12 @@ public class PolicyApiCaller {
      * @param params target specification
      * @throws PolicyApiException if an error occurs
      */
-    public PolicyApiCaller(RestServerParameters params) throws PolicyApiException {
-        BusTopicParams busParams = new BusTopicParams();
-        busParams.setClientName("policy-api");
-        busParams.setHostname(params.getHost());
-        busParams.setManaged(false);
-        busParams.setPassword(params.getPassword());
-        busParams.setPort(params.getPort());
-        busParams.setUseHttps(params.isHttps());
-        busParams.setUserName(params.getUserName());
-
+    public PolicyApiCaller(BusTopicParams params) throws PolicyApiException {
         try {
-            httpClient = makeClient(busParams);
+            params.setClientName("policy-api");
+            httpClient = makeClient(params);
         } catch (HttpClientConfigException e) {
-            throw new PolicyApiException("connection to host: " + busParams.getHostname(), e);
+            throw new PolicyApiException("connection to host: " + params.getHostname(), e);
         }
     }
 
@@ -92,7 +83,7 @@ public class PolicyApiCaller {
             }
 
         } catch (RuntimeException e) {
-            logger.warn("policy-api connection error");
+            logger.warn("policy-api connection error, client info: {} ", httpClient);
             throw new PolicyApiException(type.toString(), e);
         }
     }

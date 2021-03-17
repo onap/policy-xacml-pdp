@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
-import org.onap.policy.common.parameters.ParameterGroup;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -41,9 +40,10 @@ public class CommonTestData {
     private static final String PASS_KEY = "password";
     private static final String USER_KEY = "userName";
     private static final String PORT_KEY = "port";
-    private static final String HOST_KEY = "host";
+    private static final String SERVER_HOST_KEY = "host";
+    private static final String API_HOST_KEY = "hostname";
     private static final String AAF_KEY = "aaf";
-    private static final String HTTPS_KEY = "https";
+    private static final String HTTPS_KEY = "useHttps";
 
     private static final String REST_SERVER_PASS = "zb!XztG34";
     private static final String REST_SERVER_USER = "healthcheck";
@@ -92,7 +92,7 @@ public class CommonTestData {
         map.put(AAF_KEY, REST_SERVER_AAF);
 
         if (!isEmpty) {
-            map.put(HOST_KEY, REST_SERVER_HOST);
+            map.put(SERVER_HOST_KEY, REST_SERVER_HOST);
             map.put(PORT_KEY, REST_SERVER_PORT);
             map.put(USER_KEY, REST_SERVER_USER);
             map.put(PASS_KEY, REST_SERVER_PASS);
@@ -111,7 +111,7 @@ public class CommonTestData {
         final Map<String, Object> map = new TreeMap<>();
         map.put(HTTPS_KEY, REST_SERVER_HTTPS);
         map.put(AAF_KEY, REST_SERVER_AAF);
-        map.put(HOST_KEY, REST_SERVER_HOST);
+        map.put(SERVER_HOST_KEY, REST_SERVER_HOST);
         map.put(PORT_KEY, port);
         map.put(USER_KEY, REST_SERVER_USER);
         map.put(PASS_KEY, REST_SERVER_PASS);
@@ -126,7 +126,7 @@ public class CommonTestData {
      * @param clazz class of object to be created from the map
      * @return a new object represented by the map
      */
-    public <T extends ParameterGroup> T toObject(final Map<String, Object> source, final Class<T> clazz) {
+    public <T> T toObject(final Map<String, Object> source, final Class<T> clazz) {
         try {
             return coder.decode(coder.encode(source), clazz);
 
@@ -147,7 +147,7 @@ public class CommonTestData {
         map.put(AAF_KEY, POLICY_API_AAF);
 
         if (!isEmpty) {
-            map.put(HOST_KEY, POLICY_API_HOST);
+            map.put(API_HOST_KEY, POLICY_API_HOST);
             map.put(PORT_KEY, POLICY_API_PORT);
             map.put(USER_KEY, POLICY_API_USER);
             map.put(PASS_KEY, POLICY_API_PASS);

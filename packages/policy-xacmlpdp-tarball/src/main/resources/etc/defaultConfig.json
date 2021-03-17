@@ -11,11 +11,11 @@
         "aaf": false
     },
     "policyApiParameters": {
-        "host": "policy-api",
+        "hostname": "policy-api",
         "port": 6969,
         "userName": "healthcheck",
         "password": "zb!XztG34",
-        "https": true,
+        "useHttps": true,
         "aaf": false
     },
     "applicationPath": "/opt/app/policy/pdpx/apps",

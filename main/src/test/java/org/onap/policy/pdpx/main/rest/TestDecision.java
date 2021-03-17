@@ -104,8 +104,8 @@ public class TestDecision {
         //
         RestServerParameters rest =
             testData.toObject(testData.getRestServerParametersMap(port), RestServerParameters.class);
-        RestServerParameters policyApiParameters =
-                        testData.toObject(testData.getPolicyApiParametersMap(false), RestServerParameters.class);
+        BusTopicParams policyApiParameters =
+                        testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
         TopicParameterGroup topicParameterGroup =
                         testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
         XacmlPdpParameterGroup params =
