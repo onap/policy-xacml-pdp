@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
+import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
@@ -66,7 +66,7 @@ public class SonCoordinationTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(SonCoordinationTest.class);
     private static Properties properties = new Properties();
     private static File propertiesFile;
-    private static RestServerParameters clientParams = new RestServerParameters();
+    private static BusTopicParams clientParams = new BusTopicParams();
     private static XacmlApplicationServiceProvider service;
     private static DecisionRequest requestVpciNode1;
     private static DecisionRequest requestVsonhNode1;

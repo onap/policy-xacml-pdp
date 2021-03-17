@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,9 +58,9 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.endpoints.http.server.HttpServletServer;
 import org.onap.policy.common.endpoints.http.server.HttpServletServerFactoryInstance;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.properties.PolicyEndPointProperties;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -85,7 +85,7 @@ public class StdMatchableTranslatorTest {
     private static final String CLIENT_NAME = "policy-api";
     private static final StandardYamlCoder yamlCoder = new StandardYamlCoder();
     private static int port;
-    private static RestServerParameters clientParams;
+    private static BusTopicParams clientParams;
     private static ToscaServiceTemplate testTemplate;
 
     @ClassRule
@@ -106,8 +106,8 @@ public class StdMatchableTranslatorTest {
         //
         port = NetworkUtil.allocPort();
 
-        clientParams = mock(RestServerParameters.class);
-        when(clientParams.getHost()).thenReturn("localhost");
+        clientParams = mock(BusTopicParams.class);
+        when(clientParams.getHostname()).thenReturn("localhost");
         when(clientParams.getPort()).thenReturn(port);
 
         Properties props = new Properties();
@@ -116,7 +116,7 @@ public class StdMatchableTranslatorTest {
         final String svcpfx =
                         PolicyEndPointProperties.PROPERTY_HTTP_SERVER_SERVICES + "." + CLIENT_NAME;
 
-        props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_HOST_SUFFIX, clientParams.getHost());
+        props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_HOST_SUFFIX, clientParams.getHostname());
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_PORT_SUFFIX,
                         Integer.toString(clientParams.getPort()));
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_REST_CLASSES_SUFFIX,
@@ -129,7 +129,7 @@ public class StdMatchableTranslatorTest {
 
         HttpServletServerFactoryInstance.getServerFactory().build(props).forEach(HttpServletServer::start);
 
-        assertTrue(NetworkUtil.isTcpPortOpen(clientParams.getHost(), clientParams.getPort(), 100, 100));
+        assertTrue(NetworkUtil.isTcpPortOpen(clientParams.getHostname(), clientParams.getPort(), 100, 100));
         //
         // Load our test policy type
         //

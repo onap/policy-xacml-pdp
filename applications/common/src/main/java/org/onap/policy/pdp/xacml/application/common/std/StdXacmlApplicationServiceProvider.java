@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.Properties;
 import lombok.Getter;
 import org.apache.commons.lang3.tuple.Pair;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
+import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -64,7 +64,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
 
     private Path pathForData = null;
     @Getter
-    private RestServerParameters policyApiParameters;
+    private BusTopicParams policyApiParameters;
     private Properties pdpProperties = null;
     private PDPEngine pdpEngine = null;
     private Map<ToscaPolicy, Path> mapLoadedPolicies = new HashMap<>();
@@ -84,7 +84,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
     }
 
     @Override
-    public void initialize(Path pathForData, RestServerParameters policyApiParameters)
+    public void initialize(Path pathForData, BusTopicParams policyApiParameters)
             throws XacmlApplicationException {
         //
         // Save our path

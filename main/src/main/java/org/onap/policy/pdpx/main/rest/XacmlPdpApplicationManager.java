@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,7 +33,7 @@ import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
+import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -58,7 +58,7 @@ public class XacmlPdpApplicationManager {
     /**
      * One time to initialize the applications upon startup.
      */
-    public XacmlPdpApplicationManager(Path applicationPath, RestServerParameters policyApiParameters) {
+    public XacmlPdpApplicationManager(Path applicationPath, BusTopicParams policyApiParameters) {
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Initialization applications {} {}", applicationPath.toAbsolutePath(), policyApiParameters);
         }
@@ -232,7 +232,7 @@ public class XacmlPdpApplicationManager {
     }
 
     private void initializeApplicationPath(Path basePath, XacmlApplicationServiceProvider application,
-            RestServerParameters policyApiParameters) throws XacmlApplicationException {
+                    BusTopicParams policyApiParameters) throws XacmlApplicationException {
         //
         // Making an assumption that all application names are unique, and
         // they can result in a valid directory being created.

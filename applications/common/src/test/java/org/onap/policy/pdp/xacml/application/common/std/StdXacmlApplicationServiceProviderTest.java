@@ -56,7 +56,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
+import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -80,7 +80,7 @@ public class StdXacmlApplicationServiceProviderTest {
     private static final String POLICY_NAME = "my-name";
     private static final String POLICY_VERSION = "1.2.3";
     private static final String POLICY_TYPE = "my-type";
-    private static final RestServerParameters apiRestParameters = new RestServerParameters();
+    private static final BusTopicParams apiRestParameters = new BusTopicParams();
 
     @Mock
     private ToscaPolicyTranslator trans;

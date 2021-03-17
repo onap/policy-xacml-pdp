@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,7 +47,6 @@ import org.onap.policy.common.endpoints.http.client.HttpClient;
 import org.onap.policy.common.endpoints.http.client.HttpClientConfigException;
 import org.onap.policy.common.endpoints.http.server.HttpServletServer;
 import org.onap.policy.common.endpoints.http.server.HttpServletServerFactoryInstance;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.properties.PolicyEndPointProperties;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.onap.policy.common.utils.network.NetworkUtil;
@@ -69,7 +68,7 @@ public class PolicyApiCallerTest {
     private static final String UNKNOWN_TYPE = "unknown";
 
     private static int port;
-    private static RestServerParameters clientParams;
+    private static BusTopicParams clientParams;
 
     private PolicyApiCaller api;
 
@@ -83,8 +82,8 @@ public class PolicyApiCallerTest {
     public static void setUpBeforeClass() throws Exception {
         port = NetworkUtil.allocPort();
 
-        clientParams = mock(RestServerParameters.class);
-        when(clientParams.getHost()).thenReturn("localhost");
+        clientParams = mock(BusTopicParams.class);
+        when(clientParams.getHostname()).thenReturn("localhost");
         when(clientParams.getPort()).thenReturn(port);
 
         Properties props = new Properties();
@@ -93,7 +92,7 @@ public class PolicyApiCallerTest {
         final String svcpfx =
                         PolicyEndPointProperties.PROPERTY_HTTP_SERVER_SERVICES + "." + CLIENT_NAME;
 
-        props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_HOST_SUFFIX, clientParams.getHost());
+        props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_HOST_SUFFIX, clientParams.getHostname());
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_PORT_SUFFIX,
                         Integer.toString(clientParams.getPort()));
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_REST_CLASSES_SUFFIX,
@@ -106,7 +105,7 @@ public class PolicyApiCallerTest {
 
         HttpServletServerFactoryInstance.getServerFactory().build(props).forEach(HttpServletServer::start);
 
-        assertTrue(NetworkUtil.isTcpPortOpen(clientParams.getHost(), clientParams.getPort(), 100, 100));
+        assertTrue(NetworkUtil.isTcpPortOpen(clientParams.getHostname(), clientParams.getPort(), 100, 100));
     }
 
     @AfterClass
