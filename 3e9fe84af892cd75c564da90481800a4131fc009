@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "62e8de99_fa3a4bc8",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/etc/defaultConfig.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-03-18T13:20:53Z",
+      "side": 1,
+      "message": "do we need additional changes across repos, csits, and oom ?",
+      "revId": "3e9fe84af892cd75c564da90481800a4131fc009",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
