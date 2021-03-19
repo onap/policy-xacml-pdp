@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,6 +42,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.onap.policy.common.utils.security.SelfSignedKeyStore;
 import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 import org.onap.policy.pdpx.main.startstop.Main;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
@@ -51,7 +52,6 @@ import org.powermock.reflect.Whitebox;
  * Common base class for REST service tests.
  */
 public class CommonRest {
-    private static final String KEYSTORE = System.getProperty("user.dir") + "/src/test/resources/ssl/policy-keystore";
 
     /**
      * Full path to the config file.
@@ -109,8 +109,8 @@ public class CommonRest {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        System.setProperty("javax.net.ssl.keyStore", KEYSTORE);
-        System.setProperty("javax.net.ssl.keyStorePassword", "Pol1cy_0nap");
+        System.setProperty("javax.net.ssl.keyStore", new SelfSignedKeyStore().getKeystoreName());
+        System.setProperty("javax.net.ssl.keyStorePassword", SelfSignedKeyStore.KEYSTORE_PASSWORD);
 
         System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StdErrLog");
         System.setProperty("org.eclipse.jetty.LEVEL", "OFF");
