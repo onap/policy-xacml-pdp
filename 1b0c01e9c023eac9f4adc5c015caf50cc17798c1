@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64650dfb_c955748d",
+        "filename": "applications/native/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-24T12:42:07Z",
+      "side": 1,
+      "message": "thx",
+      "revId": "1b0c01e9c023eac9f4adc5c015caf50cc17798c1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
