@@ -27,31 +27,35 @@ import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
-import org.onap.policy.common.parameters.GroupValidationResult;
+import org.onap.policy.common.parameters.BeanValidationResult;
+import org.onap.policy.common.parameters.BeanValidator;
 import org.onap.policy.common.parameters.ParameterGroup;
 import org.onap.policy.common.parameters.ValidationStatus;
-import org.onap.policy.common.utils.validation.ParameterValidationUtils;
+import org.onap.policy.common.parameters.annotations.NotBlank;
+import org.onap.policy.common.parameters.annotations.NotNull;
+import org.onap.policy.common.parameters.annotations.Valid;
+import org.onap.policy.models.base.Validated;
 
 /**
  * Class to hold all parameters needed for xacml pdp component.
  *
  */
 @Getter
+@NotNull
+@NotBlank
 public class XacmlPdpParameterGroup implements ParameterGroup {
-    private static final String PARAM_REST_SERVER = "restServerParameters";
     private static final String PARAM_POLICY_API = "policyApiParameters";
-    private static final String PARAM_TOPIC_PARAMETER_GROUP = "topicParameterGroup";
-    private static final String PARAM_APPLICATION_PATH = "applicationPath";
-
-    private static final String ERROR_MSG = "must be a non-blank string";
 
     @Setter
     private String name;
 
     private String pdpGroup;
     private String pdpType;
+    @Valid
     private RestServerParameters restServerParameters;
+    @Valid
     private BusTopicParams policyApiParameters;
+    @Valid
     private TopicParameterGroup topicParameterGroup;
     private String applicationPath;
 
@@ -79,43 +83,15 @@ public class XacmlPdpParameterGroup implements ParameterGroup {
      * @return the result of the validation
      */
     @Override
-    public GroupValidationResult validate() {
-        final GroupValidationResult validationResult = new GroupValidationResult(this);
-        if (!ParameterValidationUtils.validateStringParameter(name)) {
-            validationResult.setResult("name", ValidationStatus.INVALID, ERROR_MSG);
+    public BeanValidationResult validate() {
+        final BeanValidationResult validationResult = new BeanValidator().validateTop(getClass().getSimpleName(), this);
+
+        if (policyApiParameters != null && StringUtils.isBlank(policyApiParameters.getHostname())) {
+            BeanValidationResult sub = new BeanValidationResult(PARAM_POLICY_API, policyApiParameters);
+            sub.addResult("hostname", policyApiParameters.getHostname(), ValidationStatus.INVALID, Validated.IS_NULL);
+            validationResult.addResult(sub);
         }
-        if (!ParameterValidationUtils.validateStringParameter(pdpGroup)) {
-            validationResult.setResult("pdpGroup", ValidationStatus.INVALID, ERROR_MSG);
-        }
-        if (!ParameterValidationUtils.validateStringParameter(pdpType)) {
-            validationResult.setResult("pdpType", ValidationStatus.INVALID, ERROR_MSG);
-        }
-        if (restServerParameters == null) {
-            validationResult.setResult(PARAM_REST_SERVER, ValidationStatus.INVALID,
-                    "must have restServerParameters to configure xacml pdp rest server");
-        } else {
-            validationResult.setResult(PARAM_REST_SERVER, restServerParameters.validate());
-        }
-        if (policyApiParameters == null) {
-            validationResult.setResult(PARAM_POLICY_API, ValidationStatus.INVALID,
-                            "must have policyApiParameters to configure xacml pdp rest server");
-        } else if (StringUtils.isBlank(policyApiParameters.getHostname())) {
-            validationResult.setResult(PARAM_POLICY_API, ValidationStatus.INVALID,
-                            "must have hostname to configure xacml pdp api client");
-        }
-        if (topicParameterGroup == null) {
-            validationResult.setResult(PARAM_TOPIC_PARAMETER_GROUP, ValidationStatus.INVALID,
-                    "must have topicParameterGroup to configure xacml pdp topic sink and source");
-        } else {
-            validationResult.setResult(PARAM_TOPIC_PARAMETER_GROUP, topicParameterGroup.validate());
-        }
-        //
-        // Validate the application path directory
-        //
-        if (applicationPath == null || applicationPath.isEmpty()) {
-            validationResult.setResult(PARAM_APPLICATION_PATH, ValidationStatus.INVALID,
-                    "must have application path for applications to store policies and data.");
-        }
+
         return validationResult;
     }
 }
