@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ package org.onap.policy.pdpx.main.parameters;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.FileReader;
-import org.onap.policy.common.parameters.GroupValidationResult;
+import org.onap.policy.common.parameters.ValidationResult;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpCommandLineArguments;
 import org.slf4j.Logger;
@@ -69,7 +69,7 @@ public class XacmlPdpParameterHandler {
         }
 
         // validate the parameters
-        final GroupValidationResult validationResult = xacmlPdpParameterGroup.validate();
+        final ValidationResult validationResult = xacmlPdpParameterGroup.validate();
         if (!validationResult.isValid()) {
             String returnMessage =
                     "validation error(s) on parameters from \"" + arguments.getConfigurationFilePath() + "\"\n";
