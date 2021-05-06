@@ -1,5 +1,5 @@
 # ============LICENSE_START=======================================================
-#  Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+#  Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -38,8 +38,8 @@ services:
       expose:
        - 3904
    api:
-      # Guilin released images
-      image: nexus3.onap.org:10001/onap/policy-api:2.3.3
+      # Honolulu released images
+      image: nexus3.onap.org:10001/onap/policy-api:2.4.2
       container_name: policy-api
       depends_on:
        - mariadb
@@ -49,8 +49,8 @@ services:
       expose:
        - 6767
    pap:
-      # Guilin released images
-      image: nexus3.onap.org:10001/onap/policy-pap:2.3.3
+      # Honolulu released images
+      image: nexus3.onap.org:10001/onap/policy-pap:2.4.2
       container_name: policy-pap
       depends_on:
        - mariadb
