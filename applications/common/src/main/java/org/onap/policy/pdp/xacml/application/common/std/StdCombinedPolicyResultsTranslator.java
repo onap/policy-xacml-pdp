@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ import java.util.Collection;
 import java.util.Map;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
@@ -76,7 +75,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         //
         // Set it as the policy ID
         //
-        PolicyType newPolicyType = new PolicyType();
+        var newPolicyType = new PolicyType();
         newPolicyType.setPolicyId(policyId);
         //
         // Optional description
@@ -93,14 +92,14 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         //
         // Generate the TargetType
         //
-        TargetType target = this.generateTargetType(policyId, toscaPolicy.getType(), toscaPolicy.getVersion());
+        var target = this.generateTargetType(policyId, toscaPolicy.getType(), toscaPolicy.getVersion());
         newPolicyType.setTarget(target);
         //
         // Now create the Permit Rule
         // No target since the policy has a target
         // With obligations.
         //
-        RuleType rule = new RuleType();
+        var rule = new RuleType();
         rule.setDescription("Default is to PERMIT if the policy matches.");
         rule.setRuleId(policyId + ":rule");
         rule.setEffect(EffectType.PERMIT);
@@ -108,7 +107,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         //
         // Now represent the policy as Json
         //
-        StandardCoder coder = new StandardCoder();
+        var coder = new StandardCoder();
         String jsonPolicy;
         try {
             jsonPolicy = coder.encode(toscaPolicy);
@@ -179,7 +178,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         //
         // Create our OnapObligation which will scan for attributes
         //
-        OnapObligation onapObligation = new OnapObligation(obligation);
+        var onapObligation = new OnapObligation(obligation);
         //
         // Get the attributes we care about
         //
@@ -211,7 +210,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         //
         // This is for the Policy Id
         //
-        MatchType matchPolicyId = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
+        var matchPolicyId = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
                 XACML3.ID_FUNCTION_STRING_EQUAL,
                 policyId,
                 XACML3.ID_DATATYPE_STRING,
@@ -220,7 +219,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         //
         // This is for the Policy Type
         //
-        MatchType matchPolicyType = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
+        var matchPolicyType = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
                 XACML3.ID_FUNCTION_STRING_EQUAL,
                 policyType,
                 XACML3.ID_DATATYPE_STRING,
@@ -229,7 +228,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         //
         // This is for the Policy Type version
         //
-        MatchType matchPolicyTypeVersion = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
+        var matchPolicyTypeVersion = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
                 XACML3.ID_FUNCTION_STRING_EQUAL,
                 policyTypeVersion,
                 XACML3.ID_DATATYPE_STRING,
@@ -238,7 +237,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         //
         // This is our outer AnyOf - which is an OR
         //
-        AnyOfType anyOf = new AnyOfType();
+        var anyOf = new AnyOfType();
         //
         // Create AllOf (AND) of just Policy Id
         //
@@ -255,7 +254,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         // Now we can create the TargetType, add the top-level anyOf (OR),
         // and return the value.
         //
-        TargetType target = new TargetType();
+        var target = new TargetType();
         target.getAnyOf().add(anyOf);
         return target;
     }

@@ -70,12 +70,12 @@ public final class ToscaPolicyTranslatorUtils {
         //
         // Create the MatchType object and set its function
         //
-        MatchType match = new MatchType();
+        var match = new MatchType();
         match.setMatchId(function.stringValue());
         //
         // Add in the AttributeValue object
         //
-        AttributeValueType valueType = new AttributeValueType();
+        var valueType = new AttributeValueType();
         valueType.setDataType(datatype.stringValue());
         valueType.getContent().add(value);
 
@@ -83,7 +83,7 @@ public final class ToscaPolicyTranslatorUtils {
         //
         // Add in the AttributeDesignator object
         //
-        AttributeDesignatorType designator = new AttributeDesignatorType();
+        var designator = new AttributeDesignatorType();
         designator.setAttributeId(designatorId.stringValue());
         designator.setCategory(designatorCategory.stringValue());
         designator.setDataType(datatype.stringValue());
@@ -102,7 +102,7 @@ public final class ToscaPolicyTranslatorUtils {
      * @return The AllOf object
      */
     public static AllOfType buildAllOf(MatchType... matches) {
-        AllOfType allOf = new AllOfType();
+        var allOf = new AllOfType();
         for (MatchType match : matches) {
             allOf.getMatch().add(match);
         }
@@ -121,26 +121,26 @@ public final class ToscaPolicyTranslatorUtils {
             return null;
         }
 
-        AttributeDesignatorType designator = new AttributeDesignatorType();
+        var designator = new AttributeDesignatorType();
         designator.setAttributeId(XACML3.ID_ENVIRONMENT_CURRENT_TIME.stringValue());
         designator.setCategory(XACML3.ID_ATTRIBUTE_CATEGORY_ENVIRONMENT.stringValue());
         designator.setDataType(XACML3.ID_DATATYPE_TIME.stringValue());
 
-        AttributeValueType valueStart = new AttributeValueType();
+        var valueStart = new AttributeValueType();
         valueStart.setDataType(XACML3.ID_DATATYPE_TIME.stringValue());
         valueStart.getContent().add(start);
 
-        AttributeValueType valueEnd = new AttributeValueType();
+        var valueEnd = new AttributeValueType();
         valueEnd.setDataType(XACML3.ID_DATATYPE_TIME.stringValue());
         valueEnd.getContent().add(end);
 
 
-        ApplyType applyOneAndOnly = new ApplyType();
+        var applyOneAndOnly = new ApplyType();
         applyOneAndOnly.setDescription("Unbag the current time");
         applyOneAndOnly.setFunctionId(XACML3.ID_FUNCTION_TIME_ONE_AND_ONLY.stringValue());
         applyOneAndOnly.getExpression().add(factory.createAttributeDesignator(designator));
 
-        ApplyType applyTimeInRange = new ApplyType();
+        var applyTimeInRange = new ApplyType();
         applyTimeInRange.setDescription("return true if current time is in range.");
         if (useRecurringFunction) {
             applyTimeInRange.setFunctionId(XACML3.ID_FUNCTION_TIME_IN_RECURRING_RANGE.stringValue());
@@ -185,7 +185,7 @@ public final class ToscaPolicyTranslatorUtils {
      */
     public static AnyOfType buildAndAppendAllof(AnyOfType anyOf, Object type) {
         if (type instanceof MatchType) {
-            AllOfType allOf = new AllOfType();
+            var allOf = new AllOfType();
             allOf.getMatch().add((MatchType) type);
             if (anyOf == null) {
                 anyOf = new AnyOfType();
@@ -212,9 +212,9 @@ public final class ToscaPolicyTranslatorUtils {
         if (object instanceof AnyOfType) {
             target.getAnyOf().add((AnyOfType) object);
         } else if (object instanceof MatchType) {
-            AllOfType allOf = new AllOfType();
+            var allOf = new AllOfType();
             allOf.getMatch().add((MatchType) object);
-            AnyOfType anyOf = new AnyOfType();
+            var anyOf = new AnyOfType();
             anyOf.getAllOf().add(allOf);
             target.getAnyOf().add(anyOf);
         }
@@ -232,11 +232,11 @@ public final class ToscaPolicyTranslatorUtils {
      */
     public static ConditionType addVariableToCondition(ConditionType condition, VariableReferenceType variable,
             Identifier functionId) {
-        ApplyType applyFunction = new ApplyType();
+        var applyFunction = new ApplyType();
         applyFunction.setFunctionId(functionId.stringValue());
         applyFunction.getExpression().add(condition.getExpression());
         applyFunction.getExpression().add(factory.createVariableReference(variable));
-        ConditionType newCondition = new ConditionType();
+        var newCondition = new ConditionType();
         newCondition.setExpression(factory.createApply(applyFunction));
         return newCondition;
     }

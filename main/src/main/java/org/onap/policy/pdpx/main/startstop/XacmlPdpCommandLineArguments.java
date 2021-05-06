@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ package org.onap.policy.pdpx.main.startstop;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.URL;
 import java.util.Arrays;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -180,9 +179,9 @@ public class XacmlPdpCommandLineArguments {
      * @return the help string
      */
     public String help(final String mainClassName) {
-        final HelpFormatter helpFormatter = new HelpFormatter();
-        final StringWriter stringWriter = new StringWriter();
-        final PrintWriter printWriter = new PrintWriter(stringWriter);
+        final var helpFormatter = new HelpFormatter();
+        final var stringWriter = new StringWriter();
+        final var printWriter = new PrintWriter(stringWriter);
 
         helpFormatter.printHelp(printWriter, HELP_LINE_LENGTH, mainClassName + " [options...]", "options", options, 0,
                 0, "");
@@ -268,12 +267,12 @@ public class XacmlPdpCommandLineArguments {
         }
 
         // The file name refers to a resource on the local file system
-        final URL fileUrl = ResourceUtils.getUrl4Resource(fileName);
+        final var fileUrl = ResourceUtils.getUrl4Resource(fileName);
         if (fileUrl == null) {
             throw new PolicyXacmlPdpException(fileTag + FILE_MESSAGE_PREAMBLE + fileName + "\" does not exist");
         }
 
-        final File theFile = new File(fileUrl.getPath());
+        final var theFile = new File(fileUrl.getPath());
         if (!theFile.exists()) {
             throw new PolicyXacmlPdpException(fileTag + FILE_MESSAGE_PREAMBLE + fileName + "\" does not exist");
         }

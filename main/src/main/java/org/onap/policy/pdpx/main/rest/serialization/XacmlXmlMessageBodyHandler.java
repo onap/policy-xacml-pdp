@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ public class XacmlXmlMessageBodyHandler implements MessageBodyReader<Request>, M
             MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream)
                     throws IOException {
 
-        try (OutputStreamWriter writer = new OutputStreamWriter(entityStream, StandardCharsets.UTF_8)) {
+        try (var writer = new OutputStreamWriter(entityStream, StandardCharsets.UTF_8)) {
             writer.write(DOMResponse.toString(response, true));
         } catch (Exception exc) {
             throw new IOException("failed to convert a dom response to a string");

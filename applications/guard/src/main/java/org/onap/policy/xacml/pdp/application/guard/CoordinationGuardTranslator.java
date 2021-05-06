@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,13 +61,13 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
         // Policy name should be at the root
         //
         String type = toscaPolicy.getType();
-        String coordinationFunctionPath = "coordination/function";
+        var coordinationFunctionPath = "coordination/function";
         Map<String, Object> policyProps = toscaPolicy.getProperties();
         LOGGER.debug("path = {}", coordinationFunctionPath);
         LOGGER.debug("props = {}", policyProps);
         @SuppressWarnings("unchecked")
         List<String> controlLoop = (List<String>) policyProps.get("controlLoop");
-        CoordinationDirective cd = new CoordinationDirective();
+        var cd = new CoordinationDirective();
         cd.setCoordinationFunction(type);
         cd.setControlLoop(controlLoop);
         LOGGER.debug("CoordinationDirective = {}", cd);
@@ -117,7 +117,7 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
             return null;
         }
         try (InputStream is = new FileInputStream(new File(directiveFilename))) {
-            String contents = IOUtils.toString(is, StandardCharsets.UTF_8);
+            var contents = IOUtils.toString(is, StandardCharsets.UTF_8);
             //
             // Read the yaml into our Java Object
             //
@@ -149,13 +149,13 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
         /*
          * Values to be substituted for placeholder's
          */
-        final String uniqueId = UUID.randomUUID().toString();
+        final var uniqueId = UUID.randomUUID().toString();
         final String cLOne = cd.getControlLoop(0);
         final String cLTwo = cd.getControlLoop(1);
         /*
          * Replace function placeholder's with appropriate values
          */
-        String policyXml = ResourceUtils.getResourceAsString(xacmlProtoFilename);
+        var policyXml = ResourceUtils.getResourceAsString(xacmlProtoFilename);
         if (policyXml == null) {
             throw new ToscaPolicyConversionException("Unable to find prototype " + xacmlProtoFilename);
         }

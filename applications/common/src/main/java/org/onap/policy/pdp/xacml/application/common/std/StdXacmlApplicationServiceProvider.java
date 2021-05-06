@@ -133,11 +133,11 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             //
             // Create a copy of the properties object
             //
-            Properties newProperties = this.getProperties();
+            var newProperties = this.getProperties();
             //
             // Construct the filename
             //
-            Path refPath = XacmlPolicyUtils.constructUniquePolicyFilename(xacmlPolicy, this.getDataPath());
+            var refPath = XacmlPolicyUtils.constructUniquePolicyFilename(xacmlPolicy, this.getDataPath());
             //
             // Write the policy to disk
             // Maybe check for an error
@@ -189,7 +189,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
         //
         // Create a copy of the properties object
         //
-        Properties newProperties = this.getProperties();
+        var newProperties = this.getProperties();
         //
         // Remove it from the properties
         //
@@ -244,7 +244,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             xacmlRequest = this.getTranslator().convertRequest(request);
         } catch (ToscaPolicyConversionException e) {
             LOGGER.error("Failed to convert request", e);
-            DecisionResponse response = new DecisionResponse();
+            var response = new DecisionResponse();
             response.setStatus("error");
             response.setMessage(e.getLocalizedMessage());
             return Pair.of(response, null);
@@ -252,7 +252,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
         //
         // Now get a decision
         //
-        Response xacmlResponse = this.xacmlDecision(xacmlRequest);
+        var xacmlResponse = this.xacmlDecision(xacmlRequest);
         //
         // Convert to a DecisionResponse
         //
@@ -270,7 +270,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
     }
 
     protected synchronized Properties getProperties() {
-        Properties newProperties = new Properties();
+        var newProperties = new Properties();
         newProperties.putAll(pdpProperties);
         return newProperties;
     }
@@ -287,7 +287,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
         // Now initialize the XACML PDP Engine
         //
         try {
-            PDPEngineFactory factory = getPdpEngineFactory();
+            var factory = getPdpEngineFactory();
             PDPEngine engine = factory.newEngine(properties);
             if (engine != null) {
                 //

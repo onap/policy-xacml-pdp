@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,10 +36,10 @@ public class StatisticsProvider {
      * @return Report containing statistics of xacmlPdp service
      */
     public StatisticsReport fetchCurrentStatistics() {
-        final StatisticsReport report = new StatisticsReport();
+        final var report = new StatisticsReport();
         report.setCode(XacmlPdpActivator.getCurrent().isAlive() ? 200 : 500);
 
-        XacmlPdpStatisticsManager stats = XacmlPdpStatisticsManager.getCurrent();
+        var stats = XacmlPdpStatisticsManager.getCurrent();
         report.setTotalPolicyTypesCount(stats.getTotalPolicyTypesCount());
         report.setTotalPoliciesCount(stats.getTotalPoliciesCount());
         report.setTotalErrorCount(stats.getErrorCount());

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019 Nordix Foundation.
  * Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
  * ================================================================================
@@ -53,11 +53,11 @@ public class Main {
      * @throws PolicyXacmlPdpException if an error occurs
      */
     public Main(final String[] args) throws PolicyXacmlPdpException {
-        final String argumentString = Arrays.toString(args);
+        final var argumentString = Arrays.toString(args);
         LOGGER.info("Starting policy xacml pdp service with arguments - {}", argumentString);
 
         // Check the arguments
-        final XacmlPdpCommandLineArguments arguments = new XacmlPdpCommandLineArguments();
+        final var arguments = new XacmlPdpCommandLineArguments();
 
         // The arguments return a string if there is a message to print and we should exit
         argumentMessage = arguments.parse(args);
@@ -81,7 +81,7 @@ public class Main {
 
         // Add a shutdown hook to shut everything down in an orderly manner
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
-        String successMsg = String.format(MessageConstants.START_SUCCESS_MSG, MessageConstants.POLICY_XACML_PDP);
+        var successMsg = String.format(MessageConstants.START_SUCCESS_MSG, MessageConstants.POLICY_XACML_PDP);
         LOGGER.info(successMsg);
     }
 

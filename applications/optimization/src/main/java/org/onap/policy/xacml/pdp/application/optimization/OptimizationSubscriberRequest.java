@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ package org.onap.policy.xacml.pdp.application.optimization;
 import com.att.research.xacml.api.AttributeValue;
 import com.att.research.xacml.api.DataType;
 import com.att.research.xacml.api.DataTypeException;
-import com.att.research.xacml.api.DataTypeFactory;
 import com.att.research.xacml.api.Identifier;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.XACML3;
@@ -58,13 +57,13 @@ public class OptimizationSubscriberRequest extends StdMatchablePolicyRequest {
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static Request createInstance(DecisionRequest decisionRequest) throws XacmlApplicationException {
-        Request request = StdMatchablePolicyRequest.createInstance(decisionRequest);
+        var request = StdMatchablePolicyRequest.createInstance(decisionRequest);
 
         //
         // Add in the context attributes
         //
-        StdMutableRequest mutableRequest = new StdMutableRequest(request);
-        StdMutableRequestAttributes contextAttributes = new StdMutableRequestAttributes();
+        var mutableRequest = new StdMutableRequest(request);
+        var contextAttributes = new StdMutableRequestAttributes();
         contextAttributes.setCategory(XACML3.ID_SUBJECT_CATEGORY_ACCESS_SUBJECT);
         //
         // Add the context attributes
@@ -94,12 +93,12 @@ public class OptimizationSubscriberRequest extends StdMatchablePolicyRequest {
     protected static StdMutableRequestAttributes addSubject(StdMutableRequestAttributes attributes,
             Collection<Object> values, Identifier id) throws DataTypeException {
 
-        DataTypeFactory factory = getDataTypeFactory();
+        var factory = getDataTypeFactory();
         if (factory == null) {
             return null;
         }
         for (Object value : values) {
-            StdMutableAttribute mutableAttribute    = new StdMutableAttribute();
+            var mutableAttribute    = new StdMutableAttribute();
             mutableAttribute.setCategory(XACML3.ID_SUBJECT_CATEGORY_ACCESS_SUBJECT);
             mutableAttribute.setAttributeId(id);
             mutableAttribute.setIncludeInResults(true);

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,6 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ConditionType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionsType;
@@ -76,7 +75,7 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
     @Override
     public DecisionResponse convertResponse(Response xacmlResponse) {
         LOGGER.info("Converting Response {}", xacmlResponse);
-        DecisionResponse decisionResponse = new DecisionResponse();
+        var decisionResponse = new DecisionResponse();
         //
         // Setup policies
         //
@@ -182,7 +181,7 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
         //
         // Create our OnapObligation
         //
-        OnapObligation onapObligation = new OnapObligation(policyId, jsonPolicy, policyType, weight);
+        var onapObligation = new OnapObligation(policyId, jsonPolicy, policyType, weight);
         //
         // Generate the obligation
         //
@@ -190,7 +189,7 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
         //
         // Now we can add it into the rule/policy/policyset
         //
-        ObligationExpressionsType obligations = new ObligationExpressionsType();
+        var obligations = new ObligationExpressionsType();
         obligations.getObligationExpression().add(obligation);
         if (ruleOrPolicy instanceof RuleType) {
             ((RuleType) ruleOrPolicy).setObligationExpressions(obligations);
@@ -218,7 +217,7 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
         //
         // Create the match for the policy type
         //
-        MatchType match = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
+        var match = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
                 XACML3.ID_FUNCTION_STRING_EQUAL,
                 type,
                 XACML3.ID_DATATYPE_STRING,
@@ -227,7 +226,7 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
         //
         // Add it to an AnyOfType object
         //
-        AnyOfType anyOf = new AnyOfType();
+        var anyOf = new AnyOfType();
         anyOf.getAllOf().add(ToscaPolicyTranslatorUtils.buildAllOf(match));
         //
         // Return new AnyOfType
@@ -250,22 +249,22 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
         // Create an ApplyType that checks if the request contains the
         // policy-type attribute
         //
-        AttributeDesignatorType designator = new AttributeDesignatorType();
+        var designator = new AttributeDesignatorType();
         designator.setAttributeId(ToscaDictionary.ID_RESOURCE_POLICY_TYPE.stringValue());
         designator.setCategory(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue());
         designator.setDataType(XACML3.ID_DATATYPE_STRING.stringValue());
 
-        ApplyType applyBagSize = new ApplyType();
+        var applyBagSize = new ApplyType();
         applyBagSize.setDescription("Get the size of policy-type attributes");
         applyBagSize.setFunctionId(XACML3.ID_FUNCTION_STRING_BAG_SIZE.stringValue());
 
-        AttributeValueType valueZero = new AttributeValueType();
+        var valueZero = new AttributeValueType();
         valueZero.setDataType(XACML3.ID_DATATYPE_INTEGER.stringValue());
         valueZero.getContent().add("0");    // Yes really - represent as a string
 
         applyBagSize.getExpression().add(factory.createAttributeDesignator(designator));
 
-        ApplyType applyGreaterThan = new ApplyType();
+        var applyGreaterThan = new ApplyType();
         applyGreaterThan.setDescription("Does the policy-type attribute exist?");
         applyGreaterThan.setFunctionId(XACML3.ID_FUNCTION_INTEGER_EQUAL.stringValue());
 
@@ -275,7 +274,7 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
         //
         // Create an apply type that checks the actual value
         //
-        AttributeValueType value = new AttributeValueType();
+        var value = new AttributeValueType();
         value.setDataType(XACML3.ID_DATATYPE_STRING.stringValue());
         value.getContent().add(type);
 
@@ -283,7 +282,7 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
         // Create string-is-in apply - which determines if the policy-type
         // is in the request bag of resources for policy-type
         //
-        ApplyType applyIsIn = new ApplyType();
+        var applyIsIn = new ApplyType();
         applyIsIn.setDescription("Is this policy-type in the list?");
         applyIsIn.setFunctionId(XACML3.ID_FUNCTION_STRING_IS_IN.stringValue());
         applyIsIn.getExpression().add(factory.createAttributeValue(value));
@@ -292,7 +291,7 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
         //
         // Create our outer apply
         //
-        ApplyType applyOr = new ApplyType();
+        var applyOr = new ApplyType();
         applyOr.setDescription("IF exists and is equal");
         applyOr.setFunctionId(XACML3.ID_FUNCTION_OR.stringValue());
 
@@ -302,7 +301,7 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
         //
         // Finally create the condition
         //
-        ConditionType condition = new ConditionType();
+        var condition = new ConditionType();
 
         condition.setExpression(factory.createApply(applyOr));
 

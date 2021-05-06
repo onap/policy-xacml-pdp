@@ -29,7 +29,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -80,7 +79,7 @@ public class XacmlPolicyUtils {
      * @return PolicySetType object
      */
     public static PolicySetType createEmptyPolicySet(String policyId, Identifier policyCombiningAlgorithm) {
-        PolicySetType policy = new PolicySetType();
+        var policy = new PolicySetType();
         policy.setPolicySetId(policyId);
         policy.setPolicyCombiningAlgId(policyCombiningAlgorithm.stringValue());
         policy.setTarget(new TargetType());
@@ -96,7 +95,7 @@ public class XacmlPolicyUtils {
      * @return PolicyType object
      */
     public static PolicyType createEmptyPolicy(String policyId, Identifier ruleCombiningAlgorithm) {
-        PolicyType policy = new PolicyType();
+        var policy = new PolicyType();
         policy.setPolicyId(policyId);
         policy.setRuleCombiningAlgId(ruleCombiningAlgorithm.stringValue());
         policy.setTarget(new TargetType());
@@ -113,12 +112,12 @@ public class XacmlPolicyUtils {
      */
     public static PolicySetType addPoliciesToXacmlRootPolicy(PolicySetType rootPolicy,
             PolicyType... referencedPolicies) {
-        ObjectFactory factory = new ObjectFactory();
+        var factory = new ObjectFactory();
         //
         // Iterate each policy
         //
         for (PolicyType referencedPolicy : referencedPolicies) {
-            IdReferenceType reference = new IdReferenceType();
+            var reference = new IdReferenceType();
             reference.setValue(referencedPolicy.getPolicyId());
             //
             // Add it in
@@ -140,12 +139,12 @@ public class XacmlPolicyUtils {
      */
     public static PolicySetType addPolicySetsToXacmlRootPolicy(PolicySetType rootPolicy,
             PolicySetType... referencedPolicySets) {
-        ObjectFactory factory = new ObjectFactory();
+        var factory = new ObjectFactory();
         //
         // Iterate each policy
         //
         for (PolicySetType referencedPolicySet : referencedPolicySets) {
-            IdReferenceType reference = new IdReferenceType();
+            var reference = new IdReferenceType();
             reference.setValue(referencedPolicySet.getPolicySetId());
             //
             // Add it in
@@ -173,7 +172,7 @@ public class XacmlPolicyUtils {
         //
         // Construct a unique id
         //
-        int id = 1;
+        var id = 1;
         while (true) {
             String refId = "root" + id;
             if (rootPolicies.contains(refId)) {
@@ -207,7 +206,7 @@ public class XacmlPolicyUtils {
         //
         // Construct a unique id
         //
-        int id = 1;
+        var id = 1;
         while (true) {
             String refId = "ref" + id;
             if (referencedPolicies.contains(refId)) {
@@ -238,8 +237,8 @@ public class XacmlPolicyUtils {
         //
         // Get the current set of referenced policy ids
         //
-        StringJoiner join = new StringJoiner(",");
-        boolean found = false;
+        var join = new StringJoiner(",");
+        var found = false;
         Set<String> rootPolicies = XACMLProperties.getRootPolicyIDs(properties);
         for (String refPolicy : rootPolicies) {
             String refPolicyFile = refPolicy + DOT_FILE_SUFFIX;
@@ -282,8 +281,8 @@ public class XacmlPolicyUtils {
         //
         // Get the current set of referenced policy ids
         //
-        StringJoiner join = new StringJoiner(",");
-        boolean found = false;
+        var join = new StringJoiner(",");
+        var found = false;
         Set<String> referencedPolicies = XACMLProperties.getReferencedPolicyIDs(properties);
         for (String refPolicy : referencedPolicies) {
             String refPolicyFile = refPolicy + DOT_FILE_SUFFIX;
@@ -391,8 +390,8 @@ public class XacmlPolicyUtils {
      */
     public static Properties loadXacmlProperties(Path propertyPath) throws IOException {
         LOGGER.info("Loading xacml properties {}", propertyPath);
-        try (InputStream is = Files.newInputStream(propertyPath)) {
-            Properties properties = new Properties();
+        try (var is = Files.newInputStream(propertyPath)) {
+            var properties = new Properties();
             properties.load(is);
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info("Loaded xacml properties {} {}", XacmlPolicyUtils.LINE_SEPARATOR, properties);
@@ -411,9 +410,8 @@ public class XacmlPolicyUtils {
      */
     public static void storeXacmlProperties(Properties properties, Path propertyPath) throws IOException {
         LOGGER.info("Storing xacml properties {} {} {}", properties, XacmlPolicyUtils.LINE_SEPARATOR, propertyPath);
-        try (OutputStream os = Files.newOutputStream(propertyPath)) {
-            String strComments = "#";
-            properties.store(os, strComments);
+        try (var os = Files.newOutputStream(propertyPath)) {
+            properties.store(os, "#");
         }
     }
 
@@ -447,7 +445,7 @@ public class XacmlPolicyUtils {
         //
         // Open the properties file
         //
-        try (InputStream is = new FileInputStream(propertiesPath)) {
+        try (var is = new FileInputStream(propertiesPath)) {
             //
             // Load in the properties
             //
@@ -455,7 +453,7 @@ public class XacmlPolicyUtils {
             //
             // Now we create a new xacml.properties in the temporary folder location
             //
-            File propertiesFile = creator.createAFile(XACML_PROPERTY_FILE);
+            var propertiesFile = creator.createAFile(XACML_PROPERTY_FILE);
             //
             // Iterate through any root policies defined
             //
@@ -463,12 +461,12 @@ public class XacmlPolicyUtils {
                 //
                 // Get a file
                 //
-                Path rootPath = Paths.get(properties.getProperty(root + DOT_FILE_SUFFIX));
+                var rootPath = Paths.get(properties.getProperty(root + DOT_FILE_SUFFIX));
                 LOGGER.info("Root file {} {}", rootPath, rootPath.getFileName());
                 //
                 // Construct new path for the root policy
                 //
-                File newRootPath = creator.createAFile(rootPath.getFileName().toString());
+                var newRootPath = creator.createAFile(rootPath.getFileName().toString());
                 //
                 // Copy the policy file to the temporary folder
                 //
@@ -486,12 +484,12 @@ public class XacmlPolicyUtils {
                 //
                 // Get a file
                 //
-                Path refPath = Paths.get(properties.getProperty(referenced + DOT_FILE_SUFFIX));
+                var refPath = Paths.get(properties.getProperty(referenced + DOT_FILE_SUFFIX));
                 LOGGER.info("Referenced file {} {}", refPath, refPath.getFileName());
                 //
                 // Construct new path for the root policy
                 //
-                File newReferencedPath = creator.createAFile(refPath.getFileName().toString());
+                var newReferencedPath = creator.createAFile(refPath.getFileName().toString());
                 //
                 // Copy the policy file to the temporary folder
                 //

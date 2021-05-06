@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ public class CountRecentOperationsPip extends StdOnapPip {
         //
         String[] s1 = pipRequest.getIssuer().split("tw:");
         String[] s2 = s1[1].split(":");
-        int timeWindowVal = Integer.parseInt(s2[0]);
+        var timeWindowVal = Integer.parseInt(s2[0]);
         String timeWindowScale = s2[1];
         //
         // Grab other attribute values
@@ -118,7 +118,7 @@ public class CountRecentOperationsPip extends StdOnapPip {
         //
         // Create and return PipResponse
         //
-        StdMutablePIPResponse pipResponse    = new StdMutablePIPResponse();
+        var pipResponse = new StdMutablePIPResponse();
         this.addLongAttribute(pipResponse,
                 XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
                 ToscaDictionary.ID_RESOURCE_GUARD_OPERATIONCOUNT,

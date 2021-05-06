@@ -87,12 +87,12 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
         final XacmlState state;
 
         try {
-            XacmlPdpApplicationManager appmgr =
+            var appmgr =
                             new XacmlPdpApplicationManager(Paths.get(xacmlPdpParameterGroup.getApplicationPath()),
                                     xacmlPdpParameterGroup.getPolicyApiParameters());
             XacmlPdpApplicationManager.setCurrent(appmgr);
 
-            XacmlPdpStatisticsManager stats = new XacmlPdpStatisticsManager();
+            var stats = new XacmlPdpStatisticsManager();
             XacmlPdpStatisticsManager.setCurrent(stats);
             stats.setTotalPolicyTypesCount(appmgr.getPolicyTypeCount());
             stats.setTotalPolicyCount(appmgr.getPolicyCount());

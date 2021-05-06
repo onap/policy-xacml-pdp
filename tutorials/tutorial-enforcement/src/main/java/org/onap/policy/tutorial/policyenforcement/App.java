@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import java.util.Map.Entry;
 import java.util.Scanner;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
 import org.onap.policy.common.endpoints.event.comm.TopicListener;
@@ -63,13 +62,13 @@ public class App extends Thread implements TopicListener {
         xacmlPdpHost = args[0];
         xacmlPdpPort = args[1];
 
-        TopicParameters params = new TopicParameters();
+        var params = new TopicParameters();
         params.setTopicCommInfrastructure("dmaap");
         params.setFetchLimit(1);
         params.setFetchTimeout(5000);
         params.setTopic("POLICY-NOTIFICATION");
         params.setServers(Arrays.asList(args[2] + ":" + args[3]));
-        TopicParameterGroup topicParams = new TopicParameterGroup();
+        var topicParams = new TopicParameterGroup();
         topicParams.setTopicSources(Arrays.asList(params));
 
         TopicEndpointManager.getManager().addTopics(topicParams);
@@ -117,7 +116,7 @@ public class App extends Thread implements TopicListener {
         TopicEndpointManager.getManager().start();
 
         @SuppressWarnings("resource") // never close System.in
-        Scanner input = new Scanner(System.in);
+        var input = new Scanner(System.in);
         while (!Thread.currentThread().isInterrupted()) {
             String quit = input.nextLine();
             if ("q".equalsIgnoreCase(quit)) {
@@ -155,7 +154,7 @@ public class App extends Thread implements TopicListener {
      * @return true if MY_POLICYTYPEID is in the message
      */
     private boolean scanForPolicyType(String msg) {
-        StandardCoder gson = new StandardCoder();
+        var gson = new StandardCoder();
         try {
             PolicyNotification notification = gson.decode(msg, PolicyNotification.class);
             for (PolicyStatus added : notification.getAdded()) {
@@ -189,7 +188,7 @@ public class App extends Thread implements TopicListener {
 
         Entity<DecisionRequest> entityRequest =
                 Entity.entity(decisionRequest, MediaType.APPLICATION_JSON);
-        Response response = client.post("/decision", entityRequest, Collections.emptyMap());
+        var response = client.post("/decision", entityRequest, Collections.emptyMap());
 
         if (response.getStatus() != 200) {
             logger.error(
@@ -197,7 +196,7 @@ public class App extends Thread implements TopicListener {
             return Collections.emptyMap();
         }
 
-        DecisionResponse decisionResponse = HttpClient.getBody(response, DecisionResponse.class);
+        var decisionResponse = HttpClient.getBody(response, DecisionResponse.class);
 
         return decisionResponse.getPolicies();
     }
@@ -210,7 +209,7 @@ public class App extends Thread implements TopicListener {
     public static void main(String[] args) {
         logger.info("Hello Welcome to ONAP Enforcement Tutorial!");
 
-        App app = new App(args);
+        var app = new App(args);
 
         app.start();
 

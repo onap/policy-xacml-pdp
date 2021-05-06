@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -121,7 +121,7 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
     }
 
     protected PolicyDef loadPolicyFileDef(String propLocation) {
-        File fileLocation   = new File(propLocation);
+        var fileLocation   = new File(propLocation);
         if (!fileLocation.exists()) {
             logger.error("Policy file {} does not exist.", fileLocation.getAbsolutePath());
             return null;
@@ -132,7 +132,7 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
         }
         try {
             logger.info("Loading policy file {}", fileLocation);
-            PolicyDef policyDef = DOMPolicyDef.load(fileLocation);
+            var policyDef = DOMPolicyDef.load(fileLocation);
             if (policyDef != null) {
                 return policyDef;
             }
@@ -163,7 +163,7 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
 
         List<PolicyDef> listPolicyDefs  = new ArrayList<>();
         for (String policyId : policyIdArray) {
-            PolicyDef policyDef = this.loadPolicyDef(policyId);
+            var policyDef = this.loadPolicyDef(policyId);
             if (policyDef != null) {
                 listPolicyDefs.add(policyDef);
             }
@@ -194,7 +194,7 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
                 //
                 // Create our root policy
                 //
-                PolicySet root = new PolicySet();
+                var root = new PolicySet();
                 root.setIdentifier(new IdentifierImpl(UUID.randomUUID().toString()));
                 root.setVersion(StdVersion.newInstance("1.0"));
                 root.setTarget(new Target());

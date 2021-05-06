@@ -174,7 +174,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
         //
         // Create our OnapObligation object
         //
-        OnapObligation onapObligation = new OnapObligation(obligation);
+        var onapObligation = new OnapObligation(obligation);
         //
         // All 4 *should* be there
         //
@@ -257,7 +257,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
         //
         // Set it as the policy ID
         //
-        PolicyType newPolicyType = new PolicyType();
+        var newPolicyType = new PolicyType();
         newPolicyType.setPolicyId(policyName);
         //
         // Optional description
@@ -280,7 +280,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
         //
         // Now represent the policy as Json
         //
-        StandardCoder coder = new StandardCoder();
+        var coder = new StandardCoder();
         String jsonPolicy;
         try {
             jsonPolicy = coder.encode(toscaPolicy);
@@ -294,7 +294,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
         //
         // Now create the Permit Rule.
         //
-        RuleType rule = new RuleType();
+        var rule = new RuleType();
         rule.setDescription("Default is to PERMIT if the policy matches.");
         rule.setRuleId(policyName + ":rule");
         rule.setEffect(EffectType.PERMIT);
@@ -311,7 +311,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
         //
         // Log output of the policy
         //
-        try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+        try (var os = new ByteArrayOutputStream()) {
             XACMLPolicyWriter.writePolicyFile(os, newPolicyType);
             LOGGER.info("{}", os);
         } catch (IOException e) {
@@ -379,11 +379,11 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
         //
         // Our return object
         //
-        TargetType target = new TargetType();
+        var target = new TargetType();
         //
         // See if we have a matchable in the cache already
         //
-        MatchablePolicyType matchablePolicyType = matchableCache.get(policy.getTypeIdentifier());
+        var matchablePolicyType = matchableCache.get(policy.getTypeIdentifier());
         //
         // If not found, create one
         //
@@ -391,7 +391,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
             //
             // Our callback
             //
-            MyMatchableCallback myCallback = new MyMatchableCallback(this, template);
+            var myCallback = new MyMatchableCallback(this, template);
             //
             // Create the matchable
             //
@@ -459,7 +459,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
     }
 
     protected int calculateWeight(TargetType target) {
-        int weight = 0;
+        var weight = 0;
         for (AnyOfType anyOf : target.getAnyOf()) {
             for (AllOfType allOf : anyOf.getAllOf()) {
                 weight += allOf.getMatch().size();
@@ -512,7 +512,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
         //
         // Construct what the file name should be
         //
-        Path policyTypePath = this.constructLocalFilePath(policyTypeId);
+        var policyTypePath = this.constructLocalFilePath(policyTypeId);
         //
         // See if it exists
         //
@@ -546,7 +546,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
             //
             // Ensure all the fields are setup correctly
             //
-            JpaToscaServiceTemplate jtst = new JpaToscaServiceTemplate();
+            var jtst = new JpaToscaServiceTemplate();
             jtst.fromAuthorative(template);
             return jtst.toAuthorative();
         } catch (CoderException e) {
@@ -574,7 +574,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
         //
         ToscaServiceTemplate policyTemplate = null;
         try {
-            PolicyApiCaller api = new PolicyApiCaller(this.apiRestParameters);
+            var api = new PolicyApiCaller(this.apiRestParameters);
 
             policyTemplate = api.getPolicyType(policyTypeId);
         } catch (PolicyApiException e) {

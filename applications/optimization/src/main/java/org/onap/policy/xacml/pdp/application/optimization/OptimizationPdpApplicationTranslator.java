@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,6 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import org.apache.commons.lang3.StringUtils;
@@ -95,7 +94,7 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
             //
             // Dump our revised policy out
             //
-            try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+            try (var os = new ByteArrayOutputStream()) {
                 XACMLPolicyWriter.writePolicyFile(os, policy);
                 LOGGER.info("{}", os);
             } catch (IOException e) {
@@ -161,11 +160,11 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
         //
         // Iterate through all the subscriber names
         //
-        AnyOfType anyOf = new AnyOfType();
+        var anyOf = new AnyOfType();
         for (Object subscriberName : subscriberNames instanceof Collection ? (List<Object>) subscriberNames :
             Arrays.asList(subscriberNames)) {
 
-            MatchType match = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
+            var match = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
                     XACML3.ID_FUNCTION_STRING_EQUAL,
                     subscriberName,
                     XACML3.ID_DATATYPE_STRING,
@@ -197,7 +196,7 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
         //
         // Create our subscriber advice expression
         //
-        AdviceExpressionType adviceExpression = new AdviceExpressionType();
+        var adviceExpression = new AdviceExpressionType();
         adviceExpression.setAppliesTo(EffectType.PERMIT);
         adviceExpression.setAdviceId(ToscaDictionary.ID_ADVICE_OPTIMIZATION_SUBSCRIBER.stringValue());
         //
@@ -221,7 +220,7 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
         //
         // Add it to the overall expressions
         //
-        AdviceExpressionsType adviceExpressions = new AdviceExpressionsType();
+        var adviceExpressions = new AdviceExpressionsType();
         adviceExpressions.getAdviceExpression().add(adviceExpression);
         //
         // Done return our advice expressions
@@ -232,11 +231,11 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
     private static AdviceExpressionType generateSubscriberAdviceAttributes(AdviceExpressionType adviceExpression,
             Identifier attributeId, Collection<Object> adviceAttribute) {
         for (Object attribute : adviceAttribute) {
-            AttributeValueType value = new AttributeValueType();
+            var value = new AttributeValueType();
             value.setDataType(XACML3.ID_DATATYPE_STRING.stringValue());
             value.getContent().add(attribute.toString());
 
-            AttributeAssignmentExpressionType assignment = new AttributeAssignmentExpressionType();
+            var assignment = new AttributeAssignmentExpressionType();
             assignment.setAttributeId(attributeId.stringValue());
             assignment.setCategory(XACML3.ID_SUBJECT_CATEGORY_ACCESS_SUBJECT.stringValue());
             assignment.setExpression(new ObjectFactory().createAttributeValue(value));

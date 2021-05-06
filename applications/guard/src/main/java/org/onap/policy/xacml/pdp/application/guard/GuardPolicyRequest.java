@@ -126,7 +126,7 @@ public class GuardPolicyRequest {
         //
         // Create our return object
         //
-        GuardPolicyRequest request = new GuardPolicyRequest();
+        var request = new GuardPolicyRequest();
         //
         // Add the subject attributes
         //

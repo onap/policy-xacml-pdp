@@ -148,7 +148,7 @@ public class XacmlState {
      * @return a new response
      */
     private PdpStatus makeResponse(PdpMessage message, String errMessage) {
-        PdpResponseDetails resp = new PdpResponseDetails();
+        var resp = new PdpResponseDetails();
 
         if (StringUtils.isBlank(errMessage)) {
             resp.setResponseStatus(PdpResponseStatus.SUCCESS);
@@ -158,7 +158,7 @@ public class XacmlState {
         }
         resp.setResponseTo(message.getRequestId());
 
-        PdpStatus status2 = new PdpStatus(status);
+        var status2 = new PdpStatus(status);
         status2.setResponse(resp);
         return status2;
     }
