@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -71,7 +71,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         //
         // Scan the string and convert to xacml PolicyType
         //
-        try (ByteArrayInputStream is = new ByteArrayInputStream(decodedXacmlPolicy.getBytes(StandardCharsets.UTF_8))) {
+        try (var is = new ByteArrayInputStream(decodedXacmlPolicy.getBytes(StandardCharsets.UTF_8))) {
             //
             // Read the Policy In
             //
@@ -92,7 +92,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
             throw new ToscaPolicyConversionException("no xacml native policy found in the tosca policy");
         }
 
-        String nativePolicyString = propertyMap.get(POLICY).toString();
+        var nativePolicyString = propertyMap.get(POLICY).toString();
         LOGGER.debug("Base64 encoded native xacml policy {}", nativePolicyString);
         return nativePolicyString;
     }

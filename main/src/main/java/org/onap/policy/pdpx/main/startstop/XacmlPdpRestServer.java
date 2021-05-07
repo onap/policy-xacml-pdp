@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ public class XacmlPdpRestServer extends RestServer {
     @Override
     protected Properties getServerProperties(RestServerParameters restServerParameters, String names) {
 
-        final Properties props = super.getServerProperties(restServerParameters, names);
+        final var props = super.getServerProperties(restServerParameters, names);
         final String svcpfx =
                         PolicyEndPointProperties.PROPERTY_HTTP_SERVER_SERVICES + "." + restServerParameters.getName();
 

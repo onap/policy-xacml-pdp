@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -99,7 +99,7 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
             //
             // In case there are any overloaded properties for the JPA
             //
-            Properties emProperties = new Properties();
+            var emProperties = new Properties();
             emProperties.putAll(properties);
 
             //
@@ -126,7 +126,7 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
         //
         // Get the actor value
         //
-        PIPResponse pipResponse = this.getAttribute(pipRequest, pipFinder);
+        var pipResponse = this.getAttribute(pipRequest, pipFinder);
         if (pipResponse == null) {
             logger.error("Need actor attribute which is not found");
             return null;

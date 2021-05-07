@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ public class GetOperationOutcomePip extends StdOnapPip {
         String outcome = doDatabaseQuery(clname);
         logger.info("Query result is: {}", outcome);
 
-        StdMutablePIPResponse pipResponse = new StdMutablePIPResponse();
+        var pipResponse = new StdMutablePIPResponse();
         this.addStringAttribute(pipResponse, XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
             ToscaDictionary.ID_RESOURCE_GUARD_OPERATIONOUTCOME, outcome, pipRequest);
         return new StdPIPResponse(pipResponse);

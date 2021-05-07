@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -87,7 +87,7 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
         // Make the decision
         //
         Pair<DecisionResponse, Response> decisionPair = super.makeDecision(request, requestQueryParams);
-        DecisionResponse decisionResponse = decisionPair.getKey();
+        var decisionResponse = decisionPair.getKey();
         //
         // Abbreviate results if needed
         //

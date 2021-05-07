@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,7 +103,7 @@ public class StdMatchablePolicyRequest {
         //
         // Create our request object
         //
-        StdMatchablePolicyRequest request = new StdMatchablePolicyRequest();
+        var request = new StdMatchablePolicyRequest();
         //
         // Add the subject attributes
         //
@@ -127,8 +127,8 @@ public class StdMatchablePolicyRequest {
         //
         // Create an object we can add to
         //
-        StdMutableRequest mutableRequest = new StdMutableRequest(xacmlRequest);
-        StdMutableRequestAttributes resourceAttributes = new StdMutableRequestAttributes();
+        var mutableRequest = new StdMutableRequest(xacmlRequest);
+        var resourceAttributes = new StdMutableRequestAttributes();
         resourceAttributes.setCategory(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
         //
         // Add the resource attributes
@@ -166,12 +166,12 @@ public class StdMatchablePolicyRequest {
     protected static StdMutableRequestAttributes addResources(StdMutableRequestAttributes attributes,
             Collection<Object> values, String id) throws DataTypeException {
 
-        DataTypeFactory factory = getDataTypeFactory();
+        var factory = getDataTypeFactory();
         if (factory == null) {
             return null;
         }
         for (Object value : values) {
-            StdMutableAttribute mutableAttribute    = new StdMutableAttribute();
+            var mutableAttribute    = new StdMutableAttribute();
             mutableAttribute.setCategory(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
             mutableAttribute.setAttributeId(new IdentifierImpl(id));
             mutableAttribute.setIncludeInResults(true);

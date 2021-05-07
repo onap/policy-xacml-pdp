@@ -82,7 +82,7 @@ public class XacmlPdpParameterGroup extends ParameterGroupImpl {
         final BeanValidationResult validationResult = super.validate();
 
         if (policyApiParameters != null && StringUtils.isBlank(policyApiParameters.getHostname())) {
-            BeanValidationResult sub = new BeanValidationResult(PARAM_POLICY_API, policyApiParameters);
+            var sub = new BeanValidationResult(PARAM_POLICY_API, policyApiParameters);
             sub.addResult("hostname", policyApiParameters.getHostname(), ValidationStatus.INVALID, Validated.IS_NULL);
             validationResult.addResult(sub);
         }

@@ -78,7 +78,7 @@ public class XacmlPdpApplicationManager {
             // We are not going to make this available unless the application can
             // install correctly.
             //
-            boolean applicationInitialized = false;
+            var applicationInitialized = false;
             //
             // Have it initialize at a path
             //
@@ -237,7 +237,7 @@ public class XacmlPdpApplicationManager {
         // Making an assumption that all application names are unique, and
         // they can result in a valid directory being created.
         //
-        Path path = Paths.get(basePath.toAbsolutePath().toString(), application.applicationName());
+        var path = Paths.get(basePath.toAbsolutePath().toString(), application.applicationName());
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("initializeApplicationPath {} at this path {}", application.applicationName(), path);
         }

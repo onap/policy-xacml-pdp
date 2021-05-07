@@ -137,7 +137,7 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
             //
             // Convert the request
             //
-            DecisionRequest subscriberRequest = new DecisionRequest(request);
+            var subscriberRequest = new DecisionRequest(request);
             //
             // Override the PolicyType to ensure we are only looking at Subscriber Policies
             //

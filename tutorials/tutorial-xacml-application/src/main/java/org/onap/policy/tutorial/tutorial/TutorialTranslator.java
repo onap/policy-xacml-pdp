@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
@@ -59,7 +58,7 @@ public class TutorialTranslator implements ToscaPolicyTranslator {
         //
         // Here is our policy with a version and default combining algo
         //
-        PolicyType newPolicyType = new PolicyType();
+        var newPolicyType = new PolicyType();
         newPolicyType.setPolicyId(toscaPolicy.getMetadata().get("policy-id"));
         newPolicyType.setVersion(toscaPolicy.getMetadata().get("policy-version"));
         //
@@ -77,33 +76,33 @@ public class TutorialTranslator implements ToscaPolicyTranslator {
         //
         // For simplicity, let's just match on the action "authorize" and the user
         //
-        MatchType matchAction = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
+        var matchAction = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
                 XACML3.ID_FUNCTION_STRING_EQUAL, "authorize", XACML3.ID_DATATYPE_STRING,
                 XACML3.ID_ACTION_ACTION_ID, XACML3.ID_ATTRIBUTE_CATEGORY_ACTION);
         Map<String, Object> props = toscaPolicy.getProperties();
-        String user = props.get("user").toString();
-        MatchType matchUser = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(XACML3.ID_FUNCTION_STRING_EQUAL, user,
+        var user = props.get("user").toString();
+        var matchUser = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(XACML3.ID_FUNCTION_STRING_EQUAL, user,
                 XACML3.ID_DATATYPE_STRING, ID_TUTORIAL_USER, XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
-        AnyOfType anyOf = new AnyOfType();
+        var anyOf = new AnyOfType();
         //
         // Create AllOf (AND) of just Policy Id
         //
         anyOf.getAllOf().add(ToscaPolicyTranslatorUtils.buildAllOf(matchAction, matchUser));
-        TargetType target = new TargetType();
+        var target = new TargetType();
         target.getAnyOf().add(anyOf);
         newPolicyType.setTarget(target);
         //
         // Now add the rule for each permission
         //
-        int ruleNumber = 0;
+        var ruleNumber = 0;
         List<Object> permissions = (List<Object>) props.get("permissions");
         for (Object permission : permissions) {
 
-            MatchType matchEntity = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(XACML3.ID_FUNCTION_STRING_EQUAL,
+            var matchEntity = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(XACML3.ID_FUNCTION_STRING_EQUAL,
                     ((Map<String, String>) permission).get("entity"), XACML3.ID_DATATYPE_STRING, ID_TUTORIAL_ENTITY,
                     XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
 
-            MatchType matchPermission = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
+            var matchPermission = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
                     XACML3.ID_FUNCTION_STRING_EQUAL, ((Map<String, String>) permission).get("permission"),
                     XACML3.ID_DATATYPE_STRING, ID_TUTORIAL_PERM, XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
             anyOf = new AnyOfType();
@@ -111,7 +110,7 @@ public class TutorialTranslator implements ToscaPolicyTranslator {
             target = new TargetType();
             target.getAnyOf().add(anyOf);
 
-            RuleType rule = new RuleType();
+            var rule = new RuleType();
             rule.setDescription("Default is to PERMIT if the policy matches.");
             rule.setRuleId(newPolicyType.getPolicyId() + ":rule" + ruleNumber);
 
@@ -141,7 +140,7 @@ public class TutorialTranslator implements ToscaPolicyTranslator {
      * Convert XACML Response to ONAP DecisionResponse.
      */
     public DecisionResponse convertResponse(Response xacmlResponse) {
-        DecisionResponse decisionResponse = new DecisionResponse();
+        var decisionResponse = new DecisionResponse();
         //
         // Iterate through all the results
         //

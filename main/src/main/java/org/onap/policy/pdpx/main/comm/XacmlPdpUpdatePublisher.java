@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ public class XacmlPdpUpdatePublisher {
             }
         }
 
-        StringBuilder errorMessage = new StringBuilder();
+        var errorMessage = new StringBuilder();
         // Deploy a policy
         // if deployed policies do not contain the incoming policy load it
         for (ToscaPolicy policy : incomingPolicies) {
@@ -96,7 +96,7 @@ public class XacmlPdpUpdatePublisher {
         LOGGER.debug("Returning current deployed policies: {} ", message.getPolicies());
 
         // update the policy count statistic
-        XacmlPdpStatisticsManager stats = XacmlPdpStatisticsManager.getCurrent();
+        var stats = XacmlPdpStatisticsManager.getCurrent();
         if (stats != null) {
             stats.setTotalPolicyCount(appManager.getPolicyCount());
         }
