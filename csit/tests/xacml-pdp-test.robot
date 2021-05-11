@@ -22,18 +22,18 @@ MakeTopics
      Should Be Equal As Integers        ${result.rc}    0
 
 ExecuteXacmlPolicy
-     Wait Until Keyword Succeeds    0 min   15 sec  CreateMonitorPolicy
-     Wait Until Keyword Succeeds    0 min   15 sec  CreateOptimizationPolicy
-     Wait Until Keyword Succeeds    0 min   15 sec  GetDefaultDecision
-     Wait Until Keyword Succeeds    0 min   15 sec  DeployPolicies
-     Wait Until Keyword Succeeds    0 min   15 sec  GetStatisticsAfterDeployed
-     Wait Until Keyword Succeeds    0 min   15 sec  GetAbbreviatedDecisionResult
-     Wait Until Keyword Succeeds    0 min   15 sec  GetMonitoringDecision
-     Wait Until Keyword Succeeds    0 min   15 sec  GetNamingDecision
-     Wait Until Keyword Succeeds    0 min   15 sec  GetOptimizationDecision
-     Wait Until Keyword Succeeds    0 min   15 sec  GetStatisticsAfterDecision
-     Wait Until Keyword Succeeds    0 min   15 sec  UndeployMonitorPolicy
-     Wait Until Keyword Succeeds    0 min   15 sec  GetStatisticsAfterUndeploy
+     Wait Until Keyword Succeeds    1 min   15 sec  CreateMonitorPolicy
+     Wait Until Keyword Succeeds    1 min   15 sec  CreateOptimizationPolicy
+     Wait Until Keyword Succeeds    1 min   15 sec  GetDefaultDecision
+     Wait Until Keyword Succeeds    1 min   15 sec  DeployPolicies
+     Wait Until Keyword Succeeds    1 min   15 sec  GetStatisticsAfterDeployed
+     Wait Until Keyword Succeeds    1 min   15 sec  GetAbbreviatedDecisionResult
+     Wait Until Keyword Succeeds    1 min   15 sec  GetMonitoringDecision
+     Wait Until Keyword Succeeds    1 min   15 sec  GetNamingDecision
+     Wait Until Keyword Succeeds    1 min   15 sec  GetOptimizationDecision
+     Wait Until Keyword Succeeds    1 min   15 sec  GetStatisticsAfterDecision
+     Wait Until Keyword Succeeds    1 min   15 sec  UndeployMonitorPolicy
+     Wait Until Keyword Succeeds    1 min   15 sec  GetStatisticsAfterUndeploy
 
 *** Keywords ***
 
