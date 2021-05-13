@@ -1,3 +1,0 @@
-# Test suites are relative paths under [policy/xacml-pdp.git]/tests/.
-# Place the suites in run order.
-xacml-pdp-test.robot
