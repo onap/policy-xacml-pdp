@@ -20,13 +20,16 @@
 
 package org.onap.policy.pdpx.main.comm;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
@@ -63,15 +66,22 @@ public class XacmlPdpUpdatePublisher {
      */
     public void handlePdpUpdate(PdpUpdate message) {
 
-        Set<ToscaPolicy> incomingPolicies =
-                new HashSet<>(message.getPolicies() == null ? Collections.emptyList() : message.getPolicies());
-        Set<ToscaPolicy> deployedPolicies =
-                new HashSet<>(appManager.getToscaPolicies().keySet());
+        // current data
+        Map<ToscaConceptIdentifier, ToscaPolicy> deployedPolicies = policyToMap(appManager.getToscaPolicies().keySet());
 
-        // Undeploy a policy
-        // if incoming policies do not contain the deployed policy then remove it from PDP
-        for (ToscaPolicy policy : deployedPolicies) {
-            if (!incomingPolicies.contains(policy)) {
+        // incoming data
+        Map<ToscaConceptIdentifier, ToscaPolicy> toBeDeployedPolicies = policyToMap(message.getPoliciesToBeDeployed());
+        List<ToscaConceptIdentifier> toBeUndeployedIds =
+                        Optional.ofNullable(message.getPoliciesToBeUndeployed()).orElse(Collections.emptyList());
+
+        // Undeploy policies
+        for (ToscaConceptIdentifier policyId: toBeUndeployedIds) {
+            ToscaPolicy policy = deployedPolicies.get(policyId);
+            if (policy == null) {
+                LOGGER.warn("attempt to undeploy policy that has not been previously deployed: {}", policyId);
+            } else if (toBeDeployedPolicies.containsKey(policyId)) {
+                LOGGER.warn("not undeploying policy, as it also appears in the deployment list: {}", policyId);
+            } else {
                 appManager.removeUndeployedPolicy(policy);
             }
         }
@@ -79,8 +89,8 @@ public class XacmlPdpUpdatePublisher {
         var errorMessage = new StringBuilder();
         // Deploy a policy
         // if deployed policies do not contain the incoming policy load it
-        for (ToscaPolicy policy : incomingPolicies) {
-            if (!deployedPolicies.contains(policy)) {
+        for (ToscaPolicy policy : toBeDeployedPolicies.values()) {
+            if (!deployedPolicies.containsKey(policy.getIdentifier())) {
                 try {
                     appManager.loadDeployedPolicy(policy);
                 } catch (XacmlApplicationException e) {
@@ -91,9 +101,6 @@ public class XacmlPdpUpdatePublisher {
                 }
             }
         }
-        // Return current deployed policies
-        message.setPolicies(new ArrayList<>(appManager.getToscaPolicies().keySet()));
-        LOGGER.debug("Returning current deployed policies: {} ", message.getPolicies());
 
         // update the policy count statistic
         var stats = XacmlPdpStatisticsManager.getCurrent();
@@ -101,7 +108,18 @@ public class XacmlPdpUpdatePublisher {
             stats.setTotalPolicyCount(appManager.getPolicyCount());
         }
 
-        sendPdpUpdate(state.updateInternalState(message, errorMessage.toString()));
+        PdpStatus status = state.updateInternalState(message, errorMessage.toString());
+        LOGGER.debug("Returning current deployed policies: {} ", status.getPolicies());
+
+        sendPdpUpdate(status);
+    }
+
+    private Map<ToscaConceptIdentifier, ToscaPolicy> policyToMap(Collection<ToscaPolicy> policies) {
+        if (policies == null) {
+            return Collections.emptyMap();
+        }
+
+        return policies.stream().collect(Collectors.toMap(ToscaPolicy::getIdentifier, policy -> policy));
     }
 
     private void sendPdpUpdate(PdpStatus status) {
@@ -110,5 +128,4 @@ public class XacmlPdpUpdatePublisher {
             LOGGER.error("failed to send to topic sink {}", client.getTopic());
         }
     }
-
 }
