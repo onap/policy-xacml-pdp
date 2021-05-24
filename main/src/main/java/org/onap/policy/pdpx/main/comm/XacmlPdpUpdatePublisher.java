@@ -20,13 +20,15 @@
 
 package org.onap.policy.pdpx.main.comm;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
@@ -63,15 +65,24 @@ public class XacmlPdpUpdatePublisher {
      */
     public void handlePdpUpdate(PdpUpdate message) {
 
-        Set<ToscaPolicy> incomingPolicies =
-                new HashSet<>(message.getPolicies() == null ? Collections.emptyList() : message.getPolicies());
-        Set<ToscaPolicy> deployedPolicies =
-                new HashSet<>(appManager.getToscaPolicies().keySet());
+        Map<ToscaConceptIdentifier, ToscaPolicy> deployedPolicies = appManager.getToscaPolicies().keySet().stream()
+                        .collect(Collectors.toMap(ToscaPolicy::getIdentifier, policy -> policy));
 
-        // Undeploy a policy
-        // if incoming policies do not contain the deployed policy then remove it from PDP
-        for (ToscaPolicy policy : deployedPolicies) {
-            if (!incomingPolicies.contains(policy)) {
+        Map<ToscaConceptIdentifier, ToscaPolicy> toBeDeployedPolicies = (message.getPoliciesToBeDeployed() == null
+                        ? Collections.emptyMap()
+                        : message.getPoliciesToBeDeployed().stream()
+                                        .collect(Collectors.toMap(ToscaPolicy::getIdentifier, policy -> policy)));
+
+        Set<ToscaConceptIdentifier> toBeUndeployedIds =
+                        (message.getPoliciesToBeUndeployed() == null ? Collections.emptySet()
+                                        : new HashSet<>(message.getPoliciesToBeUndeployed()));
+
+        toBeUndeployedIds.removeAll(toBeDeployedPolicies.keySet());
+
+        // Undeploy policies
+        for (ToscaConceptIdentifier policyId: toBeUndeployedIds) {
+            ToscaPolicy policy = deployedPolicies.get(policyId);
+            if (policy != null) {
                 appManager.removeUndeployedPolicy(policy);
             }
         }
@@ -79,8 +90,8 @@ public class XacmlPdpUpdatePublisher {
         var errorMessage = new StringBuilder();
         // Deploy a policy
         // if deployed policies do not contain the incoming policy load it
-        for (ToscaPolicy policy : incomingPolicies) {
-            if (!deployedPolicies.contains(policy)) {
+        for (ToscaPolicy policy : toBeDeployedPolicies.values()) {
+            if (!deployedPolicies.containsKey(policy.getIdentifier())) {
                 try {
                     appManager.loadDeployedPolicy(policy);
                 } catch (XacmlApplicationException e) {
@@ -92,8 +103,9 @@ public class XacmlPdpUpdatePublisher {
             }
         }
         // Return current deployed policies
-        message.setPolicies(new ArrayList<>(appManager.getToscaPolicies().keySet()));
-        LOGGER.debug("Returning current deployed policies: {} ", message.getPolicies());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Returning current deployed policies: {} ", appManager.getToscaPolicyIdentifiers());
+        }
 
         // update the policy count statistic
         var stats = XacmlPdpStatisticsManager.getCurrent();
