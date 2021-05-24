@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fdd2120_c796caf3",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpUpdatePublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-24T20:51:09Z",
+      "side": 0,
+      "message": "this is not needed, as state.updateInternalState() updates the policies in the PDP-STATUS based on what\u0027s in appManager, not what\u0027s in \"message\"",
+      "revId": "7293cbd3c0bf0043b663d036dcb7abe400a4e706",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
