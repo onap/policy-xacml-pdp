@@ -33,6 +33,24 @@
       "revId": "e856fea74cac2bae0a2d488a40143a95105b73c8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffe36d69_5c660b4b",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/comm/XacmlPdpUpdatePublisher.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-05-25T13:22:06Z",
+      "side": 1,
+      "message": "I don\u0027t think so. The xacml pdp had statistics from the beginning of inception and has an endpoint to collect them. But I don\u0027t think they ever got hooked into the PDP monitoring. Should be easy, I think there\u0027s a task somewhere but don\u0027t know for sure.",
+      "parentUuid": "88b57b72_ec585c54",
+      "revId": "e856fea74cac2bae0a2d488a40143a95105b73c8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
