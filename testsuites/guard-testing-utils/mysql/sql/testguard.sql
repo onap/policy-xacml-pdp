@@ -15,5 +15,11 @@ create table if not exists operationshistory (
     PRIMARY KEY (id)
 );
 
+create index if not exists operationshistory_clreqid_index on
+    operationshistory(requestId, closedLoopName);
+
+create index if not exists operationshistory_target_index on
+    operationshistory(target, operation, actor, endtime);
+
 insert into operationshistory (`closedLoopName`,`requestId`,`actor`,`operation`,`target`,`starttime`,`outcome`,`message`,`subrequestId`,`endtime`)
 VALUES('ControlLoop-vDNS-6f37f56d-a87d-4b85-b6a9-cc953cf779b3','test001122','SO','VF Module Create','.*',NOW() - INTERVAL 1 HOUR,'SUCCESS',null,null,Now());
