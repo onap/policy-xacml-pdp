@@ -147,22 +147,13 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
 
     }
 
-    @SuppressWarnings("unchecked")
     private static PolicyType addSubscriberNameIntoTarget(PolicyType policy,
             Map<String, Object> subscriberProperties) throws ToscaPolicyConversionException {
-        //
-        // Find the subscriber names
-        //
-        Object subscriberNames = subscriberProperties.get("subscriberName");
-        if (subscriberNames == null) {
-            throw new ToscaPolicyConversionException("Missing subscriberName property");
-        }
         //
         // Iterate through all the subscriber names
         //
         var anyOf = new AnyOfType();
-        for (Object subscriberName : subscriberNames instanceof Collection ? (List<Object>) subscriberNames :
-            Arrays.asList(subscriberNames)) {
+        for (Object subscriberName : getPropAsList(subscriberProperties, "subscriberName")) {
 
             var match = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
                     XACML3.ID_FUNCTION_STRING_EQUAL,
@@ -183,16 +174,8 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
         return policy;
     }
 
-    @SuppressWarnings("unchecked")
     private static AdviceExpressionsType generateSubscriberAdvice(Map<String, Object> subscriberProperties)
             throws ToscaPolicyConversionException {
-        //
-        // Get the subscriber role
-        //
-        Object role = subscriberProperties.get(FIELD_SUBSCRIBER_ROLE);
-        if (role == null || StringUtils.isBlank(role.toString())) {
-            throw new ToscaPolicyConversionException("Missing subscriberRole");
-        }
         //
         // Create our subscriber advice expression
         //
@@ -205,18 +188,14 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
         generateSubscriberAdviceAttributes(
                 adviceExpression,
                 ToscaDictionary.ID_ADVICE_OPTIMIZATION_SUBSCRIBER_ROLE,
-                role instanceof Collection ? (List<Object>) role : Arrays.asList(role));
+                getPropAsList(subscriberProperties, FIELD_SUBSCRIBER_ROLE));
         //
         // Get the provision status
         //
-        Object provision = subscriberProperties.get(FIELD_PROV_STATUS);
-        if (provision == null || StringUtils.isBlank(provision.toString())) {
-            throw new ToscaPolicyConversionException("Missing provStatus");
-        }
-        adviceExpression = generateSubscriberAdviceAttributes(
+        generateSubscriberAdviceAttributes(
                 adviceExpression,
                 ToscaDictionary.ID_ADVICE_OPTIMIZATION_SUBSCRIBER_STATUS,
-                role instanceof Collection ? (List<Object>) provision : Arrays.asList(role));
+                getPropAsList(subscriberProperties, FIELD_PROV_STATUS));
         //
         // Add it to the overall expressions
         //
@@ -228,7 +207,7 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
         return adviceExpressions;
     }
 
-    private static AdviceExpressionType generateSubscriberAdviceAttributes(AdviceExpressionType adviceExpression,
+    private static void generateSubscriberAdviceAttributes(AdviceExpressionType adviceExpression,
             Identifier attributeId, Collection<Object> adviceAttribute) {
         for (Object attribute : adviceAttribute) {
             var value = new AttributeValueType();
@@ -242,9 +221,17 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
 
             adviceExpression.getAttributeAssignmentExpression().add(assignment);
         }
-        //
-        // Return for convenience
-        //
-        return adviceExpression;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<Object> getPropAsList(Map<String, Object> properties, String fieldName)
+                    throws ToscaPolicyConversionException {
+
+        Object raw = properties.get(fieldName);
+        if (raw == null || StringUtils.isBlank(raw.toString())) {
+            throw new ToscaPolicyConversionException("Missing " + fieldName);
+        }
+
+        return raw instanceof Collection ? (List<Object>) raw : Arrays.asList(raw);
     }
 }

@@ -24,6 +24,7 @@ package org.onap.policy.pdp.xacml.application.common;
 
 import com.att.research.xacml.api.Identifier;
 import com.att.research.xacml.api.XACML3;
+import java.util.Map;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
@@ -35,6 +36,10 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
 import org.apache.commons.lang3.StringUtils;
+import org.onap.policy.common.parameters.BeanValidationResult;
+import org.onap.policy.common.parameters.BeanValidator;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 
 /**
  * This class contains static methods of helper classes to convert TOSCA policies
@@ -45,6 +50,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public final class ToscaPolicyTranslatorUtils {
     private static final ObjectFactory factory = new ObjectFactory();
+    private static final StandardCoder CODER = new StandardCoder();
 
     private ToscaPolicyTranslatorUtils() {
         super();
@@ -239,5 +245,35 @@ public final class ToscaPolicyTranslatorUtils {
         var newCondition = new ConditionType();
         newCondition.setExpression(factory.createApply(applyFunction));
         return newCondition;
+    }
+
+    /**
+     * Decodes TOSCA Policy properties into a particular type and validates the result.
+     *
+     * @param <T> desired type
+     * @param properties properties to be decoded
+     * @param clazz desired class
+     * @return the decoded properties
+     * @throws ToscaPolicyConversionException if the properties cannot be decoded or are
+     *         invalid
+     */
+    public static <T> T decodeProperties(Map<String, Object> properties, Class<T> clazz)
+                    throws ToscaPolicyConversionException {
+
+        if (properties == null) {
+            throw new ToscaPolicyConversionException(
+                            "Cannot decode " + clazz.getSimpleName() + " from null properties");
+        }
+
+        try {
+            T data = CODER.convert(properties, clazz);
+            BeanValidationResult result = new BeanValidator().validateTop("properties", data);
+            if (!result.isValid()) {
+                throw new ToscaPolicyConversionException(result.getResult());
+            }
+            return data;
+        } catch (CoderException e) {
+            throw new ToscaPolicyConversionException("Cannot decode " + clazz.getSimpleName() + " from properties", e);
+        }
     }
 }

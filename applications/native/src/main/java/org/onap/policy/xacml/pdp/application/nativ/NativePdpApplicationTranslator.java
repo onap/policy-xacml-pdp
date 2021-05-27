@@ -30,13 +30,15 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.Map;
-import org.apache.commons.collections4.MapUtils;
+import lombok.Getter;
+import org.onap.policy.common.parameters.annotations.NotBlank;
+import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
+import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +51,6 @@ import org.slf4j.LoggerFactory;
 public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NativePdpApplicationTranslator.class);
-    private static final String POLICY = "policy";
 
     public NativePdpApplicationTranslator() {
         super();
@@ -87,14 +88,11 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
 
     private String getNativeXacmlPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
 
-        Map<String, Object> propertyMap = toscaPolicy.getProperties();
-        if (MapUtils.isEmpty(propertyMap) || !propertyMap.containsKey(POLICY)) {
-            throw new ToscaPolicyConversionException("no xacml native policy found in the tosca policy");
-        }
+        NativeDefinition nativeDefinition = ToscaPolicyTranslatorUtils.decodeProperties(toscaPolicy.getProperties(),
+                        NativeDefinition.class);
 
-        var nativePolicyString = propertyMap.get(POLICY).toString();
-        LOGGER.debug("Base64 encoded native xacml policy {}", nativePolicyString);
-        return nativePolicyString;
+        LOGGER.debug("Base64 encoded native xacml policy {}", nativeDefinition.getPolicy());
+        return nativeDefinition.getPolicy();
     }
 
     @Override
@@ -108,5 +106,12 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         // We do nothing to DecisionResponse for native xacml application
         //
         return null;
+    }
+
+    @Getter
+    public static class NativeDefinition {
+        @NotNull
+        @NotBlank
+        private String policy;
     }
 }

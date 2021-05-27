@@ -117,27 +117,26 @@ public class GuardTranslatorTest {
         // Expected message for given policy name
         //
         final Map<String, String> name2message = new HashMap<>();
-        name2message.put("frequency-missing-properties", "Missing property limit");
-        name2message.put("frequency-timewindow", "timeWindow is not an integer");
-        name2message.put("frequency-badtimerange_start", "Invalid timeRange");
-        name2message.put("frequency-badtimerange_end", "Invalid timeRange");
+        name2message.put("frequency-missing-properties", "item \"limit\"");
+        name2message.put("frequency-timewindow", "Cannot decode FrequencyDefinition");
+        name2message.put("frequency-badtimerange_start", "item \"startTime\"");
+        name2message.put("frequency-badtimerange_end", "item \"endTime\"");
         name2message.put("frequency-badtimerange_value", "timestamp 99:99:99 could not be parsed");
-        name2message.put("minmax-notarget", "Missing target field in minmax policy");
+        name2message.put("minmax-notarget", "item \"target\"");
         name2message.put("minmax-nominmax", "Missing min or max field in minmax policy");
-        name2message.put("blacklist-noblacklist", "Missing blacklist");
-        name2message.put("filter-noalgorithm", "Missing algorithm");
+        name2message.put("blacklist-noblacklist", "item \"blacklist\"");
+        name2message.put("filter-noalgorithm", "item \"algorithm\"");
         name2message.put("filter-badalgorithm",
                             "Unexpected value for algorithm, should be whitelist-overrides or blacklist-overrides");
-        name2message.put("filter-nofilter", "Missing filters");
-        name2message.put("filter-nocollection", "Filters is not a collection");
-        name2message.put("filter-noarray", "Filters is not a collection");
-        name2message.put("filter-missingfield", "Missing \'field\' from filter");
+        name2message.put("filter-nofilter", "item \"filters\"");
+        name2message.put("filter-nocollection", "Cannot decode FilterDefinition");
+        name2message.put("filter-noarray", "Cannot decode FilterDefinition");
+        name2message.put("filter-missingfield", "item \"field\"");
         name2message.put("filter-badfield", "Unexpected value for field in filter");
-        name2message.put("filter-missingfilter", "Missing \'filter\' from filter");
-        name2message.put("filter-missingfunction", "Missing \'function\' from filter");
+        name2message.put("filter-missingfilter", "item \"filter\"");
+        name2message.put("filter-missingfunction", "item \"function\"");
         name2message.put("filter-badfunction", "Unexpected value for function in filter");
-        name2message.put("filter-missingblacklist", "Missing \'blacklist\' from filter");
-        name2message.put("filter-badblacklist", "Unexpected value for blacklist in filter");
+        name2message.put("filter-missingblacklist", "item \"blacklist\"");
         //
         // Get the policies
         //
@@ -149,7 +148,7 @@ public class GuardTranslatorTest {
 
                 assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
                     translator.convertPolicy(policy)
-                ).withMessageContaining(expectedMsg);
+                ).as(policy.getName()).withMessageContaining(expectedMsg);
             }
         }
     }

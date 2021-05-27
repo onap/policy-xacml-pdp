@@ -23,11 +23,14 @@
 package org.onap.policy.pdp.xacml.application.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertTrue;
 
 import com.att.research.xacml.api.XACML3;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
+import java.util.Map;
+import lombok.Getter;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
@@ -39,6 +42,8 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
 import org.junit.Test;
+import org.onap.policy.common.parameters.annotations.NotNull;
+import org.onap.policy.common.utils.coder.CoderException;
 
 public class ToscaPolicyTranslatorUtilsTest {
     private static final ObjectFactory factory = new ObjectFactory();
@@ -109,5 +114,31 @@ public class ToscaPolicyTranslatorUtilsTest {
         Object obj = newCondition.getExpression().getValue();
         assertThat(((ApplyType) obj).getFunctionId()).isEqualTo(XACML3.ID_FUNCTION_AND.stringValue());
         assertThat(((ApplyType) obj).getExpression()).hasSize(2);
+    }
+
+    @Test
+    public void testDecodeProperties() throws ToscaPolicyConversionException {
+        Data data = ToscaPolicyTranslatorUtils.decodeProperties(Map.of("value", 20), Data.class);
+        assertThat(data.getValue()).isEqualTo(20);
+
+        // null value - invalid
+        assertThatThrownBy(() -> ToscaPolicyTranslatorUtils.decodeProperties(Map.of(), Data.class))
+                        .isInstanceOf(ToscaPolicyConversionException.class).hasMessageContaining("item \"value\"");
+
+        // value is not an integer - cannot even decode it
+        assertThatThrownBy(() -> ToscaPolicyTranslatorUtils.decodeProperties(Map.of("value", "abc"), Data.class))
+                        .isInstanceOf(ToscaPolicyConversionException.class).getCause()
+                        .isInstanceOf(CoderException.class);
+
+        // null properties - cannot even decode
+        assertThatThrownBy(() -> ToscaPolicyTranslatorUtils.decodeProperties(null, Data.class))
+                        .isInstanceOf(ToscaPolicyConversionException.class)
+                        .hasMessage("Cannot decode Data from null properties");
+    }
+
+    @Getter
+    @NotNull
+    public static class Data {
+        private Integer value;
     }
 }
