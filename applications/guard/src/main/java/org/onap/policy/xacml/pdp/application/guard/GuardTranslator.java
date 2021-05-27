@@ -32,10 +32,13 @@ import com.att.research.xacml.api.Result;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.IdentifierImpl;
 import com.att.research.xacml.std.annotations.RequestParser;
+import com.google.gson.annotations.SerializedName;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import lombok.Getter;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
@@ -50,7 +53,9 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableDefinitionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
-import org.apache.commons.lang3.StringUtils;
+import org.onap.policy.common.parameters.annotations.NotBlank;
+import org.onap.policy.common.parameters.annotations.NotNull;
+import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -171,9 +176,8 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         //
         // Add in our variable definition
         //
-        Object timeRange = toscaPolicy.getProperties().get(FIELD_TIMERANGE);
-        if (timeRange != null) {
-            VariableReferenceType variable = this.createTimeRangeVariable(timeRange, newPolicyType);
+        VariableReferenceType variable = this.createTimeRangeVariable(toscaPolicy.getProperties(), newPolicyType);
+        if (variable != null) {
             //
             // Update all the rules to have conditions for this variable
             //
@@ -295,20 +299,25 @@ public class GuardTranslator implements ToscaPolicyTranslator {
     protected TargetType generateTargetType(Map<String, Object> properties, boolean addTargets)
             throws ToscaPolicyConversionException {
         //
+        // Decode the definition from the policy's properties
+        //
+        TargetTypeDefinition targetTypeDef =
+                        ToscaPolicyTranslatorUtils.decodeProperties(properties, TargetTypeDefinition.class);
+        //
         // Go through potential properties
         //
         var allOf = new AllOfType();
-        if (properties.containsKey(FIELD_ACTOR)) {
-            addMatch(allOf, properties.get(FIELD_ACTOR), ToscaDictionary.ID_RESOURCE_GUARD_ACTOR);
+        if (targetTypeDef.getActor() != null) {
+            addMatch(allOf, targetTypeDef.getActor(), ToscaDictionary.ID_RESOURCE_GUARD_ACTOR);
         }
-        if (properties.containsKey(FIELD_OPERATION)) {
-            addMatch(allOf, properties.get(FIELD_OPERATION), ToscaDictionary.ID_RESOURCE_GUARD_RECIPE);
+        if (targetTypeDef.getOperation() != null) {
+            addMatch(allOf, targetTypeDef.getOperation(), ToscaDictionary.ID_RESOURCE_GUARD_RECIPE);
         }
-        if (addTargets && properties.containsKey(FIELD_TARGET)) {
-            addMatch(allOf, properties.get(FIELD_TARGET), ToscaDictionary.ID_RESOURCE_GUARD_TARGETID);
+        if (addTargets && targetTypeDef.getTarget() != null) {
+            addMatch(allOf, targetTypeDef.getTarget(), ToscaDictionary.ID_RESOURCE_GUARD_TARGETID);
         }
-        if (properties.containsKey(FIELD_CONTROLLOOP)) {
-            addMatch(allOf, properties.get(FIELD_CONTROLLOOP), ToscaDictionary.ID_RESOURCE_GUARD_CLNAME);
+        if (targetTypeDef.getId() != null) {
+            addMatch(allOf, targetTypeDef.getId(), ToscaDictionary.ID_RESOURCE_GUARD_CLNAME);
         }
         //
         // Create target
@@ -358,16 +367,12 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         return allOf;
     }
 
-    @SuppressWarnings("rawtypes")
-    protected void addTimeRangeMatch(AllOfType allOf, Object timeRange)
+    protected void addTimeRangeMatch(AllOfType allOf, TimeRange timeRange)
             throws ToscaPolicyConversionException {
-        if (! (timeRange instanceof Map)) {
-            throw new ToscaPolicyConversionException("timeRange is not a map object " + timeRange.getClass());
-        }
 
         var matchStart = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
                 XACML3.ID_FUNCTION_TIME_GREATER_THAN_OR_EQUAL,
-                ((Map) timeRange).get("start_time").toString(),
+                timeRange.getStartTime(),
                 XACML3.ID_DATATYPE_TIME,
                 XACML3.ID_ENVIRONMENT_CURRENT_TIME,
                 XACML3.ID_ATTRIBUTE_CATEGORY_ENVIRONMENT);
@@ -376,7 +381,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
 
         var matchEnd = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
                 XACML3.ID_FUNCTION_TIME_LESS_THAN_OR_EQUAL,
-                ((Map) timeRange).get("end_time").toString(),
+                timeRange.getEndTime(),
                 XACML3.ID_DATATYPE_TIME,
                 XACML3.ID_ENVIRONMENT_CURRENT_TIME,
                 XACML3.ID_ATTRIBUTE_CATEGORY_ENVIRONMENT);
@@ -384,36 +389,22 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         allOf.getMatch().add(matchEnd);
     }
 
-    @SuppressWarnings("rawtypes")
-    protected VariableReferenceType createTimeRangeVariable(Object timeRange, PolicyType newPolicyType)
+    protected VariableReferenceType createTimeRangeVariable(Map<String, Object> properties, PolicyType newPolicyType)
             throws ToscaPolicyConversionException {
         //
-        // Sanity check the properties
+        // Decode the definition from the policy's properties
         //
-        if (! (timeRange instanceof Map)) {
-            throw new ToscaPolicyConversionException("timeRange is not a map object " + timeRange.getClass());
-        }
-        String startTimestamp;
-        String endTimestamp;
-        try {
-            startTimestamp = ((Map) timeRange).get("start_time").toString();
-            endTimestamp = ((Map) timeRange).get("end_time").toString();
-            if (StringUtils.isBlank(startTimestamp)) {
-                throw new ToscaPolicyConversionException("Missing timeRange start_time property");
-            }
-            if (StringUtils.isBlank(endTimestamp)) {
-                throw new ToscaPolicyConversionException("Missing timeRange end_time property");
-            }
-        } catch (ToscaPolicyConversionException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ToscaPolicyConversionException("Invalid timeRange", e);
+        TimeRangeDefinition timeRangeDef =
+                        ToscaPolicyTranslatorUtils.decodeProperties(properties, TimeRangeDefinition.class);
+        TimeRange timeRange = timeRangeDef.getTimeRange();
+        if (timeRange == null) {
+            return null;
         }
         //
         // Should also be parseable as an ISO8601 timestamp
         //
-        var startTimeObject = parseTimestamp(startTimestamp);
-        var endTimeObject = parseTimestamp(endTimestamp);
+        var startTimeObject = parseTimestamp(timeRange.getStartTime());
+        var endTimeObject = parseTimestamp(timeRange.getEndTime());
         //
         // They should be the same object types. We cannot establish a range
         // between an OffsetDateTime and an OffsetTime
@@ -424,7 +415,8 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         //
         // Create the inner timeInRange ApplyType
         //
-        ApplyType timeInRange = ToscaPolicyTranslatorUtils.generateTimeInRange(startTimestamp, endTimestamp, true);
+        ApplyType timeInRange = ToscaPolicyTranslatorUtils.generateTimeInRange(timeRange.getStartTime(),
+                        timeRange.getEndTime(), true);
         var variable = new VariableDefinitionType();
         variable.setVariableId(VARIABLE_TIMEINRANGE);
         variable.setExpression(new ObjectFactory().createApply(timeInRange));
@@ -462,36 +454,22 @@ public class GuardTranslator implements ToscaPolicyTranslator {
     protected void generateFrequencyRules(ToscaPolicy toscaPolicy, String policyName, PolicyType newPolicyType)
             throws ToscaPolicyConversionException {
         //
-        // We must have the limit
+        // Decode the definition from the policy's properties
         //
-        if (! toscaPolicy.getProperties().containsKey(FIELD_LIMIT)) {
-            throw new ToscaPolicyConversionException("Missing property limit");
-        }
+        FrequencyDefinition frequencyDef = ToscaPolicyTranslatorUtils.decodeProperties(toscaPolicy.getProperties(),
+                        FrequencyDefinition.class);
         //
         // See if its possible to generate a count
         //
-        var limit = ToscaPolicyTranslatorUtils.parseInteger(
-                toscaPolicy.getProperties().get(FIELD_LIMIT).toString());
-        if (limit == null) {
-            throw new ToscaPolicyConversionException("Missing limit value");
-        }
         String timeWindow = null;
-        if (toscaPolicy.getProperties().containsKey(FIELD_TIMEWINDOW)) {
-            var intTimeWindow = ToscaPolicyTranslatorUtils.parseInteger(
-                    toscaPolicy.getProperties().get(FIELD_TIMEWINDOW).toString());
-            if (intTimeWindow == null) {
-                throw new ToscaPolicyConversionException("timeWindow is not an integer");
-            }
-            timeWindow = intTimeWindow.toString();
-        }
-        String timeUnits = null;
-        if (toscaPolicy.getProperties().containsKey(FIELD_TIMEUNITS)) {
-            timeUnits = toscaPolicy.getProperties().get(FIELD_TIMEUNITS).toString();
+        if (frequencyDef.getTimeWindow() != null) {
+            timeWindow = frequencyDef.getTimeWindow().toString();
         }
         //
         // Generate a count
         //
-        final ApplyType countCheck = generateCountCheck(limit, timeWindow, timeUnits);
+        final ApplyType countCheck =
+                        generateCountCheck(frequencyDef.getLimit(), timeWindow, frequencyDef.getTimeUnits());
         //
         // Create our condition
         //
@@ -558,14 +536,16 @@ public class GuardTranslator implements ToscaPolicyTranslator {
     protected void generateMinMaxRules(ToscaPolicy toscaPolicy, String policyName, PolicyType newPolicyType)
             throws ToscaPolicyConversionException {
         //
+        // Decode the definition from the policy's properties
+        //
+        MinMaxDefinition minMaxDef = ToscaPolicyTranslatorUtils.decodeProperties(toscaPolicy.getProperties(),
+                        MinMaxDefinition.class);
+        //
         // Add the target
         //
-        if (! toscaPolicy.getProperties().containsKey(FIELD_TARGET)) {
-            throw new ToscaPolicyConversionException("Missing target field in minmax policy");
-        }
         var matchTarget = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
                 XACML3.ID_FUNCTION_STRING_EQUAL,
-                toscaPolicy.getProperties().get(FIELD_TARGET).toString(),
+                minMaxDef.getTarget(),
                 XACML3.ID_DATATYPE_STRING,
                 ToscaDictionary.ID_RESOURCE_GUARD_TARGETID,
                 XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
@@ -573,12 +553,10 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         // For the min, if the # of instances is less than the minimum
         // then allow the scale.
         //
-        Integer min = null;
-        if (toscaPolicy.getProperties().containsKey(FIELD_MIN)) {
-            min = ToscaPolicyTranslatorUtils.parseInteger(toscaPolicy.getProperties().get(FIELD_MIN).toString());
+        if (minMaxDef.getMin() != null) {
             var matchMin = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
                     XACML3.ID_FUNCTION_INTEGER_GREATER_THAN,
-                    min.toString(),
+                    minMaxDef.getMin().toString(),
                     XACML3.ID_DATATYPE_INTEGER,
                     ToscaDictionary.ID_RESOURCE_GUARD_VFCOUNT,
                     XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
@@ -586,12 +564,10 @@ public class GuardTranslator implements ToscaPolicyTranslator {
             newPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(
                     generateMinMaxRule(matchTarget, matchMin, policyName + ":minrule", "check minimum"));
         }
-        Integer max = null;
-        if (toscaPolicy.getProperties().containsKey(FIELD_MAX)) {
-            max = ToscaPolicyTranslatorUtils.parseInteger(toscaPolicy.getProperties().get(FIELD_MAX).toString());
+        if (minMaxDef.getMax() != null) {
             var matchMax = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
                     XACML3.ID_FUNCTION_INTEGER_GREATER_THAN,
-                    max.toString(),
+                    minMaxDef.getMax().toString(),
                     XACML3.ID_DATATYPE_INTEGER,
                     ToscaDictionary.ID_RESOURCE_GUARD_VFCOUNT,
                     XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
@@ -602,7 +578,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         //
         // Do we have at least a min or max?
         //
-        if (min == null && max == null) {
+        if (minMaxDef.getMin() == null && minMaxDef.getMax() == null) {
             throw new ToscaPolicyConversionException("Missing min or max field in minmax policy");
         }
     }
@@ -626,25 +602,17 @@ public class GuardTranslator implements ToscaPolicyTranslator {
     protected void generateBlacklistRules(ToscaPolicy toscaPolicy, String policyName, PolicyType newPolicyType)
             throws ToscaPolicyConversionException {
         //
-        // Validate the blacklist exists
+        // Decode the definition from the policy's properties
         //
-        if (! toscaPolicy.getProperties().containsKey(FIELD_BLACKLIST)) {
-            throw new ToscaPolicyConversionException("Missing blacklist field");
-        }
-        //
-        // Get the blacklist, which should be an array or collection.
-        //
-        Object arrayBlacklisted = toscaPolicy.getProperties().get(FIELD_BLACKLIST);
-        if (!(arrayBlacklisted instanceof Collection)) {
-            throw new ToscaPolicyConversionException("Blacklist is not a collection");
-        }
+        BlacklistDefinition blacklistDef = ToscaPolicyTranslatorUtils.decodeProperties(toscaPolicy.getProperties(),
+                        BlacklistDefinition.class);
         //
         // Iterate the entries and create individual AnyOf so each entry is
         // treated as an OR.
         //
         var target = new TargetType();
         var anyOf = new AnyOfType();
-        for (Object blacklisted : ((Collection<?>) arrayBlacklisted)) {
+        for (Object blacklisted : blacklistDef.blacklist) {
             var allOf = new AllOfType();
             this.addMatch(allOf, blacklisted, ToscaDictionary.ID_RESOURCE_GUARD_TARGETID);
             anyOf.getAllOf().add(allOf);
@@ -664,57 +632,42 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         newPolicyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(blacklistRule);
     }
 
-    @SuppressWarnings("unchecked")
     protected void generateFilterRules(ToscaPolicy toscaPolicy, String policyName, PolicyType newPolicyType)
             throws ToscaPolicyConversionException {
         //
-        // Validate the algorithm
+        // Decode the definition from the policy's properties
         //
-        if (! toscaPolicy.getProperties().containsKey(FIELD_FILTER_ALGORITHM)) {
-            throw new ToscaPolicyConversionException("Missing algorithm");
-        }
-        Object algorithm = toscaPolicy.getProperties().get(FIELD_FILTER_ALGORITHM);
-        if ("whitelist-overrides".equals(algorithm.toString())) {
-            newPolicyType.setRuleCombiningAlgId(XACML3.ID_RULE_PERMIT_OVERRIDES.stringValue());
-        } else if ("blacklist-overrides".equals(algorithm.toString())) {
-            newPolicyType.setRuleCombiningAlgId(XACML3.ID_RULE_DENY_OVERRIDES.stringValue());
-        } else {
-            throw new ToscaPolicyConversionException(
-                    "Unexpected value for algorithm, should be whitelist-overrides or blacklist-overrides");
-        }
+        FilterDefinition filterDef = ToscaPolicyTranslatorUtils.decodeProperties(toscaPolicy.getProperties(),
+                        FilterDefinition.class);
         //
-        // Validate the filters exist and have the right properties
+        // Set the combining algorithm
         //
-        if (! toscaPolicy.getProperties().containsKey(FIELD_FILTER_FILTERS)) {
-            throw new ToscaPolicyConversionException("Missing filters");
-        }
-        //
-        // Get the filters, which should be an array or collection.
-        //
-        Object arrayFilters = toscaPolicy.getProperties().get(FIELD_FILTER_FILTERS);
-        if (!(arrayFilters instanceof Collection)) {
-            throw new ToscaPolicyConversionException("Filters is not a collection");
+        switch (filterDef.getAlgorithm()) {
+            case "whitelist-overrides":
+                newPolicyType.setRuleCombiningAlgId(XACML3.ID_RULE_PERMIT_OVERRIDES.stringValue());
+                break;
+            case "blacklist-overrides":
+                newPolicyType.setRuleCombiningAlgId(XACML3.ID_RULE_DENY_OVERRIDES.stringValue());
+                break;
+            default:
+                throw new ToscaPolicyConversionException(
+                                "Unexpected value for algorithm, should be whitelist-overrides or blacklist-overrides");
         }
         //
         // Iterate the filters
         //
         var ruleId = 1;
-        for (Object filterAttributes : ((Collection<?>) arrayFilters)) {
-            if (!(filterAttributes instanceof Map)) {
-                throw new ToscaPolicyConversionException("Filter should be a map");
-            }
+        for (FilterAttribute filterAttributes : filterDef.filters) {
             //
-            // All fields must be there
+            // Check fields requiring extra validation
             //
-            String field = validateFilterPropertyField((Map<String, Object>) filterAttributes);
-            String filter = validateFilterPropertyFilter((Map<String, Object>) filterAttributes);
-            Identifier function = validateFilterPropertyFunction((Map<String, Object>) filterAttributes);
-            boolean isBlacklisted = validateFilterPropertyBlacklist((Map<String, Object>) filterAttributes);
+            String field = validateFilterPropertyField(filterAttributes.getField());
+            Identifier function = validateFilterPropertyFunction(filterAttributes.getFunction());
             //
             // Create our filter rule
             //
-            RuleType filterRule = createFilterRule(policyName + ":rule" + ruleId++, field, filter,
-                    function, isBlacklisted);
+            RuleType filterRule = createFilterRule(policyName + ":rule" + ruleId++, field, filterAttributes.getFilter(),
+                            function, filterAttributes.getBlacklist());
             //
             // Add the rule to the policy
             //
@@ -722,79 +675,48 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         }
     }
 
-    private String validateFilterPropertyField(Map<String, Object> filterAttributes)
+    private String validateFilterPropertyField(String field)
             throws ToscaPolicyConversionException {
-        Object field = filterAttributes.get(FIELD_FILTER_FIELD);
-        if (field != null) {
-            switch (field.toString().toLowerCase()) {
-                case "generic-vnf.vnf-name":
-                case "generic-vnf.vnf-id":
-                case "generic-vnf.vnf-type":
-                case "generic-vnf.nf-naming-code":
-                case "vserver.vserver-id":
-                case "cloud-region.cloud-region-id":
-                    return field.toString();
-                default:
-                    throw new ToscaPolicyConversionException("Unexpected value for field in filter");
-            }
+        String fieldLowerCase = field.toLowerCase();
+        switch (fieldLowerCase) {
+            case "generic-vnf.vnf-name":
+            case "generic-vnf.vnf-id":
+            case "generic-vnf.vnf-type":
+            case "generic-vnf.nf-naming-code":
+            case "vserver.vserver-id":
+            case "cloud-region.cloud-region-id":
+                return fieldLowerCase;
+            default:
+                throw new ToscaPolicyConversionException("Unexpected value for field in filter");
         }
-        throw new ToscaPolicyConversionException("Missing \'field\' from filter");
     }
 
-    private String validateFilterPropertyFilter(Map<String, Object> filterAttributes)
+    private Identifier validateFilterPropertyFunction(String function)
             throws ToscaPolicyConversionException {
-        Object filter = filterAttributes.get(FIELD_FILTER_FILTER);
-        if (filter != null) {
-            return filter.toString();
+        switch (function.toLowerCase()) {
+            case "string-equal":
+                return XACML3.ID_FUNCTION_STRING_EQUAL;
+            case "string-equal-ignore-case":
+                return XACML3.ID_FUNCTION_STRING_EQUAL_IGNORE_CASE;
+            case "string-regexp-match":
+                return XACML3.ID_FUNCTION_STRING_REGEXP_MATCH;
+            case "string-contains":
+                return XACML3.ID_FUNCTION_STRING_CONTAINS;
+            case "string-greater-than":
+                return XACML3.ID_FUNCTION_STRING_GREATER_THAN;
+            case "string-greater-than-or-equal":
+                return XACML3.ID_FUNCTION_STRING_GREATER_THAN_OR_EQUAL;
+            case "string-less-than":
+                return XACML3.ID_FUNCTION_STRING_LESS_THAN;
+            case "string-less-than-or-equal":
+                return XACML3.ID_FUNCTION_STRING_LESS_THAN_OR_EQUAL;
+            case "string-starts-with":
+                return XACML3.ID_FUNCTION_STRING_STARTS_WITH;
+            case "string-ends-with":
+                return XACML3.ID_FUNCTION_STRING_ENDS_WITH;
+            default:
+                throw new ToscaPolicyConversionException("Unexpected value for function in filter");
         }
-        throw new ToscaPolicyConversionException("Missing \'filter\' from filter");
-    }
-
-    private Identifier validateFilterPropertyFunction(Map<String, Object> filterAttributes)
-            throws ToscaPolicyConversionException {
-        Object function = filterAttributes.get(FIELD_FILTER_FUNCTION);
-        if (function != null) {
-            switch (function.toString().toLowerCase()) {
-                case "string-equal":
-                    return XACML3.ID_FUNCTION_STRING_EQUAL;
-                case "string-equal-ignore-case":
-                    return XACML3.ID_FUNCTION_STRING_EQUAL_IGNORE_CASE;
-                case "string-regexp-match":
-                    return XACML3.ID_FUNCTION_STRING_REGEXP_MATCH;
-                case "string-contains":
-                    return XACML3.ID_FUNCTION_STRING_CONTAINS;
-                case "string-greater-than":
-                    return XACML3.ID_FUNCTION_STRING_GREATER_THAN;
-                case "string-greater-than-or-equal":
-                    return XACML3.ID_FUNCTION_STRING_GREATER_THAN_OR_EQUAL;
-                case "string-less-than":
-                    return XACML3.ID_FUNCTION_STRING_LESS_THAN;
-                case "string-less-than-or-equal":
-                    return XACML3.ID_FUNCTION_STRING_LESS_THAN_OR_EQUAL;
-                case "string-starts-with":
-                    return XACML3.ID_FUNCTION_STRING_STARTS_WITH;
-                case "string-ends-with":
-                    return XACML3.ID_FUNCTION_STRING_ENDS_WITH;
-                default:
-                    throw new ToscaPolicyConversionException("Unexpected value for function in filter");
-            }
-        }
-        throw new ToscaPolicyConversionException("Missing \'function\' from filter");
-    }
-
-    private boolean validateFilterPropertyBlacklist(Map<String, Object> filterAttributes)
-            throws ToscaPolicyConversionException {
-        Object filter = filterAttributes.get(FIELD_FILTER_BLACKLIST);
-        if (filter != null) {
-            if ("true".equalsIgnoreCase(filter.toString())) {
-                return true;
-            }
-            if ("false".equalsIgnoreCase(filter.toString())) {
-                return false;
-            }
-            throw new ToscaPolicyConversionException("Unexpected value for blacklist in filter");
-        }
-        throw new ToscaPolicyConversionException("Missing \'blacklist\' from filter");
     }
 
     private RuleType createFilterRule(String ruleId, String field, String filter, Identifier function,
@@ -829,4 +751,65 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         return rule;
     }
 
+    @Getter
+    public static class TimeRangeDefinition {
+        private @Valid TimeRange timeRange;
+    }
+
+    @Getter
+    public static class TargetTypeDefinition {
+        private String actor;
+        private String operation;
+        private String target;
+        private String id;
+    }
+
+    @Getter
+    @NotNull
+    @NotBlank
+    public static class TimeRange {
+        @SerializedName("start_time")
+        private String startTime;
+
+        @SerializedName("end_time")
+        private String endTime;
+    }
+
+    @Getter
+    public static class FrequencyDefinition {
+        @NotNull
+        private Integer limit;
+        private Integer timeWindow;
+        private String timeUnits;
+    }
+
+    @Getter
+    public static class MinMaxDefinition {
+        @NotNull
+        private String target;
+        private Integer min;
+        private Integer max;
+    }
+
+    @Getter
+    @NotNull
+    public static class BlacklistDefinition {
+        private List<@NotNull Object> blacklist;
+    }
+
+    @Getter
+    @NotNull
+    public static class FilterDefinition {
+        private String algorithm;
+        private List<@NotNull @Valid FilterAttribute> filters;
+    }
+
+    @Getter
+    @NotNull
+    public static class FilterAttribute {
+        private String field;
+        private String filter;
+        private String function;
+        private Boolean blacklist;
+    }
 }

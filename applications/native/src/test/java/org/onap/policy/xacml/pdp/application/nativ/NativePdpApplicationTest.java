@@ -160,15 +160,15 @@ public class NativePdpApplicationTest {
                 if ("bad.base64".equals(policy.getName())) {
                     assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
                         translator.convertPolicy(policy)
-                    ).withMessageContaining("error on Base64 decoding the native policy");
+                    ).as(policy.getName()).withMessageContaining("error on Base64 decoding the native policy");
                 } else if ("bad.noproperties".equals(policy.getName())) {
                     assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
                         translator.convertPolicy(policy)
-                    ).withMessageContaining("no xacml native policy found in the tosca policy");
+                    ).as(policy.getName()).withMessageContaining("Cannot decode NativeDefinition from null properties");
                 } else if ("bad.policy".equals(policy.getName())) {
                     assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
                         translator.convertPolicy(policy)
-                    ).withMessageContaining("Invalid XACML Policy");
+                    ).as(policy.getName()).withMessageContaining("Invalid XACML Policy");
                 }
             }
         }

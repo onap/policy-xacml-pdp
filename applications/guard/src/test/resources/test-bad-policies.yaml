@@ -79,12 +79,13 @@ topology_template:
          type_version: 1.0.0
          version: 1.0.0
          properties:
-            badProperty: badValue
+            filters: []
    -  filter-badalgorithm:
          type: onap.policies.controlloop.guard.common.Filter
          type_version: 1.0.0
          version: 1.0.0
          properties:
+            filters: []
             algorithm: idontknow
    -  filter-nofilter:
          type: onap.policies.controlloop.guard.common.Filter
@@ -123,6 +124,9 @@ topology_template:
             algorithm: blacklist-overrides
             filters:
             -  field: notinaai
+               filter: vfwl*
+               function: string-contains
+               blacklist: true
    -  filter-missingfilter:
          type: onap.policies.controlloop.guard.common.Filter
          type_version: 1.0.0
@@ -150,6 +154,7 @@ topology_template:
             -  field: generic-vnf.vnf-name
                filter: vfwl*
                function: notafunction
+               blacklist: true
    -  filter-missingblacklist:
          type: onap.policies.controlloop.guard.common.Filter
          type_version: 1.0.0
@@ -160,14 +165,3 @@ topology_template:
             -  field: generic-vnf.vnf-name
                filter: vfwl*
                function: string-equal
-   -  filter-badblacklist:
-         type: onap.policies.controlloop.guard.common.Filter
-         type_version: 1.0.0
-         version: 1.0.0
-         properties:
-            algorithm: blacklist-overrides
-            filters:
-            -  field: generic-vnf.vnf-name
-               filter: vfwl*
-               function: string-equal
-               blacklist: shouldbeboolean
