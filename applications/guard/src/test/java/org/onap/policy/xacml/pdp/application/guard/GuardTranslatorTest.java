@@ -119,8 +119,8 @@ public class GuardTranslatorTest {
         final Map<String, String> name2message = new HashMap<>();
         name2message.put("frequency-missing-properties", "item \"limit\"");
         name2message.put("frequency-timewindow", "Cannot decode FrequencyDefinition");
-        name2message.put("frequency-badtimerange_start", "item \"startTime\"");
-        name2message.put("frequency-badtimerange_end", "item \"endTime\"");
+        name2message.put("frequency-badtimerange_start", "item \"start_time\"");
+        name2message.put("frequency-badtimerange_end", "item \"end_time\"");
         name2message.put("frequency-badtimerange_value", "timestamp 99:99:99 could not be parsed");
         name2message.put("minmax-notarget", "item \"target\"");
         name2message.put("minmax-nominmax", "Missing min or max field in minmax policy");
