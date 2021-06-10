@@ -266,7 +266,7 @@ public final class ToscaPolicyTranslatorUtils {
         }
 
         try {
-            T data = CODER.convert(properties, clazz);
+            var data = CODER.convert(properties, clazz);
             BeanValidationResult result = new BeanValidator().validateTop("properties", data);
             if (!result.isValid()) {
                 throw new ToscaPolicyConversionException(result.getResult());
