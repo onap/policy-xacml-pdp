@@ -157,7 +157,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
      * scanAdvice - not implemented in this class.
      *
      * @param advice Collection of advice objects
-     * @param DecisionResponse DecisionResponse object
+     * @param decisionResponse DecisionResponse object
      */
     @Override
     protected void scanAdvice(Collection<Advice> advice, DecisionResponse decisionResponse) {

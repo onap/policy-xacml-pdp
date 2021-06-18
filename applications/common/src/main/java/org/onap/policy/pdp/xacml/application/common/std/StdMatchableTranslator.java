@@ -167,7 +167,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
      * contents and their details.
      *
      * @param closestMatches Map holding the current set of highest weight policy types
-     * @param Obligation Obligation object
+     * @param obligation Obligation object
      */
     protected void scanClosestMatchObligation(
             Map<String, Map<Integer, List<Pair<String, Map<String, Object>>>>> closestMatches, Obligation obligation) {
@@ -371,8 +371,8 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
      * For generating target type, we scan for matchable properties
      * and use those to build the policy.
      *
-     * @param properties Properties section of policy
-     * @param policyTypes Collection of policy Type to find matchable metadata
+     * @param policy the policy
+     * @param template template containing the policy
      * @return {@code Pair<TargetType, Integer>} Returns a TargetType and a Total Weight of matchables.
      */
     protected Pair<TargetType, Integer> generateTargetType(ToscaPolicy policy, ToscaServiceTemplate template) {
