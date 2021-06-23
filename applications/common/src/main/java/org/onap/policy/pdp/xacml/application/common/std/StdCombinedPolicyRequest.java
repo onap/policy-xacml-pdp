@@ -112,14 +112,15 @@ public class StdCombinedPolicyRequest {
         return request;
     }
 
-    private static StdCombinedPolicyRequest addPolicyIds(StdCombinedPolicyRequest request, Collection<Object> ids) {
+    protected static StdCombinedPolicyRequest addPolicyIds(StdCombinedPolicyRequest request, Collection<Object> ids) {
         for (Object id : ids) {
             request.resource.add(id.toString());
         }
         return request;
     }
 
-    private static StdCombinedPolicyRequest addPolicyTypes(StdCombinedPolicyRequest request, Collection<Object> types) {
+    protected static StdCombinedPolicyRequest addPolicyTypes(StdCombinedPolicyRequest request,
+            Collection<Object> types) {
         for (Object type : types) {
             request.resourcePolicyType.add(type.toString());
         }

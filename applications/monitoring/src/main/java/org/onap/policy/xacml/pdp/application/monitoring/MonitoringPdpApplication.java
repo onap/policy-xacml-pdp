@@ -118,7 +118,7 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
      *
      * @param queryParams - http request query parameters
      */
-    private boolean checkAbbreviateResults(Map<String, String[]> queryParams) {
+    protected boolean checkAbbreviateResults(Map<String, String[]> queryParams) {
         if (queryParams != null && !queryParams.isEmpty()) {
             // Check if query params contains "abbrev" flag
             if (queryParams.containsKey("abbrev")) {

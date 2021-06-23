@@ -194,7 +194,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
      * @param variable VariableDefinitionType to add
      * @param newPolicyType PolicyType that will be updated
      */
-    private void addVariableToConditionTypes(VariableReferenceType variable,
+    protected void addVariableToConditionTypes(VariableReferenceType variable,
             PolicyType newPolicyType) {
         //
         // Iterate through the rules
@@ -432,7 +432,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         return reference;
     }
 
-    private Object parseTimestamp(String string) throws ToscaPolicyConversionException {
+    protected Object parseTimestamp(String string) throws ToscaPolicyConversionException {
         //
         // First see if it is a full datetime object
         //
@@ -675,7 +675,11 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         }
     }
 
+<<<<<<< HEAD   (402eae Fix new checkstyle issues in xacml-pdp)
     private String validateFilterPropertyField(String field)
+=======
+    protected String validateFilterPropertyField(Map<String, Object> filterAttributes)
+>>>>>>> CHANGE (8e0aa0 Use protected methods vs private)
             throws ToscaPolicyConversionException {
         String fieldLowerCase = field.toLowerCase();
         switch (fieldLowerCase) {
@@ -691,7 +695,11 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         }
     }
 
+<<<<<<< HEAD   (402eae Fix new checkstyle issues in xacml-pdp)
     private Identifier validateFilterPropertyFunction(String function)
+=======
+    protected String validateFilterPropertyFilter(Map<String, Object> filterAttributes)
+>>>>>>> CHANGE (8e0aa0 Use protected methods vs private)
             throws ToscaPolicyConversionException {
         switch (function.toLowerCase()) {
             case "string-equal":
@@ -717,9 +725,60 @@ public class GuardTranslator implements ToscaPolicyTranslator {
             default:
                 throw new ToscaPolicyConversionException("Unexpected value for function in filter");
         }
+<<<<<<< HEAD   (402eae Fix new checkstyle issues in xacml-pdp)
+=======
+        throw new ToscaPolicyConversionException("Missing \'filter\' from filter");
     }
 
-    private RuleType createFilterRule(String ruleId, String field, String filter, Identifier function,
+    protected Identifier validateFilterPropertyFunction(Map<String, Object> filterAttributes)
+            throws ToscaPolicyConversionException {
+        Object function = filterAttributes.get(FIELD_FILTER_FUNCTION);
+        if (function != null) {
+            switch (function.toString().toLowerCase()) {
+                case "string-equal":
+                    return XACML3.ID_FUNCTION_STRING_EQUAL;
+                case "string-equal-ignore-case":
+                    return XACML3.ID_FUNCTION_STRING_EQUAL_IGNORE_CASE;
+                case "string-regexp-match":
+                    return XACML3.ID_FUNCTION_STRING_REGEXP_MATCH;
+                case "string-contains":
+                    return XACML3.ID_FUNCTION_STRING_CONTAINS;
+                case "string-greater-than":
+                    return XACML3.ID_FUNCTION_STRING_GREATER_THAN;
+                case "string-greater-than-or-equal":
+                    return XACML3.ID_FUNCTION_STRING_GREATER_THAN_OR_EQUAL;
+                case "string-less-than":
+                    return XACML3.ID_FUNCTION_STRING_LESS_THAN;
+                case "string-less-than-or-equal":
+                    return XACML3.ID_FUNCTION_STRING_LESS_THAN_OR_EQUAL;
+                case "string-starts-with":
+                    return XACML3.ID_FUNCTION_STRING_STARTS_WITH;
+                case "string-ends-with":
+                    return XACML3.ID_FUNCTION_STRING_ENDS_WITH;
+                default:
+                    throw new ToscaPolicyConversionException("Unexpected value for function in filter");
+            }
+        }
+        throw new ToscaPolicyConversionException("Missing \'function\' from filter");
+    }
+
+    protected boolean validateFilterPropertyBlacklist(Map<String, Object> filterAttributes)
+            throws ToscaPolicyConversionException {
+        Object filter = filterAttributes.get(FIELD_FILTER_BLACKLIST);
+        if (filter != null) {
+            if ("true".equalsIgnoreCase(filter.toString())) {
+                return true;
+            }
+            if ("false".equalsIgnoreCase(filter.toString())) {
+                return false;
+            }
+            throw new ToscaPolicyConversionException("Unexpected value for blacklist in filter");
+        }
+        throw new ToscaPolicyConversionException("Missing \'blacklist\' from filter");
+>>>>>>> CHANGE (8e0aa0 Use protected methods vs private)
+    }
+
+    protected RuleType createFilterRule(String ruleId, String field, String filter, Identifier function,
             boolean isBlacklisted) {
         var rule = new RuleType();
         rule.setRuleId(ruleId);

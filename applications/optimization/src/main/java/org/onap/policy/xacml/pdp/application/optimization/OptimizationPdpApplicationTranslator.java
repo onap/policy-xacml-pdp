@@ -136,7 +136,7 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
     }
 
     @SuppressWarnings("unchecked")
-    private static void addValuesToMap(Object values, String key, Map<String, Object> mapAdvice) {
+    protected static void addValuesToMap(Object values, String key, Map<String, Object> mapAdvice) {
         if (values instanceof Collection) {
             List<String> valueList = new ArrayList<>();
             ((Collection<Object>) values).forEach(val -> valueList.add(val.toString()));
@@ -147,7 +147,12 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
 
     }
 
+<<<<<<< HEAD   (402eae Fix new checkstyle issues in xacml-pdp)
     private static PolicyType addSubscriberNameIntoTarget(PolicyType policy,
+=======
+    @SuppressWarnings("unchecked")
+    protected static PolicyType addSubscriberNameIntoTarget(PolicyType policy,
+>>>>>>> CHANGE (8e0aa0 Use protected methods vs private)
             Map<String, Object> subscriberProperties) throws ToscaPolicyConversionException {
         //
         // Iterate through all the subscriber names
@@ -174,7 +179,12 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
         return policy;
     }
 
+<<<<<<< HEAD   (402eae Fix new checkstyle issues in xacml-pdp)
     private static AdviceExpressionsType generateSubscriberAdvice(Map<String, Object> subscriberProperties)
+=======
+    @SuppressWarnings("unchecked")
+    protected static AdviceExpressionsType generateSubscriberAdvice(Map<String, Object> subscriberProperties)
+>>>>>>> CHANGE (8e0aa0 Use protected methods vs private)
             throws ToscaPolicyConversionException {
         //
         // Create our subscriber advice expression
@@ -207,7 +217,11 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
         return adviceExpressions;
     }
 
+<<<<<<< HEAD   (402eae Fix new checkstyle issues in xacml-pdp)
     private static void generateSubscriberAdviceAttributes(AdviceExpressionType adviceExpression,
+=======
+    protected static AdviceExpressionType generateSubscriberAdviceAttributes(AdviceExpressionType adviceExpression,
+>>>>>>> CHANGE (8e0aa0 Use protected methods vs private)
             Identifier attributeId, Collection<Object> adviceAttribute) {
         for (Object attribute : adviceAttribute) {
             var value = new AttributeValueType();
