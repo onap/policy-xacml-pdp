@@ -194,7 +194,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
      * @param variable VariableDefinitionType to add
      * @param newPolicyType PolicyType that will be updated
      */
-    private void addVariableToConditionTypes(VariableReferenceType variable,
+    protected void addVariableToConditionTypes(VariableReferenceType variable,
             PolicyType newPolicyType) {
         //
         // Iterate through the rules
@@ -432,7 +432,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         return reference;
     }
 
-    private Object parseTimestamp(String string) throws ToscaPolicyConversionException {
+    protected Object parseTimestamp(String string) throws ToscaPolicyConversionException {
         //
         // First see if it is a full datetime object
         //
@@ -675,7 +675,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         }
     }
 
-    private String validateFilterPropertyField(String field)
+    protected String validateFilterPropertyField(String field)
             throws ToscaPolicyConversionException {
         String fieldLowerCase = field.toLowerCase();
         switch (fieldLowerCase) {
@@ -691,7 +691,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         }
     }
 
-    private Identifier validateFilterPropertyFunction(String function)
+    protected Identifier validateFilterPropertyFunction(String function)
             throws ToscaPolicyConversionException {
         switch (function.toLowerCase()) {
             case "string-equal":
@@ -719,7 +719,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         }
     }
 
-    private RuleType createFilterRule(String ruleId, String field, String filter, Identifier function,
+    protected RuleType createFilterRule(String ruleId, String field, String filter, Identifier function,
             boolean isBlacklisted) {
         var rule = new RuleType();
         rule.setRuleId(ruleId);

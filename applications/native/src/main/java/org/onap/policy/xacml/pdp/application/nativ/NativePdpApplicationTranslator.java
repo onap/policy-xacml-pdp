@@ -86,7 +86,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         }
     }
 
-    private String getNativeXacmlPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
+    protected String getNativeXacmlPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
 
         var nativeDefinition = ToscaPolicyTranslatorUtils.decodeProperties(toscaPolicy.getProperties(),
                         NativeDefinition.class);

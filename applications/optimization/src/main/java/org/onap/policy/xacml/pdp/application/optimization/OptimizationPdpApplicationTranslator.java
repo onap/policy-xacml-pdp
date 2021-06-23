@@ -136,7 +136,7 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
     }
 
     @SuppressWarnings("unchecked")
-    private static void addValuesToMap(Object values, String key, Map<String, Object> mapAdvice) {
+    protected static void addValuesToMap(Object values, String key, Map<String, Object> mapAdvice) {
         if (values instanceof Collection) {
             List<String> valueList = new ArrayList<>();
             ((Collection<Object>) values).forEach(val -> valueList.add(val.toString()));
@@ -147,7 +147,7 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
 
     }
 
-    private static PolicyType addSubscriberNameIntoTarget(PolicyType policy,
+    protected static PolicyType addSubscriberNameIntoTarget(PolicyType policy,
             Map<String, Object> subscriberProperties) throws ToscaPolicyConversionException {
         //
         // Iterate through all the subscriber names
@@ -174,7 +174,7 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
         return policy;
     }
 
-    private static AdviceExpressionsType generateSubscriberAdvice(Map<String, Object> subscriberProperties)
+    protected static AdviceExpressionsType generateSubscriberAdvice(Map<String, Object> subscriberProperties)
             throws ToscaPolicyConversionException {
         //
         // Create our subscriber advice expression
@@ -207,7 +207,7 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
         return adviceExpressions;
     }
 
-    private static void generateSubscriberAdviceAttributes(AdviceExpressionType adviceExpression,
+    protected static void generateSubscriberAdviceAttributes(AdviceExpressionType adviceExpression,
             Identifier attributeId, Collection<Object> adviceAttribute) {
         for (Object attribute : adviceAttribute) {
             var value = new AttributeValueType();
