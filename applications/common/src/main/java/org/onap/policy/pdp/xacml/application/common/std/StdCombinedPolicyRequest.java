@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,14 +112,15 @@ public class StdCombinedPolicyRequest {
         return request;
     }
 
-    private static StdCombinedPolicyRequest addPolicyIds(StdCombinedPolicyRequest request, Collection<Object> ids) {
+    protected static StdCombinedPolicyRequest addPolicyIds(StdCombinedPolicyRequest request, Collection<Object> ids) {
         for (Object id : ids) {
             request.resource.add(id.toString());
         }
         return request;
     }
 
-    private static StdCombinedPolicyRequest addPolicyTypes(StdCombinedPolicyRequest request, Collection<Object> types) {
+    protected static StdCombinedPolicyRequest addPolicyTypes(StdCombinedPolicyRequest request,
+            Collection<Object> types) {
         for (Object type : types) {
             request.resourcePolicyType.add(type.toString());
         }

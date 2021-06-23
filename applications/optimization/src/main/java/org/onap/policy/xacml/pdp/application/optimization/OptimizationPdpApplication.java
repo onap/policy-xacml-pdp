@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -188,14 +188,14 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
     }
 
     @SuppressWarnings("unchecked")
-    private boolean hasSubscriberAttributes(DecisionRequest request) {
+    protected boolean hasSubscriberAttributes(DecisionRequest request) {
         return request.getContext() != null
                 && request.getContext().containsKey(RESOURCE_SUBSCRIBERNAME)
                 && request.getContext().get(RESOURCE_SUBSCRIBERNAME) instanceof List
                 && ! ((List<String>) request.getContext().get(RESOURCE_SUBSCRIBERNAME)).isEmpty();
     }
 
-    private boolean addSubscriberAttributes(Response xacmlResponse, DecisionRequest initialRequest) {
+    protected boolean addSubscriberAttributes(Response xacmlResponse, DecisionRequest initialRequest) {
         //
         // This has multiple results right now because of how the attributes were added to the
         // request. That will have to be fixed in the future, for now find the Permit result
@@ -221,7 +221,7 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
         return false;
     }
 
-    private void addSubscriberAdvice(Response xacmlResponse, DecisionResponse response) {
+    protected void addSubscriberAdvice(Response xacmlResponse, DecisionResponse response) {
         //
         // Again find the Permit result
         //
@@ -237,7 +237,7 @@ public class OptimizationPdpApplication extends StdXacmlApplicationServiceProvid
 
 
     @SuppressWarnings("unchecked")
-    private void scanAdvice(Collection<Advice> adviceCollection, DecisionRequest initialRequest) {
+    protected void scanAdvice(Collection<Advice> adviceCollection, DecisionRequest initialRequest) {
         //
         // There really should only be one advice object
         //

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -477,7 +477,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
      * @param policyTypeId ToscaConceptIdentifier to find
      * @return ToscaPolicyType object. Can be null if failure.
      */
-    private ToscaServiceTemplate findPolicyType(ToscaConceptIdentifier policyTypeId) {
+    protected ToscaServiceTemplate findPolicyType(ToscaConceptIdentifier policyTypeId) {
         //
         // Is it loaded in memory?
         //
@@ -508,7 +508,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
      * @param policyTypeId ToscaConceptIdentifier input
      * @return ToscaPolicyType object. Null if failure.
      */
-    private ToscaServiceTemplate loadPolicyType(ToscaConceptIdentifier policyTypeId) {
+    protected ToscaServiceTemplate loadPolicyType(ToscaConceptIdentifier policyTypeId) {
         //
         // Construct what the file name should be
         //
@@ -567,7 +567,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
      * @param policyTypePath Path object to store locally
      * @return ToscaPolicyType object. Null if failure.
      */
-    private synchronized ToscaServiceTemplate pullPolicyType(ToscaConceptIdentifier policyTypeId,
+    protected synchronized ToscaServiceTemplate pullPolicyType(ToscaConceptIdentifier policyTypeId,
             Path policyTypePath) {
         //
         // This is what we return
@@ -604,7 +604,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
      * @param policyTypeId ToscaConceptIdentifier
      * @return Path object
      */
-    private Path constructLocalFilePath(ToscaConceptIdentifier policyTypeId) {
+    protected Path constructLocalFilePath(ToscaConceptIdentifier policyTypeId) {
         return Paths.get(this.pathForData.toAbsolutePath().toString(), policyTypeId.getName() + "-"
                 + policyTypeId.getVersion() + ".yaml");
     }

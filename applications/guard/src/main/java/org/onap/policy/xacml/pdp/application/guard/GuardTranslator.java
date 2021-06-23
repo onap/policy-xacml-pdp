@@ -190,7 +190,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
      * @param variable VariableDefinitionType to add
      * @param newPolicyType PolicyType that will be updated
      */
-    private void addVariableToConditionTypes(VariableReferenceType variable,
+    protected void addVariableToConditionTypes(VariableReferenceType variable,
             PolicyType newPolicyType) {
         //
         // Iterate through the rules
@@ -440,7 +440,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         return reference;
     }
 
-    private Object parseTimestamp(String string) throws ToscaPolicyConversionException {
+    protected Object parseTimestamp(String string) throws ToscaPolicyConversionException {
         //
         // First see if it is a full datetime object
         //
@@ -722,7 +722,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         }
     }
 
-    private String validateFilterPropertyField(Map<String, Object> filterAttributes)
+    protected String validateFilterPropertyField(Map<String, Object> filterAttributes)
             throws ToscaPolicyConversionException {
         Object field = filterAttributes.get(FIELD_FILTER_FIELD);
         if (field != null) {
@@ -741,7 +741,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         throw new ToscaPolicyConversionException("Missing \'field\' from filter");
     }
 
-    private String validateFilterPropertyFilter(Map<String, Object> filterAttributes)
+    protected String validateFilterPropertyFilter(Map<String, Object> filterAttributes)
             throws ToscaPolicyConversionException {
         Object filter = filterAttributes.get(FIELD_FILTER_FILTER);
         if (filter != null) {
@@ -750,7 +750,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         throw new ToscaPolicyConversionException("Missing \'filter\' from filter");
     }
 
-    private Identifier validateFilterPropertyFunction(Map<String, Object> filterAttributes)
+    protected Identifier validateFilterPropertyFunction(Map<String, Object> filterAttributes)
             throws ToscaPolicyConversionException {
         Object function = filterAttributes.get(FIELD_FILTER_FUNCTION);
         if (function != null) {
@@ -782,7 +782,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         throw new ToscaPolicyConversionException("Missing \'function\' from filter");
     }
 
-    private boolean validateFilterPropertyBlacklist(Map<String, Object> filterAttributes)
+    protected boolean validateFilterPropertyBlacklist(Map<String, Object> filterAttributes)
             throws ToscaPolicyConversionException {
         Object filter = filterAttributes.get(FIELD_FILTER_BLACKLIST);
         if (filter != null) {
@@ -797,7 +797,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         throw new ToscaPolicyConversionException("Missing \'blacklist\' from filter");
     }
 
-    private RuleType createFilterRule(String ruleId, String field, String filter, Identifier function,
+    protected RuleType createFilterRule(String ruleId, String field, String filter, Identifier function,
             boolean isBlacklisted) {
         RuleType rule = new RuleType();
         rule.setRuleId(ruleId);
