@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -137,7 +137,7 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
     }
 
     @SuppressWarnings("unchecked")
-    private static void addValuesToMap(Object values, String key, Map<String, Object> mapAdvice) {
+    protected static void addValuesToMap(Object values, String key, Map<String, Object> mapAdvice) {
         if (values instanceof Collection) {
             List<String> valueList = new ArrayList<>();
             ((Collection<Object>) values).forEach(val -> valueList.add(val.toString()));
@@ -149,7 +149,7 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
     }
 
     @SuppressWarnings("unchecked")
-    private static PolicyType addSubscriberNameIntoTarget(PolicyType policy,
+    protected static PolicyType addSubscriberNameIntoTarget(PolicyType policy,
             Map<String, Object> subscriberProperties) throws ToscaPolicyConversionException {
         //
         // Find the subscriber names
@@ -185,7 +185,7 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
     }
 
     @SuppressWarnings("unchecked")
-    private static AdviceExpressionsType generateSubscriberAdvice(Map<String, Object> subscriberProperties)
+    protected static AdviceExpressionsType generateSubscriberAdvice(Map<String, Object> subscriberProperties)
             throws ToscaPolicyConversionException {
         //
         // Get the subscriber role
@@ -229,7 +229,7 @@ public class OptimizationPdpApplicationTranslator extends StdMatchableTranslator
         return adviceExpressions;
     }
 
-    private static AdviceExpressionType generateSubscriberAdviceAttributes(AdviceExpressionType adviceExpression,
+    protected static AdviceExpressionType generateSubscriberAdviceAttributes(AdviceExpressionType adviceExpression,
             Identifier attributeId, Collection<Object> adviceAttribute) {
         for (Object attribute : adviceAttribute) {
             AttributeValueType value = new AttributeValueType();
