@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fd9b710d_6b9c2914",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-06-23T15:11:40Z",
+      "side": 1,
+      "message": "Jim - this pulling/storing of policy functionality makes me think we could pull this into another interface also so its available to other apps or custom apps. I can make a jira for that fun work!",
+      "revId": "7374c56e200d0fb72a22ce0fe22e4fa45c7bf3ab",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
