@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "35073831_b068fcba",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdCombinedPolicyRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-06-23T15:19:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "943be3be_e53612ff",
+      "range": {
+        "startLine": 122,
+        "startChar": 94,
+        "endLine": 122,
+        "endChar": 95
+      },
+      "revId": "7374c56e200d0fb72a22ce0fe22e4fa45c7bf3ab",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fd9b710d_6b9c2914",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/std/StdMatchableTranslator.java",
         "patchSetId": 1
