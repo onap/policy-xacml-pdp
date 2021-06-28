@@ -35,7 +35,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.pdp.concepts.PdpResponseDetails;
 import org.onap.policy.models.pdp.concepts.PdpStateChange;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
@@ -59,7 +58,7 @@ public class XacmlStateTest {
     @Mock
     private XacmlPdpActivator act;
 
-    private String hostName;
+    private String pdpName;
 
     private XacmlState state;
 
@@ -68,7 +67,7 @@ public class XacmlStateTest {
      */
     @Before
     public void setUp() {
-        hostName = NetworkUtil.getHostname();
+        pdpName = XacmlState.PDP_NAME;
 
         XacmlPdpActivator.setCurrent(act);
 
@@ -85,7 +84,7 @@ public class XacmlStateTest {
         PdpUpdate msg = new PdpUpdate();
         assertFalse(state.shouldHandle(msg));
 
-        msg.setName(NetworkUtil.getHostname());
+        msg.setName(XacmlState.PDP_NAME);
         assertTrue(state.shouldHandle(msg));
     }
 
@@ -94,7 +93,7 @@ public class XacmlStateTest {
         // not healthy
         PdpStatus status = state.genHeartbeat();
         assertEquals(PdpHealthStatus.NOT_HEALTHY, status.getHealthy());
-        assertEquals(hostName, status.getName());
+        assertEquals(pdpName, status.getName());
         assertEquals(GROUP, status.getPdpGroup());
         assertEquals(PDP_TYPE, status.getPdpType());
         assertEquals(PdpState.PASSIVE, status.getState());
@@ -110,7 +109,7 @@ public class XacmlStateTest {
     @Test
     public void testUpdateInternalStatePdpStateChange() {
         PdpStateChange req = new PdpStateChange();
-        req.setName(hostName);
+        req.setName(pdpName);
         req.setPdpGroup("wrong-pdp-group");
         req.setPdpSubgroup(SUBGROUP);
         req.setState(STATE);

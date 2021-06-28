@@ -44,6 +44,11 @@ public class XacmlState {
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlState.class);
 
     /**
+     * Unique name for the xacml-pdp JVM, used in PdpStatus messages.
+     */
+    public static final String PDP_NAME = NetworkUtil.genUniqueName("xacml");
+
+    /**
      * The application manager.
      */
     private final XacmlPdpApplicationManager appManager;
@@ -60,7 +65,7 @@ public class XacmlState {
         this.appManager = appManager;
 
         this.status = new PdpStatus();
-        this.status.setName(NetworkUtil.getHostname());
+        this.status.setName(PDP_NAME);
         this.status.setPdpType(pdpType);
         this.status.setState(PdpState.PASSIVE);
         this.status.setPolicies(Collections.emptyList());

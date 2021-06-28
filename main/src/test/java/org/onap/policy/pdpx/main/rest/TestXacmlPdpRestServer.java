@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import javax.ws.rs.client.Invocation;
 import org.junit.Test;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.pdpx.main.CommonRest;
+import org.onap.policy.pdpx.main.XacmlState;
 import org.onap.policy.pdpx.main.rest.model.StatisticsReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,7 @@ public class TestXacmlPdpRestServer extends CommonRest {
     private static final String NOT_ALIVE = "not alive";
     private static final String ALIVE = "alive";
     private static final String SELF = "self";
-    private static final String NAME = "Policy Xacml PDP";
+    private static final String NAME = XacmlState.PDP_NAME;
     private static final String HEALTHCHECK_ENDPOINT = "healthcheck";
     private static final String STATISTICS_ENDPOINT = "statistics";
 

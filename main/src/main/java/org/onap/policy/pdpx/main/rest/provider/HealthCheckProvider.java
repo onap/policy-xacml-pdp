@@ -21,6 +21,7 @@
 package org.onap.policy.pdpx.main.rest.provider;
 
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
+import org.onap.policy.pdpx.main.XacmlState;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
 
 /**
@@ -32,7 +33,6 @@ public class HealthCheckProvider {
     private static final String NOT_ALIVE = "not alive";
     private static final String ALIVE = "alive";
     private static final String URL = "self";
-    private static final String NAME = "Policy Xacml PDP";
 
     /**
      * Performs the health check of xacml pdp service.
@@ -41,7 +41,7 @@ public class HealthCheckProvider {
      */
     public HealthCheckReport performHealthCheck() {
         final var report = new HealthCheckReport();
-        report.setName(NAME);
+        report.setName(XacmlState.PDP_NAME);
         report.setUrl(URL);
 
         boolean alive = XacmlPdpActivator.getCurrent().isAlive();
