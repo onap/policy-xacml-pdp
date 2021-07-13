@@ -14,7 +14,9 @@
         "userName": "healthcheck",
         "password": "zb!XztG34"
     },
-    "applicationPath": "apps.test",
+    "applicationParameters": {
+        "applicationPath": "apps.test"
+    },
     "topicParameterGroup": {
         "topicSources" : [{
             "topic" : "POLICY-PDP-PAP",

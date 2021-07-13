@@ -39,6 +39,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
+import org.onap.policy.pdpx.main.parameters.XacmlApplicationParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,9 +59,10 @@ public class XacmlPdpApplicationManager {
     /**
      * One time to initialize the applications upon startup.
      */
-    public XacmlPdpApplicationManager(Path applicationPath, BusTopicParams policyApiParameters) {
+    public XacmlPdpApplicationManager(XacmlApplicationParameters applicationParameters,
+            BusTopicParams policyApiParameters) {
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Initialization applications {} {}", applicationPath.toAbsolutePath(), policyApiParameters);
+            LOGGER.info("Initialization applications {} {}", applicationParameters, policyApiParameters);
         }
         //
         // Load service
@@ -83,7 +85,8 @@ public class XacmlPdpApplicationManager {
             // Have it initialize at a path
             //
             try {
-                initializeApplicationPath(applicationPath, application, policyApiParameters);
+                initializeApplicationPath(Paths.get(applicationParameters.getApplicationPath()), application,
+                        policyApiParameters);
                 //
                 // We are initialized
                 //

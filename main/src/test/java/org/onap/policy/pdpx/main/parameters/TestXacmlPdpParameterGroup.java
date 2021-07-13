@@ -63,10 +63,13 @@ public class TestXacmlPdpParameterGroup {
                         testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
         final TopicParameterGroup topicParameterGroup =
             testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
+        final XacmlApplicationParameters xacmlApplicationParameters =
+                testData.toObject(testData.getXacmlapplicationParametersMap(false,
+                        applicationPath.getAbsolutePath().toString()), XacmlApplicationParameters.class);
         final XacmlPdpParameterGroup pdpxParameters =
                         new XacmlPdpParameterGroup(CommonTestData.PDPX_PARAMETER_GROUP_NAME,
                                 CommonTestData.PDPX_GROUP, "flavor", restServerParameters, policyApiParameters,
-                                topicParameterGroup, applicationPath.getAbsolutePath());
+                                topicParameterGroup, xacmlApplicationParameters);
         final ValidationResult validationResult = pdpxParameters.validate();
         assertThat(validationResult.getResult()).isNull();
         assertTrue(validationResult.isValid());
@@ -88,9 +91,11 @@ public class TestXacmlPdpParameterGroup {
                         testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
         final TopicParameterGroup topicParameterGroup =
             testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
+        final XacmlApplicationParameters xacmlApplicationParameters =
+                testData.toObject(testData.getXacmlapplicationParametersMap(false,
+                        applicationPath.getAbsolutePath().toString()), XacmlApplicationParameters.class);
         final XacmlPdpParameterGroup pdpxParameters = new XacmlPdpParameterGroup(null, CommonTestData.PDPX_GROUP,
-                null, restServerParameters, policyApiParameters, topicParameterGroup,
-                applicationPath.getAbsolutePath());
+                null, restServerParameters, policyApiParameters, topicParameterGroup, xacmlApplicationParameters);
         final ValidationResult validationResult = pdpxParameters.validate();
         assertFalse(validationResult.isValid());
         assertEquals(null, pdpxParameters.getName());
@@ -105,9 +110,12 @@ public class TestXacmlPdpParameterGroup {
                         testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
         final TopicParameterGroup topicParameterGroup =
             testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
+        final XacmlApplicationParameters xacmlApplicationParameters =
+                testData.toObject(testData.getXacmlapplicationParametersMap(false,
+                        applicationPath.getAbsolutePath().toString()), XacmlApplicationParameters.class);
         final XacmlPdpParameterGroup pdpxParameters = new XacmlPdpParameterGroup("", CommonTestData.PDPX_GROUP,
                 CommonTestData.PDPX_TYPE, restServerParameters, policyApiParameters, topicParameterGroup,
-                applicationPath.getAbsolutePath());
+                xacmlApplicationParameters);
         final ValidationResult validationResult = pdpxParameters.validate();
         assertFalse(validationResult.isValid());
         assertEquals("", pdpxParameters.getName());
@@ -122,9 +130,12 @@ public class TestXacmlPdpParameterGroup {
                         testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
         final TopicParameterGroup topicParameterGroup =
             testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
+        final XacmlApplicationParameters xacmlApplicationParameters =
+                testData.toObject(testData.getXacmlapplicationParametersMap(false,
+                        applicationPath.getAbsolutePath().toString()), XacmlApplicationParameters.class);
         final XacmlPdpParameterGroup pdpxParameters =
                 new XacmlPdpParameterGroup(CommonTestData.PDPX_PARAMETER_GROUP_NAME, null, null, restServerParameters,
-                        policyApiParameters, topicParameterGroup, applicationPath.getAbsolutePath());
+                        policyApiParameters, topicParameterGroup, xacmlApplicationParameters);
         final ValidationResult validationResult = pdpxParameters.validate();
         assertFalse(validationResult.isValid());
         assertEquals(null, pdpxParameters.getPdpGroup());
@@ -139,9 +150,12 @@ public class TestXacmlPdpParameterGroup {
                         testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
         final TopicParameterGroup topicParameterGroup =
             testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
+        final XacmlApplicationParameters xacmlApplicationParameters =
+                testData.toObject(testData.getXacmlapplicationParametersMap(false,
+                        applicationPath.getAbsolutePath().toString()), XacmlApplicationParameters.class);
         final XacmlPdpParameterGroup pdpxParameters =
                 new XacmlPdpParameterGroup(CommonTestData.PDPX_PARAMETER_GROUP_NAME, "", null, restServerParameters,
-                        policyApiParameters, topicParameterGroup, applicationPath.getAbsolutePath());
+                        policyApiParameters, topicParameterGroup, xacmlApplicationParameters);
         final ValidationResult validationResult = pdpxParameters.validate();
         assertFalse(validationResult.isValid());
         assertEquals("", pdpxParameters.getPdpGroup());
@@ -156,10 +170,13 @@ public class TestXacmlPdpParameterGroup {
                         testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
         final TopicParameterGroup topicParameterGroup =
             testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
+        final XacmlApplicationParameters xacmlApplicationParameters =
+                testData.toObject(testData.getXacmlapplicationParametersMap(false,
+                        applicationPath.getAbsolutePath().toString()), XacmlApplicationParameters.class);
         final XacmlPdpParameterGroup pdpxParameters =
                 new XacmlPdpParameterGroup(CommonTestData.PDPX_PARAMETER_GROUP_NAME, CommonTestData.PDPX_GROUP,
                         null, restServerParameters, policyApiParameters,
-                        topicParameterGroup, applicationPath.getAbsolutePath());
+                        topicParameterGroup, xacmlApplicationParameters);
         final ValidationResult validationResult = pdpxParameters.validate();
         assertFalse(validationResult.isValid());
         assertThat(validationResult.getResult()).contains("\"RestServerParameters\"");
@@ -173,10 +190,13 @@ public class TestXacmlPdpParameterGroup {
                         testData.toObject(testData.getPolicyApiParametersMap(true), BusTopicParams.class);
         final TopicParameterGroup topicParameterGroup =
             testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
+        final XacmlApplicationParameters xacmlApplicationParameters =
+                testData.toObject(testData.getXacmlapplicationParametersMap(false,
+                        applicationPath.getAbsolutePath().toString()), XacmlApplicationParameters.class);
         final XacmlPdpParameterGroup pdpxParameters =
                 new XacmlPdpParameterGroup(CommonTestData.PDPX_PARAMETER_GROUP_NAME, CommonTestData.PDPX_GROUP,
                         null, restServerParameters, policyApiParameters,
-                        topicParameterGroup, applicationPath.getAbsolutePath());
+                        topicParameterGroup, xacmlApplicationParameters);
         final ValidationResult validationResult = pdpxParameters.validate();
         assertFalse(validationResult.isValid());
         assertThat(validationResult.getResult()).contains("\"policyApiParameters\"");
@@ -190,12 +210,35 @@ public class TestXacmlPdpParameterGroup {
                         testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
         final TopicParameterGroup topicParameterGroup =
             testData.toObject(testData.getTopicParametersMap(true), TopicParameterGroup.class);
+        final XacmlApplicationParameters xacmlApplicationParameters =
+                testData.toObject(testData.getXacmlapplicationParametersMap(false,
+                        applicationPath.getAbsolutePath().toString()), XacmlApplicationParameters.class);
         final XacmlPdpParameterGroup pdpxParameters =
                 new XacmlPdpParameterGroup(CommonTestData.PDPX_PARAMETER_GROUP_NAME, CommonTestData.PDPX_GROUP,
                         null, restServerParameters, policyApiParameters,
-                        topicParameterGroup, applicationPath.getAbsolutePath());
+                        topicParameterGroup, xacmlApplicationParameters);
         final ValidationResult validationResult = pdpxParameters.validate();
         assertFalse(validationResult.isValid());
         assertThat(validationResult.getResult()).contains("\"TopicParameterGroup\"");
+    }
+
+    @Test
+    public void testXacmlPdpParameterGroup_EmptyApplicationParameterGroup() {
+        final RestServerParameters restServerParameters =
+            testData.toObject(testData.getRestServerParametersMap(false), RestServerParameters.class);
+        final BusTopicParams policyApiParameters =
+                        testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
+        final TopicParameterGroup topicParameterGroup =
+            testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
+        final XacmlApplicationParameters xacmlApplicationParameters =
+                testData.toObject(testData.getXacmlapplicationParametersMap(true,
+                        applicationPath.getAbsolutePath().toString()), XacmlApplicationParameters.class);
+        final XacmlPdpParameterGroup pdpxParameters =
+                new XacmlPdpParameterGroup(CommonTestData.PDPX_PARAMETER_GROUP_NAME, CommonTestData.PDPX_GROUP,
+                        null, restServerParameters, policyApiParameters,
+                        topicParameterGroup, xacmlApplicationParameters);
+        final ValidationResult validationResult = pdpxParameters.validate();
+        assertFalse(validationResult.isValid());
+        assertThat(validationResult.getResult()).contains("\"XacmlApplicationParameters\"");
     }
 }

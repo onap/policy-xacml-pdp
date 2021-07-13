@@ -52,7 +52,8 @@ public class XacmlPdpParameterGroup extends ParameterGroupImpl {
     private BusTopicParams policyApiParameters;
     @Valid
     private TopicParameterGroup topicParameterGroup;
-    private String applicationPath;
+    @Valid
+    private XacmlApplicationParameters applicationParameters;
 
     /**
      * Create the xacml pdp parameter group.
@@ -62,14 +63,14 @@ public class XacmlPdpParameterGroup extends ParameterGroupImpl {
      */
     public XacmlPdpParameterGroup(final String name, final String pdpGroup, final String pdpType,
             final RestServerParameters restServerParameters, final BusTopicParams policyApiParameters,
-            final TopicParameterGroup topicParameterGroup, final String applicationPath) {
+            final TopicParameterGroup topicParameterGroup, final XacmlApplicationParameters applicationParameters) {
         super(name);
         this.pdpGroup = pdpGroup;
         this.pdpType = pdpType;
         this.restServerParameters = restServerParameters;
         this.policyApiParameters = policyApiParameters;
         this.topicParameterGroup = topicParameterGroup;
-        this.applicationPath = applicationPath;
+        this.applicationParameters = applicationParameters;
     }
 
     /**

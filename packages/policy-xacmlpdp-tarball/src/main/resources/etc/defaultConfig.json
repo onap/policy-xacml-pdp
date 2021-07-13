@@ -18,7 +18,9 @@
         "useHttps": true,
         "aaf": false
     },
-    "applicationPath": "/opt/app/policy/pdpx/apps",
+    "applicationParameters": {
+        "applicationPath": "/opt/app/policy/pdpx/apps"
+    },
     "topicParameterGroup": {
         "topicSources" : [{
             "topic" : "POLICY-PDP-PAP",

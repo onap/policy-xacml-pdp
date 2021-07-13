@@ -44,6 +44,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
+import org.onap.policy.pdpx.main.parameters.CommonTestData;
+import org.onap.policy.pdpx.main.parameters.XacmlApplicationParameters;
 import org.onap.policy.xacml.pdp.application.guard.GuardPdpApplication;
 import org.onap.policy.xacml.pdp.application.nativ.NativePdpApplication;
 import org.onap.policy.xacml.pdp.application.optimization.OptimizationPdpApplication;
@@ -56,6 +58,7 @@ public class XacmlPdpApplicationManagerTest {
     private static final BusTopicParams params = new BusTopicParams();
     private static Path appsDirectory;
     private static ToscaServiceTemplate completedJtst;
+    private static CommonTestData testData = new CommonTestData();
 
     @ClassRule
     public static final TemporaryFolder appsFolder = new TemporaryFolder();
@@ -113,10 +116,13 @@ public class XacmlPdpApplicationManagerTest {
         // Make up a non existent directory to initialize from
         //
         Path nonExistentPath = Paths.get(appsFolder.getRoot().getAbsolutePath(), "nonexistent");
+        final XacmlApplicationParameters xacmlApplicationParameters =
+                testData.toObject(testData.getXacmlapplicationParametersMap(false,
+                        nonExistentPath.toString()), XacmlApplicationParameters.class);
         //
         // Create our app manager
         //
-        XacmlPdpApplicationManager manager = new XacmlPdpApplicationManager(nonExistentPath, params);
+        XacmlPdpApplicationManager manager = new XacmlPdpApplicationManager(xacmlApplicationParameters, params);
         //
         // Still creates the manager, but the apps were not able to initialize
         //
@@ -126,7 +132,7 @@ public class XacmlPdpApplicationManagerTest {
         // Now create the directory
         //
         Files.createDirectory(nonExistentPath);
-        manager = new XacmlPdpApplicationManager(nonExistentPath, params);
+        manager = new XacmlPdpApplicationManager(xacmlApplicationParameters, params);
         //
         // Now it should have initialized the apps
         //
@@ -136,7 +142,10 @@ public class XacmlPdpApplicationManagerTest {
 
     @Test
     public void testXacmlPdpApplicationManagerSimple() {
-        XacmlPdpApplicationManager manager = new XacmlPdpApplicationManager(appsDirectory, params);
+        final XacmlApplicationParameters xacmlApplicationParameters =
+                testData.toObject(testData.getXacmlapplicationParametersMap(false,
+                        appsDirectory.toString()), XacmlApplicationParameters.class);
+        XacmlPdpApplicationManager manager = new XacmlPdpApplicationManager(xacmlApplicationParameters, params);
         //
         // Test the basics from the startup
         //
