@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e29465d6_a683ae06",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/XacmlApplicationParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-07-13T14:29:01Z",
+      "side": 1,
+      "message": "ugh - I\u0027ll fix.",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 4
+      },
+      "revId": "6c9b64c3a3dca4818d7f1031a94be1d4040f6544",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83c55519_76472332",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/CommonTestData.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-07-13T14:29:01Z",
+      "side": 1,
+      "message": "will fix",
+      "range": {
+        "startLine": 176,
+        "startChar": 6,
+        "endLine": 176,
+        "endChar": 7
+      },
+      "revId": "6c9b64c3a3dca4818d7f1031a94be1d4040f6544",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d60ee49_92e0012a",
+        "filename": "main/src/test/resources/parameters/MinimumParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-07-13T14:29:01Z",
+      "side": 1,
+      "message": "will fix",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 1
+      },
+      "revId": "6c9b64c3a3dca4818d7f1031a94be1d4040f6544",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
