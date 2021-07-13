@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a4c52034_ee1dbdc5",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/parameters/XacmlApplicationParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-07-13T14:31:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e29465d6_a683ae06",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 4
+      },
+      "revId": "6c9b64c3a3dca4818d7f1031a94be1d4040f6544",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83c55519_76472332",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/CommonTestData.java",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "6a118db8_a515e886",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/CommonTestData.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-07-13T14:31:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83c55519_76472332",
+      "range": {
+        "startLine": 176,
+        "startChar": 6,
+        "endLine": 176,
+        "endChar": 7
+      },
+      "revId": "6c9b64c3a3dca4818d7f1031a94be1d4040f6544",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d60ee49_92e0012a",
         "filename": "main/src/test/resources/parameters/MinimumParameters.json",
         "patchSetId": 1
@@ -68,6 +116,30 @@
       "revId": "6c9b64c3a3dca4818d7f1031a94be1d4040f6544",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b572e30_cb6d475d",
+        "filename": "main/src/test/resources/parameters/MinimumParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-07-13T14:31:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d60ee49_92e0012a",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 1
+      },
+      "revId": "6c9b64c3a3dca4818d7f1031a94be1d4040f6544",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
