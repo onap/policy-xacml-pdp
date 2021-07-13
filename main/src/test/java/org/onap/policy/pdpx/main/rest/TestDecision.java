@@ -59,6 +59,7 @@ import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.errors.concepts.ErrorResponse;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
+import org.onap.policy.pdpx.main.parameters.XacmlApplicationParameters;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
 import org.onap.policy.pdpx.main.startstop.Main;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
@@ -108,9 +109,12 @@ public class TestDecision {
                         testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
         TopicParameterGroup topicParameterGroup =
                         testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
+        final XacmlApplicationParameters xacmlApplicationParameters =
+                testData.toObject(testData.getXacmlapplicationParametersMap(false,
+                        apps.getAbsolutePath().toString()), XacmlApplicationParameters.class);
         XacmlPdpParameterGroup params =
                 new XacmlPdpParameterGroup("XacmlPdpParameters", "XacmlPdpGroup", "xacml", rest, policyApiParameters,
-                        topicParameterGroup, apps.getAbsolutePath());
+                        topicParameterGroup, xacmlApplicationParameters);
         final Gson gson = new GsonBuilder().create();
         File fileParams = appsFolder.newFile("params.json");
         String jsonParams = gson.toJson(params);

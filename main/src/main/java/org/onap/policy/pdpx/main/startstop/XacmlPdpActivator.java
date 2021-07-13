@@ -20,7 +20,6 @@
 
 package org.onap.policy.pdpx.main.startstop;
 
-import java.nio.file.Paths;
 import java.util.Arrays;
 import lombok.Getter;
 import lombok.Setter;
@@ -88,7 +87,7 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
 
         try {
             var appmgr =
-                            new XacmlPdpApplicationManager(Paths.get(xacmlPdpParameterGroup.getApplicationPath()),
+                            new XacmlPdpApplicationManager(xacmlPdpParameterGroup.getApplicationParameters(),
                                     xacmlPdpParameterGroup.getPolicyApiParameters());
             XacmlPdpApplicationManager.setCurrent(appmgr);
 

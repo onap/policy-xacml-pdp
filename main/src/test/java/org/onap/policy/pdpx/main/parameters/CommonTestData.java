@@ -170,4 +170,19 @@ public class CommonTestData {
         }
         return map;
     }
+
+    /**
+     * Returns a property map for a XacmlApplicationParameters map for test cases.
+     * 
+     * @param isEmpty boolean value to represent that object created should be empty or not
+     * @param tempPath Application Path string
+     * @return a property map suitable for constructing an object
+     */
+    public Map<String, Object> getXacmlapplicationParametersMap(boolean isEmpty, String tempPath) {
+        final Map<String, Object> map = new TreeMap<>();
+        if (!isEmpty) {
+            map.put("applicationPath", tempPath);
+        }
+        return map;
+    }
 }
