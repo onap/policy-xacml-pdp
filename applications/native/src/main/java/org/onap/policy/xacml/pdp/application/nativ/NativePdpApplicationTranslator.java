@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.onap.policy.common.parameters.annotations.NotBlank;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
@@ -48,13 +49,10 @@ import org.slf4j.LoggerFactory;
  * @author Chenfei Gao (cgao@research.att.com)
  *
  */
+@NoArgsConstructor
 public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NativePdpApplicationTranslator.class);
-
-    public NativePdpApplicationTranslator() {
-        super();
-    }
 
     @Override
     public Object convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {

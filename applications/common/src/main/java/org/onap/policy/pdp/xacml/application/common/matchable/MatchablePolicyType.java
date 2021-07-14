@@ -69,8 +69,8 @@ public class MatchablePolicyType {
             );
     //@formatter:on
 
-    ToscaConceptIdentifier policyId;
-    Map<String, MatchableProperty> matchables = new HashMap<>();
+    private ToscaConceptIdentifier policyId;
+    private Map<String, MatchableProperty> matchables = new HashMap<>();
 
     public MatchablePolicyType(@NonNull ToscaPolicyType policyType, @NonNull MatchableCallback callback) {
         this.policyId = new ToscaConceptIdentifier(policyType.getName(), policyType.getVersion());

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
@@ -39,6 +40,7 @@ import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@AllArgsConstructor
 public class XacmlPdpUpdatePublisher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpUpdatePublisher.class);
@@ -46,18 +48,6 @@ public class XacmlPdpUpdatePublisher {
     private final TopicSinkClient client;
     private final XacmlState state;
     private final XacmlPdpApplicationManager appManager;
-
-    /**
-     * Constructs the object.
-     * @param client messages are published to this client
-     * @param state tracks the state of this PDP
-     * @param appManager application manager
-     */
-    public XacmlPdpUpdatePublisher(TopicSinkClient client, XacmlState state, XacmlPdpApplicationManager appManager) {
-        this.client = client;
-        this.state = state;
-        this.appManager = appManager;
-    }
 
     /**
      * Handle the PDP Update message.

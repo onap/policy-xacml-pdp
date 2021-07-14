@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,24 +22,18 @@
 
 package org.onap.policy.pdpx.main.comm;
 
+import lombok.AllArgsConstructor;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@AllArgsConstructor
 public class XacmlPdpPapRegistration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpPapRegistration.class);
     private final TopicSinkClient client;
-
-    /**
-     * Constructs the object.
-     * @param client name of the TopickSinkClient
-     */
-    public XacmlPdpPapRegistration(TopicSinkClient client) {
-        this.client = client;
-    }
 
     /**
      * Sends PDP register and unregister message to the PAP.

@@ -43,6 +43,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
@@ -83,6 +84,7 @@ import org.slf4j.LoggerFactory;
  * @author pameladragosh
  *
  */
+@NoArgsConstructor
 public class StdMatchableTranslator  extends StdBaseTranslator implements MatchableCallback {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StdMatchableTranslator.class);
@@ -95,10 +97,6 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
     private BusTopicParams apiRestParameters;
     @Setter
     private Path pathForData;
-
-    public StdMatchableTranslator() {
-        super();
-    }
 
     @Override
     public Request convertRequest(DecisionRequest request) throws ToscaPolicyConversionException {

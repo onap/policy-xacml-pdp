@@ -32,6 +32,7 @@ import com.att.research.xacml.std.annotations.RequestParser;
 import com.google.common.base.Strings;
 import java.util.Collection;
 import java.util.Map;
+import lombok.NoArgsConstructor;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
@@ -49,13 +50,10 @@ import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@NoArgsConstructor
 public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StdCombinedPolicyResultsTranslator.class);
-
-    public StdCombinedPolicyResultsTranslator() {
-        super();
-    }
 
     @Override
     public Object convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {

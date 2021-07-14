@@ -46,7 +46,7 @@ import org.onap.policy.pdp.xacml.application.common.std.StdMatchablePolicyReques
 public class OptimizationSubscriberRequest extends StdMatchablePolicyRequest {
 
     @XACMLSubject(attributeId = "urn:org:onap:optimization:subscriber:name", includeInResults = true)
-    List<String> subscriberRoles;
+    private List<String> subscriberRoles;
 
     /**
      * Create an instance of xacml request.

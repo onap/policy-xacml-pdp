@@ -33,6 +33,7 @@ import java.time.OffsetTime;
 import java.time.ZoneOffset;
 import java.util.Map;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
@@ -41,6 +42,7 @@ import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionExcepti
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @XACMLRequest(ReturnPolicyIdList = true)
 public class GuardPolicyRequest {
     private static final String STR_GUARD = "guard";
@@ -108,10 +110,6 @@ public class GuardPolicyRequest {
     private String cloudRegionId;
 
     public static final String PREFIX_RESOURCE_ATTRIBUTE_ID = "urn:org:onap:guard:target:";
-
-    public GuardPolicyRequest() {
-        super();
-    }
 
     /**
      * Parses the DecisionRequest into a StdMetadataPolicyRequest.

@@ -36,7 +36,7 @@ import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionExcepti
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
 
 public class MatchablePropertyTypeMap extends MatchablePropertyTypeBase<Map<String, MatchablePropertyType<?>>> {
-    MatchableProperty primitiveProperty;
+    private MatchableProperty primitiveProperty;
 
     /**
      * constructor.

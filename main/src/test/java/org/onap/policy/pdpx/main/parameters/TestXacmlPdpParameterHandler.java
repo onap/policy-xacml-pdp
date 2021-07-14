@@ -67,9 +67,9 @@ public class TestXacmlPdpParameterHandler {
         badArguments.parse(badArgumentString);
 
         assertThatThrownBy(() -> new XacmlPdpParameterHandler().getParameters(badArguments))
-                .hasMessage("error reading parameters from \"parameters/BadParameters.json\"\n"
-                        + "(JsonSyntaxException):java.lang.IllegalStateException: "
-                        + "Expected a string but was BEGIN_ARRAY at line 2 column 14 path $.name");
+                .hasMessageContaining("error reading parameters from", "parameters/BadParameters.json",
+                        "JsonSyntaxException", "java.lang.IllegalStateException",
+                        "Expected a string but was BEGIN_ARRAY at line 2 column 14 path $.name");
 
     }
 
@@ -81,9 +81,9 @@ public class TestXacmlPdpParameterHandler {
         invalidArguments.parse(invalidArgumentString);
 
         assertThatThrownBy(() -> new XacmlPdpParameterHandler().getParameters(invalidArguments))
-                .hasMessage("error reading parameters from \"parameters/InvalidParameters.json\"\n"
-                        + "(JsonSyntaxException):java.lang.IllegalStateException: "
-                        + "Expected a string but was BEGIN_ARRAY at line 2 column 14 path $.name");
+                .hasMessageContaining("error reading parameters from", "parameters/InvalidParameters.json",
+                        "JsonSyntaxException", "java.lang.IllegalStateException",
+                        "Expected a string but was BEGIN_ARRAY at line 2 column 14 path $.name");
     }
 
     @Test
