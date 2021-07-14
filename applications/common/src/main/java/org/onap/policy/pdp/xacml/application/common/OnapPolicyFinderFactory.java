@@ -68,16 +68,6 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
     private Properties properties;
 
     /**
-     * Empty private constructor. We do not want to create
-     * an instance of this without giving Properties object.
-     *
-     * @throws OnapPolicyFinderFactoryException Exception will be thrown
-     */
-    public OnapPolicyFinderFactory() throws OnapPolicyFinderFactoryException {
-        throw new OnapPolicyFinderFactoryException("Please use the constructor with Properties object.");
-    }
-
-    /**
      * Constructor with properties passed. This will be preferred.
      *
      * @param properties Properties object

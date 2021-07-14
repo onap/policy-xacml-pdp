@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,7 +33,7 @@ import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionExcepti
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
 
 public class MatchablePropertyTypeList extends MatchablePropertyTypeBase<List<MatchablePropertyType<?>>> {
-    MatchableProperty primitiveProperty;
+    private MatchableProperty primitiveProperty;
 
     /**
      * constructor.

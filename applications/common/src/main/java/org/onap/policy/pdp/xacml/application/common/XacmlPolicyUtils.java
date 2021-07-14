@@ -47,7 +47,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class XacmlPolicyUtils {
+public final class XacmlPolicyUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPolicyUtils.class);
 

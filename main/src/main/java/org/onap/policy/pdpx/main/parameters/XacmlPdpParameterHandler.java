@@ -20,10 +20,10 @@
 
 package org.onap.policy.pdpx.main.parameters;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import java.io.FileReader;
 import org.onap.policy.common.parameters.ValidationResult;
+import org.onap.policy.common.utils.coder.Coder;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpCommandLineArguments;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 public class XacmlPdpParameterHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpParameterHandler.class);
-    private static final Gson gson = new GsonBuilder().create();
+    private static final Coder CODER = new StandardCoder();
 
     /**
      * Read the parameters from the parameter file.
@@ -51,8 +51,8 @@ public class XacmlPdpParameterHandler {
         XacmlPdpParameterGroup xacmlPdpParameterGroup = null;
 
         try {
-            // Read the parameters from JSON using Gson
-            xacmlPdpParameterGroup = gson.fromJson(new FileReader(arguments.getFullConfigurationFilePath()),
+            // Read the parameters from JSON
+            xacmlPdpParameterGroup = CODER.decode(new FileReader(arguments.getFullConfigurationFilePath()),
                     XacmlPdpParameterGroup.class);
         } catch (final Exception e) {
             final String errorMessage = "error reading parameters from \"" + arguments.getConfigurationFilePath()

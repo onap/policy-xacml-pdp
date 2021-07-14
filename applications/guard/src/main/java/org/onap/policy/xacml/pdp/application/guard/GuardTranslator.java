@@ -39,6 +39,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
@@ -67,6 +68,7 @@ import org.onap.policy.pdp.xacml.application.common.operationshistory.CountRecen
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@NoArgsConstructor
 public class GuardTranslator implements ToscaPolicyTranslator {
     private static final Logger LOGGER = LoggerFactory.getLogger(GuardTranslator.class);
 
@@ -118,9 +120,6 @@ public class GuardTranslator implements ToscaPolicyTranslator {
     //
     private static final String VARIABLE_TIMEINRANGE = "timeInRange";
 
-    public GuardTranslator() {
-        super();
-    }
 
     /**
      * Convert the policy.

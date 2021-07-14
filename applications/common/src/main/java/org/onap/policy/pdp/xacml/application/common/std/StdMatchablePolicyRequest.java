@@ -43,6 +43,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
@@ -54,6 +55,7 @@ import org.slf4j.LoggerFactory;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @XACMLRequest(ReturnPolicyIdList = true)
 public class StdMatchablePolicyRequest {
 
@@ -74,10 +76,6 @@ public class StdMatchablePolicyRequest {
     private String action;
 
     protected static DataTypeFactory dataTypeFactory        = null;
-
-    public StdMatchablePolicyRequest() {
-        super();
-    }
 
     protected static synchronized DataTypeFactory getDataTypeFactory() {
         try {

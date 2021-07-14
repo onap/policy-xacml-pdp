@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
@@ -38,6 +39,7 @@ import org.onap.policy.models.decisions.concepts.DecisionRequest;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @XACMLRequest(ReturnPolicyIdList = true)
 public class StdCombinedPolicyRequest {
 
@@ -61,10 +63,6 @@ public class StdCombinedPolicyRequest {
 
     @XACMLResource(attributeId = "urn:org:onap:policy-type", includeInResults = true)
     private Collection<String> resourcePolicyType = new ArrayList<>();
-
-    public StdCombinedPolicyRequest() {
-        super();
-    }
 
     /**
      * Parses the DecisionRequest into a MonitoringRequest.

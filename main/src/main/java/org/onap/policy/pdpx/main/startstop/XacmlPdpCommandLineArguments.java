@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -46,7 +48,11 @@ public class XacmlPdpCommandLineArguments {
     private final Options options;
 
     // The command line options
+    @Getter
+    @Setter
     private String configurationFilePath = null;
+    @Getter
+    @Setter
     private String propertyFilePath = null;
 
     /**
@@ -190,31 +196,12 @@ public class XacmlPdpCommandLineArguments {
     }
 
     /**
-     * Gets the configuration file path.
-     *
-     * @return the configuration file path
-     */
-    public String getConfigurationFilePath() {
-        return configurationFilePath;
-    }
-
-    /**
      * Gets the full expanded configuration file path.
      *
      * @return the configuration file path
      */
     public String getFullConfigurationFilePath() {
         return ResourceUtils.getFilePath4Resource(getConfigurationFilePath());
-    }
-
-    /**
-     * Sets the configuration file path.
-     *
-     * @param configurationFilePath the configuration file path
-     */
-    public void setConfigurationFilePath(final String configurationFilePath) {
-        this.configurationFilePath = configurationFilePath;
-
     }
 
     /**
@@ -227,31 +214,12 @@ public class XacmlPdpCommandLineArguments {
     }
 
     /**
-     * Gets the property file path.
-     *
-     * @return the property file path
-     */
-    public String getPropertyFilePath() {
-        return propertyFilePath;
-    }
-
-    /**
      * Gets the full expanded property file path.
      *
      * @return the property file path
      */
     public String getFullPropertyFilePath() {
         return ResourceUtils.getFilePath4Resource(getPropertyFilePath());
-    }
-
-    /**
-     * Sets the property file path.
-     *
-     * @param propertyFilePath the property file path
-     */
-    public void setPropertyFilePath(final String propertyFilePath) {
-        this.propertyFilePath = propertyFilePath;
-
     }
 
     /**

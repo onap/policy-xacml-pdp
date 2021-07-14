@@ -42,11 +42,13 @@ import java.util.Iterator;
 import java.util.Properties;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class StdOnapPip extends StdConfigurableEngine {
     protected static Logger logger = LoggerFactory.getLogger(StdOnapPip.class);
 
@@ -69,10 +71,6 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
     protected EntityManager em;
     protected String issuer;
     protected boolean shutdown = false;
-
-    protected StdOnapPip() {
-        super();
-    }
 
     @Override
     public Collection<PIPRequest> attributesProvided() {

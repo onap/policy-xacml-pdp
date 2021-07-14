@@ -39,7 +39,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
@@ -54,6 +56,7 @@ import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class StdXacmlApplicationServiceProvider implements XacmlApplicationServiceProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StdXacmlApplicationServiceProvider.class);
@@ -68,10 +71,6 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
     private Properties pdpProperties = null;
     private PDPEngine pdpEngine = null;
     private Map<ToscaPolicy, Path> mapLoadedPolicies = new HashMap<>();
-
-    protected StdXacmlApplicationServiceProvider() {
-        super();
-    }
 
     @Override
     public String applicationName() {

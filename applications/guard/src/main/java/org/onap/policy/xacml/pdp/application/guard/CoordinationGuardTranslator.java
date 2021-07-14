@@ -34,6 +34,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import lombok.NoArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
@@ -46,13 +47,10 @@ import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@NoArgsConstructor
 public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CoordinationGuardTranslator.class);
-
-    public CoordinationGuardTranslator() {
-        super();
-    }
 
     @Override
     public Object convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
