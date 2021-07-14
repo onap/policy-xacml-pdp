@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c887e6d0_ed519f15",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/OnapPolicyFinderFactory.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-14T21:35:47Z",
+      "side": 0,
+      "message": "just deleted this method - that way it doesn\u0027t exist and can\u0027t even be called",
+      "revId": "6803c3b370560217215be30514396f75be780a0f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
