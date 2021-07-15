@@ -2,6 +2,63 @@
   "comments": [
     {
       "key": {
+        "uuid": "4e7ad580_eada9342",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T19:40:22Z",
+      "side": 1,
+      "message": "use getName instead (I seem to recall investigating this before and finding that getCanonicalName was really a left-over artifact)",
+      "range": {
+        "startLine": 82,
+        "startChar": 72,
+        "endLine": 82,
+        "endChar": 88
+      },
+      "revId": "129bf9e45f542e320dcfc0e571f94f84d7b2f160",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a58165d_8f4c71b9",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T19:40:22Z",
+      "side": 1,
+      "message": "maybe include the name of the thing that was excluded",
+      "revId": "129bf9e45f542e320dcfc0e571f94f84d7b2f160",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9c62f65_d9ac8f94",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/TestXacmlPdpParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T19:40:22Z",
+      "side": 1,
+      "message": "I\u0027m thinking that sonar now prefers assertThat(xxx).hasSize(2)",
+      "revId": "129bf9e45f542e320dcfc0e571f94f84d7b2f160",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2a7971da_09f211ce",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestGuardOverrideApplication.java",
         "patchSetId": 1
@@ -13,6 +70,30 @@
       "writtenOn": "2021-07-15T19:34:22Z",
       "side": 1,
       "message": "oops - will remove",
+      "range": {
+        "startLine": 32,
+        "startChar": 1,
+        "endLine": 36,
+        "endChar": 4
+      },
+      "revId": "129bf9e45f542e320dcfc0e571f94f84d7b2f160",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d2f12b5_04ff1aea",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestGuardOverrideApplication.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T19:40:22Z",
+      "side": 1,
+      "message": "maybe make it private static?",
+      "parentUuid": "2a7971da_09f211ce",
       "range": {
         "startLine": 32,
         "startChar": 1,
