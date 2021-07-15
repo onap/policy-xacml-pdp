@@ -20,7 +20,9 @@
 
 package org.onap.policy.pdpx.main.parameters;
 
+import java.util.List;
 import lombok.Getter;
+import lombok.NonNull;
 import org.onap.policy.common.parameters.ParameterGroupImpl;
 import org.onap.policy.common.parameters.annotations.NotBlank;
 import org.onap.policy.common.parameters.annotations.NotNull;
@@ -32,8 +34,24 @@ public class XacmlApplicationParameters extends ParameterGroupImpl {
     @NotNull
     private String applicationPath;
 
+    private List<String> exclusions;
+
     public XacmlApplicationParameters() {
         super(XacmlApplicationParameters.class.getSimpleName());
+    }
+
+    /**
+     * Looks for an application class that has been configured
+     * as excluded.
+     *
+     * @param canonicalName The classname
+     * @return true if excluded
+     */
+    public boolean isExcluded(@NonNull String canonicalName) {
+        if (exclusions == null) {
+            return false;
+        }
+        return exclusions.contains(canonicalName);
     }
 
 }
