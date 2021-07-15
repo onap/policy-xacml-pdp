@@ -46,7 +46,6 @@ import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
 import org.onap.policy.pdpx.main.parameters.XacmlApplicationParameters;
-import org.onap.policy.xacml.pdp.application.guard.GuardPdpApplication;
 import org.onap.policy.xacml.pdp.application.nativ.NativePdpApplication;
 import org.onap.policy.xacml.pdp.application.optimization.OptimizationPdpApplication;
 import org.slf4j.Logger;
@@ -142,9 +141,11 @@ public class XacmlPdpApplicationManagerTest {
 
     @Test
     public void testXacmlPdpApplicationManagerSimple() {
+        final String[] exclusions = {"org.onap.policy.xacml.pdp.application.guard.GuardPdpApplication",
+            "org.onap.policy.xacml.pdp.application.match.MatchPdpApplication" };
         final XacmlApplicationParameters xacmlApplicationParameters =
                 testData.toObject(testData.getXacmlapplicationParametersMap(false,
-                        appsDirectory.toString()), XacmlApplicationParameters.class);
+                        appsDirectory.toString(), exclusions), XacmlApplicationParameters.class);
         XacmlPdpApplicationManager manager = new XacmlPdpApplicationManager(xacmlApplicationParameters, params);
         //
         // Test the basics from the startup
@@ -162,7 +163,12 @@ public class XacmlPdpApplicationManagerTest {
         request.setAction("optimize");
         assertThat(manager.findApplication(request)).isInstanceOf(OptimizationPdpApplication.class);
         request.setAction("guard");
-        assertThat(manager.findApplication(request)).isInstanceOf(GuardPdpApplication.class);
+        assertThat(manager.findApplication(request)).isInstanceOf(TestGuardOverrideApplication.class);
+        //
+        // Test Exclusion
+        //
+        request.setAction("match");
+        assertThat(manager.findApplication(request)).isNull();
         //
         // Try to unload a policy that isn't loaded
         //

@@ -21,6 +21,7 @@
 
 package org.onap.policy.pdpx.main.parameters;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -166,6 +167,20 @@ public class TestXacmlPdpParameterHandler {
         assertThatThrownBy(() -> new XacmlPdpParameterHandler().getParameters(arguments))
                 .hasMessageContaining("validation error(s) on parameters from "
                         + "\"parameters/XacmlPdpConfigParameters_InvalidRestServerParameters.json\"");
+    }
+
+    @Test
+    public void testXacmlPdpParameterGroup_Exclusions() throws PolicyXacmlPdpException {
+        final String[] xacmlPdpConfigParameters = {"-c", "parameters/XacmlPdpConfigParameters_Exclusions.json"};
+
+        final XacmlPdpCommandLineArguments arguments = new XacmlPdpCommandLineArguments();
+        arguments.parse(xacmlPdpConfigParameters);
+
+        final XacmlPdpParameterGroup parGroup = new XacmlPdpParameterHandler().getParameters(arguments);
+        assertTrue(arguments.checkSetConfigurationFilePath());
+        assertEquals(CommonTestData.PDPX_PARAMETER_GROUP_NAME, parGroup.getName());
+        assertEquals(CommonTestData.PDPX_GROUP, parGroup.getPdpGroup());
+        assertThat(parGroup.getApplicationParameters().getExclusions()).hasSize(2);
     }
 
     @Test

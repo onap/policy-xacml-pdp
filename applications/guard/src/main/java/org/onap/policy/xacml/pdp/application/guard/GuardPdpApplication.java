@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  */
 public class GuardPdpApplication extends StdXacmlApplicationServiceProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(GuardPdpApplication.class);
-    private static final String STRING_VERSION100 = "1.0.0";
+    protected static final String STRING_VERSION100 = "1.0.0";
 
     private GuardTranslator guardTranslator = new GuardTranslator();
     private CoordinationGuardTranslator coordinationTranslator = new CoordinationGuardTranslator();
