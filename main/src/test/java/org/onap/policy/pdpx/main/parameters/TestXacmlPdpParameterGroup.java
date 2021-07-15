@@ -81,6 +81,7 @@ public class TestXacmlPdpParameterGroup {
         assertEquals("flavor", pdpxParameters.getPdpType());
         assertFalse(pdpxParameters.getRestServerParameters().isHttps());
         assertFalse(pdpxParameters.getRestServerParameters().isAaf());
+        assertThat(pdpxParameters.getApplicationParameters().getExclusions()).isEmpty();
     }
 
     @Test

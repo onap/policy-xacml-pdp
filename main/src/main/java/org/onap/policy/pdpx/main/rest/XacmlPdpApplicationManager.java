@@ -77,6 +77,13 @@ public class XacmlPdpApplicationManager {
                     application.supportedPolicyTypes());
             }
             //
+            // Check for exclusions
+            //
+            if (applicationParameters.isExcluded(application.getClass().getCanonicalName())) {
+                LOGGER.info("excluded");
+                continue;
+            }
+            //
             // We are not going to make this available unless the application can
             // install correctly.
             //
@@ -218,11 +225,7 @@ public class XacmlPdpApplicationManager {
      * @return Total count added from all applications
      */
     public long getPolicyTypeCount() {
-        long types = 0;
-        for (XacmlApplicationServiceProvider application : applicationLoader) {
-            types += application.supportedPolicyTypes().size();
-        }
-        return types;
+        return toscaPolicyTypeIdents.size();
     }
 
     /**

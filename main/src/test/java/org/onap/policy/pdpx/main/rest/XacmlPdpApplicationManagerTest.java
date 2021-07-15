@@ -142,9 +142,11 @@ public class XacmlPdpApplicationManagerTest {
 
     @Test
     public void testXacmlPdpApplicationManagerSimple() {
+        final String[] exclusions = {"org.onap.policy.xacml.pdp.application.guard.GuardPdpApplication",
+            "org.onap.policy.xacml.pdp.application.match.MatchPdpApplication" };
         final XacmlApplicationParameters xacmlApplicationParameters =
                 testData.toObject(testData.getXacmlapplicationParametersMap(false,
-                        appsDirectory.toString()), XacmlApplicationParameters.class);
+                        appsDirectory.toString(), exclusions), XacmlApplicationParameters.class);
         XacmlPdpApplicationManager manager = new XacmlPdpApplicationManager(xacmlApplicationParameters, params);
         //
         // Test the basics from the startup
@@ -162,7 +164,12 @@ public class XacmlPdpApplicationManagerTest {
         request.setAction("optimize");
         assertThat(manager.findApplication(request)).isInstanceOf(OptimizationPdpApplication.class);
         request.setAction("guard");
-        assertThat(manager.findApplication(request)).isInstanceOf(GuardPdpApplication.class);
+        assertThat(manager.findApplication(request)).isInstanceOf(TestGuardOverrideApplication.class);
+        //
+        // Test Exclusion
+        //
+        request.setAction("match");
+        assertThat(manager.findApplication(request)).isNull();
         //
         // Try to unload a policy that isn't loaded
         //
