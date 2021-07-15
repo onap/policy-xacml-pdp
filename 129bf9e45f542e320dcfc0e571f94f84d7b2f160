@@ -119,6 +119,24 @@
     },
     {
       "key": {
+        "uuid": "acfcb840_f034e8da",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/TestXacmlPdpParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T20:19:40Z",
+      "side": 1,
+      "message": "guess we\u0027ll see what sonar says",
+      "parentUuid": "1b7ab7d8_d646f529",
+      "revId": "129bf9e45f542e320dcfc0e571f94f84d7b2f160",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2a7971da_09f211ce",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestGuardOverrideApplication.java",
         "patchSetId": 1
