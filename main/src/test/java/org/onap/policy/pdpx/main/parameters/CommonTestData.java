@@ -176,12 +176,17 @@ public class CommonTestData {
      *
      * @param isEmpty boolean value to represent that object created should be empty or not
      * @param tempPath Application Path string
+     * @param exclusions An optional list of application classnames for exclusion
      * @return a property map suitable for constructing an object
      */
-    public Map<String, Object> getXacmlapplicationParametersMap(boolean isEmpty, String tempPath) {
+    public Map<String, Object> getXacmlapplicationParametersMap(boolean isEmpty, String tempPath,
+            String... exclusions) {
         final Map<String, Object> map = new TreeMap<>();
         if (!isEmpty) {
             map.put("applicationPath", tempPath);
+            if (exclusions != null) {
+                map.put("exclusions", List.of(exclusions));
+            }
         }
         return map;
     }
