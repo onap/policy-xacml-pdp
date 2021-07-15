@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "27549885_813d6a1d",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-07-15T20:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4e7ad580_eada9342",
+      "range": {
+        "startLine": 82,
+        "startChar": 72,
+        "endLine": 82,
+        "endChar": 88
+      },
+      "revId": "129bf9e45f542e320dcfc0e571f94f84d7b2f160",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a58165d_8f4c71b9",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
         "patchSetId": 1
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "94d0312b_2ce2816e",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpApplicationManager.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-07-15T20:06:41Z",
+      "side": 1,
+      "message": "it was being logged above",
+      "parentUuid": "6a58165d_8f4c71b9",
+      "revId": "129bf9e45f542e320dcfc0e571f94f84d7b2f160",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9c62f65_d9ac8f94",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/TestXacmlPdpParameterHandler.java",
         "patchSetId": 1
@@ -53,6 +95,24 @@
       "writtenOn": "2021-07-15T19:40:22Z",
       "side": 1,
       "message": "I\u0027m thinking that sonar now prefers assertThat(xxx).hasSize(2)",
+      "revId": "129bf9e45f542e320dcfc0e571f94f84d7b2f160",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b7ab7d8_d646f529",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/parameters/TestXacmlPdpParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-07-15T20:06:41Z",
+      "side": 1,
+      "message": "I would have to bring in another import, I thought it easier not to and just follow the rest of the test assert*.",
+      "parentUuid": "f9c62f65_d9ac8f94",
       "revId": "129bf9e45f542e320dcfc0e571f94f84d7b2f160",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -103,6 +163,30 @@
       "revId": "129bf9e45f542e320dcfc0e571f94f84d7b2f160",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05613d1e_19cdf8ed",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestGuardOverrideApplication.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-07-15T20:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d2f12b5_04ff1aea",
+      "range": {
+        "startLine": 32,
+        "startChar": 1,
+        "endLine": 36,
+        "endChar": 4
+      },
+      "revId": "129bf9e45f542e320dcfc0e571f94f84d7b2f160",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
