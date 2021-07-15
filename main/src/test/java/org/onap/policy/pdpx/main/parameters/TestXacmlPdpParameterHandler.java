@@ -169,6 +169,20 @@ public class TestXacmlPdpParameterHandler {
     }
 
     @Test
+    public void testXacmlPdpParameterGroup_Exclusions() throws PolicyXacmlPdpException {
+        final String[] xacmlPdpConfigParameters = {"-c", "parameters/XacmlPdpConfigParameters_Exclusions.json"};
+
+        final XacmlPdpCommandLineArguments arguments = new XacmlPdpCommandLineArguments();
+        arguments.parse(xacmlPdpConfigParameters);
+
+        final XacmlPdpParameterGroup parGroup = new XacmlPdpParameterHandler().getParameters(arguments);
+        assertTrue(arguments.checkSetConfigurationFilePath());
+        assertEquals(CommonTestData.PDPX_PARAMETER_GROUP_NAME, parGroup.getName());
+        assertEquals(CommonTestData.PDPX_GROUP, parGroup.getPdpGroup());
+        assertEquals(2, parGroup.getApplicationParameters().getExclusions().size());
+    }
+
+    @Test
     public void testXacmlPdpVersion() throws PolicyXacmlPdpException {
         final String[] xacmlPdpConfigParameters = {"-v"};
         final XacmlPdpCommandLineArguments arguments = new XacmlPdpCommandLineArguments();
