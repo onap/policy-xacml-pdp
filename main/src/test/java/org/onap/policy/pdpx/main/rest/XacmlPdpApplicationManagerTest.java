@@ -35,7 +35,7 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
+import org.onap.policy.common.endpoints.parameters.RestClientParameters;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
 public class XacmlPdpApplicationManagerTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpApplicationManagerTest.class);
     private static final StandardYamlCoder yamlCoder = new StandardYamlCoder();
-    private static final BusTopicParams params = new BusTopicParams();
+    private static final RestClientParameters params = new RestClientParameters();
     private static Path appsDirectory;
     private static ToscaServiceTemplate completedJtst;
     private static CommonTestData testData = new CommonTestData();

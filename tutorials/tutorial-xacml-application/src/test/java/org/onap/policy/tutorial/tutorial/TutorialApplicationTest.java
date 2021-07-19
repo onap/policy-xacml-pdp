@@ -30,7 +30,7 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
+import org.onap.policy.common.endpoints.parameters.RestClientParameters;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
@@ -86,7 +86,7 @@ public class TutorialApplicationTest {
         // Tell the application to initialize based on the properties file
         // we just built for it.
         //
-        service.initialize(propertiesFile.toPath().getParent(), new BusTopicParams());
+        service.initialize(propertiesFile.toPath().getParent(), new RestClientParameters());
     }
 
     @Test

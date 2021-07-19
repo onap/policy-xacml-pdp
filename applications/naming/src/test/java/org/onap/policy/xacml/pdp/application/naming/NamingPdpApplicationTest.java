@@ -48,7 +48,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
+import org.onap.policy.common.endpoints.parameters.RestClientParameters;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
@@ -71,7 +71,7 @@ public class NamingPdpApplicationTest {
     private static XacmlApplicationServiceProvider service;
     private static StandardCoder gson = new StandardCoder();
     private static DecisionRequest baseRequest;
-    private static BusTopicParams clientParams;
+    private static RestClientParameters clientParams;
 
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
@@ -83,7 +83,7 @@ public class NamingPdpApplicationTest {
      */
     @BeforeClass
     public static void setUp() throws Exception {
-        clientParams = mock(BusTopicParams.class);
+        clientParams = mock(RestClientParameters.class);
         when(clientParams.getHostname()).thenReturn("localhost");
         when(clientParams.getPort()).thenReturn(6969);
         //

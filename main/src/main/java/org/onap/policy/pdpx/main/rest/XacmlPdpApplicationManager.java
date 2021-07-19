@@ -33,7 +33,7 @@ import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
+import org.onap.policy.common.endpoints.parameters.RestClientParameters;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -60,7 +60,7 @@ public class XacmlPdpApplicationManager {
      * One time to initialize the applications upon startup.
      */
     public XacmlPdpApplicationManager(XacmlApplicationParameters applicationParameters,
-            BusTopicParams policyApiParameters) {
+            RestClientParameters policyApiParameters) {
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Initialization applications {} {}", applicationParameters, policyApiParameters);
         }
@@ -238,7 +238,7 @@ public class XacmlPdpApplicationManager {
     }
 
     private void initializeApplicationPath(Path basePath, XacmlApplicationServiceProvider application,
-                    BusTopicParams policyApiParameters) throws XacmlApplicationException {
+                    RestClientParameters policyApiParameters) throws XacmlApplicationException {
         //
         // Making an assumption that all application names are unique, and
         // they can result in a valid directory being created.

@@ -42,11 +42,11 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.endpoints.http.client.HttpClient;
 import org.onap.policy.common.endpoints.http.client.HttpClientConfigException;
 import org.onap.policy.common.endpoints.http.server.HttpServletServer;
 import org.onap.policy.common.endpoints.http.server.HttpServletServerFactoryInstance;
+import org.onap.policy.common.endpoints.parameters.RestClientParameters;
 import org.onap.policy.common.endpoints.properties.PolicyEndPointProperties;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.onap.policy.common.utils.network.NetworkUtil;
@@ -68,7 +68,7 @@ public class PolicyApiCallerTest {
     private static final String UNKNOWN_TYPE = "unknown";
 
     private static int port;
-    private static BusTopicParams clientParams;
+    private static RestClientParameters clientParams;
 
     private PolicyApiCaller api;
 
@@ -82,7 +82,7 @@ public class PolicyApiCallerTest {
     public static void setUpBeforeClass() throws Exception {
         port = NetworkUtil.allocPort();
 
-        clientParams = mock(BusTopicParams.class);
+        clientParams = mock(RestClientParameters.class);
         when(clientParams.getHostname()).thenReturn("localhost");
         when(clientParams.getPort()).thenReturn(port);
 
@@ -129,7 +129,7 @@ public class PolicyApiCallerTest {
     public void testPolicyApi() {
         assertThatThrownBy(() -> new PolicyApiCaller(clientParams) {
             @Override
-            protected HttpClient makeClient(BusTopicParams busParams) throws HttpClientConfigException {
+            protected HttpClient makeClient(RestClientParameters busParams) throws HttpClientConfigException {
                 throw new HttpClientConfigException("expected exception");
             }
         }).isInstanceOf(PolicyApiException.class);
