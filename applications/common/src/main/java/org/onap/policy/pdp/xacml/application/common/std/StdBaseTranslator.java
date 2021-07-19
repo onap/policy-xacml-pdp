@@ -23,6 +23,9 @@
 package org.onap.policy.pdp.xacml.application.common.std;
 
 import com.att.research.xacml.api.Advice;
+import com.att.research.xacml.api.Attribute;
+import com.att.research.xacml.api.AttributeCategory;
+import com.att.research.xacml.api.AttributeValue;
 import com.att.research.xacml.api.Decision;
 import com.att.research.xacml.api.Obligation;
 import com.att.research.xacml.api.Request;
@@ -31,7 +34,10 @@ import com.att.research.xacml.api.Result;
 import com.att.research.xacml.api.XACML3;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import lombok.Getter;
+import lombok.Setter;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
@@ -58,6 +64,14 @@ import org.slf4j.LoggerFactory;
 public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
     private static final Logger LOGGER = LoggerFactory.getLogger(StdBaseTranslator.class);
     private static final ObjectFactory factory = new ObjectFactory();
+
+    @Getter
+    @Setter
+    protected boolean booleanReturnAttributes = false;
+
+    @Getter
+    @Setter
+    protected boolean booleanReturnSingleValueAttributesAsCollection = false;
 
     public static final String POLICY_ID = "policy-id";
     public static final String POLICY_VERSION = "policy-version";
@@ -103,6 +117,12 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
                 decisionResponse.setStatus("error");
                 decisionResponse.setMessage(xacmlResult.getStatus().getStatusMessage());
             }
+            //
+            // Add attributes
+            //
+            if (booleanReturnAttributes) {
+                scanAttributes(xacmlResult.getAttributes(), decisionResponse);
+            }
         }
 
         return decisionResponse;
@@ -127,6 +147,38 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
      * @param decisionResponse DecisionResponse object used to store any results from advice.
      */
     protected abstract void scanAdvice(Collection<Advice> advice, DecisionResponse decisionResponse);
+
+    /**
+     * scanAttributes - scans the attributes that are returned in the XACML Decision and puts them into the
+     * DecisionResponse object.
+     *
+     * @param attributeCategories Collection of AttributeCategory objects
+     * @param decisionResponse DecisionResponse object used to store any attributes
+     */
+    protected void scanAttributes(Collection<AttributeCategory> attributeCategories,
+            DecisionResponse decisionResponse) {
+        var returnedAttributes = new HashMap<String, Object>();
+        for (AttributeCategory attributeCategory : attributeCategories) {
+            var mapCategory = new HashMap<String, Object>();
+            for (Attribute attribute : attributeCategory.getAttributes()) {
+                //
+                // Most attributes have a single value, thus the collection is not necessary to
+                // return. However, we will allow this to be configurable.
+                //
+                if (! booleanReturnSingleValueAttributesAsCollection && attribute.getValues().size() == 1) {
+                    Iterator<AttributeValue<?>> iterator = attribute.getValues().iterator();
+                    AttributeValue<?> value = iterator.next();
+                    mapCategory.put(attribute.getAttributeId().stringValue(), value.getValue().toString());
+                } else {
+                    mapCategory.put(attribute.getAttributeId().stringValue(), attribute.getValues());
+                }
+            }
+            returnedAttributes.put(attributeCategory.getCategory().stringValue(), mapCategory);
+        }
+        if (! returnedAttributes.isEmpty()) {
+            decisionResponse.setAttributes(returnedAttributes);
+        }
+    }
 
     /**
      * From the TOSCA metadata section, pull in values that are needed into the XACML policy.
