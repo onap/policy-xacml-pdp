@@ -182,6 +182,12 @@ public class GuardPdpApplicationTest {
         // Dump it out as Json
         //
         LOGGER.info(gson.encode(response));
+        //
+        // Guard does not return these
+        //
+        assertThat(response.getAdvice()).isNull();
+        assertThat(response.getObligations()).isNull();
+        assertThat(response.getAttributes()).isNull();
     }
 
     /**
