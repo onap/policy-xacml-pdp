@@ -35,7 +35,6 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
@@ -54,7 +53,6 @@ import org.slf4j.LoggerFactory;
 public class XacmlPdpApplicationManagerTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpApplicationManagerTest.class);
     private static final StandardYamlCoder yamlCoder = new StandardYamlCoder();
-    private static final BusTopicParams params = new BusTopicParams();
     private static Path appsDirectory;
     private static ToscaServiceTemplate completedJtst;
     private static CommonTestData testData = new CommonTestData();
@@ -69,10 +67,6 @@ public class XacmlPdpApplicationManagerTest {
      */
     @BeforeClass
     public static void setupTestEnvironment() throws Exception {
-        //
-        // No need to do more than this
-        //
-        params.setClientName("policyApiParameters");
         //
         // Load an example policy
         //
@@ -121,7 +115,7 @@ public class XacmlPdpApplicationManagerTest {
         //
         // Create our app manager
         //
-        XacmlPdpApplicationManager manager = new XacmlPdpApplicationManager(xacmlApplicationParameters, params);
+        XacmlPdpApplicationManager manager = new XacmlPdpApplicationManager(xacmlApplicationParameters, null);
         //
         // Still creates the manager, but the apps were not able to initialize
         //
@@ -131,7 +125,7 @@ public class XacmlPdpApplicationManagerTest {
         // Now create the directory
         //
         Files.createDirectory(nonExistentPath);
-        manager = new XacmlPdpApplicationManager(xacmlApplicationParameters, params);
+        manager = new XacmlPdpApplicationManager(xacmlApplicationParameters, null);
         //
         // Now it should have initialized the apps
         //
@@ -146,7 +140,7 @@ public class XacmlPdpApplicationManagerTest {
         final XacmlApplicationParameters xacmlApplicationParameters =
                 testData.toObject(testData.getXacmlapplicationParametersMap(false,
                         appsDirectory.toString(), exclusions), XacmlApplicationParameters.class);
-        XacmlPdpApplicationManager manager = new XacmlPdpApplicationManager(xacmlApplicationParameters, params);
+        XacmlPdpApplicationManager manager = new XacmlPdpApplicationManager(xacmlApplicationParameters, null);
         //
         // Test the basics from the startup
         //

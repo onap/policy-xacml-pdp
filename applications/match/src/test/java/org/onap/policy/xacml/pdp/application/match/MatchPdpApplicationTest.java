@@ -24,8 +24,6 @@
 package org.onap.policy.xacml.pdp.application.match;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import com.att.research.xacml.api.Response;
 import java.io.File;
@@ -44,7 +42,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
@@ -67,7 +64,6 @@ public class MatchPdpApplicationTest {
     private static XacmlApplicationServiceProvider service;
     private static StandardCoder gson = new StandardCoder();
     private static DecisionRequest baseRequest;
-    private static BusTopicParams clientParams;
 
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
@@ -79,9 +75,6 @@ public class MatchPdpApplicationTest {
      */
     @BeforeClass
     public static void setUp() throws Exception {
-        clientParams = mock(BusTopicParams.class);
-        when(clientParams.getHostname()).thenReturn("localhost");
-        when(clientParams.getPort()).thenReturn(6969);
         //
         // Load Single Decision Request
         //
@@ -137,7 +130,7 @@ public class MatchPdpApplicationTest {
         // Tell it to initialize based on the properties file
         // we just built for it.
         //
-        service.initialize(propertiesFile.toPath().getParent(), clientParams);
+        service.initialize(propertiesFile.toPath().getParent(), null);
     }
 
     @Test

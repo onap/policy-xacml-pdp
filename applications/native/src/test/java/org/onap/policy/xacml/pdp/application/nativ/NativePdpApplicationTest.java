@@ -39,7 +39,6 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.common.utils.resources.TextFileUtils;
@@ -61,7 +60,6 @@ public class NativePdpApplicationTest {
     private static final StandardYamlCoder yamlCoder = new StandardYamlCoder();
     private static Properties properties = new Properties();
     private static File propertiesFile;
-    private static BusTopicParams clientParams = new BusTopicParams();
     private static NativePdpApplication service;
     private static Request request;
 
@@ -112,7 +110,7 @@ public class NativePdpApplicationTest {
         // Tell it to initialize based on the properties file
         // we just built for it.
         //
-        service.initialize(propertiesFile.toPath().getParent(), clientParams);
+        service.initialize(propertiesFile.toPath().getParent(), null);
         //
         // Load XACML Request
         //

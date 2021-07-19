@@ -23,10 +23,7 @@ package org.onap.policy.pdp.xacml.application.common;
 
 import java.net.HttpURLConnection;
 import javax.ws.rs.core.Response;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.endpoints.http.client.HttpClient;
-import org.onap.policy.common.endpoints.http.client.HttpClientConfigException;
-import org.onap.policy.common.endpoints.http.client.HttpClientFactoryInstance;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
@@ -46,16 +43,10 @@ public class PolicyApiCaller {
     /**
      * Constructs the object.
      *
-     * @param params target specification
-     * @throws PolicyApiException if an error occurs
+     * @param httpClient API REST client
      */
-    public PolicyApiCaller(BusTopicParams params) throws PolicyApiException {
-        try {
-            params.setClientName("policy-api");
-            httpClient = makeClient(params);
-        } catch (HttpClientConfigException e) {
-            throw new PolicyApiException("connection to host: " + params.getHostname(), e);
-        }
+    public PolicyApiCaller(HttpClient httpClient) {
+        this.httpClient = httpClient;
     }
 
     /**
@@ -86,11 +77,5 @@ public class PolicyApiCaller {
             logger.warn("policy-api connection error, client info: {} ", httpClient);
             throw new PolicyApiException(type.toString(), e);
         }
-    }
-
-    // these methods may be overridden by junit tests
-
-    protected HttpClient makeClient(BusTopicParams busParams) throws HttpClientConfigException {
-        return HttpClientFactoryInstance.getClientFactory().build(busParams);
     }
 }

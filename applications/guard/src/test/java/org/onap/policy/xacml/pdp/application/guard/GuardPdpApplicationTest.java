@@ -50,7 +50,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
@@ -73,7 +72,6 @@ public class GuardPdpApplicationTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(GuardPdpApplicationTest.class);
     private static Properties properties = new Properties();
     private static File propertiesFile;
-    private static BusTopicParams clientParams = new BusTopicParams();
     private static XacmlApplicationServiceProvider service;
     private static DecisionRequest requestVfCount;
     private static StandardCoder gson = new StandardCoder();
@@ -129,7 +127,7 @@ public class GuardPdpApplicationTest {
         // Tell it to initialize based on the properties file
         // we just built for it.
         //
-        service.initialize(propertiesFile.toPath().getParent(), clientParams);
+        service.initialize(propertiesFile.toPath().getParent(), null);
         //
         // Load Decision Requests
         //

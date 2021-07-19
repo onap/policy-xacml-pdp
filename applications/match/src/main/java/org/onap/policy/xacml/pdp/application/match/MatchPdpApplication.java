@@ -25,7 +25,7 @@ package org.onap.policy.xacml.pdp.application.match;
 
 import java.nio.file.Path;
 import java.util.Arrays;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
+import org.onap.policy.common.endpoints.http.client.HttpClient;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
@@ -54,18 +54,18 @@ public class MatchPdpApplication extends StdXacmlApplicationServiceProvider {
     }
 
     @Override
-    public void initialize(Path pathForData, BusTopicParams policyApiParameters)
+    public void initialize(Path pathForData, HttpClient policyApiClient)
             throws XacmlApplicationException {
         //
         // Store our API parameters and path for translator so it
         // can go get Policy Types
         //
         this.translator.setPathForData(pathForData);
-        this.translator.setApiRestParameters(policyApiParameters);
+        this.translator.setApiClient(policyApiClient);
         //
         // Let our super class do its thing
         //
-        super.initialize(pathForData, policyApiParameters);
+        super.initialize(pathForData, policyApiClient);
     }
 
     @Override

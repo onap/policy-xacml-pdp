@@ -27,7 +27,11 @@ import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
 import org.onap.policy.common.endpoints.event.comm.TopicSource;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
+import org.onap.policy.common.endpoints.http.client.HttpClient;
+import org.onap.policy.common.endpoints.http.client.HttpClientConfigException;
+import org.onap.policy.common.endpoints.http.client.HttpClientFactoryInstance;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
+import org.onap.policy.common.endpoints.parameters.RestClientParameters;
 import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.services.ServiceManagerContainer;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
@@ -79,6 +83,8 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
     public XacmlPdpActivator(final XacmlPdpParameterGroup xacmlPdpParameterGroup) {
         LOGGER.info("Activator initializing using {}", xacmlPdpParameterGroup);
 
+        RestClientParameters apiClientParams = xacmlPdpParameterGroup.getPolicyApiParameters();
+
         TopicEndpointManager.getManager().addTopics(xacmlPdpParameterGroup.getTopicParameterGroup());
 
         final XacmlPdpHearbeatPublisher heartbeat;
@@ -86,9 +92,10 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
         final XacmlState state;
 
         try {
-            var appmgr =
-                            new XacmlPdpApplicationManager(xacmlPdpParameterGroup.getApplicationParameters(),
-                                    xacmlPdpParameterGroup.getPolicyApiParameters());
+            HttpClient apiClient = HttpClientFactoryInstance.getClientFactory().build(apiClientParams);
+
+            var appmgr = new XacmlPdpApplicationManager(xacmlPdpParameterGroup.getApplicationParameters(),
+                                            apiClient);
             XacmlPdpApplicationManager.setCurrent(appmgr);
 
             var stats = new XacmlPdpStatisticsManager();
@@ -116,7 +123,7 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
             restServer = new XacmlPdpRestServer(xacmlPdpParameterGroup.getRestServerParameters(),
                     XacmlPdpAafFilter.class, XacmlPdpRestController.class);
 
-        } catch (RuntimeException | TopicSinkClientException e) {
+        } catch (RuntimeException | TopicSinkClientException | HttpClientConfigException e) {
             throw new PolicyXacmlPdpRuntimeException(e.getMessage(), e);
         }
 

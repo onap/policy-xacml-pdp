@@ -42,11 +42,11 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.endpoints.http.client.HttpClient;
-import org.onap.policy.common.endpoints.http.client.HttpClientConfigException;
+import org.onap.policy.common.endpoints.http.client.HttpClientFactoryInstance;
 import org.onap.policy.common.endpoints.http.server.HttpServletServer;
 import org.onap.policy.common.endpoints.http.server.HttpServletServerFactoryInstance;
+import org.onap.policy.common.endpoints.parameters.RestClientParameters;
 import org.onap.policy.common.endpoints.properties.PolicyEndPointProperties;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.onap.policy.common.utils.network.NetworkUtil;
@@ -68,7 +68,9 @@ public class PolicyApiCallerTest {
     private static final String UNKNOWN_TYPE = "unknown";
 
     private static int port;
-    private static BusTopicParams clientParams;
+    private static RestClientParameters clientParams;
+
+    private static HttpClient apiClient;
 
     private PolicyApiCaller api;
 
@@ -82,7 +84,8 @@ public class PolicyApiCallerTest {
     public static void setUpBeforeClass() throws Exception {
         port = NetworkUtil.allocPort();
 
-        clientParams = mock(BusTopicParams.class);
+        clientParams = mock(RestClientParameters.class);
+        when(clientParams.getClientName()).thenReturn("apiClient");
         when(clientParams.getHostname()).thenReturn("localhost");
         when(clientParams.getPort()).thenReturn(port);
 
@@ -104,6 +107,7 @@ public class PolicyApiCallerTest {
                         GsonMessageBodyHandler.class.getName());
 
         HttpServletServerFactoryInstance.getServerFactory().build(props).forEach(HttpServletServer::start);
+        apiClient = HttpClientFactoryInstance.getClientFactory().build(clientParams);
 
         assertTrue(NetworkUtil.isTcpPortOpen(clientParams.getHostname(), clientParams.getPort(), 100, 100));
     }
@@ -122,17 +126,7 @@ public class PolicyApiCallerTest {
     public void setUp() throws PolicyApiException {
         when(clientParams.getPort()).thenReturn(port);
 
-        api = new PolicyApiCaller(clientParams);
-    }
-
-    @Test
-    public void testPolicyApi() {
-        assertThatThrownBy(() -> new PolicyApiCaller(clientParams) {
-            @Override
-            protected HttpClient makeClient(BusTopicParams busParams) throws HttpClientConfigException {
-                throw new HttpClientConfigException("expected exception");
-            }
-        }).isInstanceOf(PolicyApiException.class);
+        api = new PolicyApiCaller(apiClient);
     }
 
     @Test
@@ -150,8 +144,13 @@ public class PolicyApiCallerTest {
                         .isInstanceOf(PolicyApiException.class);
 
         // connect to a port that has no server
-        when(clientParams.getPort()).thenReturn(NetworkUtil.allocPort());
-        api = new PolicyApiCaller(clientParams);
+        RestClientParameters params2 = mock(RestClientParameters.class);
+        when(params2.getClientName()).thenReturn("apiClient");
+        when(params2.getHostname()).thenReturn("localhost");
+        when(params2.getPort()).thenReturn(NetworkUtil.allocPort());
+
+        HttpClient apiClient2 = HttpClientFactoryInstance.getClientFactory().build(params2);
+        api = new PolicyApiCaller(apiClient2);
 
         assertThatThrownBy(() -> api.getPolicyType(new ToscaConceptIdentifier(MY_TYPE, MY_VERSION)))
                         .isInstanceOf(PolicyApiException.class);

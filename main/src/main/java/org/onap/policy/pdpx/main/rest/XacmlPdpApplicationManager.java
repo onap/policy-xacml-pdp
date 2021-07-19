@@ -33,7 +33,7 @@ import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
+import org.onap.policy.common.endpoints.http.client.HttpClient;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -60,9 +60,9 @@ public class XacmlPdpApplicationManager {
      * One time to initialize the applications upon startup.
      */
     public XacmlPdpApplicationManager(XacmlApplicationParameters applicationParameters,
-            BusTopicParams policyApiParameters) {
+                    HttpClient policyApiClient) {
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Initialization applications {} {}", applicationParameters, policyApiParameters);
+            LOGGER.info("Initialization applications {} {}", applicationParameters, policyApiClient);
         }
         //
         // Load service
@@ -93,7 +93,7 @@ public class XacmlPdpApplicationManager {
             //
             try {
                 initializeApplicationPath(Paths.get(applicationParameters.getApplicationPath()), application,
-                        policyApiParameters);
+                                policyApiClient);
                 //
                 // We are initialized
                 //
@@ -238,7 +238,7 @@ public class XacmlPdpApplicationManager {
     }
 
     private void initializeApplicationPath(Path basePath, XacmlApplicationServiceProvider application,
-                    BusTopicParams policyApiParameters) throws XacmlApplicationException {
+                    HttpClient policyApiClient) throws XacmlApplicationException {
         //
         // Making an assumption that all application names are unique, and
         // they can result in a valid directory being created.
@@ -267,6 +267,6 @@ public class XacmlPdpApplicationManager {
         //
         // Have the application initialize
         //
-        application.initialize(path, policyApiParameters);
+        application.initialize(path, policyApiClient);
     }
 }

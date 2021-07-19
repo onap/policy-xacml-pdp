@@ -37,6 +37,7 @@ import org.onap.policy.common.utils.coder.StandardCoder;
  */
 public class CommonTestData {
 
+    private static final String CLIENT_NAME = "clientName";
     private static final String PASS_KEY = "password";
     private static final String USER_KEY = "userName";
     private static final String PORT_KEY = "port";
@@ -143,6 +144,7 @@ public class CommonTestData {
      */
     public Map<String, Object> getPolicyApiParametersMap(final boolean isEmpty) {
         final Map<String, Object> map = new TreeMap<>();
+        map.put(CLIENT_NAME, XacmlPdpParameterGroup.PARAM_POLICY_API);
         map.put(HTTPS_KEY, POLICY_API_HTTPS);
         map.put(AAF_KEY, POLICY_API_AAF);
 

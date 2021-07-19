@@ -25,8 +25,6 @@ package org.onap.policy.xacml.pdp.application.optimization;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import com.att.research.xacml.api.Response;
 import com.google.common.collect.Lists;
@@ -48,7 +46,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
@@ -76,7 +73,6 @@ public class OptimizationPdpApplicationTest {
     private static XacmlApplicationServiceProvider service;
     private static StandardCoder gson = new StandardCoder();
     private static DecisionRequest baseRequest;
-    private static BusTopicParams clientParams;
     private static String[] listPolicyTypeFiles = {
         "onap.policies.Optimization",
         "onap.policies.optimization.Resource",
@@ -101,9 +97,6 @@ public class OptimizationPdpApplicationTest {
      */
     @BeforeClass
     public static void setUp() throws Exception {
-        clientParams = mock(BusTopicParams.class);
-        when(clientParams.getHostname()).thenReturn("localhost");
-        when(clientParams.getPort()).thenReturn(6969);
         //
         // Load Single Decision Request
         //
@@ -162,7 +155,7 @@ public class OptimizationPdpApplicationTest {
         // Tell it to initialize based on the properties file
         // we just built for it.
         //
-        service.initialize(propertiesFile.toPath().getParent(), clientParams);
+        service.initialize(propertiesFile.toPath().getParent(), null);
     }
 
     /**

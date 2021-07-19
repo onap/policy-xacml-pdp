@@ -43,7 +43,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
+import org.onap.policy.common.endpoints.http.client.HttpClient;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -67,7 +67,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
 
     private Path pathForData = null;
     @Getter
-    private BusTopicParams policyApiParameters;
+    private HttpClient policyApiClient;
     private Properties pdpProperties = null;
     private PDPEngine pdpEngine = null;
     private Map<ToscaPolicy, Path> mapLoadedPolicies = new HashMap<>();
@@ -83,7 +83,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
     }
 
     @Override
-    public void initialize(Path pathForData, BusTopicParams policyApiParameters)
+    public void initialize(Path pathForData, HttpClient policyApiClient)
             throws XacmlApplicationException {
         //
         // Save our path
@@ -93,7 +93,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
         //
         // Save our params
         //
-        this.policyApiParameters = policyApiParameters;
+        this.policyApiClient = policyApiClient;
         //
         // Look for and load the properties object
         //

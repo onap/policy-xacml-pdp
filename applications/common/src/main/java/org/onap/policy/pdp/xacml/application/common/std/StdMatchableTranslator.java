@@ -52,7 +52,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import org.apache.commons.lang3.tuple.Pair;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
+import org.onap.policy.common.endpoints.http.client.HttpClient;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
@@ -94,7 +94,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
     private final Map<ToscaConceptIdentifier, MatchablePolicyType> matchableCache = new HashMap<>();
 
     @Setter
-    private BusTopicParams apiRestParameters;
+    private HttpClient apiClient;
     @Setter
     private Path pathForData;
 
@@ -572,7 +572,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
         //
         ToscaServiceTemplate policyTemplate = null;
         try {
-            var api = new PolicyApiCaller(this.apiRestParameters);
+            var api = new PolicyApiCaller(this.apiClient);
 
             policyTemplate = api.getPolicyType(policyTypeId);
         } catch (PolicyApiException e) {

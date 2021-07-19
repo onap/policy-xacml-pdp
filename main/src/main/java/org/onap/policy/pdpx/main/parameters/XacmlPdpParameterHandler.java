@@ -21,6 +21,7 @@
 package org.onap.policy.pdpx.main.parameters;
 
 import java.io.File;
+import org.onap.policy.common.endpoints.parameters.RestClientParameters;
 import org.onap.policy.common.parameters.ValidationResult;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -67,6 +68,10 @@ public class XacmlPdpParameterHandler {
             LOGGER.error(errorMessage);
             throw new PolicyXacmlPdpException(errorMessage);
         }
+
+        RestClientParameters apiClientParams = xacmlPdpParameterGroup.getPolicyApiParameters();
+        apiClientParams.setName(XacmlPdpParameterGroup.PARAM_POLICY_API);
+        apiClientParams.setManaged(false);
 
         // validate the parameters
         final ValidationResult validationResult = xacmlPdpParameterGroup.validate();

@@ -27,7 +27,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
+import org.onap.policy.common.endpoints.http.client.HttpClient;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -64,9 +64,9 @@ public interface XacmlApplicationServiceProvider {
      * Also gives api rest parameters if needed.
      *
      * @param pathForData Local Path
-     * @param policyApiParameters API rest parameters
+     * @param policyApiClient API rest client
      */
-    void             initialize(Path pathForData, BusTopicParams policyApiParameters)
+    void             initialize(Path pathForData, HttpClient policyApiClient)
             throws XacmlApplicationException;
 
     /**

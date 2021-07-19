@@ -46,10 +46,10 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.endpoints.http.client.HttpClient;
 import org.onap.policy.common.endpoints.http.client.HttpClientConfigException;
 import org.onap.policy.common.endpoints.http.client.HttpClientFactoryInstance;
+import org.onap.policy.common.endpoints.parameters.RestClientParameters;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.onap.policy.common.utils.network.NetworkUtil;
@@ -105,8 +105,8 @@ public class TestDecision {
         //
         RestServerParameters rest =
             testData.toObject(testData.getRestServerParametersMap(port), RestServerParameters.class);
-        BusTopicParams policyApiParameters =
-                        testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
+        RestClientParameters policyApiParameters =
+                        testData.toObject(testData.getPolicyApiParametersMap(false), RestClientParameters.class);
         TopicParameterGroup topicParameterGroup =
                         testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
         final XacmlApplicationParameters xacmlApplicationParameters =
@@ -245,7 +245,7 @@ public class TestDecision {
     }
 
     private static HttpClient getNoAuthHttpClient() throws HttpClientConfigException {
-        return HttpClientFactoryInstance.getClientFactory().build(BusTopicParams.builder()
+        return HttpClientFactoryInstance.getClientFactory().build(RestClientParameters.builder()
                 .clientName("testDecisionClient")
                 .useHttps(false).allowSelfSignedCerts(false).hostname("localhost").port(port)
                 .basePath("policy/pdpx/v1")

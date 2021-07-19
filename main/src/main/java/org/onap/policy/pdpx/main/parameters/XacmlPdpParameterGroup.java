@@ -23,7 +23,7 @@ package org.onap.policy.pdpx.main.parameters;
 
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
+import org.onap.policy.common.endpoints.parameters.RestClientParameters;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.onap.policy.common.parameters.BeanValidationResult;
@@ -42,14 +42,14 @@ import org.onap.policy.models.base.Validated;
 @NotNull
 @NotBlank
 public class XacmlPdpParameterGroup extends ParameterGroupImpl {
-    private static final String PARAM_POLICY_API = "policyApiParameters";
+    public static final String PARAM_POLICY_API = "policyApiParameters";
 
     private String pdpGroup;
     private String pdpType;
     @Valid
     private RestServerParameters restServerParameters;
     @Valid
-    private BusTopicParams policyApiParameters;
+    private RestClientParameters policyApiParameters;
     @Valid
     private TopicParameterGroup topicParameterGroup;
     @Valid
@@ -62,7 +62,7 @@ public class XacmlPdpParameterGroup extends ParameterGroupImpl {
      * @param pdpGroup the pdp group name
      */
     public XacmlPdpParameterGroup(final String name, final String pdpGroup, final String pdpType,
-            final RestServerParameters restServerParameters, final BusTopicParams policyApiParameters,
+            final RestServerParameters restServerParameters, final RestClientParameters policyApiParameters,
             final TopicParameterGroup topicParameterGroup, final XacmlApplicationParameters applicationParameters) {
         super(name);
         this.pdpGroup = pdpGroup;

@@ -47,10 +47,10 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.endpoints.http.client.HttpClient;
 import org.onap.policy.common.endpoints.http.client.HttpClientConfigException;
 import org.onap.policy.common.endpoints.http.client.internal.JerseyClient;
+import org.onap.policy.common.endpoints.parameters.RestClientParameters;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -85,7 +85,7 @@ public class TestAbbreviateDecisionResults {
     private static File propertiesFile;
     private static XacmlApplicationServiceProvider service;
 
-    private static BusTopicParams policyApiParameters;
+    private static RestClientParameters policyApiParameters;
 
     @ClassRule
     public static final TemporaryFolder appsFolder = new TemporaryFolder();
@@ -117,7 +117,7 @@ public class TestAbbreviateDecisionResults {
         // Create parameters for XacmlPdPService
         RestServerParameters rest = testData.toObject(testData.getRestServerParametersMap(port),
                 RestServerParameters.class);
-        policyApiParameters = testData.toObject(testData.getPolicyApiParametersMap(false), BusTopicParams.class);
+        policyApiParameters = testData.toObject(testData.getPolicyApiParametersMap(false), RestClientParameters.class);
         TopicParameterGroup topicParameterGroup = testData.toObject(testData.getTopicParametersMap(false),
                 TopicParameterGroup.class);
         final XacmlApplicationParameters xacmlApplicationParameters =
@@ -219,7 +219,7 @@ public class TestAbbreviateDecisionResults {
      */
     private static HttpClient getNoAuthHttpClient()
             throws HttpClientConfigException, KeyManagementException, NoSuchAlgorithmException, ClassNotFoundException {
-        BusTopicParams clientParams = new BusTopicParams();
+        RestClientParameters clientParams = new RestClientParameters();
         clientParams.setClientName("testName");
         clientParams.setUseHttps(false);
         clientParams.setAllowSelfSignedCerts(false);
@@ -289,6 +289,6 @@ public class TestAbbreviateDecisionResults {
         // Tell it to initialize based on the properties file
         // we just built for it.
         //
-        service.initialize(propertiesFile.toPath().getParent(), policyApiParameters);
+        service.initialize(propertiesFile.toPath().getParent(), null);
     }
 }

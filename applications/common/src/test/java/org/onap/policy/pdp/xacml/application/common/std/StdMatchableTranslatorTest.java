@@ -58,9 +58,11 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
+import org.onap.policy.common.endpoints.http.client.HttpClient;
+import org.onap.policy.common.endpoints.http.client.HttpClientFactoryInstance;
 import org.onap.policy.common.endpoints.http.server.HttpServletServer;
 import org.onap.policy.common.endpoints.http.server.HttpServletServerFactoryInstance;
+import org.onap.policy.common.endpoints.parameters.RestClientParameters;
 import org.onap.policy.common.endpoints.properties.PolicyEndPointProperties;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -85,8 +87,9 @@ public class StdMatchableTranslatorTest {
     private static final String CLIENT_NAME = "policy-api";
     private static final StandardYamlCoder yamlCoder = new StandardYamlCoder();
     private static int port;
-    private static BusTopicParams clientParams;
+    private static RestClientParameters clientParams;
     private static ToscaServiceTemplate testTemplate;
+    private static HttpClient apiClient;
 
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
@@ -106,7 +109,8 @@ public class StdMatchableTranslatorTest {
         //
         port = NetworkUtil.allocPort();
 
-        clientParams = mock(BusTopicParams.class);
+        clientParams = mock(RestClientParameters.class);
+        when(clientParams.getClientName()).thenReturn("apiClient");
         when(clientParams.getHostname()).thenReturn("localhost");
         when(clientParams.getPort()).thenReturn(port);
 
@@ -128,6 +132,7 @@ public class StdMatchableTranslatorTest {
                         GsonMessageBodyHandler.class.getName());
 
         HttpServletServerFactoryInstance.getServerFactory().build(props).forEach(HttpServletServer::start);
+        apiClient = HttpClientFactoryInstance.getClientFactory().build(clientParams);
 
         assertTrue(NetworkUtil.isTcpPortOpen(clientParams.getHostname(), clientParams.getPort(), 100, 100));
         //
@@ -170,7 +175,7 @@ public class StdMatchableTranslatorTest {
         // Set it up
         //
         translator.setPathForData(policyFolder.getRoot().toPath());
-        translator.setApiRestParameters(clientParams);
+        translator.setApiClient(apiClient);
         //
         // Load policies to test
         //
