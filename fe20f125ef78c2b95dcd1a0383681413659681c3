@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2449021f_a43a12f9",
+        "filename": "applications/monitoring/src/test/java/org/onap/policy/xacml/pdp/application/monitoring/MonitoringPdpApplicationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-20T14:19:10Z",
+      "side": 1,
+      "message": "redundant",
+      "range": {
+        "startLine": 238,
+        "startChar": 8,
+        "endLine": 239,
+        "endChar": 63
+      },
+      "revId": "fe20f125ef78c2b95dcd1a0383681413659681c3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
