@@ -38,8 +38,8 @@ services:
       expose:
        - 3904
    pap:
-      # Released Honlulu image
-      image: nexus3.onap.org:10001/onap/policy-pap:2.4.2
+      # Istanbul To Be released images
+      image: nexus3.onap.org:10001/onap/policy-pap:2.5.0-SNAPSHOT
       container_name: policy-pap
       depends_on:
        - mariadb
@@ -50,8 +50,8 @@ services:
       expose:
        - 6868
    api:
-      # Released Honolulu image
-      image: nexus3.onap.org:10001/onap/policy-api:2.4.2
+      # Istanbul To Be released images
+      image: nexus3.onap.org:10001/onap/policy-api:2.5.0-SNAPSHOT
       container_name: policy-api
       depends_on:
        - mariadb

@@ -18,15 +18,19 @@
 
 package org.onap.policy.tutorial.tutorial;
 
+import com.att.research.xacml.api.Advice;
 import com.att.research.xacml.api.DataTypeException;
 import com.att.research.xacml.api.Decision;
 import com.att.research.xacml.api.Identifier;
+import com.att.research.xacml.api.Obligation;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.IdentifierImpl;
 import com.att.research.xacml.std.annotations.RequestParser;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
@@ -39,10 +43,10 @@ import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
-import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
+import org.onap.policy.pdp.xacml.application.common.std.StdBaseTranslator;
 
-public class TutorialTranslator implements ToscaPolicyTranslator {
+public class TutorialTranslator extends StdBaseTranslator {
 
     private static final Identifier ID_TUTORIAL_USER = new IdentifierImpl(ToscaDictionary.ID_URN_ONAP, "tutorial-user");
     private static final Identifier ID_TUTORIAL_ENTITY =
@@ -51,9 +55,22 @@ public class TutorialTranslator implements ToscaPolicyTranslator {
             new IdentifierImpl(ToscaDictionary.ID_URN_ONAP, "tutorial-permission");
 
     /**
+     * Constructor will setup some defaults.
+     */
+    public TutorialTranslator() {
+        //
+        // For demonstration purposes, this tutorial will have
+        // the original attributes returned in the request.
+        //
+        this.booleanReturnAttributes = true;
+        this.booleanReturnSingleValueAttributesAsCollection = false;
+    }
+
+    /**
      * Convert Policy from TOSCA to XACML.
      */
     @SuppressWarnings("unchecked")
+    @Override
     public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
         //
         // Here is our policy with a version and default combining algo
@@ -127,6 +144,7 @@ public class TutorialTranslator implements ToscaPolicyTranslator {
     /**
      * Convert ONAP DecisionRequest to XACML Request.
      */
+    @Override
     public Request convertRequest(DecisionRequest request) {
         try {
             return RequestParser.parseRequest(TutorialRequest.createRequest(request));
@@ -136,11 +154,13 @@ public class TutorialTranslator implements ToscaPolicyTranslator {
         return null;
     }
 
-    /**
-     * Convert XACML Response to ONAP DecisionResponse.
-     */
+    @Override
     public DecisionResponse convertResponse(Response xacmlResponse) {
         var decisionResponse = new DecisionResponse();
+        //
+        // Setup policies
+        //
+        decisionResponse.setPolicies(new HashMap<>());
         //
         // Iterate through all the results
         //
@@ -150,18 +170,42 @@ public class TutorialTranslator implements ToscaPolicyTranslator {
             //
             if (xacmlResult.getDecision() == Decision.PERMIT) {
                 //
-                // Just simply return a Permit response
+                // This tutorial will simply set the status to Permit
                 //
                 decisionResponse.setStatus(Decision.PERMIT.toString());
             } else {
                 //
-                // Just simply return a Deny response
+                // This tutorial will simply set the status to Deny
                 //
                 decisionResponse.setStatus(Decision.DENY.toString());
+            }
+            //
+            // Add attributes use the default scanAttributes. Note that one
+            // could override that method and return the structure as desired.
+            // The attributes returned by default method are in the format
+            // of XACML syntax. It may be more desirable to map them back to
+            // the original request name-value.
+            //
+            if (booleanReturnAttributes) {
+                scanAttributes(xacmlResult.getAttributes(), decisionResponse);
             }
         }
 
         return decisionResponse;
+    }
+
+    @Override
+    protected void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse) {
+        //
+        // No obligations in this tutorial yet.
+        //
+    }
+
+    @Override
+    protected void scanAdvice(Collection<Advice> advice, DecisionResponse decisionResponse) {
+        //
+        // No advice in this tutorial yet.
+        //
     }
 
 }
