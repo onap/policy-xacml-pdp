@@ -18,9 +18,11 @@
 
 package org.onap.policy.tutorial.tutorial;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import com.att.research.xacml.api.Response;
+import com.att.research.xacml.api.XACML3;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
@@ -101,19 +103,31 @@ public class TutorialApplicationTest {
                 TextFileUtils
                 .getTextFileAsString("src/test/resources/tutorial-decision-request.json"),
                 DecisionRequest.class);
+        LOGGER.info("{}", gson.encode(decisionRequest, true));
         //
         // Test a decision - should start with a permit
         //
         Pair<DecisionResponse, Response> decision = service.makeDecision(decisionRequest, null);
-        LOGGER.info(decision.getLeft().toString());
+        LOGGER.info("{}", gson.encode(decision.getLeft(), true));
         assertEquals("Permit", decision.getLeft().getStatus());
+        //
+        // Check that there are attributes
+        //
+        assertThat(decision.getLeft().getAttributes()).isNotNull().hasSize(1)
+            .containsKey(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue());
         //
         // This should be a deny
         //
         decisionRequest.getResource().put("user", "audit");
+        LOGGER.info("{}", gson.encode(decisionRequest, true));
         decision = service.makeDecision(decisionRequest, null);
-        LOGGER.info(decision.getLeft().toString());
+        LOGGER.info("{}", gson.encode(decision.getLeft(), true));
         assertEquals("Deny", decision.getLeft().getStatus());
+        //
+        // Check that there are attributes
+        //
+        assertThat(decision.getLeft().getAttributes()).isNotNull().hasSize(1)
+            .containsKey(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue());
     }
 
 }

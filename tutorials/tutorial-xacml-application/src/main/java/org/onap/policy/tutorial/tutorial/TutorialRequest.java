@@ -34,18 +34,24 @@ import org.onap.policy.models.decisions.concepts.DecisionRequest;
 @ToString
 @XACMLRequest(ReturnPolicyIdList = true)
 public class TutorialRequest {
-    @XACMLSubject(includeInResults = true)
+    //
+    // Excluding from results to demonstrate control as to which attributes can be returned.
+    //
+    @XACMLSubject(includeInResults = false)
     private String onapName;
 
-    @XACMLSubject(attributeId = "urn:org:onap:onap-component", includeInResults = true)
+    @XACMLSubject(attributeId = "urn:org:onap:onap-component", includeInResults = false)
     private String onapComponent;
 
-    @XACMLSubject(attributeId = "urn:org:onap:onap-instance", includeInResults = true)
+    @XACMLSubject(attributeId = "urn:org:onap:onap-instance", includeInResults = false)
     private String onapInstance;
 
     @XACMLAction()
     private String action;
 
+    //
+    // Including in results to demonstrate control as to which attributes can be returned.
+    //
     @XACMLResource(attributeId = "urn:org:onap:tutorial-user", includeInResults = true)
     private String user;
 
