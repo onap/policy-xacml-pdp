@@ -182,6 +182,12 @@ public class MonitoringPdpApplicationTest {
 
         assertThat(decision.getKey()).isNotNull();
         assertThat(decision.getKey().getPolicies()).isEmpty();
+        //
+        // Monitoring applications should not have this information returned
+        //
+        assertThat(decision.getKey().getAdvice()).isNull();
+        assertThat(decision.getKey().getObligations()).isNull();
+        assertThat(decision.getKey().getAttributes()).isNull();
     }
 
     @SuppressWarnings("unchecked")
@@ -202,9 +208,17 @@ public class MonitoringPdpApplicationTest {
         //
         Pair<DecisionResponse, Response> decision = service.makeDecision(requestSinglePolicy, null);
         LOGGER.info("Decision {}", decision);
-
+        //
+        // Should have one policy returned
+        //
         assertThat(decision.getKey()).isNotNull();
         assertThat(decision.getKey().getPolicies()).hasSize(1);
+        //
+        // Monitoring applications should not have this information returned
+        //
+        assertThat(decision.getKey().getAdvice()).isNull();
+        assertThat(decision.getKey().getObligations()).isNull();
+        assertThat(decision.getKey().getAttributes()).isNull();
         //
         // Dump it out as Json
         //
@@ -214,9 +228,20 @@ public class MonitoringPdpApplicationTest {
         //
         decision = service.makeDecision(requestPolicyType, null);
         LOGGER.info("Decision {}", decision);
-
+        //
+        // Should have one policy returned
+        //
         assertThat(decision.getKey()).isNotNull();
         assertThat(decision.getKey().getPolicies()).hasSize(1);
+        //
+        // Monitoring applications should not have this information returned
+        //
+        assertThat(decision.getKey().getAdvice()).isNull();
+        assertThat(decision.getKey().getObligations()).isNull();
+        assertThat(decision.getKey().getAttributes()).isNull();
+        //
+        // Validate the full policy is returned
+        //
         Map<String, Object> jsonPolicy = (Map<String, Object>) decision.getKey().getPolicies().get("onap.scaleout.tca");
         assertThat(jsonPolicy).isNotNull();
         assertThat(jsonPolicy.get("properties")).isNotNull();
@@ -231,9 +256,20 @@ public class MonitoringPdpApplicationTest {
         requestQueryParams.put("abbrev", new String[] {"true"});
         decision = service.makeDecision(requestPolicyType, requestQueryParams);
         LOGGER.info("Decision {}", decision);
-
+        //
+        // Should have one policy returned
+        //
         assertThat(decision.getKey()).isNotNull();
         assertThat(decision.getKey().getPolicies()).hasSize(1);
+        //
+        // Monitoring applications should not have this information returned
+        //
+        assertThat(decision.getKey().getAdvice()).isNull();
+        assertThat(decision.getKey().getObligations()).isNull();
+        assertThat(decision.getKey().getAttributes()).isNull();
+        //
+        // Validate an abbreviated policy is returned
+        //
         jsonPolicy = (Map<String, Object>) decision.getKey().getPolicies().get("onap.scaleout.tca");
         assertThat(jsonPolicy).isNotNull().doesNotContainKey("properties");
         //
@@ -243,9 +279,20 @@ public class MonitoringPdpApplicationTest {
         requestQueryParams.put("abbrev", new String[] {"false"});
         decision = service.makeDecision(requestPolicyType, requestQueryParams);
         LOGGER.info("Decision {}", decision);
-
+        //
+        // Should have one policy returned
+        //
         assertThat(decision.getKey()).isNotNull();
         assertThat(decision.getKey().getPolicies()).hasSize(1);
+        //
+        // Monitoring applications should not have this information returned
+        //
+        assertThat(decision.getKey().getAdvice()).isNull();
+        assertThat(decision.getKey().getObligations()).isNull();
+        assertThat(decision.getKey().getAttributes()).isNull();
+        //
+        // And should have full policy returned
+        //
         jsonPolicy = (Map<String, Object>) decision.getKey().getPolicies().get("onap.scaleout.tca");
         assertThat(jsonPolicy).isNotNull();
         assertThat(jsonPolicy.get("properties")).isNotNull();

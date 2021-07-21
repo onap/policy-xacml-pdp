@@ -202,6 +202,13 @@ public class OptimizationPdpApplicationTest {
 
         assertThat(decision.getKey()).isNotNull();
         assertThat(decision.getKey().getPolicies()).isEmpty();
+        //
+        // Optimization applications should not have this information returned. Except advice
+        // for subscriber details, which does get checked in the tests following.
+        //
+        assertThat(decision.getKey().getAdvice()).isNull();
+        assertThat(decision.getKey().getObligations()).isNull();
+        assertThat(decision.getKey().getAttributes()).isNull();
     }
 
     /**
@@ -423,6 +430,11 @@ public class OptimizationPdpApplicationTest {
 
         assertThat(response).isNotNull();
         assertThat(response.getPolicies()).hasSize(expectedPolicyCount);
+        //
+        // Optimization applications should not have this information returned
+        //
+        assertThat(response.getObligations()).isNull();
+        assertThat(response.getAttributes()).isNull();
         //
         // Validate it
         //

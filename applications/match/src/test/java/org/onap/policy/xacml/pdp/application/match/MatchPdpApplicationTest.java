@@ -184,6 +184,12 @@ public class MatchPdpApplicationTest {
         assertThat(response).isNotNull();
         assertThat(response.getPolicies()).isEmpty();
         //
+        // Match applications should not have this information returned
+        //
+        assertThat(response.getAdvice()).isNull();
+        assertThat(response.getObligations()).isNull();
+        assertThat(response.getAttributes()).isNull();
+        //
         // Ask for foo
         //
         baseRequest.getResource().put("matchable", "foo");
@@ -193,6 +199,12 @@ public class MatchPdpApplicationTest {
         response = makeDecision();
         assertThat(response).isNotNull();
         assertThat(response.getPolicies()).hasSize(1);
+        //
+        // Match applications should not have this information returned
+        //
+        assertThat(response.getAdvice()).isNull();
+        assertThat(response.getObligations()).isNull();
+        assertThat(response.getAttributes()).isNull();
         //
         // Validate it
         //

@@ -171,6 +171,12 @@ public class NamingPdpApplicationTest {
 
         assertThat(decision.getKey()).isNotNull();
         assertThat(decision.getKey().getPolicies()).isEmpty();
+        //
+        // Naming applications should not have this information returned
+        //
+        assertThat(decision.getKey().getAdvice()).isNull();
+        assertThat(decision.getKey().getObligations()).isNull();
+        assertThat(decision.getKey().getAttributes()).isNull();
     }
 
     @Test
@@ -199,6 +205,12 @@ public class NamingPdpApplicationTest {
         response = makeDecision();
         assertThat(response).isNotNull();
         assertThat(response.getPolicies()).hasSize(1);
+        //
+        // Naming applications should not have this information returned
+        //
+        assertThat(response.getAdvice()).isNull();
+        assertThat(response.getObligations()).isNull();
+        assertThat(response.getAttributes()).isNull();
         //
         // Validate it
         //
