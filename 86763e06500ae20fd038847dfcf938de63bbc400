@@ -16,6 +16,24 @@
       "revId": "86763e06500ae20fd038847dfcf938de63bbc400",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1feb1eee_7e5945cf",
+        "filename": "tutorials/tutorial-xacml-application/src/test/java/org/onap/policy/tutorial/tutorial/TutorialApplicationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-07-21T16:36:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e844be09_16e56239",
+      "revId": "86763e06500ae20fd038847dfcf938de63bbc400",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
