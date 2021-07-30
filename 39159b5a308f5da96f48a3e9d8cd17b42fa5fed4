@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "18519aae_fde4b8f1",
+        "filename": "tutorials/tutorial-xacml-application/src/main/java/org/onap/policy/tutorial/tutorial/TutorialTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T19:10:08Z",
+      "side": 1,
+      "message": "looks like convertMultiResponse could be used in both cases.  Is this method here just to demonstrate how you would do it if you only ever planned to send a single response?",
+      "revId": "39159b5a308f5da96f48a3e9d8cd17b42fa5fed4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
