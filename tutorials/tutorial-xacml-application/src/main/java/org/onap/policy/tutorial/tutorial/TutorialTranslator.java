@@ -28,7 +28,7 @@ import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.IdentifierImpl;
-import com.att.research.xacml.std.annotations.RequestParser;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -93,9 +93,9 @@ public class TutorialTranslator extends StdBaseTranslator {
         //
         // For simplicity, let's just match on the action "authorize" and the user
         //
-        var matchAction = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
-                XACML3.ID_FUNCTION_STRING_EQUAL, "authorize", XACML3.ID_DATATYPE_STRING,
-                XACML3.ID_ACTION_ACTION_ID, XACML3.ID_ATTRIBUTE_CATEGORY_ACTION);
+        var matchAction =
+                ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(XACML3.ID_FUNCTION_STRING_EQUAL, "authorize",
+                        XACML3.ID_DATATYPE_STRING, XACML3.ID_ACTION_ACTION_ID, XACML3.ID_ATTRIBUTE_CATEGORY_ACTION);
         Map<String, Object> props = toscaPolicy.getProperties();
         var user = props.get("user").toString();
         var matchUser = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(XACML3.ID_FUNCTION_STRING_EQUAL, user,
@@ -119,9 +119,9 @@ public class TutorialTranslator extends StdBaseTranslator {
                     ((Map<String, String>) permission).get("entity"), XACML3.ID_DATATYPE_STRING, ID_TUTORIAL_ENTITY,
                     XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
 
-            var matchPermission = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
-                    XACML3.ID_FUNCTION_STRING_EQUAL, ((Map<String, String>) permission).get("permission"),
-                    XACML3.ID_DATATYPE_STRING, ID_TUTORIAL_PERM, XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
+            var matchPermission = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(XACML3.ID_FUNCTION_STRING_EQUAL,
+                    ((Map<String, String>) permission).get("permission"), XACML3.ID_DATATYPE_STRING, ID_TUTORIAL_PERM,
+                    XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
             anyOf = new AnyOfType();
             anyOf.getAllOf().add(ToscaPolicyTranslatorUtils.buildAllOf(matchEntity, matchPermission));
             target = new TargetType();
@@ -147,7 +147,7 @@ public class TutorialTranslator extends StdBaseTranslator {
     @Override
     public Request convertRequest(DecisionRequest request) {
         try {
-            return RequestParser.parseRequest(TutorialRequest.createRequest(request));
+            return TutorialRequest.createRequest(request);
         } catch (IllegalArgumentException | IllegalAccessException | DataTypeException e) {
             // Empty
         }
@@ -156,15 +156,59 @@ public class TutorialTranslator extends StdBaseTranslator {
 
     @Override
     public DecisionResponse convertResponse(Response xacmlResponse) {
+        //
+        // Single or Multi?
+        //
+        if (xacmlResponse.getResults().size() > 1) {
+            return convertMultiResponse(xacmlResponse);
+        } else {
+            return convertSingleResponse(xacmlResponse.getResults().iterator().next());
+        }
+    }
+
+    protected DecisionResponse convertSingleResponse(Result xacmlResult) {
         var decisionResponse = new DecisionResponse();
         //
         // Setup policies
         //
         decisionResponse.setPolicies(new HashMap<>());
         //
-        // Iterate through all the results
+        // Check the result
         //
+        if (xacmlResult.getDecision() == Decision.PERMIT) {
+            //
+            // This tutorial will simply set the status to Permit
+            //
+            decisionResponse.setStatus(Decision.PERMIT.toString());
+        } else {
+            //
+            // This tutorial will simply set the status to Deny
+            //
+            decisionResponse.setStatus(Decision.DENY.toString());
+        }
+        //
+        // Add attributes use the default scanAttributes. Note that one
+        // could override that method and return the structure as desired.
+        // The attributes returned by default method are in the format
+        // of XACML syntax. It may be more desirable to map them back to
+        // the original request name-value.
+        //
+        if (booleanReturnAttributes) {
+            scanAttributes(xacmlResult.getAttributes(), decisionResponse);
+        }
+        return decisionResponse;
+    }
+
+    protected DecisionResponse convertMultiResponse(Response xacmlResponse) {
+        TutorialResponse decisionResponse = new TutorialResponse();
+        //
+        // Setup policies
+        //
+        decisionResponse.setPolicies(new HashMap<>());
+        decisionResponse.setStatus("multi");
+        List<TutorialResponsePermission> permissions = new ArrayList<>();
         for (Result xacmlResult : xacmlResponse.getResults()) {
+            TutorialResponsePermission permission = new TutorialResponsePermission();
             //
             // Check the result
             //
@@ -172,12 +216,12 @@ public class TutorialTranslator extends StdBaseTranslator {
                 //
                 // This tutorial will simply set the status to Permit
                 //
-                decisionResponse.setStatus(Decision.PERMIT.toString());
+                permission.setStatus(Decision.PERMIT.toString());
             } else {
                 //
                 // This tutorial will simply set the status to Deny
                 //
-                decisionResponse.setStatus(Decision.DENY.toString());
+                permission.setStatus(Decision.DENY.toString());
             }
             //
             // Add attributes use the default scanAttributes. Note that one
@@ -187,10 +231,22 @@ public class TutorialTranslator extends StdBaseTranslator {
             // the original request name-value.
             //
             if (booleanReturnAttributes) {
+                //
+                // Call existing method
+                //
                 scanAttributes(xacmlResult.getAttributes(), decisionResponse);
+                //
+                // Move from overall response to the individual permission
+                //
+                permission.setAttributes(decisionResponse.getAttributes());
+                decisionResponse.setAttributes(null);
             }
+            //
+            // Add it
+            //
+            permissions.add(permission);
         }
-
+        decisionResponse.setPermissions(permissions);
         return decisionResponse;
     }
 

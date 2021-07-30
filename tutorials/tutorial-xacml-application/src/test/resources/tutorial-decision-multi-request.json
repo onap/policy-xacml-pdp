@@ -1,0 +1,53 @@
+{
+  "ONAPName": "TutorialPEP",
+  "ONAPComponent": "TutorialPEPComponent",
+  "ONAPInstance": "TutorialPEPInstance",
+  "requestId": "unique-request-id-tutorial",
+  "action": "authorize",
+  "resource": {
+    "users": [
+      {
+        "multiId": 1,
+        "user": "demo",
+        "entity": "foo",
+        "permission" : "write"
+      },
+      {
+        "multiId": 2,
+        "user": "demo",
+        "entity": "foo",
+        "permission" : "read"
+      },
+      {
+        "multiId": 3,
+        "user": "audit",
+        "entity": "foo",
+        "permission" : "write"
+      },
+      {
+        "multiId": 4,
+        "user": "audit",
+        "entity": "foo",
+        "permission" : "read"
+      },
+      {
+        "multiId": 5,
+        "user": "demo",
+        "entity": "bar",
+        "permission" : "read"
+      },
+      {
+        "multiId": 6,
+        "user": "demo",
+        "entity": "bar",
+        "permission" : "admin"
+      },
+      {
+        "multiId": 7,
+        "user": "ceo",
+        "entity": "bar",
+        "permission" : "read"
+      }
+    ]
+  }
+}

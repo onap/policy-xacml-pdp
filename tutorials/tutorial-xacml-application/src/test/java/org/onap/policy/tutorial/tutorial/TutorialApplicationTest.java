@@ -25,6 +25,7 @@ import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.XACML3;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import org.apache.commons.lang3.tuple.Pair;
@@ -65,8 +66,8 @@ public class TutorialApplicationTest {
         // Setup our temporary folder
         //
         XacmlPolicyUtils.FileCreator myCreator = (String filename) -> policyFolder.newFile(filename);
-        propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties",
-                properties, myCreator);
+        propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties", properties,
+                myCreator);
         //
         // Load XacmlApplicationServiceProvider service
         //
@@ -88,21 +89,20 @@ public class TutorialApplicationTest {
         // we just built for it.
         //
         service.initialize(propertiesFile.toPath().getParent(), null);
-    }
-
-    @Test
-    public void test() throws CoderException, XacmlApplicationException, IOException {
         //
         // Now load the tutorial policies.
         //
         TestUtils.loadPolicies("src/test/resources/tutorial-policies.yaml", service);
+    }
+
+    @Test
+    public void testSingleDecision() throws CoderException, XacmlApplicationException, IOException {
         //
         // Load a Decision request
         //
-        DecisionRequest decisionRequest = gson.decode(
-                TextFileUtils
-                .getTextFileAsString("src/test/resources/tutorial-decision-request.json"),
-                DecisionRequest.class);
+        DecisionRequest decisionRequest =
+                gson.decode(TextFileUtils.getTextFileAsString("src/test/resources/tutorial-decision-request.json"),
+                        DecisionRequest.class);
         LOGGER.info("{}", gson.encode(decisionRequest, true));
         //
         // Test a decision - should start with a permit
@@ -114,7 +114,7 @@ public class TutorialApplicationTest {
         // Check that there are attributes
         //
         assertThat(decision.getLeft().getAttributes()).isNotNull().hasSize(1)
-            .containsKey(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue());
+                .containsKey(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue());
         //
         // This should be a deny
         //
@@ -127,7 +127,73 @@ public class TutorialApplicationTest {
         // Check that there are attributes
         //
         assertThat(decision.getLeft().getAttributes()).isNotNull().hasSize(1)
-            .containsKey(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue());
+                .containsKey(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue());
     }
 
+
+    @Test
+    public void testMultiDecision() throws CoderException, XacmlApplicationException, IOException {
+        //
+        // Load a Decision request
+        //
+        DecisionRequest decisionRequest = gson.decode(
+                TextFileUtils.getTextFileAsString("src/test/resources/tutorial-decision-multi-request.json"),
+                DecisionRequest.class);
+        LOGGER.info("{}", gson.encode(decisionRequest, true));
+        //
+        // Test a decision - should start with a permit
+        //
+        Pair<DecisionResponse, Response> decision = service.makeDecision(decisionRequest, null);
+        LOGGER.info("{}", gson.encode(decision.getLeft(), true));
+        assertEquals("multi", decision.getLeft().getStatus());
+        //
+        // Check that there no attributes for the overall response
+        //
+        assertThat(decision.getLeft().getAttributes()).isNull();
+        //
+        // Check that there are 7 decisions with attributes
+        //
+        assertThat(decision.getLeft()).isInstanceOf(TutorialResponse.class);
+        TutorialResponse tutorialResponse = (TutorialResponse) decision.getLeft();
+        assertThat(tutorialResponse.getPermissions()).hasSize(7);
+        tutorialResponse.getPermissions().forEach(p -> checkPermission(p));
+    }
+
+    private void checkPermission(TutorialResponsePermission permission) {
+        assertThat(permission.getAttributes()).hasSize(1);
+        Object resourceAttributes = permission.getAttributes().get(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue());
+        assertThat(resourceAttributes).isNotNull().isInstanceOf(Map.class);
+        @SuppressWarnings("unchecked")
+        String multiId = ((Map<String, String>) resourceAttributes).get("urn:org:onap:tutorial-multi-id").toString();
+        assertThat(Integer.parseInt(multiId)).isBetween(1, 7);
+        switch (multiId) {
+            case "1":
+                assertThat(permission.getStatus()).isEqualTo("Permit");
+                return;
+            case "2":
+                assertThat(permission.getStatus()).isEqualTo("Permit");
+                return;
+            case "3":
+                assertThat(permission.getStatus()).isEqualTo("Deny");
+                return;
+            case "4":
+                assertThat(permission.getStatus()).isEqualTo("Permit");
+                return;
+            case "5":
+                assertThat(permission.getStatus()).isEqualTo("Deny");
+                return;
+            case "6":
+                assertThat(permission.getStatus()).isEqualTo("Deny");
+                return;
+            case "7":
+                assertThat(permission.getStatus()).isEqualTo("Deny");
+                return;
+            default:
+                //
+                // Should not get here as we check the value range in line 168.
+                // But CodeStyle wants a default.
+                //
+                break;
+        }
+    }
 }
