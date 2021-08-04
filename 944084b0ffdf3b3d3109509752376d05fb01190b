@@ -70,6 +70,30 @@
       "revId": "944084b0ffdf3b3d3109509752376d05fb01190b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffd755e0_00a50a0b",
+        "filename": "releases/2.4.4-container.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-08-04T19:41:06Z",
+      "side": 1,
+      "message": "Agree, I think either of them should be fine. \nI generally take the latest commit tag from the repo. The one which did the maven release.",
+      "parentUuid": "d30ad752_5c7145fa",
+      "range": {
+        "startLine": 5,
+        "startChar": 5,
+        "endLine": 5,
+        "endChar": 45
+      },
+      "revId": "944084b0ffdf3b3d3109509752376d05fb01190b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
