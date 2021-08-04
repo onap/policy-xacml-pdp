@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c6cec79f_15875721",
+        "filename": "releases/2.4.4-container.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-08-04T19:33:34Z",
+      "side": 1,
+      "message": "latest from repo is 4ebc00b808bcad7f591a597b97ead5f5f8ce9842\nbut that commit is only for releasing maven artifacts, so I guess it will be okay.",
+      "range": {
+        "startLine": 5,
+        "startChar": 5,
+        "endLine": 5,
+        "endChar": 45
+      },
+      "revId": "944084b0ffdf3b3d3109509752376d05fb01190b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
