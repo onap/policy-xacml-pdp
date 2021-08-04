@@ -22,6 +22,30 @@
       "revId": "944084b0ffdf3b3d3109509752376d05fb01190b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d30ad752_5c7145fa",
+        "filename": "releases/2.4.4-container.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-08-04T19:36:27Z",
+      "side": 1,
+      "message": "Yeah I\u0027ll use its parent, which is the one from which I did the stage-release that triggered the image build.   I always doubt which one to use.   Is it ok?",
+      "parentUuid": "c6cec79f_15875721",
+      "range": {
+        "startLine": 5,
+        "startChar": 5,
+        "endLine": 5,
+        "endChar": 45
+      },
+      "revId": "944084b0ffdf3b3d3109509752376d05fb01190b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
