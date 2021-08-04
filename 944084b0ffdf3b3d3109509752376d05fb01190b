@@ -118,6 +118,30 @@
       "revId": "944084b0ffdf3b3d3109509752376d05fb01190b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "689cdb6c_bb99027b",
+        "filename": "releases/2.4.4-container.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-04T19:51:08Z",
+      "side": 1,
+      "message": "I, too, normally wait for the maven release to finish merging, then I run mkdock.sh.",
+      "parentUuid": "7c965a63_0d8f09ff",
+      "range": {
+        "startLine": 5,
+        "startChar": 5,
+        "endLine": 5,
+        "endChar": 45
+      },
+      "revId": "944084b0ffdf3b3d3109509752376d05fb01190b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
