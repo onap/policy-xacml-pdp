@@ -26,7 +26,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.AfterClass;
@@ -131,12 +130,10 @@ public class XacmlStateTest {
         req.setState(PdpState.ACTIVE);
         status = state.updateInternalState(req);
         assertEquals(PdpState.ACTIVE, status.getState());
-        verify(act).startXacmlRestController();
 
         req.setState(PdpState.PASSIVE);
         status = state.updateInternalState(req);
         assertEquals(PdpState.PASSIVE, status.getState());
-        verify(act).stopXacmlRestController();
     }
 
     @Test
