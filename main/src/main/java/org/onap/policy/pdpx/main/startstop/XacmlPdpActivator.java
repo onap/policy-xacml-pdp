@@ -145,10 +145,15 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
         addAction("Terminate PDP",
             () -> { },
             () -> sendTerminateMessage(sinkClient, state));
+
         // initial heart beats act as registration messages
         addAction("Heartbeat Publisher",
             heartbeat::start,
             heartbeat::terminate);
+
+        addAction("REST Server",
+            restServer::start,
+            restServer::stop);
 
         // @formatter:on
     }
