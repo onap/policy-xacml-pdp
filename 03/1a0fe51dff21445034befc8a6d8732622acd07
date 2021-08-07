@@ -1,0 +1,9 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Jim Hahn <jrh3@att.com>
+Code-Review+1: Pamela Dragosh <pd1248@att.com>
+Code-Review+2: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Submitted-by: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Submitted-at: Sat, 07 Aug 2021 18:50:51 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/xacml-pdp/+/123174
+Project: policy/xacml-pdp
+Branch: refs/heads/master
