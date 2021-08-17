@@ -33,11 +33,15 @@ import org.onap.policy.models.pdp.enums.PdpResponseStatus;
 import org.onap.policy.models.pdp.enums.PdpState;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Current state of this XACML PDP.
  */
 public class XacmlState {
+    private static final Logger LOGGER = LoggerFactory.getLogger(XacmlState.class);
+
     /**
      * Unique name for the xacml-pdp JVM, used in PdpStatus messages.
      */
@@ -74,7 +78,7 @@ public class XacmlState {
      * @return {@code true} if this PDP should handle the message, {@code false} otherwise
      */
     public boolean shouldHandle(PdpMessage message) {
-        return message.appliesTo(status.getName(), status.getPdpGroup(), status.getPdpSubgroup());
+        return message.appliesTo(status.getName(), status.getPdpGroup(), status.getPdpType());
     }
 
     /**
@@ -82,7 +86,7 @@ public class XacmlState {
      *
      * @return a new heart beat message
      */
-    public PdpStatus genHeartbeat() {
+    public synchronized PdpStatus genHeartbeat() {
         // first, update status fields
         status.setHealthy(XacmlPdpActivator.getCurrent().isAlive() ? PdpHealthStatus.HEALTHY
                         : PdpHealthStatus.NOT_HEALTHY);
@@ -96,7 +100,8 @@ public class XacmlState {
      * @param message message from which to update the internal state
      * @return a response to the message
      */
-    public PdpStatus updateInternalState(PdpStateChange message) {
+    public synchronized PdpStatus updateInternalState(PdpStateChange message) {
+        LOGGER.info("set state of {} to {}", this, message.getState());
         status.setState(message.getState());
 
         /*
@@ -120,7 +125,7 @@ public class XacmlState {
      * @param message message from which to update the internal state
      * @return a response to the message
      */
-    public PdpStatus updateInternalState(PdpUpdate message, String errMessage) {
+    public synchronized PdpStatus updateInternalState(PdpUpdate message, String errMessage) {
         status.setPdpSubgroup(message.getPdpSubgroup());
         status.setPolicies(appManager.getToscaPolicyIdentifiers());
 
@@ -132,7 +137,8 @@ public class XacmlState {
      *
      * @return the current PdpStatus with Terminated state
      */
-    public PdpStatus terminatePdpMessage() {
+    public synchronized PdpStatus terminatePdpMessage() {
+        LOGGER.info("set state of {} to {}", this, PdpState.TERMINATED);
         status.setState(PdpState.TERMINATED);
         return new PdpStatus(status);
     }

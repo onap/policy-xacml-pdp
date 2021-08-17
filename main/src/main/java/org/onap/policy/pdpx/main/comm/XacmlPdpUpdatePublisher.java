@@ -54,7 +54,7 @@ public class XacmlPdpUpdatePublisher {
      *
      * @param message Incoming message
      */
-    public void handlePdpUpdate(PdpUpdate message) {
+    public synchronized void handlePdpUpdate(PdpUpdate message) {
 
         // current data
         Map<ToscaConceptIdentifier, ToscaPolicy> deployedPolicies = policyToMap(appManager.getToscaPolicies().keySet());
