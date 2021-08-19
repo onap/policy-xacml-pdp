@@ -35,6 +35,7 @@ import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterHandler;
+import org.powermock.reflect.Whitebox;
 
 
 /**
@@ -42,6 +43,8 @@ import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterHandler;
  *
  */
 public class TestXacmlPdpActivator extends CommonRest {
+    private static final String PROBE_FIELD_NAME = "probeHeartbeatTopicSec";
+
     private static XacmlPdpParameterGroup parGroup;
 
     private XacmlPdpActivator activator = null;
@@ -67,6 +70,7 @@ public class TestXacmlPdpActivator extends CommonRest {
     @Override
     @Before
     public void setUp() {
+        Whitebox.setInternalState(parGroup, PROBE_FIELD_NAME, 4);
         activator = new XacmlPdpActivator(parGroup);
     }
 
@@ -97,6 +101,14 @@ public class TestXacmlPdpActivator extends CommonRest {
 
         activator.startXacmlRestController();
         assertTrue(activator.isXacmlRestControllerAlive());
+    }
+
+    @Test
+    public void testXacmlPdpActivator_NoProbe() throws Exception {
+        Whitebox.setInternalState(parGroup, PROBE_FIELD_NAME, 0);
+        activator = new XacmlPdpActivator(parGroup);
+        activator.start();
+        assertTrue(activator.isAlive());
     }
 
     @Test

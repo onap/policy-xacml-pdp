@@ -22,6 +22,7 @@
 package org.onap.policy.pdpx.main.parameters;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.common.endpoints.parameters.RestClientParameters;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
@@ -29,6 +30,7 @@ import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ParameterGroupImpl;
 import org.onap.policy.common.parameters.ValidationStatus;
+import org.onap.policy.common.parameters.annotations.Min;
 import org.onap.policy.common.parameters.annotations.NotBlank;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
@@ -41,6 +43,7 @@ import org.onap.policy.models.base.Validated;
 @Getter
 @NotNull
 @NotBlank
+@NoArgsConstructor
 public class XacmlPdpParameterGroup extends ParameterGroupImpl {
     public static final String PARAM_POLICY_API = "policyApiParameters";
 
@@ -54,6 +57,13 @@ public class XacmlPdpParameterGroup extends ParameterGroupImpl {
     private TopicParameterGroup topicParameterGroup;
     @Valid
     private XacmlApplicationParameters applicationParameters;
+    /**
+     * Frequency, in seconds, with which to probe the heartbeat topic before sending the
+     * first heartbeat. Set to zero to disable probing.
+     */
+    @Min(0)
+    private long probeHeartbeatTopicSec = 4;
+
 
     /**
      * Create the xacml pdp parameter group.
