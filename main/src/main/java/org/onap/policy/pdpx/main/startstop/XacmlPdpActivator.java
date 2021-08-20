@@ -41,9 +41,9 @@ import org.onap.policy.pdpx.main.comm.XacmlPdpHearbeatPublisher;
 import org.onap.policy.pdpx.main.comm.listeners.XacmlPdpStateChangeListener;
 import org.onap.policy.pdpx.main.comm.listeners.XacmlPdpUpdateListener;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
-import org.onap.policy.pdpx.main.rest.XacmlPdpAafFilter;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
 import org.onap.policy.pdpx.main.rest.XacmlPdpRestController;
+import org.onap.policy.pdpx.main.rest.XacmlPdpServiceFilter;
 import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,8 +127,10 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
             msgDispatcher.register(PdpMessageType.PDP_UPDATE.name(),
                             new XacmlPdpUpdateListener(sinkClient, state, heartbeat, appmgr));
 
+            XacmlPdpServiceFilter.disableApi();
+
             restServer = new XacmlPdpRestServer(xacmlPdpParameterGroup.getRestServerParameters(),
-                    XacmlPdpAafFilter.class, XacmlPdpRestController.class);
+                                XacmlPdpServiceFilter.class, XacmlPdpRestController.class);
 
         } catch (RuntimeException | HttpClientConfigException | BidirectionalTopicClientException e) {
             throw new PolicyXacmlPdpRuntimeException(e.getMessage(), e);
@@ -158,6 +160,9 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
             heartbeat::terminate);
 
         // @formatter:on
+        addAction("REST Server",
+            restServer::start,
+            restServer::stop);
     }
 
     /*
@@ -212,26 +217,18 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
     /**
      * Start the xacmlpdp rest controller.
      */
-    public void startXacmlRestController() {
-        if (isXacmlRestControllerAlive()) {
-            LOGGER.info("Xacml rest controller already running");
-        } else {
-            restServer.start();
-        }
+    public void enableApi() {
+        XacmlPdpServiceFilter.enableApi();
     }
 
     /**
      * Stop the xacmlpdp rest controller.
      */
-    public void stopXacmlRestController() {
-        if (isXacmlRestControllerAlive()) {
-            restServer.stop();
-        } else {
-            LOGGER.info("Xacml rest controller already stopped");
-        }
+    public void disableApi() {
+        XacmlPdpServiceFilter.disableApi();
     }
 
-    public boolean isXacmlRestControllerAlive() {
-        return restServer.isAlive();
+    public boolean isApiEnabled() {
+        return XacmlPdpServiceFilter.isApiEnabled();
     }
 }

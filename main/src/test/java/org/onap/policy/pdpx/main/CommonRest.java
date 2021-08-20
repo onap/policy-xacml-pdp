@@ -121,7 +121,7 @@ public class CommonRest {
         main = new Main(xacmlPdpConfigParameters);
 
         // start xacml rest controller
-        XacmlPdpActivator.getCurrent().startXacmlRestController();
+        XacmlPdpActivator.getCurrent().enableApi();
 
         if (!NetworkUtil.isTcpPortOpen("localhost", port, 20, 1000L)) {
             throw new IllegalStateException("server is not listening on port " + port);
