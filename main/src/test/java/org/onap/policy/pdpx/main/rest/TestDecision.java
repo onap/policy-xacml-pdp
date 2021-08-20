@@ -124,7 +124,7 @@ public class TestDecision {
         // Start the service
         //
         main = startXacmlPdpService(fileParams);
-        XacmlPdpActivator.getCurrent().startXacmlRestController();
+        XacmlPdpActivator.getCurrent().enableApi();
         //
         // Make sure it is running
         //
