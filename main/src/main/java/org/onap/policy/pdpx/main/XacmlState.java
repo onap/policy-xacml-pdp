@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
  * Current state of this XACML PDP.
  */
 public class XacmlState {
+    // The logger for this class
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlState.class);
 
     /**
@@ -112,6 +113,9 @@ public class XacmlState {
 
         PdpStatus status2 = makeResponse(message, "");
 
+        // start/stop rest controller based on state change
+        handleXacmlRestController();
+
         // these fields aren't needed in the response, so clear them out to avoid sending
         status2.setPolicies(null);
 
@@ -164,5 +168,24 @@ public class XacmlState {
         var status2 = new PdpStatus(status);
         status2.setResponse(resp);
         return status2;
+    }
+
+    /**
+     * Manages the Xacml-Pdp rest controller based on the Xacml-Pdp State.
+     * Current supported states:
+     * ACTIVE  - rest service is running and handling requests
+     * PASSIVE - rest service is not running
+     */
+    private void handleXacmlRestController() {
+        if (status.getState() == PdpState.ACTIVE) {
+            LOGGER.info("State change: {} - Starting rest controller", status.getState());
+            XacmlPdpActivator.getCurrent().startXacmlRestController();
+        } else if (status.getState() == PdpState.PASSIVE) {
+            LOGGER.info("State change: {} - Stopping rest controller", status.getState());
+            XacmlPdpActivator.getCurrent().stopXacmlRestController();
+        } else {
+            // unsupported state
+            LOGGER.warn("Unsupported state: {}", status.getState());
+        }
     }
 }

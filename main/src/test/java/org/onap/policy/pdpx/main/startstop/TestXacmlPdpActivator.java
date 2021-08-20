@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -74,17 +74,6 @@ public class TestXacmlPdpActivator extends CommonRest {
         activator = new XacmlPdpActivator(parGroup);
     }
 
-    /**
-     * Teardown tests.
-     * @throws PolicyXacmlPdpException on termination errors
-     */
-    @After
-    public void teardown() throws PolicyXacmlPdpException {
-        if (activator != null && activator.isAlive()) {
-            activator.stop();
-        }
-    }
-
     @Test
     public void testXacmlPdpActivator() throws Exception {
         assertFalse(activator.isAlive());
@@ -92,15 +81,17 @@ public class TestXacmlPdpActivator extends CommonRest {
         activator.start();
         assertTrue(activator.isAlive());
 
+        // XacmlPdp starts in PASSIVE state so the rest controller should not be alive
+        assertFalse(activator.isXacmlRestControllerAlive());
         assertTrue(activator.getParameterGroup().isValid());
         assertEquals(CommonTestData.PDPX_PARAMETER_GROUP_NAME, activator.getParameterGroup().getName());
         assertEquals(CommonTestData.PDPX_GROUP, activator.getParameterGroup().getPdpGroup());
 
-        activator.stopXacmlRestController();
-        assertFalse(activator.isXacmlRestControllerAlive());
-
         activator.startXacmlRestController();
         assertTrue(activator.isXacmlRestControllerAlive());
+
+        activator.stopXacmlRestController();
+        assertFalse(activator.isXacmlRestControllerAlive());
     }
 
     @Test
@@ -122,5 +113,16 @@ public class TestXacmlPdpActivator extends CommonRest {
         activator.start();
         activator.stop();
         assertFalse(activator.isAlive());
+    }
+
+    /**
+     * Teardown tests.
+     * @throws PolicyXacmlPdpException on termination errors
+     */
+    @After
+    public void teardown() throws PolicyXacmlPdpException {
+        if (activator != null && activator.isAlive()) {
+            activator.stop();
+        }
     }
 }
