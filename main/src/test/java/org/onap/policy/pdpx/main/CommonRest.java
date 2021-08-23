@@ -29,6 +29,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.SecureRandom;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -215,6 +216,7 @@ public class CommonRest {
      */
     private void markActivator(boolean newAlive) {
         Object manager = Whitebox.getInternalState(XacmlPdpActivator.getCurrent(), "serviceManager");
-        Whitebox.setInternalState(manager, "running", newAlive);
+        AtomicBoolean running = Whitebox.getInternalState(manager, "running");
+        running.set(newAlive);
     }
 }
