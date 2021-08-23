@@ -34,6 +34,24 @@
       "revId": "c1359b3aebf8678f026951fbe1d4eb02ab2155f7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83db6991_12c02e08",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpServiceFilter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-08-23T15:02:23Z",
+      "side": 1,
+      "message": "I think it is a reasonable assumption provided that has been disabled for several releases already.   In any case I was under the assumption that it was supported as the common *ServletFactory and HttpServletServer support multiple filters with the APIs, do you think there is a limitation there not working, or perhaps it would be in the RestServer wrapping them?  Ideally, would be good to support multiple filters if it was possible.",
+      "parentUuid": "b9683c98_458f1640",
+      "revId": "c1359b3aebf8678f026951fbe1d4eb02ab2155f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
