@@ -52,6 +52,24 @@
       "revId": "c1359b3aebf8678f026951fbe1d4eb02ab2155f7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3465f02c_350affe6",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpServiceFilter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-08-23T15:04:21Z",
+      "side": 1,
+      "message": "yeah! currently RestServer is taking in only one Filter class: https://github.com/onap/policy-common/blob/master/policy-endpoints/src/main/java/org/onap/policy/common/endpoints/http/server/RestServer.java#L59\n. For passing multiple filter classes that will have to change to support a set of classes.",
+      "parentUuid": "b9683c98_458f1640",
+      "revId": "c1359b3aebf8678f026951fbe1d4eb02ab2155f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
