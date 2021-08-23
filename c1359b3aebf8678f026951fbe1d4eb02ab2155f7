@@ -70,6 +70,24 @@
       "revId": "c1359b3aebf8678f026951fbe1d4eb02ab2155f7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f7449053_e9ec4668",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpServiceFilter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-23T20:03:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3465f02c_350affe6",
+      "revId": "c1359b3aebf8678f026951fbe1d4eb02ab2155f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
