@@ -179,10 +179,10 @@ public class XacmlState {
     private void handleXacmlRestController() {
         if (status.getState() == PdpState.ACTIVE) {
             LOGGER.info("State change: {} - Starting rest controller", status.getState());
-            XacmlPdpActivator.getCurrent().startXacmlRestController();
+            XacmlPdpActivator.getCurrent().enableApi();
         } else if (status.getState() == PdpState.PASSIVE) {
             LOGGER.info("State change: {} - Stopping rest controller", status.getState());
-            XacmlPdpActivator.getCurrent().stopXacmlRestController();
+            XacmlPdpActivator.getCurrent().disableApi();
         } else {
             // unsupported state
             LOGGER.warn("Unsupported state: {}", status.getState());

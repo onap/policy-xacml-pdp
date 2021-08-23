@@ -20,12 +20,13 @@
 
 package org.onap.policy.pdpx.main.startstop;
 
+import java.util.List;
 import java.util.Properties;
+import javax.servlet.Filter;
 import org.onap.policy.common.endpoints.http.server.JsonExceptionMapper;
 import org.onap.policy.common.endpoints.http.server.RestServer;
 import org.onap.policy.common.endpoints.http.server.YamlExceptionMapper;
 import org.onap.policy.common.endpoints.http.server.YamlMessageBodyHandler;
-import org.onap.policy.common.endpoints.http.server.aaf.AafAuthFilter;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.properties.PolicyEndPointProperties;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
@@ -45,13 +46,13 @@ public class XacmlPdpRestServer extends RestServer {
      * Constructs the object.
      *
      * @param restServerParameters the rest server parameters
-     * @param aafFilter class of object to use to filter AAF requests, or {@code null}
+     * @param filters class of object to use to filter requests, or {@code null}
      * @param jaxrsProviders classes providing the services
      */
     public XacmlPdpRestServer(final RestServerParameters restServerParameters,
-            Class<? extends AafAuthFilter> aafFilter, Class<?>... jaxrsProviders) {
+            List<Class<? extends Filter>> filters, List<Class<?>> jaxrsProviders) {
 
-        super(restServerParameters, aafFilter, jaxrsProviders);
+        super(restServerParameters, filters, jaxrsProviders);
     }
 
     @Override

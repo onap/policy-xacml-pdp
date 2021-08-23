@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -77,21 +77,21 @@ public class TestXacmlPdpActivator extends CommonRest {
     @Test
     public void testXacmlPdpActivator() throws Exception {
         assertFalse(activator.isAlive());
-        assertFalse(activator.isXacmlRestControllerAlive());
+        assertFalse(activator.isApiEnabled());
         activator.start();
         assertTrue(activator.isAlive());
 
         // XacmlPdp starts in PASSIVE state so the rest controller should not be alive
-        assertFalse(activator.isXacmlRestControllerAlive());
+        assertFalse(activator.isApiEnabled());
         assertTrue(activator.getParameterGroup().isValid());
         assertEquals(CommonTestData.PDPX_PARAMETER_GROUP_NAME, activator.getParameterGroup().getName());
         assertEquals(CommonTestData.PDPX_GROUP, activator.getParameterGroup().getPdpGroup());
 
-        activator.startXacmlRestController();
-        assertTrue(activator.isXacmlRestControllerAlive());
+        activator.enableApi();
+        assertTrue(activator.isApiEnabled());
 
-        activator.stopXacmlRestController();
-        assertFalse(activator.isXacmlRestControllerAlive());
+        activator.disableApi();
+        assertFalse(activator.isApiEnabled());
     }
 
     @Test

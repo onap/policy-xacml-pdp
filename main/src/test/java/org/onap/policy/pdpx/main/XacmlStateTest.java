@@ -130,12 +130,12 @@ public class XacmlStateTest {
         req.setState(PdpState.ACTIVE);
         status = state.updateInternalState(req);
         assertEquals(PdpState.ACTIVE, status.getState());
-        verify(act).startXacmlRestController();
+        verify(act).enableApi();
 
         req.setState(PdpState.PASSIVE);
         status = state.updateInternalState(req);
         assertEquals(PdpState.PASSIVE, status.getState());
-        verify(act).stopXacmlRestController();
+        verify(act).disableApi();
     }
 
     @Test
