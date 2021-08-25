@@ -61,7 +61,7 @@ public class XacmlPdpUpdatePublisher {
      *
      * @param message Incoming message
      */
-    public synchronized void handlePdpUpdate(PdpUpdate message) {
+    public void handlePdpUpdate(PdpUpdate message) {
 
         Set<ToscaPolicy> incomingPolicies =
                 new HashSet<>(message.getPolicies() == null ? Collections.emptyList() : message.getPolicies());
