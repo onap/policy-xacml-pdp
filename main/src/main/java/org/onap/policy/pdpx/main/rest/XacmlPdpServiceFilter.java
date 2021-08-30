@@ -40,7 +40,7 @@ public class XacmlPdpServiceFilter implements Filter {
     /**
      * Services the are always available, even when the API is disabled.
      */
-    public static final Set<String> PERMANENT_SERVICES = Set.of("healthcheck", "statistics");
+    public static final Set<String> PERMANENT_SERVICES = Set.of("healthcheck", "statistics", "metrics");
 
 
     private static final AtomicBoolean apiDisabled = new AtomicBoolean(true);
