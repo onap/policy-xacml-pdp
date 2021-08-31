@@ -1,0 +1,8 @@
+distribution_type: 'container'
+container_release_tag: '2.4.5'
+project: 'policy-xacml-pdp'
+log_dir: 'policy-xacml-pdp-maven-docker-stage-honolulu/177'
+ref: 60e717ffb03d10b35d9dca6ed0c4fa2c6763301d
+containers:
+    - name: 'policy-xacml-pdp'
+      version: '2.4.5-20210830T2040'
