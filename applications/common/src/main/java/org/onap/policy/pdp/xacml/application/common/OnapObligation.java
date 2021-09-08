@@ -27,6 +27,7 @@ import com.att.research.xacml.api.Identifier;
 import com.att.research.xacml.api.Obligation;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.util.Collections;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -103,7 +104,7 @@ public class OnapObligation {
     @SuppressWarnings("unchecked")
     public Map<String, Object> getPolicyContentAsMap() {
         if (this.policyContent == null) {
-            return null;
+            return Collections.emptyMap();
         }
         return gson.fromJson(this.policyContent, Map.class);
     }
