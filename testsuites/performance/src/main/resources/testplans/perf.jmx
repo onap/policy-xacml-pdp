@@ -94,7 +94,7 @@
         &quot;policies&quot;: [&#xd;
             {&#xd;
                 &quot;onap.restart.tca&quot;: {&#xd;
-                    &quot;type&quot;: &quot;onap.policies.monitoring.cdap.tca.hi.lo.app&quot;,&#xd;
+                    &quot;type&quot;: &quot;onap.policies.monitoring.tcagen2&quot;,&#xd;
                     &quot;type_version&quot;: &quot;1.0.0&quot;,&#xd;
                     &quot;version&quot;: &quot;1.0.0&quot;,&#xd;
                     &quot;metadata&quot;: {&#xd;
@@ -149,7 +149,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">policy/api/v1/policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies</stringProp>
+          <stringProp name="HTTPSampler.path">policy/api/v1/policytypes/onap.policies.monitoring.tcagen2/versions/1.0.0/policies</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -976,7 +976,7 @@
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
-              <stringProp name="49586">200</stringProp>
+              <stringProp name="49586">202</stringProp>
             </collectionProp>
             <stringProp name="Assertion.custom_message"></stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
@@ -1028,7 +1028,7 @@
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
-              <stringProp name="49586">200</stringProp>
+              <stringProp name="49586">202</stringProp>
             </collectionProp>
             <stringProp name="Assertion.custom_message"></stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
@@ -1080,7 +1080,7 @@
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
-              <stringProp name="49586">200</stringProp>
+              <stringProp name="49586">202</stringProp>
             </collectionProp>
             <stringProp name="Assertion.custom_message"></stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
@@ -1132,7 +1132,7 @@
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
-              <stringProp name="49586">200</stringProp>
+              <stringProp name="49586">202</stringProp>
             </collectionProp>
             <stringProp name="Assertion.custom_message"></stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
@@ -1447,7 +1447,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
   &quot;action&quot;: &quot;configure&quot;,&#xd;
   &quot;resource&quot;: {&#xd;
       &quot;policy-id&quot;: &quot;onap.restart.tca&quot;,&#xd;
-      &quot;policy-type&quot;: &quot;onap.policies.monitoring.cdap.tca.hi.lo.app&quot;&#xd;
+      &quot;policy-type&quot;: &quot;onap.policies.monitoring.tcagen2&quot;&#xd;
   }&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
@@ -1516,7 +1516,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
   &quot;action&quot;: &quot;configure&quot;,&#xd;
   &quot;resource&quot;: {&#xd;
       &quot;policy-id&quot;: &quot;onap.restart.tca&quot;,&#xd;
-      &quot;policy-type&quot;: &quot;onap.policies.monitoring.cdap.tca.hi.lo.app&quot;&#xd;
+      &quot;policy-type&quot;: &quot;onap.policies.monitoring.tcagen2&quot;&#xd;
   }&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
@@ -2131,7 +2131,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">policy/api/v1/policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/1.0.0</stringProp>
+          <stringProp name="HTTPSampler.path">policy/api/v1/policytypes/onap.policies.monitoring.tcagen2/versions/1.0.0/policies/onap.restart.tca/versions/1.0.0</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>

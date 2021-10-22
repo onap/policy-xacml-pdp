@@ -35,7 +35,7 @@
           </elementProp>
           <elementProp name="API_PORT" elementType="Argument">
             <stringProp name="Argument.name">API_PORT</stringProp>
-            <stringProp name="Argument.value">31949</stringProp>
+            <stringProp name="Argument.value">${__P(api_port, 6969)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="PAP_PORT" elementType="Argument">
@@ -1437,7 +1437,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
   &quot;action&quot;: &quot;configure&quot;,&#xd;
   &quot;resource&quot;: {&#xd;
       &quot;policy-id&quot;: &quot;onap.restart.tca&quot;,&#xd;
-      &quot;policy-type&quot;: &quot;onap.policies.monitoring.cdap.tca.hi.lo.app&quot;&#xd;
+      &quot;policy-type&quot;: &quot;onap.policies.monitoring.tcagen2&quot;&#xd;
   }&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
@@ -1505,7 +1505,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
   &quot;action&quot;: &quot;configure&quot;,&#xd;
   &quot;resource&quot;: {&#xd;
       &quot;policy-id&quot;: &quot;onap.restart.tca&quot;,&#xd;
-      &quot;policy-type&quot;: &quot;onap.policies.monitoring.cdap.tca.hi.lo.app&quot;&#xd;
+      &quot;policy-type&quot;: &quot;onap.policies.monitoring.tcagen2&quot;&#xd;
   }&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
@@ -2108,7 +2108,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">policy/api/v1/policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/1.0.0</stringProp>
+          <stringProp name="HTTPSampler.path">policy/api/v1/policytypes/onap.policies.monitoring.tcagen2/versions/1.0.0/policies/onap.restart.tca/versions/1.0.0</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
