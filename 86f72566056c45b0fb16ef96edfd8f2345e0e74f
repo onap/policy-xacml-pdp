@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0d19c47_a778c2fc",
+        "filename": "testsuites/stability/src/main/resources/testplans/stability.jmx",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-10-22T10:18:49Z",
+      "side": 1,
+      "message": "No 200-\u003e202 changes needed in this file?",
+      "revId": "86f72566056c45b0fb16ef96edfd8f2345e0e74f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
