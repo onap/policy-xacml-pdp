@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021-2022 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,12 @@ package org.onap.policy.pdpx.main.rest;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Synchronized;
 
 /**
  * Class to hold statistical data for xacmlPdp component.
- *
  */
-@Getter
+@Getter(onMethod_ = @Synchronized)
 public class XacmlPdpStatisticsManager {
     @Getter
     @Setter
@@ -38,6 +38,10 @@ public class XacmlPdpStatisticsManager {
     private long errorCount;
     private long permitDecisionsCount;
     private long denyDecisionsCount;
+    private long deploySuccessCount;
+    private long deployFailureCount;
+    private long undeploySuccessCount;
+    private long undeployFailureCount;
     private long indeterminantDecisionsCount;
     private long notApplicableDecisionsCount;
 
@@ -48,6 +52,7 @@ public class XacmlPdpStatisticsManager {
      *
      * @return the total
      */
+    @Synchronized
     public long setTotalPolicyTypesCount(long newCount) {
         totalPolicyTypesCount = newCount;
         return totalPolicyTypesCount;
@@ -60,6 +65,7 @@ public class XacmlPdpStatisticsManager {
      *
      * @return the total
      */
+    @Synchronized
     public long setTotalPolicyCount(long newCount) {
         totalPoliciesCount = newCount;
         return totalPoliciesCount;
@@ -70,6 +76,7 @@ public class XacmlPdpStatisticsManager {
      *
      * @return the errorDecisionsCount
      */
+    @Synchronized
     public long updateErrorCount() {
         return ++errorCount;
     }
@@ -79,6 +86,7 @@ public class XacmlPdpStatisticsManager {
      *
      * @return the permitDecisionsCount
      */
+    @Synchronized
     public long updatePermitDecisionsCount() {
         return ++permitDecisionsCount;
     }
@@ -88,8 +96,49 @@ public class XacmlPdpStatisticsManager {
      *
      * @return the denyDecisionsCount
      */
+    @Synchronized
     public long updateDenyDecisionsCount() {
         return ++denyDecisionsCount;
+    }
+
+    /**
+     * Method to update the number of successful deploys.
+     *
+     * @return the deploySuccessCount
+     */
+    @Synchronized
+    public long updateDeploySuccessCount() {
+        return ++deploySuccessCount;
+    }
+
+    /**
+     * Method to update the number of failed deploys.
+     *
+     * @return the deployFailureCount
+     */
+    @Synchronized
+    public long updateDeployFailureCount() {
+        return ++deployFailureCount;
+    }
+
+    /**
+     * Method to update the number of successful undeploys.
+     *
+     * @return the undeploySuccessCount
+     */
+    @Synchronized
+    public long updateUndeploySuccessCount() {
+        return ++undeploySuccessCount;
+    }
+
+    /**
+     * Method to update the number of failed undeploys.
+     *
+     * @return the undeployFailureCount
+     */
+    @Synchronized
+    public long updateUndeployFailureCount() {
+        return ++undeployFailureCount;
     }
 
     /**
@@ -97,6 +146,7 @@ public class XacmlPdpStatisticsManager {
      *
      * @return the indeterminantDecisionsCount
      */
+    @Synchronized
     public long updateIndeterminantDecisionsCount() {
         return ++indeterminantDecisionsCount;
     }
@@ -106,6 +156,7 @@ public class XacmlPdpStatisticsManager {
      *
      * @return the notApplicableDecisionsCount
      */
+    @Synchronized
     public long updateNotApplicableDecisionsCount() {
         return ++notApplicableDecisionsCount;
     }
@@ -113,12 +164,17 @@ public class XacmlPdpStatisticsManager {
     /**
      * Reset all the statistics counts to 0.
      */
+    @Synchronized
     public void resetAllStatistics() {
         totalPolicyTypesCount = 0L;
         totalPoliciesCount = 0L;
         errorCount = 0L;
         permitDecisionsCount = 0L;
         denyDecisionsCount = 0L;
+        deploySuccessCount = 0L;
+        deployFailureCount = 0L;
+        undeploySuccessCount = 0L;
+        undeployFailureCount = 0L;
         indeterminantDecisionsCount = 0L;
         notApplicableDecisionsCount = 0L;
     }

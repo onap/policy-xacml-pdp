@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021-2022 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -102,6 +102,7 @@ public class XacmlPdpUpdatePublisherTest {
     private PdpUpdate failurePdpUpdate;
 
     private XacmlPdpUpdatePublisher publisher;
+    private XacmlPdpStatisticsManager statmgr;
 
 
     /**
@@ -150,13 +151,13 @@ public class XacmlPdpUpdatePublisherTest {
         when(client.send(any())).thenReturn(true);
 
         publisher = new XacmlPdpUpdatePublisher(client, state, appmgr);
+
+        statmgr = new XacmlPdpStatisticsManager();
+        XacmlPdpStatisticsManager.setCurrent(statmgr);
     }
 
     @Test
     public void testHandlePdpUpdate() throws XacmlApplicationException {
-        XacmlPdpStatisticsManager statmgr = new XacmlPdpStatisticsManager();
-        XacmlPdpStatisticsManager.setCurrent(statmgr);
-
         publisher.handlePdpUpdate(update);
 
         // two removed
@@ -249,16 +250,6 @@ public class XacmlPdpUpdatePublisherTest {
 
         // none added
         verify(appmgr, never()).loadDeployedPolicy(any());
-
-        verify(client).send(status);
-    }
-
-    @Test
-    public void testHandlePdpUpdate_NullStats() {
-        XacmlPdpStatisticsManager.setCurrent(null);
-
-        // should work without throwing an exception
-        publisher.handlePdpUpdate(update);
 
         verify(client).send(status);
     }
