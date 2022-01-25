@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2022 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,10 @@ public class StatisticsProvider {
         report.setTotalErrorCount(stats.getErrorCount());
         report.setPermitDecisionsCount(stats.getPermitDecisionsCount());
         report.setDenyDecisionsCount(stats.getDenyDecisionsCount());
+        report.setDeploySuccessCount(stats.getDeploySuccessCount());
+        report.setDeployFailureCount(stats.getDeployFailureCount());
+        report.setUndeploySuccessCount(stats.getUndeploySuccessCount());
+        report.setUndeployFailureCount(stats.getUndeployFailureCount());
         report.setIndeterminantDecisionsCount(stats.getIndeterminantDecisionsCount());
         report.setNotApplicableDecisionsCount(stats.getNotApplicableDecisionsCount());
         return report;
