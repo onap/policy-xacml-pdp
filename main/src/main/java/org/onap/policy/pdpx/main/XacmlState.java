@@ -26,12 +26,14 @@ import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.pdp.concepts.PdpMessage;
 import org.onap.policy.models.pdp.concepts.PdpResponseDetails;
 import org.onap.policy.models.pdp.concepts.PdpStateChange;
+import org.onap.policy.models.pdp.concepts.PdpStatistics;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.models.pdp.enums.PdpHealthStatus;
 import org.onap.policy.models.pdp.enums.PdpResponseStatus;
 import org.onap.policy.models.pdp.enums.PdpState;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
+import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,7 +94,16 @@ public class XacmlState {
         status.setHealthy(XacmlPdpActivator.getCurrent().isAlive() ? PdpHealthStatus.HEALTHY
                         : PdpHealthStatus.NOT_HEALTHY);
 
-        return new PdpStatus(status);
+        PdpStatus heartbeat = new PdpStatus(status);
+        PdpStatistics pdp_stats = new PdpStatistics();
+        var stats = XacmlPdpStatisticsManager.getCurrent();
+        if (stats != null) {
+            pdp_stats.setPolicyDeployCount(stats.getTotalPoliciesCount());
+            pdp_stats.setPolicyDeploySuccessCount(stats.getPermitDecisionsCount());
+            pdp_stats.setPolicyDeployFailCount(stats.getDenyDecisionsCount() + stats.getErrorCount());
+        }
+        heartbeat.setStatistics(pdp_stats);
+        return heartbeat;
     }
 
     /**
