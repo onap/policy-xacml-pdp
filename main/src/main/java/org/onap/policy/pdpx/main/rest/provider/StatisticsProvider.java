@@ -45,6 +45,10 @@ public class StatisticsProvider {
         report.setTotalErrorCount(stats.getErrorCount());
         report.setPermitDecisionsCount(stats.getPermitDecisionsCount());
         report.setDenyDecisionsCount(stats.getDenyDecisionsCount());
+        report.setDeploySuccessCount(stats.getDeploySuccessCount());
+        report.setDeployFailureCount(stats.getDeployFailureCount());
+        report.setUndeploySuccessCount(stats.getUndeploySuccessCount());
+        report.setDeploySuccessCount(stats.getUndeployFailureCount());
         report.setIndeterminantDecisionsCount(stats.getIndeterminantDecisionsCount());
         report.setNotApplicableDecisionsCount(stats.getNotApplicableDecisionsCount());
         return report;
