@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021-2022 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,10 @@ public class XacmlPdpStatisticsManager {
     private long errorCount;
     private long permitDecisionsCount;
     private long denyDecisionsCount;
+    private long deploySuccessCount;
+    private long deployFailureCount;
+    private long undeploySuccessCount;
+    private long undeployFailureCount;
     private long indeterminantDecisionsCount;
     private long notApplicableDecisionsCount;
 
@@ -93,6 +97,42 @@ public class XacmlPdpStatisticsManager {
     }
 
     /**
+     * Method to update the number of successful deploys.
+     *
+     * @return the deploySuccessCount
+     */
+    public long updateDeploySuccessCount() {
+        return ++deploySuccessCount;
+    }
+
+    /**
+     * Method to update the number of failed deploys.
+     *
+     * @return the deployFailureCount
+     */
+    public long updateDeployFailureCount() {
+        return ++deployFailureCount;
+    }
+
+    /**
+     * Method to update the number of successful undeploys.
+     *
+     * @return the undeploySuccessCount
+     */
+    public long updateUndeploySuccessCount() {
+        return ++undeploySuccessCount;
+    }
+
+    /**
+     * Method to update the number of failed undeploys.
+     *
+     * @return the undeployFailureCount
+     */
+    public long updateUndeployFailureCount() {
+        return ++undeployFailureCount;
+    }
+
+    /**
      * Method to update the number of indeterminant decisions.
      *
      * @return the indeterminantDecisionsCount
@@ -119,6 +159,10 @@ public class XacmlPdpStatisticsManager {
         errorCount = 0L;
         permitDecisionsCount = 0L;
         denyDecisionsCount = 0L;
+        deploySuccessCount = 0L;
+        deployFailureCount = 0L;
+        undeploySuccessCount = 0L;
+        undeployFailureCount = 0L;
         indeterminantDecisionsCount = 0L;
         notApplicableDecisionsCount = 0L;
     }
