@@ -39,6 +39,10 @@ public class StatisticsReport {
     private long totalErrorCount;
     private long permitDecisionsCount;
     private long denyDecisionsCount;
+    private long deploySuccessCount;
+    private long deployFailureCount;
+    private long undeploySuccessCount;
+    private long undeployFailureCount;
     private long indeterminantDecisionsCount;
     private long notApplicableDecisionsCount;
 }

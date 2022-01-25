@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,10 +69,13 @@ public class XacmlPdpUpdatePublisher {
             ToscaPolicy policy = deployedPolicies.get(policyId);
             if (policy == null) {
                 LOGGER.warn("attempt to undeploy policy that has not been previously deployed: {}", policyId);
+                XacmlPdpStatisticsManager.getCurrent().updateUndeployFailureCount();
             } else if (toBeDeployedPolicies.containsKey(policyId)) {
                 LOGGER.warn("not undeploying policy, as it also appears in the deployment list: {}", policyId);
+                XacmlPdpStatisticsManager.getCurrent().updateUndeployFailureCount();
             } else {
                 appManager.removeUndeployedPolicy(policy);
+                XacmlPdpStatisticsManager.getCurrent().updateUndeploySuccessCount();
             }
         }
 
@@ -83,11 +86,13 @@ public class XacmlPdpUpdatePublisher {
             if (!deployedPolicies.containsKey(policy.getIdentifier())) {
                 try {
                     appManager.loadDeployedPolicy(policy);
+                    XacmlPdpStatisticsManager.getCurrent().updateDeploySuccessCount();
                 } catch (XacmlApplicationException e) {
                     // Failed to load policy, return error(s) to PAP
                     LOGGER.error("Failed to load policy: {}", policy, e);
                     errorMessage.append("Failed to load policy: " + policy + ": "
                             + e.getMessage() + XacmlPolicyUtils.LINE_SEPARATOR);
+                    XacmlPdpStatisticsManager.getCurrent().updateDeployFailureCount();
                 }
             }
         }
