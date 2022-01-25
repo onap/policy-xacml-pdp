@@ -37,6 +37,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.onap.policy.models.pdp.concepts.PdpResponseDetails;
 import org.onap.policy.models.pdp.concepts.PdpStateChange;
+import org.onap.policy.models.pdp.concepts.PdpStatistics;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.models.pdp.enums.PdpHealthStatus;
@@ -70,7 +71,7 @@ public class XacmlStateTest {
         pdpName = XacmlState.PDP_NAME;
 
         XacmlPdpActivator.setCurrent(act);
-
+        when(appmgr.getPolicyCount()).thenReturn((1));
         state = new XacmlState(appmgr, GROUP, PDP_TYPE);
     }
 
@@ -104,6 +105,16 @@ public class XacmlStateTest {
 
         status = state.genHeartbeat();
         assertEquals(PdpHealthStatus.HEALTHY, status.getHealthy());
+    }
+
+    @Test
+    public void testGetStatistics() {
+        PdpStatistics stats = state.getStatistics();
+        assertTrue(stats != null);
+        assertEquals(GROUP, stats.getPdpGroupName());
+        assertEquals(stats.getPolicyDeployCount(), 1);
+        assertEquals(stats.getPolicyDeploySuccessCount(), 0);
+        assertEquals(stats.getPolicyDeployFailCount(), 0);
     }
 
     @Test
