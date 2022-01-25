@@ -26,12 +26,14 @@ import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.pdp.concepts.PdpMessage;
 import org.onap.policy.models.pdp.concepts.PdpResponseDetails;
 import org.onap.policy.models.pdp.concepts.PdpStateChange;
+import org.onap.policy.models.pdp.concepts.PdpStatistics;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.models.pdp.enums.PdpHealthStatus;
 import org.onap.policy.models.pdp.enums.PdpResponseStatus;
 import org.onap.policy.models.pdp.enums.PdpState;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
+import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,9 +92,23 @@ public class XacmlState {
     public synchronized PdpStatus genHeartbeat() {
         // first, update status fields
         status.setHealthy(XacmlPdpActivator.getCurrent().isAlive() ? PdpHealthStatus.HEALTHY
-                        : PdpHealthStatus.NOT_HEALTHY);
+            : PdpHealthStatus.NOT_HEALTHY);
 
-        return new PdpStatus(status);
+        XacmlPdpStatisticsManager stats;
+        if (XacmlPdpStatisticsManager.getCurrent() == null) {
+            stats = new XacmlPdpStatisticsManager();
+            XacmlPdpStatisticsManager.setCurrent(stats);
+        }
+        stats = XacmlPdpStatisticsManager.getCurrent();
+
+        PdpStatistics pdpStats = new PdpStatistics();
+        pdpStats.setPolicyDeployCount(stats.getTotalPoliciesCount());
+        pdpStats.setPolicyDeploySuccessCount(stats.getPermitDecisionsCount());
+        pdpStats.setPolicyDeployFailCount(stats.getDenyDecisionsCount() + stats.getErrorCount());
+
+        PdpStatus heartbeat = new PdpStatus(status);
+        heartbeat.setStatistics(pdpStats);
+        return heartbeat;
     }
 
     /**
@@ -150,7 +166,7 @@ public class XacmlState {
     /**
      * Makes a response to the given message, based on the current state.
      *
-     * @param message message for which the response should be made
+     * @param message    message for which the response should be made
      * @param errMessage the error message to be sent to PAP
      * @return a new response
      */
