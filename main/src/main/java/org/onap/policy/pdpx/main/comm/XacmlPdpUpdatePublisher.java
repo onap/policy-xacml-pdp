@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,15 +64,20 @@ public class XacmlPdpUpdatePublisher {
         List<ToscaConceptIdentifier> toBeUndeployedIds =
                         Optional.ofNullable(message.getPoliciesToBeUndeployed()).orElse(Collections.emptyList());
 
+        var stats = XacmlPdpStatisticsManager.getCurrent();
+
         // Undeploy policies
         for (ToscaConceptIdentifier policyId: toBeUndeployedIds) {
             ToscaPolicy policy = deployedPolicies.get(policyId);
             if (policy == null) {
                 LOGGER.warn("attempt to undeploy policy that has not been previously deployed: {}", policyId);
+                stats.updateUndeployFailureCount();
             } else if (toBeDeployedPolicies.containsKey(policyId)) {
                 LOGGER.warn("not undeploying policy, as it also appears in the deployment list: {}", policyId);
+                stats.updateUndeployFailureCount();
             } else {
                 appManager.removeUndeployedPolicy(policy);
+                stats.updateUndeploySuccessCount();
             }
         }
 
@@ -83,17 +88,18 @@ public class XacmlPdpUpdatePublisher {
             if (!deployedPolicies.containsKey(policy.getIdentifier())) {
                 try {
                     appManager.loadDeployedPolicy(policy);
+                    stats.updateDeploySuccessCount();
                 } catch (XacmlApplicationException e) {
                     // Failed to load policy, return error(s) to PAP
                     LOGGER.error("Failed to load policy: {}", policy, e);
                     errorMessage.append("Failed to load policy: " + policy + ": "
-                            + e.getMessage() + XacmlPolicyUtils.LINE_SEPARATOR);
+                        + e.getMessage() + XacmlPolicyUtils.LINE_SEPARATOR);
+                    stats.updateDeployFailureCount();
                 }
             }
         }
 
         // update the policy count statistic
-        var stats = XacmlPdpStatisticsManager.getCurrent();
         if (stats != null) {
             stats.setTotalPolicyCount(appManager.getPolicyCount());
         }
