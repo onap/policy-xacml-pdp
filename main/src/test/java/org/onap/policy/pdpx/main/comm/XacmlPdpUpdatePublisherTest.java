@@ -102,6 +102,7 @@ public class XacmlPdpUpdatePublisherTest {
     private PdpUpdate failurePdpUpdate;
 
     private XacmlPdpUpdatePublisher publisher;
+    private XacmlPdpStatisticsManager statmgr;
 
 
     /**
@@ -150,13 +151,13 @@ public class XacmlPdpUpdatePublisherTest {
         when(client.send(any())).thenReturn(true);
 
         publisher = new XacmlPdpUpdatePublisher(client, state, appmgr);
+
+        statmgr = new XacmlPdpStatisticsManager();
+        XacmlPdpStatisticsManager.setCurrent(statmgr);
     }
 
     @Test
     public void testHandlePdpUpdate() throws XacmlApplicationException {
-        XacmlPdpStatisticsManager statmgr = new XacmlPdpStatisticsManager();
-        XacmlPdpStatisticsManager.setCurrent(statmgr);
-
         publisher.handlePdpUpdate(update);
 
         // two removed
@@ -249,16 +250,6 @@ public class XacmlPdpUpdatePublisherTest {
 
         // none added
         verify(appmgr, never()).loadDeployedPolicy(any());
-
-        verify(client).send(status);
-    }
-
-    @Test
-    public void testHandlePdpUpdate_NullStats() {
-        XacmlPdpStatisticsManager.setCurrent(null);
-
-        // should work without throwing an exception
-        publisher.handlePdpUpdate(update);
 
         verify(client).send(status);
     }

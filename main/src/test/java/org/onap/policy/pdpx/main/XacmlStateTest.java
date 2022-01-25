@@ -26,23 +26,31 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpResponseDetails;
 import org.onap.policy.models.pdp.concepts.PdpStateChange;
+import org.onap.policy.models.pdp.concepts.PdpStatistics;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.models.pdp.enums.PdpHealthStatus;
 import org.onap.policy.models.pdp.enums.PdpResponseStatus;
 import org.onap.policy.models.pdp.enums.PdpState;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
+import org.onap.policy.pdpx.main.comm.XacmlPdpUpdatePublisher;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
+import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -62,6 +70,9 @@ public class XacmlStateTest {
 
     private XacmlState state;
 
+    @Mock
+    private TopicSinkClient client;
+
     /**
      * Initializes objects, including the state.
      */
@@ -70,7 +81,6 @@ public class XacmlStateTest {
         pdpName = XacmlState.PDP_NAME;
 
         XacmlPdpActivator.setCurrent(act);
-
         state = new XacmlState(appmgr, GROUP, PDP_TYPE);
     }
 
@@ -104,6 +114,34 @@ public class XacmlStateTest {
 
         status = state.genHeartbeat();
         assertEquals(PdpHealthStatus.HEALTHY, status.getHealthy());
+    }
+
+    @Test
+    public void testGetStatistics() {
+        XacmlPdpStatisticsManager statmgr = new XacmlPdpStatisticsManager();
+        XacmlPdpStatisticsManager.setCurrent(statmgr);
+
+        ToscaPolicy policy1 = mock(ToscaPolicy.class);
+        ToscaPolicy policy2 = mock(ToscaPolicy.class);
+        ToscaConceptIdentifier ident = new ToscaConceptIdentifier("undeployed", "2.3.4");
+        when(policy2.getIdentifier()).thenReturn(ident);
+
+        PdpUpdate message = new PdpUpdate();
+        message.setPoliciesToBeDeployed(Arrays.asList(policy1));
+        message.setPoliciesToBeUndeployed(Arrays.asList(policy2.getIdentifier()));
+
+        XacmlPdpUpdatePublisher publisher = new XacmlPdpUpdatePublisher(client, state, appmgr);
+        publisher.handlePdpUpdate(message);
+
+        PdpStatistics stats = state.getStatistics();
+        assertTrue(stats != null);
+        assertEquals(GROUP, stats.getPdpGroupName());
+        assertEquals(stats.getPolicyDeployCount(), 1);
+        assertEquals(stats.getPolicyDeploySuccessCount(), 1);
+        assertEquals(stats.getPolicyDeployFailCount(), 0);
+        assertEquals(stats.getPolicyUndeployCount(), 1);
+        assertEquals(stats.getPolicyUndeployFailCount(), 1);
+        assertEquals(stats.getPolicyUndeploySuccessCount(), 0);
     }
 
     @Test

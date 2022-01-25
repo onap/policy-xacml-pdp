@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2022 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,14 @@ import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.pdp.concepts.PdpMessage;
 import org.onap.policy.models.pdp.concepts.PdpResponseDetails;
 import org.onap.policy.models.pdp.concepts.PdpStateChange;
+import org.onap.policy.models.pdp.concepts.PdpStatistics;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.models.pdp.enums.PdpHealthStatus;
 import org.onap.policy.models.pdp.enums.PdpResponseStatus;
 import org.onap.policy.models.pdp.enums.PdpState;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
+import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,9 +92,38 @@ public class XacmlState {
     public synchronized PdpStatus genHeartbeat() {
         // first, update status fields
         status.setHealthy(XacmlPdpActivator.getCurrent().isAlive() ? PdpHealthStatus.HEALTHY
-                        : PdpHealthStatus.NOT_HEALTHY);
+            : PdpHealthStatus.NOT_HEALTHY);
 
-        return new PdpStatus(status);
+        PdpStatistics pdpStats = getStatistics();
+        PdpStatus heartbeat = new PdpStatus(status);
+        heartbeat.setStatistics(pdpStats);
+        return heartbeat;
+    }
+
+    /**
+     * Generates statistics to be used in a heart beat message.
+     *
+     * @return statistics for heart beat message
+     */
+    protected PdpStatistics getStatistics() {
+        XacmlPdpStatisticsManager stats = XacmlPdpStatisticsManager.getCurrent();
+        if (stats == null) {
+            LOGGER.warn("XacmlPdpStatisticsManager is null");
+            return null;
+        }
+        stats.setTotalPolicyCount(appManager.getPolicyCount());
+
+        PdpStatistics pdpStats = new PdpStatistics();
+        pdpStats.setPdpGroupName(this.status.getPdpGroup());
+        pdpStats.setPdpSubGroupName(this.status.getPdpSubgroup());
+        pdpStats.setPolicyExecutedSuccessCount(stats.getPermitDecisionsCount());
+        pdpStats.setPolicyDeployCount(stats.getDeploySuccessCount() + stats.getDeployFailureCount());
+        pdpStats.setPolicyDeploySuccessCount(stats.getDeploySuccessCount());
+        pdpStats.setPolicyDeployFailCount(stats.getDeployFailureCount());
+        pdpStats.setPolicyUndeployCount(stats.getUndeploySuccessCount() + stats.getUndeployFailureCount());
+        pdpStats.setPolicyUndeploySuccessCount(stats.getUndeploySuccessCount());
+        pdpStats.setPolicyUndeployFailCount(stats.getUndeployFailureCount());
+        return pdpStats;
     }
 
     /**
