@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79604e90_ae4595ea",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-02-02T19:58:39Z",
+      "side": 1,
+      "message": "Licenses - global comment",
+      "revId": "3a2ad252f041bd373df9a21ac0f5ff14e6a16cc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c344972_8d3587c9",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-02-02T19:58:39Z",
+      "side": 1,
+      "message": "probably should be private or protected, it seems to me we don\u0027t want to expose this method publicly.",
+      "revId": "3a2ad252f041bd373df9a21ac0f5ff14e6a16cc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ab2f190_df42479a",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-02-02T19:58:39Z",
+      "side": 1,
+      "message": "For what I see this object is created at initialization, see XacmlPdpActivator.java, I don\u0027t think there is any place where it is unset, you can assume that this will be set.   In any case, if null, you can simply log an error and return, I tend to think that is better not to try to recreate a new object.",
+      "revId": "3a2ad252f041bd373df9a21ac0f5ff14e6a16cc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e98d623_0dc3f32a",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-02-02T19:58:39Z",
+      "side": 1,
+      "message": "this would be a count of deploy-success + deploy-failure, need to trace the code for the PDP_UPDATE message and see how those are counted, so this is not totally accurate.",
+      "revId": "3a2ad252f041bd373df9a21ac0f5ff14e6a16cc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "16ca2587_681cba25",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-02-02T19:58:39Z",
+      "side": 1,
+      "message": "I don\u0027t think we know this at this point, track the code for PDP_UPDATE for deploy/undeploy to properly track this count. The Permit decissions count will correspond more to PdpStatistics.policyExecutedSuccessCount  instead of the deploy success count.",
+      "revId": "3a2ad252f041bd373df9a21ac0f5ff14e6a16cc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a81f093_c99f0eaf",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-02-02T19:58:39Z",
+      "side": 1,
+      "message": "I don\u0027t think we know this at this point, track the code for PDP_UPDATE for deploy/undeploy to properly track this count.  Similarly, deny decisions will go into pdpStats.policyexecutedfailcount.",
+      "revId": "3a2ad252f041bd373df9a21ac0f5ff14e6a16cc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d61d0a9_f4483f5f",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/XacmlStateTest.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-02-02T19:58:39Z",
+      "side": 1,
+      "message": "We will need a test associated with the PdpStatus message, should look for some junit in that area, and we will want to check that the PdpStatus message will have this statistics substructure populated as expected.\n\nOnce we move to prometheus we will have all these items properly labeled with no ambiguities but this is good leg work preparatory for that work.",
+      "revId": "3a2ad252f041bd373df9a21ac0f5ff14e6a16cc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
