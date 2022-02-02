@@ -91,7 +91,7 @@ public class XacmlPdpApplicationManagerTest {
         // We need at least 1 policies
         //
         assertThat(completedJtst).isNotNull();
-        assertThat(completedJtst.getToscaTopologyTemplate().getPolicies().size()).isPositive();
+        assertThat(completedJtst.getToscaTopologyTemplate().getPolicies()).isNotEmpty();
         //
         // Copy test directory over of the application directories
         //

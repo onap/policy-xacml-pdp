@@ -142,7 +142,7 @@ public class MatchPdpApplicationTest {
         //
         // Decisions
         //
-        assertThat(service.actionDecisionsSupported().size()).isEqualTo(1);
+        assertThat(service.actionDecisionsSupported()).hasSize(1);
         assertThat(service.actionDecisionsSupported()).contains("match");
         //
         // Ensure it has the supported policy types and

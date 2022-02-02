@@ -170,7 +170,7 @@ public class OptimizationPdpApplicationTest {
         //
         // Does it return the correct decisions
         //
-        assertThat(service.actionDecisionsSupported().size()).isEqualTo(1);
+        assertThat(service.actionDecisionsSupported()).hasSize(1);
         assertThat(service.actionDecisionsSupported()).contains("optimize");
         //
         // Ensure it has the supported policy types and
