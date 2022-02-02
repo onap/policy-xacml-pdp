@@ -186,7 +186,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         // Sanity check that we got the attributes we care about. NOTE: This translator
         // ensures that these are set when convertPolicy is called.
         //
-        if (! Strings.isNullOrEmpty(policyId) && policyContent != null) {
+        if (! Strings.isNullOrEmpty(policyId) && !policyContent.isEmpty()) {
             decisionResponse.getPolicies().put(policyId, policyContent);
         } else {
             LOGGER.error("Missing obligation policyId {} or policyContent {}", policyId,
