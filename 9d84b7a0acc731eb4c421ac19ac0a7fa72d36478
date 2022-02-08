@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "997f70f7_8efb4913",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/OnapObligation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 7879
+      },
+      "writtenOn": "2022-02-08T16:10:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea0da4a1_c8c6649a",
+      "range": {
+        "startLine": 5,
+        "startChar": 22,
+        "endLine": 5,
+        "endChar": 26
+      },
+      "revId": "9d84b7a0acc731eb4c421ac19ac0a7fa72d36478",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "376a98c2_af456a5c",
         "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/OnapObligation.java",
         "patchSetId": 1
@@ -39,6 +63,24 @@
       "revId": "9d84b7a0acc731eb4c421ac19ac0a7fa72d36478",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72a0d0ee_1e61e3a1",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/OnapObligation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 7879
+      },
+      "writtenOn": "2022-02-08T16:10:03Z",
+      "side": 1,
+      "message": "Just verified and added a quick fix to one check - thanks for pointing that out!",
+      "parentUuid": "376a98c2_af456a5c",
+      "revId": "9d84b7a0acc731eb4c421ac19ac0a7fa72d36478",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
