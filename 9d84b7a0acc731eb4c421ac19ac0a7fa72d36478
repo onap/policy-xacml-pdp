@@ -22,6 +22,23 @@
       "revId": "9d84b7a0acc731eb4c421ac19ac0a7fa72d36478",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "376a98c2_af456a5c",
+        "filename": "applications/common/src/main/java/org/onap/policy/pdp/xacml/application/common/OnapObligation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-02-08T14:16:31Z",
+      "side": 1,
+      "message": "Did you verify that callers of OnapObligation.getPolicyContentAsMap() check for null?   If there are which is pretty feasible, they should be now checking for empty collection instead of null as a safeguard.   The comment here is to doublecheck it.",
+      "revId": "9d84b7a0acc731eb4c421ac19ac0a7fa72d36478",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
