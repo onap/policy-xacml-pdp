@@ -69,7 +69,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         //
         // Get the policy Id
         //
-        String policyId = toscaPolicy.getMetadata().get(POLICY_ID);
+        String policyId = String.valueOf(toscaPolicy.getMetadata().get(POLICY_ID));
         //
         // Set it as the policy ID
         //

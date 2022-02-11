@@ -254,7 +254,7 @@ public class StdBaseTranslatorTest {
     }
 
     private class TestTranslator extends StdBaseTranslator {
-        public Map<String, String> metadata = new HashMap<>();
+        public Map<String, Object> metadata = new HashMap<>();
 
         @Override
         protected void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse) {

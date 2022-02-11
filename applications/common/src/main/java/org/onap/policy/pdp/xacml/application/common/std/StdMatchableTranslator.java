@@ -251,7 +251,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
         //
         // Policy name should be at the root
         //
-        String policyName = toscaPolicy.getMetadata().get(POLICY_ID);
+        String policyName = String.valueOf(toscaPolicy.getMetadata().get(POLICY_ID));
         //
         // Set it as the policy ID
         //
