@@ -76,8 +76,8 @@ public class TutorialTranslator extends StdBaseTranslator {
         // Here is our policy with a version and default combining algo
         //
         var newPolicyType = new PolicyType();
-        newPolicyType.setPolicyId(toscaPolicy.getMetadata().get("policy-id"));
-        newPolicyType.setVersion(toscaPolicy.getMetadata().get("policy-version"));
+        newPolicyType.setPolicyId(String.valueOf(toscaPolicy.getMetadata().get("policy-id")));
+        newPolicyType.setVersion(String.valueOf(toscaPolicy.getMetadata().get("policy-version")));
         //
         // When choosing the rule combining algorithm, be sure to be mindful of the
         // setting xacml.att.policyFinderFactory.combineRootPolicies in the

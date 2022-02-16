@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -148,7 +148,7 @@ public class NamingPdpApplicationTest {
         //
         // Decisions
         //
-        assertThat(service.actionDecisionsSupported().size()).isEqualTo(1);
+        assertThat(service.actionDecisionsSupported()).hasSize(1);
         assertThat(service.actionDecisionsSupported()).contains("naming");
         //
         // Ensure it has the supported policy types and

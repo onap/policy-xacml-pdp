@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -127,7 +127,7 @@ public class StdBaseTranslatorTest {
         assertNull(translator.convertRequest(null));
 
         assertThat(translator.generateAnyOfForPolicyType("foo.bar")).isNotNull();
-        assertThat(translator.generateAnyOfForPolicyType("foo.bar").getAllOf().size()).isEqualTo(1);
+        assertThat(translator.generateAnyOfForPolicyType("foo.bar").getAllOf()).hasSize(1);
 
         assertThat(translator.generateConditionForPolicyType("foo.bar")).isNotNull();
         assertThat(translator.generateConditionForPolicyType("foo.bar").getExpression()).isNotNull();
@@ -139,28 +139,28 @@ public class StdBaseTranslatorTest {
 
         translator.addObligation(policySet, "policy.id", policyJson, 0, "foo.bar");
 
-        assertThat(policySet.getObligationExpressions().getObligationExpression().size()).isEqualTo(1);
+        assertThat(policySet.getObligationExpressions().getObligationExpression()).hasSize(1);
         assertThat(policySet.getObligationExpressions().getObligationExpression().get(0)
-                .getAttributeAssignmentExpression().size()).isEqualTo(4);
+                .getAttributeAssignmentExpression()).hasSize(4);
 
         PolicyType policy = new PolicyType();
         translator.addObligation(policy, null, policyJson, null, null);
 
-        assertThat(policy.getObligationExpressions().getObligationExpression().size()).isEqualTo(1);
+        assertThat(policy.getObligationExpressions().getObligationExpression()).hasSize(1);
         assertThat(policy.getObligationExpressions().getObligationExpression().get(0)
-                .getAttributeAssignmentExpression().size()).isEqualTo(1);
+                .getAttributeAssignmentExpression()).hasSize(1);
 
         RuleType rule = new RuleType();
         translator.addObligation(rule, "policy.id", null, null, "foo.bar");
 
-        assertThat(rule.getObligationExpressions().getObligationExpression().size()).isEqualTo(1);
+        assertThat(rule.getObligationExpressions().getObligationExpression()).hasSize(1);
         assertThat(rule.getObligationExpressions().getObligationExpression().get(0)
-                .getAttributeAssignmentExpression().size()).isEqualTo(2);
+                .getAttributeAssignmentExpression()).hasSize(2);
 
         rule = new RuleType();
         translator.addObligation(rule, null, null, null, null);
 
-        assertThat(rule.getObligationExpressions().getObligationExpression().size()).isEqualTo(1);
+        assertThat(rule.getObligationExpressions().getObligationExpression()).hasSize(1);
         assertThat(rule.getObligationExpressions().getObligationExpression().get(0)
                 .getAttributeAssignmentExpression()).isEmpty();
 
@@ -254,7 +254,7 @@ public class StdBaseTranslatorTest {
     }
 
     private class TestTranslator extends StdBaseTranslator {
-        public Map<String, String> metadata = new HashMap<>();
+        public Map<String, Object> metadata = new HashMap<>();
 
         @Override
         protected void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse) {

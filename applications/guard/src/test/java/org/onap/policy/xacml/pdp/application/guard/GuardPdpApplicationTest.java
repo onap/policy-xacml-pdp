@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -216,14 +216,14 @@ public class GuardPdpApplicationTest {
         //
         // Decisions
         //
-        assertThat(service.actionDecisionsSupported().size()).isEqualTo(1);
+        assertThat(service.actionDecisionsSupported()).hasSize(1);
         assertThat(service.actionDecisionsSupported()).contains("guard");
         //
         // Ensure it has the supported policy types and
         // can support the correct policy types.
         //
         assertThat(service.supportedPolicyTypes()).isNotEmpty();
-        assertThat(service.supportedPolicyTypes().size()).isEqualTo(5);
+        assertThat(service.supportedPolicyTypes()).hasSize(5);
         assertThat(service.canSupportPolicyType(
                 new ToscaConceptIdentifier("onap.policies.controlloop.guard.common.FrequencyLimiter", "1.0.0")))
                         .isTrue();

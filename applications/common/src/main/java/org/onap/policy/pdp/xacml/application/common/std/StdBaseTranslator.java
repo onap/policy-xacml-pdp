@@ -187,7 +187,7 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
      * @throws ToscaPolicyConversionException If there is something missing from the metadata
      */
     protected PolicyType fillMetadataSection(PolicyType policy,
-            Map<String, String> map) throws ToscaPolicyConversionException {
+            Map<String, Object> map) throws ToscaPolicyConversionException {
         //
         // Ensure the policy-id exists - we don't use it here. It
         // is saved in the TOSCA Policy Name field.
@@ -205,7 +205,7 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
         //
         // Add in the Policy Version
         //
-        policy.setVersion(map.get(POLICY_VERSION));
+        policy.setVersion(String.valueOf(map.get(POLICY_VERSION)));
         return policy;
     }
 

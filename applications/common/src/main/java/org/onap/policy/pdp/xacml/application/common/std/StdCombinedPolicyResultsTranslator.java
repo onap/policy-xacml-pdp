@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         //
         // Get the policy Id
         //
-        String policyId = toscaPolicy.getMetadata().get(POLICY_ID);
+        String policyId = String.valueOf(toscaPolicy.getMetadata().get(POLICY_ID));
         //
         // Set it as the policy ID
         //
@@ -186,7 +186,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         // Sanity check that we got the attributes we care about. NOTE: This translator
         // ensures that these are set when convertPolicy is called.
         //
-        if (! Strings.isNullOrEmpty(policyId) && policyContent != null) {
+        if (! Strings.isNullOrEmpty(policyId) && !policyContent.isEmpty()) {
             decisionResponse.getPolicies().put(policyId, policyContent);
         } else {
             LOGGER.error("Missing obligation policyId {} or policyContent {}", policyId,

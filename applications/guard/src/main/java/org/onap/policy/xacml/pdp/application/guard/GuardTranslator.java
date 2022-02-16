@@ -129,7 +129,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         //
         // Policy name should be at the root
         //
-        String policyName = toscaPolicy.getMetadata().get("policy-id");
+        String policyName = String.valueOf(toscaPolicy.getMetadata().get("policy-id"));
         //
         // Set it as the policy ID
         //
@@ -275,14 +275,14 @@ public class GuardTranslator implements ToscaPolicyTranslator {
      * @param map The Metadata TOSCA Map
      * @return Same Policy Object
      */
-    protected PolicyType fillMetadataSection(PolicyType policy, Map<String, String> map) {
+    protected PolicyType fillMetadataSection(PolicyType policy, Map<String, Object> map) {
         //
         // NOTE: The models code ensures the metadata section ALWAYS exists
         //
         //
         // Add in the Policy Version
         //
-        policy.setVersion(map.get("policy-version"));
+        policy.setVersion(String.valueOf(map.get("policy-version")));
         return policy;
     }
 
