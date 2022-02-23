@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b36083a8_a57eb3b9",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2022-02-23T12:22:27Z",
+      "side": 1,
+      "message": "Sorry but Permits and Denys are statistics that are specifically for Decision API, not deployments. You will need to track when a Deployment of a policies succeeds vs fails.",
+      "range": {
+        "startLine": 102,
+        "startChar": 1,
+        "endLine": 103,
+        "endChar": 101
+      },
+      "revId": "9648eb6f189cf1e9e3942cbb11ddba5ee27571ed",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
