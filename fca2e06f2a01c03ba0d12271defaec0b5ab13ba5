@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c1091169_5d5d2704",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/comm/XacmlPdpUpdatePublisherTest.java",
+        "patchSetId": 18
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2022-02-23T10:47:26Z",
+      "side": 0,
+      "message": "is this scenario not valid anymore?",
+      "range": {
+        "startLine": 257,
+        "startChar": 4,
+        "endLine": 265,
+        "endChar": 0
+      },
+      "revId": "fca2e06f2a01c03ba0d12271defaec0b5ab13ba5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
