@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "1747f430_241420a1",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 7879
+      },
+      "writtenOn": "2022-02-23T15:13:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3c344972_8d3587c9",
+      "revId": "3a2ad252f041bd373df9a21ac0f5ff14e6a16cc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ab2f190_df42479a",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
         "patchSetId": 10
@@ -50,6 +68,24 @@
       "revId": "3a2ad252f041bd373df9a21ac0f5ff14e6a16cc9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9738c857_677638cc",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 7879
+      },
+      "writtenOn": "2022-02-23T15:13:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ab2f190_df42479a",
+      "revId": "3a2ad252f041bd373df9a21ac0f5ff14e6a16cc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {

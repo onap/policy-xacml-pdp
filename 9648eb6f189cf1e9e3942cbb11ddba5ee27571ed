@@ -22,6 +22,30 @@
       "revId": "9648eb6f189cf1e9e3942cbb11ddba5ee27571ed",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da4e9da4_87601c66",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 7879
+      },
+      "writtenOn": "2022-02-23T15:13:33Z",
+      "side": 1,
+      "message": "Hey Pamela - this is from an old Patchset :) Would you be able to look at Patchset 19 and let me know what you think?",
+      "parentUuid": "b36083a8_a57eb3b9",
+      "range": {
+        "startLine": 102,
+        "startChar": 1,
+        "endLine": 103,
+        "endChar": 101
+      },
+      "revId": "9648eb6f189cf1e9e3942cbb11ddba5ee27571ed",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

@@ -22,6 +22,30 @@
       "revId": "fca2e06f2a01c03ba0d12271defaec0b5ab13ba5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2a63927f_4ead5a40",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/comm/XacmlPdpUpdatePublisherTest.java",
+        "patchSetId": 18
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 7879
+      },
+      "writtenOn": "2022-02-23T15:13:33Z",
+      "side": 0,
+      "message": "Hey Adheli - it looks like XacmlPdpStatisticsManager will never be set to null. It\u0027s initially created in XacmlPdpActivator and is used throughout from there. I\u0027ve moved the creation of statmgr to the setUp function to better replicate the availability of the XacmlPdpStatisticsManager :)",
+      "parentUuid": "c1091169_5d5d2704",
+      "range": {
+        "startLine": 257,
+        "startChar": 4,
+        "endLine": 265,
+        "endChar": 0
+      },
+      "revId": "fca2e06f2a01c03ba0d12271defaec0b5ab13ba5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

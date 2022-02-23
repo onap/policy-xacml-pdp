@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "10332cbb_08a819c4",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/XacmlState.java",
+        "patchSetId": 18
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7879
+      },
+      "writtenOn": "2022-02-23T15:13:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95ad07a9_51934370",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 3,
+        "endChar": 27
+      },
+      "revId": "79e3bea7660cd3690fad2b0899f0976a61965ba5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fcbf11f_b396fd40",
         "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpStatisticsManager.java",
         "patchSetId": 18
@@ -45,6 +69,30 @@
       "revId": "79e3bea7660cd3690fad2b0899f0976a61965ba5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5cf821c_5ac93ca2",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpStatisticsManager.java",
+        "patchSetId": 18
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7879
+      },
+      "writtenOn": "2022-02-23T15:13:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3fcbf11f_b396fd40",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 3,
+        "endChar": 27
+      },
+      "revId": "79e3bea7660cd3690fad2b0899f0976a61965ba5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -95,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "161ebf64_5f313eaf",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/StatisticsProvider.java",
+        "patchSetId": 18
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7879
+      },
+      "writtenOn": "2022-02-23T15:13:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "84a713a0_54cf0423",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 3,
+        "endChar": 28
+      },
+      "revId": "79e3bea7660cd3690fad2b0899f0976a61965ba5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "53a349a4_71f85977",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/XacmlStateTest.java",
         "patchSetId": 18
@@ -142,6 +214,30 @@
     },
     {
       "key": {
+        "uuid": "f45caf7a_27f68efb",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/XacmlStateTest.java",
+        "patchSetId": 18
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7879
+      },
+      "writtenOn": "2022-02-23T15:13:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "360d65b0_a5d79823",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 3,
+        "endChar": 28
+      },
+      "revId": "79e3bea7660cd3690fad2b0899f0976a61965ba5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a1ae3173_da118cb8",
         "filename": "main/src/test/java/org/onap/policy/pdpx/main/comm/XacmlPdpUpdatePublisherTest.java",
         "patchSetId": 18
@@ -162,6 +258,30 @@
       "revId": "79e3bea7660cd3690fad2b0899f0976a61965ba5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11557a53_b358daab",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/comm/XacmlPdpUpdatePublisherTest.java",
+        "patchSetId": 18
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7879
+      },
+      "writtenOn": "2022-02-23T15:13:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a1ae3173_da118cb8",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 3,
+        "endChar": 28
+      },
+      "revId": "79e3bea7660cd3690fad2b0899f0976a61965ba5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
