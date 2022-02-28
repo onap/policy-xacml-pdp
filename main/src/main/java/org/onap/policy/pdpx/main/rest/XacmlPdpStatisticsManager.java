@@ -20,9 +20,12 @@
 
 package org.onap.policy.pdpx.main.rest;
 
+import io.prometheus.client.Counter;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Synchronized;
+import org.onap.policy.common.utils.resources.PrometheusUtils;
+import org.onap.policy.models.pdp.enums.PdpResponseStatus;
 
 /**
  * Class to hold statistical data for xacmlPdp component.
@@ -32,6 +35,14 @@ public class XacmlPdpStatisticsManager {
     @Getter
     @Setter
     private static XacmlPdpStatisticsManager current = null;
+    protected static final String PROMETHEUS_NAMESPACE = "pdpx";
+
+    protected static final Counter deploymentsCounter =
+        Counter.build().namespace(PROMETHEUS_NAMESPACE).name(PrometheusUtils.POLICY_DEPLOYMENTS_METRIC)
+            .labelNames(PrometheusUtils.OPERATION_METRIC_LABEL,
+                PrometheusUtils.STATUS_METRIC_LABEL)
+            .help(PrometheusUtils.POLICY_DEPLOYMENT_HELP)
+            .register();
 
     private long totalPolicyTypesCount;
     private long totalPoliciesCount;
@@ -108,6 +119,8 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public long updateDeploySuccessCount() {
+        deploymentsCounter.labels(PrometheusUtils.DEPLOY_OPERATION,
+            PdpResponseStatus.SUCCESS.name()).inc();
         return ++deploySuccessCount;
     }
 
@@ -118,6 +131,8 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public long updateDeployFailureCount() {
+        deploymentsCounter.labels(PrometheusUtils.DEPLOY_OPERATION,
+            PdpResponseStatus.FAIL.name()).inc();
         return ++deployFailureCount;
     }
 
@@ -128,6 +143,8 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public long updateUndeploySuccessCount() {
+        deploymentsCounter.labels(PrometheusUtils.UNDEPLOY_OPERATION,
+            PdpResponseStatus.SUCCESS.name()).inc();
         return ++undeploySuccessCount;
     }
 
@@ -138,6 +155,8 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public long updateUndeployFailureCount() {
+        deploymentsCounter.labels(PrometheusUtils.UNDEPLOY_OPERATION,
+            PdpResponseStatus.FAIL.name()).inc();
         return ++undeployFailureCount;
     }
 
