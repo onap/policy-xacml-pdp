@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dde5c30d_70ddfe86",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpStatisticsManager.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-03-01T22:06:38Z",
+      "side": 1,
+      "message": "remove \"PrometheusUtils.STATE_METRIC_LABEL,\"",
+      "revId": "f003b85b24bd46ba5aea39f08cea204280849a0b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
