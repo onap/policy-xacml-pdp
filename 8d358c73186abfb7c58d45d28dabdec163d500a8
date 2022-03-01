@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b3887998_ce50fb03",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpStatisticsManager.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-03-01T21:07:01Z",
+      "side": 1,
+      "message": "can use namespace here:  https://git.onap.org/policy/common/tree/utils/src/main/java/org/onap/policy/common/utils/resources/PrometheusUtils.java",
+      "revId": "8d358c73186abfb7c58d45d28dabdec163d500a8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
