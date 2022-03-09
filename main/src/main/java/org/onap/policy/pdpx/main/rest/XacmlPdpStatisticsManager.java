@@ -36,12 +36,24 @@ public class XacmlPdpStatisticsManager {
     @Setter
     private static XacmlPdpStatisticsManager current = null;
     protected static final String PROMETHEUS_NAMESPACE = "pdpx";
+    protected static final String POLICY_DECISIONS_METRIC = "policy_decisions";
+    public static final String POLICY_DECISIONS_HELP = "The total number of policy decisions.";
+    public static final String PERMIT_OPERATION = "permit";
+    public static final String DENY_OPERATION = "deny";
+    public static final String INDETERMINANT_OPERATION = "indeterminant";
 
     protected static final Counter deploymentsCounter =
         Counter.build().namespace(PROMETHEUS_NAMESPACE).name(PrometheusUtils.POLICY_DEPLOYMENTS_METRIC)
             .labelNames(PrometheusUtils.OPERATION_METRIC_LABEL,
                 PrometheusUtils.STATUS_METRIC_LABEL)
             .help(PrometheusUtils.POLICY_DEPLOYMENT_HELP)
+            .register();
+
+    protected static final Counter decisionsCounter =
+        Counter.build().namespace(PROMETHEUS_NAMESPACE).name(POLICY_DECISIONS_METRIC)
+            .labelNames(PrometheusUtils.OPERATION_METRIC_LABEL,
+                PrometheusUtils.STATUS_METRIC_LABEL)
+            .help(POLICY_DECISIONS_HELP)
             .register();
 
     private long totalPolicyTypesCount;
@@ -99,6 +111,8 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public long updatePermitDecisionsCount() {
+        decisionsCounter.labels(PERMIT_OPERATION,
+            PdpResponseStatus.SUCCESS.name()).inc();
         return ++permitDecisionsCount;
     }
 
@@ -109,6 +123,8 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public long updateDenyDecisionsCount() {
+        decisionsCounter.labels(DENY_OPERATION,
+            PdpResponseStatus.SUCCESS.name()).inc();
         return ++denyDecisionsCount;
     }
 
@@ -167,6 +183,8 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public long updateIndeterminantDecisionsCount() {
+        decisionsCounter.labels(INDETERMINANT_OPERATION,
+            PdpResponseStatus.SUCCESS.name()).inc();
         return ++indeterminantDecisionsCount;
     }
 
