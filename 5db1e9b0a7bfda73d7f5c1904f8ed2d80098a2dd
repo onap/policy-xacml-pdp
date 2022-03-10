@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb2cdffb_9af26a2a",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpStatisticsManager.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-03-10T20:29:26Z",
+      "side": 1,
+      "message": "i think this is indeterminate",
+      "revId": "5db1e9b0a7bfda73d7f5c1904f8ed2d80098a2dd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c808aca_66104ff7",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpStatisticsManager.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-03-10T20:29:26Z",
+      "side": 1,
+      "message": "remove operation metric label",
+      "revId": "5db1e9b0a7bfda73d7f5c1904f8ed2d80098a2dd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54e5fc76_c2848bbd",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpStatisticsManager.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-03-10T20:29:26Z",
+      "side": 1,
+      "message": "remove PdpResponseStatus.SUCCESS.name()",
+      "revId": "5db1e9b0a7bfda73d7f5c1904f8ed2d80098a2dd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d4874d01_d21b3128",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpStatisticsManager.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-03-10T20:29:26Z",
+      "side": 1,
+      "message": "PdpResponseStatus.SUCCESS.name()",
+      "revId": "5db1e9b0a7bfda73d7f5c1904f8ed2d80098a2dd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "882b7f43_9f3b935e",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpStatisticsManager.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-03-10T20:29:26Z",
+      "side": 1,
+      "message": "PdpResponseStatus.SUCCESS.name()",
+      "revId": "5db1e9b0a7bfda73d7f5c1904f8ed2d80098a2dd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e69a027a_ef4bb7d0",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpStatisticsManager.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-03-10T20:29:26Z",
+      "side": 1,
+      "message": "add a \"not applicable\" here same as for permit deny and indeterminate",
+      "revId": "5db1e9b0a7bfda73d7f5c1904f8ed2d80098a2dd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
