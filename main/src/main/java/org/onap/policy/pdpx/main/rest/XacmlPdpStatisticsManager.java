@@ -36,12 +36,24 @@ public class XacmlPdpStatisticsManager {
     @Setter
     private static XacmlPdpStatisticsManager current = null;
     protected static final String PROMETHEUS_NAMESPACE = "pdpx";
+    protected static final String POLICY_DECISIONS_METRIC = "policy_decisions";
+    public static final String POLICY_DECISIONS_HELP = "The total number of policy decisions.";
+    public static final String PERMIT_OPERATION = "permit";
+    public static final String DENY_OPERATION = "deny";
+    public static final String INDETERMINANT_OPERATION = "indeterminant";
+    public static final String NOT_APPLICABLE_OPERATION = "not_applicable";
 
     protected static final Counter deploymentsCounter =
         Counter.build().namespace(PROMETHEUS_NAMESPACE).name(PrometheusUtils.POLICY_DEPLOYMENTS_METRIC)
             .labelNames(PrometheusUtils.OPERATION_METRIC_LABEL,
                 PrometheusUtils.STATUS_METRIC_LABEL)
             .help(PrometheusUtils.POLICY_DEPLOYMENT_HELP)
+            .register();
+
+    protected static final Counter decisionsCounter =
+        Counter.build().namespace(PROMETHEUS_NAMESPACE).name(POLICY_DECISIONS_METRIC)
+            .labelNames(PrometheusUtils.STATUS_METRIC_LABEL)
+            .help(POLICY_DECISIONS_HELP)
             .register();
 
     private long totalPolicyTypesCount;
@@ -99,6 +111,7 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public long updatePermitDecisionsCount() {
+        decisionsCounter.labels(PERMIT_OPERATION).inc();
         return ++permitDecisionsCount;
     }
 
@@ -109,6 +122,7 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public long updateDenyDecisionsCount() {
+        decisionsCounter.labels(DENY_OPERATION).inc();
         return ++denyDecisionsCount;
     }
 
@@ -167,6 +181,7 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public long updateIndeterminantDecisionsCount() {
+        decisionsCounter.labels(INDETERMINANT_OPERATION).inc();
         return ++indeterminantDecisionsCount;
     }
 
@@ -177,6 +192,7 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public long updateNotApplicableDecisionsCount() {
+        decisionsCounter.labels(NOT_APPLICABLE_OPERATION).inc();
         return ++notApplicableDecisionsCount;
     }
 
