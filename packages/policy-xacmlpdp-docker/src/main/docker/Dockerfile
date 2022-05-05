@@ -29,6 +29,7 @@ ENV POLICY_LOGS=$POLICY_LOGS
 ENV POLICY_HOME=$POLICY_HOME/pdpx
 RUN apk update && \
     apk add mariadb-client && \
+    apk add postgresql-client && \
     mkdir -p $POLICY_HOME $POLICY_LOGS $POLICY_HOME/etc/ssl $POLICY_HOME/bin $POLICY_HOME/apps && \
     chown -R policy:policy $POLICY_HOME $POLICY_LOGS && mkdir /packages
 
@@ -38,7 +39,8 @@ RUN tar xvfz /packages/policy-xacmlpdp.tar.gz --directory $POLICY_HOME && \
 
 WORKDIR $POLICY_HOME
 COPY policy-pdpx.sh  bin/.
-RUN chown -R policy:policy * && chmod 755 bin/*.sh && chmod 755 mysql/bin/*.sh
+COPY policy-pdpx-pg.sh  bin/.
+RUN chown -R policy:policy * && chmod 755 bin/*.sh && chmod 755 mysql/bin/*.sh && chmod 755 postgres/bin/*.sh
 
 USER policy
 WORKDIR $POLICY_HOME/bin

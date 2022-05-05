@@ -1,9 +1,7 @@
 #!/usr/bin/env sh
 #
 # ============LICENSE_START=======================================================
-#  Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
-#  Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
-#  Modifications Copyright (C) 2022 Nordix Foundation. All rights reserved.
+#  Copyright (C) 2022 Nordix Foundation. All rights reserved.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,39 +18,39 @@
 # SPDX-License-Identifier: Apache-2.0
 # ============LICENSE_END=========================================================
 #
-SQL_FILE="${POLICY_HOME}/mysql/sql/createguardtable.sql"
+SQL_FILE="${POLICY_HOME}/mysql/sql/createguardtable-pg.sql"
 
 # Remove escape backslashes if present and save output in temp file
-sed 's/\\//g' "${POLICY_HOME}"/apps/guard/xacml.properties > /tmp/temp.xacml.properties
+sed 's/\\//g' "${POLICY_HOME}"/apps/guard/xacml-pg.properties > /tmp/temp.xacml-pg.properties
 
 # Remove temp file
-if [ ! -f /tmp/temp.xacml.properties ]; then
+if [ ! -f /tmp/temp.xacml-pg.properties ]; then
     echo "Temporary guard xacml properties file not found!"
     exit 1
 fi
 
 # Extract Maria DB Credential properties from xacml.properties file
-DB_HOSTNAME=$(awk -F[/:] '$1 == "javax.persistence.jdbc.url=jdbc" { print $3 $5 }' /tmp/temp.xacml.properties)
-DB_USERNAME=$(awk -F= '$1 == "javax.persistence.jdbc.user" { print $2 }' /tmp/temp.xacml.properties)
-DB_PASSWORD=$(awk -F= '$1 == "javax.persistence.jdbc.password" { print $2 }' /tmp/temp.xacml.properties)
+DB_HOSTNAME=$(awk -F[/:] '$1 == "javax.persistence.jdbc.url=jdbc" { print $3 $5 }' /tmp/temp.xacml-pg.properties)
+DB_USERNAME=$(awk -F= '$1 == "javax.persistence.jdbc.user" { print $2 }' /tmp/temp.xacml-pg.properties)
+DB_PASSWORD=$(awk -F= '$1 == "javax.persistence.jdbc.password" { print $2 }' /tmp/temp.xacml-pg.properties)
 
 # Remove temp file
-rm /tmp/temp.xacml.properties
+rm /tmp/temp.xacml-pg.properties
 
 if [ -z "$DB_HOSTNAME" ]; then
-    echo "No db host provided in guard xacml.properties."
+    echo "No db host provided in guard xacml-pg.properties."
     exit 2
 fi
 
 if [ -z "$DB_USERNAME" ]; then
-    echo "No db username provided in guard xacml.properties."
+    echo "No db username provided in guard xacml-pg.properties."
     exit 2
 fi
 
 if [ -z "$DB_PASSWORD" ]; then
-    echo "No db password provided in guard xacml.properties."
+    echo "No db password provided in guard xacml-pg.properties."
     exit 2
 fi
 
 # Execute sql command using sql file to create table
-mysql -u${DB_USERNAME} -p${DB_PASSWORD} -h${DB_HOSTNAME} < "${SQL_FILE}"
+psql -U postgres -h ${DB_HOSTNAME} -f ${SQL_FILE}
