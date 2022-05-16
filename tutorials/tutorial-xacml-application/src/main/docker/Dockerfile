@@ -1,4 +1,4 @@
-FROM onap/policy-xacml-pdp
+FROM onap/policy-xacml-pdp:2.6.4-SNAPSHOT
 
 ADD maven/${project.build.finalName}.jar /opt/app/policy/pdpx/lib/${project.build.finalName}.jar
 
