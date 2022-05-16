@@ -34,6 +34,24 @@
       "revId": "f62ceaf4092567bce26faf01ab6b9b9ba23a2870",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e839c37a_3c487791",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/docker-compose.yml",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-05-16T19:38:30Z",
+      "side": 1,
+      "message": "Besides that, I thought this had to be onap/policy-xacml-tutorial instead of onap/policy-xacml-pdp so to pick up the image generated per pom.xml of this tutorial?",
+      "parentUuid": "72860739_cc6923a0",
+      "revId": "f62ceaf4092567bce26faf01ab6b9b9ba23a2870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
