@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f00e0b0_809351d6",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/docker-compose.yml",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-05-16T19:15:27Z",
+      "side": 1,
+      "message": "I think this is supposed to be the resulting image from the tutorial, not the official one.",
+      "revId": "f62ceaf4092567bce26faf01ab6b9b9ba23a2870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

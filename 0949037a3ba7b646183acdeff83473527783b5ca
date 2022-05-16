@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a2deb54_f166c96c",
+        "filename": "tutorials/tutorial-xacml-application/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-05-16T19:15:27Z",
+      "side": 0,
+      "message": "I don\u0027t think we should be doing changes in this file, this is for a guided tutorial on documentation, the version doesn\u0027t have to match the official version, this can be viewed as documentation if you will.",
+      "revId": "0949037a3ba7b646183acdeff83473527783b5ca",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
