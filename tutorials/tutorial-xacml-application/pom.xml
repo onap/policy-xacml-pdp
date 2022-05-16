@@ -64,9 +64,10 @@
             <artifactId>docker-maven-plugin</artifactId>
             <configuration>
               <verbose>true</verbose>
+              <imagePullPolicy>Always</imagePullPolicy>
               <images>
                 <image>
-                  <name>onap/policy-xacml-tutorial</name>
+                  <name>onap/policy-xacml-tutorial:${project.version}</name>
                   <alias>xacml-pdp</alias>
                   <build>
                     <contextDir>${project.basedir}/src/main/docker</contextDir>

@@ -28,7 +28,7 @@ services:
       expose:
        - 3306
    message-router:
-      image: nexus3.onap.org:10001/onap/policy-models-simulator:latest
+      image: nexus3.onap.org:10001/onap/policy-models-simulator:2.7.0-SNAPSHOT
       container_name: dmaap-simulator
       hostname: dmaap-simulator
       volumes:
@@ -38,8 +38,7 @@ services:
       expose:
        - 3904
    api:
-      # Istanbul To Be released images
-      image: nexus3.onap.org:10001/onap/policy-api:2.5.0-SNAPSHOT
+      image: nexus3.onap.org:10001/onap/policy-api:2.7.0-SNAPSHOT
       container_name: policy-api
       depends_on:
        - mariadb
@@ -49,8 +48,7 @@ services:
       expose:
        - 6767
    pap:
-      # Istanbul To Be released images
-      image: nexus3.onap.org:10001/onap/policy-pap:2.5.0-SNAPSHOT
+      image: nexus3.onap.org:10001/onap/policy-pap:2.7.0-SNAPSHOT
       container_name: policy-pap
       depends_on:
        - mariadb
@@ -62,7 +60,7 @@ services:
       expose:
        - 6868
    xacml-pdp:
-      image: onap/policy-xacml-tutorial
+      image: onap/policy-xacml-tutorial:2.7.0-SNAPSHOT
       container_name: policy-xacml-pdp
       depends_on:
        - mariadb
