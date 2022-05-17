@@ -46,6 +46,30 @@
       "revId": "dae3cfb064642a8baf40f8d6c89d74be3892a4c7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7de859ac_786a5257",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/docker-compose.yml",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 5029
+      },
+      "writtenOn": "2022-05-17T02:35:50Z",
+      "side": 1,
+      "message": "What\u0027s the released version of J release? I have searched this image and only find the SNAPSHOT image tags. I am new in ONAP and not very familar with it.",
+      "parentUuid": "33c2fec0_56baa31b",
+      "range": {
+        "startLine": 31,
+        "startChar": 64,
+        "endLine": 31,
+        "endChar": 78
+      },
+      "revId": "dae3cfb064642a8baf40f8d6c89d74be3892a4c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
