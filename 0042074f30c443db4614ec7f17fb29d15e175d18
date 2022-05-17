@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d45af620_0f0b4188",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/postgres/sql/createguardtable-pg.sql",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2022-05-17T14:52:52Z",
+      "side": 1,
+      "message": "is that right?",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 2
+      },
+      "revId": "0042074f30c443db4614ec7f17fb29d15e175d18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b794196_6662cc8d",
+        "filename": "tutorials/tutorial-enforcement/src/main/docker/config/db/db-pg.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2022-05-17T14:52:52Z",
+      "side": 1,
+      "message": "perhaps remove",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 61
+      },
+      "revId": "0042074f30c443db4614ec7f17fb29d15e175d18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0863af0_f9e6a541",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/config/db/db-pg.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2022-05-17T14:52:52Z",
+      "side": 1,
+      "message": "maybe also remove 😊",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 61
+      },
+      "revId": "0042074f30c443db4614ec7f17fb29d15e175d18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
