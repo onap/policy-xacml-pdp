@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "67a89e99_557371b0",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/postgres/sql/createguardtable-pg.sql",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2022-05-17T16:09:21Z",
+      "side": 1,
+      "message": "Yes, pretty sure this the equivalent of \"use\" in mysql.",
+      "parentUuid": "d45af620_0f0b4188",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 2
+      },
+      "revId": "0042074f30c443db4614ec7f17fb29d15e175d18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1b794196_6662cc8d",
         "filename": "tutorials/tutorial-enforcement/src/main/docker/config/db/db-pg.sh",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2022-05-17T14:52:52Z",
       "side": 1,
       "message": "perhaps remove",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 61
+      },
+      "revId": "0042074f30c443db4614ec7f17fb29d15e175d18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3143efe9_3eefa324",
+        "filename": "tutorials/tutorial-enforcement/src/main/docker/config/db/db-pg.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2022-05-17T16:09:21Z",
+      "side": 1,
+      "message": "My bad. Forgot to remove this. Done now.",
+      "parentUuid": "1b794196_6662cc8d",
       "range": {
         "startLine": 19,
         "startChar": 0,
@@ -68,6 +116,30 @@
       "revId": "0042074f30c443db4614ec7f17fb29d15e175d18",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "845f3834_f4add37b",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/config/db/db-pg.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2022-05-17T16:09:21Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e0863af0_f9e6a541",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 61
+      },
+      "revId": "0042074f30c443db4614ec7f17fb29d15e175d18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
