@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "1345135f_80cd0161",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/postgres/sql/createguardtable-pg.sql",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-05-18T12:48:38Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "67a89e99_557371b0",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 2
+      },
+      "revId": "0042074f30c443db4614ec7f17fb29d15e175d18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1b794196_6662cc8d",
         "filename": "tutorials/tutorial-enforcement/src/main/docker/config/db/db-pg.sh",
         "patchSetId": 1
@@ -93,6 +117,30 @@
       "revId": "0042074f30c443db4614ec7f17fb29d15e175d18",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a6de73f_8fdaddea",
+        "filename": "tutorials/tutorial-enforcement/src/main/docker/config/db/db-pg.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-05-18T12:48:38Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3143efe9_3eefa324",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 61
+      },
+      "revId": "0042074f30c443db4614ec7f17fb29d15e175d18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
