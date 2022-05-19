@@ -20,6 +20,7 @@
 
 package org.onap.policy.pdpx.main.rest.model;
 
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -45,4 +46,5 @@ public class StatisticsReport {
     private long undeployFailureCount;
     private long indeterminantDecisionsCount;
     private long notApplicableDecisionsCount;
+    private Map<String, Map<String, Integer>> applicationMetrics;
 }
