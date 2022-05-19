@@ -22,6 +22,8 @@ package org.onap.policy.pdpx.main.rest;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.ws.rs.client.Invocation;
 import org.junit.Test;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
@@ -83,12 +85,12 @@ public class TestXacmlPdpRestServer extends CommonRest {
         Invocation.Builder invocationBuilder = sendHttpsRequest(STATISTICS_ENDPOINT);
         StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
         LOGGER.info("testStatistics_200 health report {}", report);
-        validateStatisticsReport(report, 0, 200);
+        validateStatisticsReport(report, 0, 200, new HashMap<>());
         updateXacmlPdpStatistics();
         invocationBuilder = sendHttpsRequest(STATISTICS_ENDPOINT);
         report = invocationBuilder.get(StatisticsReport.class);
         LOGGER.info("testStatistics_200 health report {}", report);
-        validateStatisticsReport(report, 1, 200);
+        validateStatisticsReport(report, 1, 200, returnStatisticsMap());
     }
 
     @Test
@@ -100,7 +102,7 @@ public class TestXacmlPdpRestServer extends CommonRest {
         final Invocation.Builder invocationBuilder = sendHttpsRequest(STATISTICS_ENDPOINT);
         final StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
         LOGGER.info("testStatistics_500 health report {}", report);
-        validateStatisticsReport(report, 0, 500);
+        validateStatisticsReport(report, 0, 500, new HashMap<>());
     }
 
     @Test
@@ -109,7 +111,20 @@ public class TestXacmlPdpRestServer extends CommonRest {
         final Invocation.Builder invocationBuilder = sendHttpsRequest(STATISTICS_ENDPOINT);
         final StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
         LOGGER.info("testHttpsStatistic health report {}", report);
-        validateStatisticsReport(report, 0, 200);
+        validateStatisticsReport(report, 0, 200, new HashMap<>());
+    }
+
+    private Map<String, Map<String, Integer>> returnStatisticsMap() {
+        Map<String, Integer> testAppMetrics1 = new HashMap<>();
+        Map<String, Integer> testAppMetrics2 = new HashMap<>();
+        testAppMetrics1.put("updatePermitDecisionsCount", 1);
+        testAppMetrics1.put("updateDenyDecisionsCount", 1);
+        testAppMetrics2.put("updateIndeterminantDecisionsCount", 1);
+        testAppMetrics2.put("updateNotApplicableDecisionsCount", 1);
+        Map<String, Map<String, Integer>> statisticsMap = new HashMap<>();
+        statisticsMap.put("testApp1", testAppMetrics1);
+        statisticsMap.put("testApp2", testAppMetrics2);
+        return statisticsMap;
     }
 
     private void updateXacmlPdpStatistics() {
@@ -117,13 +132,14 @@ public class TestXacmlPdpRestServer extends CommonRest {
         ++nupdates;
         stats.setTotalPolicyCount(nupdates);
         stats.setTotalPolicyTypesCount(nupdates);
-        stats.updatePermitDecisionsCount();
-        stats.updateDenyDecisionsCount();
-        stats.updateIndeterminantDecisionsCount();
-        stats.updateNotApplicableDecisionsCount();
+        stats.updatePermitDecisionsCount("testApp1");
+        stats.updateDenyDecisionsCount("testApp1");
+        stats.updateIndeterminantDecisionsCount("testApp2");
+        stats.updateNotApplicableDecisionsCount("testApp2");
     }
 
-    private void validateStatisticsReport(final StatisticsReport report, final int count, final int code) {
+    private void validateStatisticsReport(final StatisticsReport report, final int count,
+                                          final int code, final Map<String, Map<String, Integer>> decisionsMap) {
         assertEquals(code, report.getCode());
         assertEquals(count, report.getTotalPoliciesCount());
         assertEquals(count, report.getTotalPolicyTypesCount());
@@ -131,6 +147,7 @@ public class TestXacmlPdpRestServer extends CommonRest {
         assertEquals(count, report.getDenyDecisionsCount());
         assertEquals(count, report.getIndeterminantDecisionsCount());
         assertEquals(count, report.getNotApplicableDecisionsCount());
+        assertEquals(decisionsMap, report.getApplicationMetrics());
     }
 
     private void validateHealthCheckReport(final String name, final String url, final boolean healthy, final int code,
