@@ -51,6 +51,7 @@ public class StatisticsProvider {
         report.setUndeployFailureCount(stats.getUndeployFailureCount());
         report.setIndeterminantDecisionsCount(stats.getIndeterminantDecisionsCount());
         report.setNotApplicableDecisionsCount(stats.getNotApplicableDecisionsCount());
+        report.setApplicationMetrics(stats.getApplicationMetrics());
         return report;
     }
 }
