@@ -117,10 +117,10 @@ public class TestXacmlPdpRestServer extends CommonRest {
         ++nupdates;
         stats.setTotalPolicyCount(nupdates);
         stats.setTotalPolicyTypesCount(nupdates);
-        stats.updatePermitDecisionsCount();
-        stats.updateDenyDecisionsCount();
-        stats.updateIndeterminantDecisionsCount();
-        stats.updateNotApplicableDecisionsCount();
+        stats.updatePermitDecisionsCount("testApp");
+        stats.updateDenyDecisionsCount("testApp");
+        stats.updateIndeterminantDecisionsCount("testApp");
+        stats.updateNotApplicableDecisionsCount("testApp");
     }
 
     private void validateStatisticsReport(final StatisticsReport report, final int count, final int code) {

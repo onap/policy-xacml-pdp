@@ -42,6 +42,7 @@ public class XacmlPdpStatisticsManager {
     public static final String DENY_OPERATION = "deny";
     public static final String INDETERMINANT_OPERATION = "indeterminant";
     public static final String NOT_APPLICABLE_OPERATION = "not_applicable";
+    public static final String APPLICATION_NAME = "application_name";
 
     protected static final Counter deploymentsCounter =
         Counter.build().namespace(PROMETHEUS_NAMESPACE).name(PrometheusUtils.POLICY_DEPLOYMENTS_METRIC)
@@ -52,7 +53,7 @@ public class XacmlPdpStatisticsManager {
 
     protected static final Counter decisionsCounter =
         Counter.build().namespace(PROMETHEUS_NAMESPACE).name(POLICY_DECISIONS_METRIC)
-            .labelNames(PrometheusUtils.STATUS_METRIC_LABEL)
+            .labelNames(APPLICATION_NAME, PrometheusUtils.STATUS_METRIC_LABEL)
             .help(POLICY_DECISIONS_HELP)
             .register();
 
@@ -110,8 +111,8 @@ public class XacmlPdpStatisticsManager {
      * @return the permitDecisionsCount
      */
     @Synchronized
-    public long updatePermitDecisionsCount() {
-        decisionsCounter.labels(PERMIT_OPERATION).inc();
+    public long updatePermitDecisionsCount(String appName) {
+        decisionsCounter.labels(appName, PERMIT_OPERATION).inc();
         return ++permitDecisionsCount;
     }
 
@@ -121,8 +122,8 @@ public class XacmlPdpStatisticsManager {
      * @return the denyDecisionsCount
      */
     @Synchronized
-    public long updateDenyDecisionsCount() {
-        decisionsCounter.labels(DENY_OPERATION).inc();
+    public long updateDenyDecisionsCount(String appName) {
+        decisionsCounter.labels(appName, DENY_OPERATION).inc();
         return ++denyDecisionsCount;
     }
 
@@ -180,8 +181,8 @@ public class XacmlPdpStatisticsManager {
      * @return the indeterminantDecisionsCount
      */
     @Synchronized
-    public long updateIndeterminantDecisionsCount() {
-        decisionsCounter.labels(INDETERMINANT_OPERATION).inc();
+    public long updateIndeterminantDecisionsCount(String appName) {
+        decisionsCounter.labels(appName, INDETERMINANT_OPERATION).inc();
         return ++indeterminantDecisionsCount;
     }
 
@@ -191,8 +192,8 @@ public class XacmlPdpStatisticsManager {
      * @return the notApplicableDecisionsCount
      */
     @Synchronized
-    public long updateNotApplicableDecisionsCount() {
-        decisionsCounter.labels(NOT_APPLICABLE_OPERATION).inc();
+    public long updateNotApplicableDecisionsCount(String appName) {
+        decisionsCounter.labels(appName, NOT_APPLICABLE_OPERATION).inc();
         return ++notApplicableDecisionsCount;
     }
 

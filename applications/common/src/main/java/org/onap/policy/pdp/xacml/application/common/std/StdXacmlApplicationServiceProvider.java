@@ -119,6 +119,10 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
         throw new UnsupportedOperationException("Please override and implement canSupportPolicyType");
     }
 
+    protected void gatherMetrics(ToscaConceptIdentifier policyTypeId) {
+        // XacmlPdpStatisticsManager stats = XacmlPdpStatisticsManager.getCurrent();
+    }
+
     @Override
     public synchronized void loadPolicy(ToscaPolicy toscaPolicy) throws XacmlApplicationException {
         try {
