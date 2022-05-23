@@ -70,6 +70,30 @@
       "revId": "dae3cfb064642a8baf40f8d6c89d74be3892a4c7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71f9bbe8_81d80f1a",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/docker-compose.yml",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-05-23T08:24:27Z",
+      "side": 1,
+      "message": "The released version for Jakarta is 2.6.3\n\nThis page should have the latest status of all Policy Framework components. I\u0027ll update it later today.\nhttps://wiki.onap.org/display/DW/Policy+Framework+Project%3A+Component+Versions",
+      "parentUuid": "7de859ac_786a5257",
+      "range": {
+        "startLine": 31,
+        "startChar": 64,
+        "endLine": 31,
+        "endChar": 78
+      },
+      "revId": "dae3cfb064642a8baf40f8d6c89d74be3892a4c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
