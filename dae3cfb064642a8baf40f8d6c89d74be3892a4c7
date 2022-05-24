@@ -94,6 +94,30 @@
       "revId": "dae3cfb064642a8baf40f8d6c89d74be3892a4c7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5ed3d7c_2d66e1bf",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/docker-compose.yml",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 5029
+      },
+      "writtenOn": "2022-05-24T02:38:34Z",
+      "side": 1,
+      "message": "I tried to pull this image with tag 2.6.3, but got failed.\nError response from daemon: manifest for nexus3.onap.org:10001/onap/policy-models-simulator:2.6.3 not found: manifest unknown: manifest unknown",
+      "parentUuid": "71f9bbe8_81d80f1a",
+      "range": {
+        "startLine": 31,
+        "startChar": 64,
+        "endLine": 31,
+        "endChar": 78
+      },
+      "revId": "dae3cfb064642a8baf40f8d6c89d74be3892a4c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
