@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "859833db_8ad66853",
+        "filename": "tutorials/tutorial-xacml-application/pom.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-05-25T14:54:06Z",
+      "side": 1,
+      "message": "we usually in the other images as I can recall we use \u003ctags\u003e section to give it version number and it should be ${project.version}* to avoid hardcoding it.",
+      "revId": "b6603625e57b553f3cb2d54d2aa22344619647d6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "550fd9e3_fdde7e63",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/Dockerfile",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-05-25T14:54:06Z",
+      "side": 1,
+      "message": "Some questions:\n\nCan you automate this Liam?  It will be better to follow the pattern in drools-applications extending drools-pdp and putting its version taken by drools-applications in the pom.xml.  Or perhaps use the ${project.version} if possible.\n\nIs the plan to build it with every merge to guarantee no breakage?\nDoes it have to be released?",
+      "revId": "b6603625e57b553f3cb2d54d2aa22344619647d6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8b980df_bbee7ff1",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/docker-compose.yml",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-05-25T14:54:06Z",
+      "side": 1,
+      "message": "same with these versions Liam, are you planning to automate the replacement?",
+      "revId": "b6603625e57b553f3cb2d54d2aa22344619647d6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
