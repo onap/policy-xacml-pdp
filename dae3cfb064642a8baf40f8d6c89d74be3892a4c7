@@ -118,6 +118,30 @@
       "revId": "dae3cfb064642a8baf40f8d6c89d74be3892a4c7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e582bcaa_4f58f7a4",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/docker-compose.yml",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-05-26T10:30:43Z",
+      "side": 1,
+      "message": "Aah yes, the simulator is not released into Nexus as a released version, there are only snapshots of it. It is used for testing and simulation. Therefore it\u0027s fine to leeve it at 2.6.4-SNAPSHOT.",
+      "parentUuid": "a5ed3d7c_2d66e1bf",
+      "range": {
+        "startLine": 31,
+        "startChar": 64,
+        "endLine": 31,
+        "endChar": 78
+      },
+      "revId": "dae3cfb064642a8baf40f8d6c89d74be3892a4c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
