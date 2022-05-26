@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "47d6c638_d053d279",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/Dockerfile",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-05-26T08:38:39Z",
+      "side": 1,
+      "message": "Yes, I\u0027ll do this too at the next release so we can pull in this time done manually for this time.",
+      "parentUuid": "550fd9e3_fdde7e63",
+      "revId": "b6603625e57b553f3cb2d54d2aa22344619647d6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a8b980df_bbee7ff1",
         "filename": "tutorials/tutorial-xacml-application/src/main/docker/docker-compose.yml",
         "patchSetId": 4
@@ -50,6 +68,24 @@
       "revId": "b6603625e57b553f3cb2d54d2aa22344619647d6",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a0d6909_c5c48be2",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/docker-compose.yml",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-05-26T08:38:39Z",
+      "side": 1,
+      "message": "Yes, I\u0027ll do it for the next release so It\u0027s OK to do this manually this time.",
+      "parentUuid": "a8b980df_bbee7ff1",
+      "revId": "b6603625e57b553f3cb2d54d2aa22344619647d6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
