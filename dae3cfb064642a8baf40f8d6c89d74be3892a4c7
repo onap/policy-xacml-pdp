@@ -142,6 +142,30 @@
       "revId": "dae3cfb064642a8baf40f8d6c89d74be3892a4c7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "431c3449_c044869e",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/docker-compose.yml",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2022-05-27T12:03:10Z",
+      "side": 1,
+      "message": "As long as the CI jobs exist to create that SNAPSHOT, once those jobs go away then in 30 days the SNAPSHOT gets deleted by LF tools.",
+      "parentUuid": "e582bcaa_4f58f7a4",
+      "range": {
+        "startLine": 31,
+        "startChar": 64,
+        "endLine": 31,
+        "endChar": 78
+      },
+      "revId": "dae3cfb064642a8baf40f8d6c89d74be3892a4c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
