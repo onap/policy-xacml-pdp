@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3197b8a3_73baddfa",
+        "filename": "packages/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2022-06-02T13:26:25Z",
+      "side": 1,
+      "message": "oops - some extra spaces here.",
+      "revId": "5b3819bae6d4265c9b570d12af2710164992f6d7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
