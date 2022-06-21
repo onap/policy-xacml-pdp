@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "021a1cc5_2bb5a11c",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpStatisticsManager.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-06-21T20:05:49Z",
+      "side": 1,
+      "message": "instantiate here better unconditionally and delete \"if\" in line 93.",
+      "revId": "d6adcdebd59e45af28fb22a1fe69613c3748b85e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11bfa676_8461425e",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpStatisticsManager.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-06-21T20:05:49Z",
+      "side": 1,
+      "message": ".clear() to clear the table if precreated at object instantiation",
+      "revId": "d6adcdebd59e45af28fb22a1fe69613c3748b85e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89904b30_42510287",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/provider/DecisionProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-06-21T20:05:49Z",
+      "side": 1,
+      "message": "Add 2019-2020, 2022 ..",
+      "revId": "d6adcdebd59e45af28fb22a1fe69613c3748b85e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d1bb8c8_c51f9517",
+        "filename": "main/src/test/java/org/onap/policy/pdpx/main/rest/TestXacmlPdpRestServer.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-06-21T20:05:49Z",
+      "side": 1,
+      "message": "2021-2022",
+      "revId": "d6adcdebd59e45af28fb22a1fe69613c3748b85e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
