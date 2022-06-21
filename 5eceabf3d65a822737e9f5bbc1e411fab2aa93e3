@@ -16,6 +16,24 @@
       "revId": "5eceabf3d65a822737e9f5bbc1e411fab2aa93e3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ef63653_9448568f",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/XacmlPdpStatisticsManager.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 7879
+      },
+      "writtenOn": "2022-06-21T23:26:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c658ff85_72eda578",
+      "revId": "5eceabf3d65a822737e9f5bbc1e411fab2aa93e3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
