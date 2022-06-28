@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020, 2022 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ public class DecisionProvider {
         //
         // Calculate statistics
         //
-        this.calculateStatistic(decision.getValue());
+        this.calculateStatistic(decision.getValue(), application.applicationName());
         //
         // Return the decision
         //
@@ -86,7 +86,7 @@ public class DecisionProvider {
         //
         // Calculate statistics
         //
-        this.calculateStatistic(decision);
+        this.calculateStatistic(decision, nativeApp.applicationName());
         //
         // Return the string decision
         //
@@ -111,7 +111,7 @@ public class DecisionProvider {
                 "Native PDP application cannot be found");
     }
 
-    private void calculateStatistic(Response xacmlResponse) {
+    private void calculateStatistic(Response xacmlResponse, String appName) {
         if (xacmlResponse == null) {
             XacmlPdpStatisticsManager.getCurrent().updateErrorCount();
             return;
@@ -119,22 +119,22 @@ public class DecisionProvider {
         for (Result result : xacmlResponse.getResults()) {
             switch (result.getDecision()) {
                 case PERMIT:
-                    XacmlPdpStatisticsManager.getCurrent().updatePermitDecisionsCount();
+                    XacmlPdpStatisticsManager.getCurrent().updatePermitDecisionsCount(appName);
                     break;
 
                 case DENY:
-                    XacmlPdpStatisticsManager.getCurrent().updateDenyDecisionsCount();
+                    XacmlPdpStatisticsManager.getCurrent().updateDenyDecisionsCount(appName);
                     break;
 
                 case INDETERMINATE:
                 case INDETERMINATE_DENY:
                 case INDETERMINATE_DENYPERMIT:
                 case INDETERMINATE_PERMIT:
-                    XacmlPdpStatisticsManager.getCurrent().updateIndeterminantDecisionsCount();
+                    XacmlPdpStatisticsManager.getCurrent().updateIndeterminantDecisionsCount(appName);
                     break;
 
                 case NOTAPPLICABLE:
-                    XacmlPdpStatisticsManager.getCurrent().updateNotApplicableDecisionsCount();
+                    XacmlPdpStatisticsManager.getCurrent().updateNotApplicableDecisionsCount(appName);
                     break;
 
                 default:

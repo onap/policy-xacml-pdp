@@ -21,6 +21,8 @@
 package org.onap.policy.pdpx.main.rest;
 
 import io.prometheus.client.Counter;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Synchronized;
@@ -42,6 +44,7 @@ public class XacmlPdpStatisticsManager {
     public static final String DENY_OPERATION = "deny";
     public static final String INDETERMINANT_OPERATION = "indeterminant";
     public static final String NOT_APPLICABLE_OPERATION = "not_applicable";
+    public static final String APPLICATION = "application";
 
     protected static final Counter deploymentsCounter =
         Counter.build().namespace(PROMETHEUS_NAMESPACE).name(PrometheusUtils.POLICY_DEPLOYMENTS_METRIC)
@@ -52,7 +55,7 @@ public class XacmlPdpStatisticsManager {
 
     protected static final Counter decisionsCounter =
         Counter.build().namespace(PROMETHEUS_NAMESPACE).name(POLICY_DECISIONS_METRIC)
-            .labelNames(PrometheusUtils.STATUS_METRIC_LABEL)
+            .labelNames(APPLICATION, PrometheusUtils.STATUS_METRIC_LABEL)
             .help(POLICY_DECISIONS_HELP)
             .register();
 
@@ -67,133 +70,142 @@ public class XacmlPdpStatisticsManager {
     private long undeployFailureCount;
     private long indeterminantDecisionsCount;
     private long notApplicableDecisionsCount;
+    private Map<String, Map<String, Integer>> applicationMetrics = new HashMap<>();
+
+    /**
+     * Used to update our Map of ApplicationNames to statistics.
+     * A typical applicationsMetric map could look something like this:
+     * {
+     *     "app_1_name": {
+     *         "permit_decisions_count": 1,
+     *         "deny_decisions_count": 1
+     *     },
+     *     "app_2_name": {
+     *         "indeterminant_decisions_count": 1,
+     *         "not_applicable_decisions_count": 1
+     *     }
+     * }
+     * @param appName - the current app we are updating decisions for
+     * @param updateMethod - the kind of decision we made for our app
+     */
+    @Synchronized
+    public void updateApplicationMetrics(String appName, String updateMethod) {
+        if (!applicationMetrics.containsKey(appName)) {
+            Map<String, Integer> appMap = new HashMap<>();
+            appMap.put(updateMethod, 1);
+            applicationMetrics.put(appName, appMap);
+        } else {
+            int newTotal = applicationMetrics.get(appName).getOrDefault(updateMethod, 0) + 1;
+            applicationMetrics.get(appName).put(updateMethod, newTotal);
+        }
+    }
 
     /**
      * Method to set the xacml pdp total policy types count. This
      * doesn't really increment, it depends on the applications
      * that are loaded. Which can be dynamic.
-     *
-     * @return the total
      */
     @Synchronized
-    public long setTotalPolicyTypesCount(long newCount) {
+    public void setTotalPolicyTypesCount(long newCount) {
         totalPolicyTypesCount = newCount;
-        return totalPolicyTypesCount;
     }
 
     /**
      * Method to set the xacml pdp total policies count. This
      * doesn't really increment, it depends on the applications
      * that are loaded. Which can be dynamic.
-     *
-     * @return the total
      */
     @Synchronized
-    public long setTotalPolicyCount(long newCount) {
+    public void setTotalPolicyCount(long newCount) {
         totalPoliciesCount = newCount;
-        return totalPoliciesCount;
     }
 
     /**
      * Method to update the number of error decisions.
-     *
-     * @return the errorDecisionsCount
      */
     @Synchronized
-    public long updateErrorCount() {
-        return ++errorCount;
+    public void updateErrorCount() {
+        ++errorCount;
     }
 
     /**
      * Method to update the number of permit decisions.
-     *
-     * @return the permitDecisionsCount
      */
     @Synchronized
-    public long updatePermitDecisionsCount() {
-        decisionsCounter.labels(PERMIT_OPERATION).inc();
-        return ++permitDecisionsCount;
+    public void updatePermitDecisionsCount(String appName) {
+        decisionsCounter.labels(appName, PERMIT_OPERATION).inc();
+        updateApplicationMetrics(appName, "permit_decisions_count");
+        ++permitDecisionsCount;
     }
 
     /**
      * Method to update the number of deny decisions.
-     *
-     * @return the denyDecisionsCount
      */
     @Synchronized
-    public long updateDenyDecisionsCount() {
-        decisionsCounter.labels(DENY_OPERATION).inc();
-        return ++denyDecisionsCount;
-    }
-
-    /**
-     * Method to update the number of successful deploys.
-     *
-     * @return the deploySuccessCount
-     */
-    @Synchronized
-    public long updateDeploySuccessCount() {
-        deploymentsCounter.labels(PrometheusUtils.DEPLOY_OPERATION,
-            PdpResponseStatus.SUCCESS.name()).inc();
-        return ++deploySuccessCount;
-    }
-
-    /**
-     * Method to update the number of failed deploys.
-     *
-     * @return the deployFailureCount
-     */
-    @Synchronized
-    public long updateDeployFailureCount() {
-        deploymentsCounter.labels(PrometheusUtils.DEPLOY_OPERATION,
-            PdpResponseStatus.FAIL.name()).inc();
-        return ++deployFailureCount;
-    }
-
-    /**
-     * Method to update the number of successful undeploys.
-     *
-     * @return the undeploySuccessCount
-     */
-    @Synchronized
-    public long updateUndeploySuccessCount() {
-        deploymentsCounter.labels(PrometheusUtils.UNDEPLOY_OPERATION,
-            PdpResponseStatus.SUCCESS.name()).inc();
-        return ++undeploySuccessCount;
-    }
-
-    /**
-     * Method to update the number of failed undeploys.
-     *
-     * @return the undeployFailureCount
-     */
-    @Synchronized
-    public long updateUndeployFailureCount() {
-        deploymentsCounter.labels(PrometheusUtils.UNDEPLOY_OPERATION,
-            PdpResponseStatus.FAIL.name()).inc();
-        return ++undeployFailureCount;
+    public void updateDenyDecisionsCount(String appName) {
+        decisionsCounter.labels(appName, DENY_OPERATION).inc();
+        updateApplicationMetrics(appName, "deny_decisions_count");
+        ++denyDecisionsCount;
     }
 
     /**
      * Method to update the number of indeterminant decisions.
-     *
-     * @return the indeterminantDecisionsCount
      */
     @Synchronized
-    public long updateIndeterminantDecisionsCount() {
-        decisionsCounter.labels(INDETERMINANT_OPERATION).inc();
-        return ++indeterminantDecisionsCount;
+    public void updateIndeterminantDecisionsCount(String appName) {
+        decisionsCounter.labels(appName, INDETERMINANT_OPERATION).inc();
+        updateApplicationMetrics(appName, "indeterminant_decisions_count");
+        ++indeterminantDecisionsCount;
     }
 
     /**
      * Method to update the number of not applicable decisions.
-     *
-     * @return the notApplicableDecisionsCount
      */
     @Synchronized
-    public long updateNotApplicableDecisionsCount() {
-        decisionsCounter.labels(NOT_APPLICABLE_OPERATION).inc();
-        return ++notApplicableDecisionsCount;
+    public void updateNotApplicableDecisionsCount(String appName) {
+        decisionsCounter.labels(appName, NOT_APPLICABLE_OPERATION).inc();
+        updateApplicationMetrics(appName, "not_applicable_decisions_count");
+        ++notApplicableDecisionsCount;
+    }
+
+    /**
+     * Method to update the number of successful deploys.
+     */
+    @Synchronized
+    public void updateDeploySuccessCount() {
+        deploymentsCounter.labels(PrometheusUtils.DEPLOY_OPERATION,
+            PdpResponseStatus.SUCCESS.name()).inc();
+        ++deploySuccessCount;
+    }
+
+    /**
+     * Method to update the number of failed deploys.
+     */
+    @Synchronized
+    public void updateDeployFailureCount() {
+        deploymentsCounter.labels(PrometheusUtils.DEPLOY_OPERATION,
+            PdpResponseStatus.FAIL.name()).inc();
+        ++deployFailureCount;
+    }
+
+    /**
+     * Method to update the number of successful undeploys.
+     */
+    @Synchronized
+    public void updateUndeploySuccessCount() {
+        deploymentsCounter.labels(PrometheusUtils.UNDEPLOY_OPERATION,
+            PdpResponseStatus.SUCCESS.name()).inc();
+        ++undeploySuccessCount;
+    }
+
+    /**
+     * Method to update the number of failed undeploys.
+     */
+    @Synchronized
+    public void updateUndeployFailureCount() {
+        deploymentsCounter.labels(PrometheusUtils.UNDEPLOY_OPERATION,
+            PdpResponseStatus.FAIL.name()).inc();
+        ++undeployFailureCount;
     }
 
     /**
@@ -212,5 +224,6 @@ public class XacmlPdpStatisticsManager {
         undeployFailureCount = 0L;
         indeterminantDecisionsCount = 0L;
         notApplicableDecisionsCount = 0L;
+        applicationMetrics.clear();
     }
 }

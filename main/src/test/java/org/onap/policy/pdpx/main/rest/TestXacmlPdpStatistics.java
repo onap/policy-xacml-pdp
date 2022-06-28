@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2022 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ package org.onap.policy.pdpx.main.rest;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Test;
 import org.onap.policy.pdpx.main.CommonRest;
 import org.onap.policy.pdpx.main.rest.model.StatisticsReport;
@@ -43,20 +45,31 @@ public class TestXacmlPdpStatistics extends CommonRest {
     public void testXacmlPdpStatistics_200() throws Exception {
         LOGGER.info("*************************** Running testXacmlPdpStatistics_200 ***************************");
         StatisticsReport report = getXacmlPdpStatistics();
-        validateReport(report, 0, 200);
+        validateReport(report, 0, 200, new HashMap<>());
         updateXacmlPdpStatistics();
         report = getXacmlPdpStatistics();
-        validateReport(report, 1, 200);
+        validateReport(report, 1, 200, returnStatisticsMap());
     }
 
     @Test
     public void testXacmlPdpStatistics_500() throws Exception {
         LOGGER.info("***************************** Running testXacmlPdpStatistics_500 *****************************");
-
         markActivatorDead();
-
         final StatisticsReport report = getXacmlPdpStatistics();
-        validateReport(report, 0, 500);
+        validateReport(report, 0, 500, new HashMap<>());
+    }
+
+    private Map<String, Map<String, Integer>> returnStatisticsMap() {
+        Map<String, Integer> testAppMetrics1 = new HashMap<>();
+        Map<String, Integer> testAppMetrics2 = new HashMap<>();
+        testAppMetrics1.put("permit_decisions_count", 1);
+        testAppMetrics1.put("deny_decisions_count", 1);
+        testAppMetrics2.put("indeterminant_decisions_count", 1);
+        testAppMetrics2.put("not_applicable_decisions_count", 1);
+        Map<String, Map<String, Integer>> statisticsMap = new HashMap<>();
+        statisticsMap.put("testApp1", testAppMetrics1);
+        statisticsMap.put("testApp2", testAppMetrics2);
+        return statisticsMap;
     }
 
     private StatisticsReport getXacmlPdpStatistics() throws Exception {
@@ -69,13 +82,14 @@ public class TestXacmlPdpStatistics extends CommonRest {
         ++nupdates;
         stats.setTotalPolicyCount(nupdates);
         stats.setTotalPolicyTypesCount(nupdates);
-        stats.updatePermitDecisionsCount();
-        stats.updateDenyDecisionsCount();
-        stats.updateIndeterminantDecisionsCount();
-        stats.updateNotApplicableDecisionsCount();
+        stats.updatePermitDecisionsCount("testApp1");
+        stats.updateDenyDecisionsCount("testApp1");
+        stats.updateIndeterminantDecisionsCount("testApp2");
+        stats.updateNotApplicableDecisionsCount("testApp2");
     }
 
-    private void validateReport(final StatisticsReport report, final int count, final int code) {
+    private void validateReport(final StatisticsReport report, final int count,
+                                final int code, final Map<String, Map<String, Integer>> decisionsMap) {
         assertEquals(code, report.getCode());
         assertEquals(count, report.getTotalPoliciesCount());
         assertEquals(count, report.getTotalPolicyTypesCount());
@@ -83,5 +97,6 @@ public class TestXacmlPdpStatistics extends CommonRest {
         assertEquals(count, report.getDenyDecisionsCount());
         assertEquals(count, report.getIndeterminantDecisionsCount());
         assertEquals(count, report.getNotApplicableDecisionsCount());
+        assertEquals(decisionsMap, report.getApplicationMetrics());
     }
 }
