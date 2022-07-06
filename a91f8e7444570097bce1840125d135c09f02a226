@@ -16,6 +16,24 @@
       "revId": "a91f8e7444570097bce1840125d135c09f02a226",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9284ab3d_430cec7b",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/serialization/XacmlJsonMessageBodyHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1677
+      },
+      "writtenOn": "2022-07-06T21:41:17Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "75dd69f6_095c9c42",
+      "revId": "a91f8e7444570097bce1840125d135c09f02a226",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
