@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -201,11 +201,11 @@ public class TestDecision {
 
         String responseFromXmlRequest = getNativeDecision(xmlRequestAsString, APPLICATION_XACML_XML);
         LOGGER.info("Response from xml request {}", responseFromXmlRequest);
-        assertThat(responseFromXmlRequest).contains("NOTAPPLICABLE");
+        assertThat(responseFromXmlRequest).contains("<Response xmlns=").contains("NotApplicable");
 
         String responseFromJsonRequest = getNativeDecision(jsonRequestAsString, APPLICATION_XACML_JSON);
         LOGGER.info("Response from json request {}", responseFromJsonRequest);
-        assertThat(responseFromJsonRequest).contains("NOTAPPLICABLE");
+        assertThat(responseFromJsonRequest).contains("\"Response\":").contains("NotApplicable");
     }
 
     private static Main startXacmlPdpService(File params) throws PolicyXacmlPdpException {
@@ -228,7 +228,7 @@ public class TestDecision {
 
     private String getNativeDecision(String request, String mediaType) {
         Entity<String> entityRequest = Entity.entity(request, mediaType);
-        Response response = client.post("/xacml", entityRequest, Collections.emptyMap());
+        Response response = client.post("/xacml", entityRequest, Map.of("Accept", mediaType));
 
         assertEquals(200, response.getStatus());
 
