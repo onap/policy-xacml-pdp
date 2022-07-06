@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2020-2022 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,10 @@ package org.onap.policy.pdpx.main.rest.serialization;
 
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
+import com.att.research.xacml.std.StdMutableRequest;
+import com.att.research.xacml.std.StdMutableResponse;
+import com.att.research.xacml.std.StdRequest;
+import com.att.research.xacml.std.StdResponse;
 import com.att.research.xacml.std.dom.DOMRequest;
 import com.att.research.xacml.std.dom.DOMResponse;
 import com.att.research.xacml.std.dom.DOMStructureException;
@@ -98,6 +102,30 @@ public class XacmlXmlMessageBodyHandler implements MessageBodyReader<Request>, M
         }
 
         return ("xacml+xml".equals(mediaType.getSubtype()))
-                && (type == Request.class || type == Response.class);
+                && (isRequestType(type) || isResponseType(type));
+    }
+
+    /**
+     * Determines if the class type is a XACML request type.
+     * @param type the class type of the object
+     * @return {@code true} if the class type is a XACML request class type
+     *         {@code false} otherwise
+     */
+    private boolean isRequestType(Class<?> type) {
+        return type == Request.class
+                || type == StdMutableRequest.class
+                || type == StdRequest.class;
+    }
+
+    /**
+     * Determines if the class type is a XACML response type.
+     * @param type the class type of the object
+     * @return {@code true} if the class type is a XACML response class type
+     *         {@code false} otherwise
+     */
+    private boolean isResponseType(Class<?> type) {
+        return type == Response.class
+                || type == StdMutableResponse.class
+                || type == StdResponse.class;
     }
 }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2020, 2022 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,17 @@
 
 package org.onap.policy.pdpx.main.rest.serialization;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.RequestAttributes;
 import com.att.research.xacml.api.Response;
+import com.att.research.xacml.std.StdMutableRequest;
+import com.att.research.xacml.std.StdMutableResponse;
+import com.att.research.xacml.std.StdRequest;
+import com.att.research.xacml.std.StdResponse;
 import com.att.research.xacml.std.dom.DOMResponse;
 import com.att.research.xacml.std.dom.DOMStructureException;
 import com.att.research.xacml.std.json.JSONStructureException;
@@ -98,5 +103,21 @@ public class TestXacmlJsonMessageBodyHandler {
         assertEquals(1, thirdRequestAttributes.getAttributes().size());
         assertEquals("read", thirdRequestAttributes.getAttributes().iterator().next()
                 .getValues().iterator().next().getValue().toString());
+    }
+
+    @Test
+    public void testIsRequestType() {
+        assertThat(hdlr.isRequestType(Request.class)).isTrue();
+        assertThat(hdlr.isRequestType(StdMutableRequest.class)).isTrue();
+        assertThat(hdlr.isRequestType(StdRequest.class)).isTrue();
+        assertThat(hdlr.isRequestType(Response.class)).isFalse();
+    }
+
+    @Test
+    public void testIsResponseType() {
+        assertThat(hdlr.isResponseType(Response.class)).isTrue();
+        assertThat(hdlr.isResponseType(StdMutableResponse.class)).isTrue();
+        assertThat(hdlr.isResponseType(StdResponse.class)).isTrue();
+        assertThat(hdlr.isResponseType(Request.class)).isFalse();
     }
 }
