@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "75dd69f6_095c9c42",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/serialization/XacmlJsonMessageBodyHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-07-06T21:19:32Z",
+      "side": 1,
+      "message": "Not sure about the class hierarchy, but in case it avoids fixing the 3 classes, I think isAssignableFrom could be used against the base interface (assuming it is Request):\n\nhttps://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html#isAssignableFrom(java.lang.Class)",
+      "revId": "a91f8e7444570097bce1840125d135c09f02a226",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
