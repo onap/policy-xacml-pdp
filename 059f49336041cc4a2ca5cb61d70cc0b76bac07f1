@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aff954de_85185541",
+        "filename": "main/src/main/java/org/onap/policy/pdpx/main/rest/serialization/XacmlJsonMessageBodyHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2022-07-07T12:07:47Z",
+      "side": 1,
+      "message": "Excellent!!",
+      "revId": "059f49336041cc4a2ca5cb61d70cc0b76bac07f1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
