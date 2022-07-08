@@ -68,6 +68,7 @@
             </includes>
             <outputDirectory>${file.separator}mysql${file.separator}bin</outputDirectory>
             <lineEnding>unix</lineEnding>
+            <fileMode>0755</fileMode>
         </fileSet>
         <fileSet>
             <directory>${project.basedir}/src/main/resources/mysql/sql
@@ -86,6 +87,7 @@
             </includes>
             <outputDirectory>${file.separator}postgres${file.separator}bin</outputDirectory>
             <lineEnding>unix</lineEnding>
+            <fileMode>0755</fileMode>
         </fileSet>
         <fileSet>
             <directory>${project.basedir}/src/main/resources/postgres/sql

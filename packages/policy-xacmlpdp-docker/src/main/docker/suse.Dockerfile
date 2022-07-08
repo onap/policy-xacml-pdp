@@ -18,6 +18,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # ============LICENSE_END=========================================================
 #-------------------------------------------------------------------------------
+
+FROM busybox AS tarball
+RUN mkdir /packages /extracted
+COPY /maven/lib/policy-xacmlpdp.tar.gz /packages/
+RUN tar xvzf /packages/policy-xacmlpdp.tar.gz --directory /extracted/
+
 FROM opensuse/leap:15.4
 
 LABEL maintainer="Policy Team"
@@ -37,22 +43,19 @@ ENV POLICY_HOME=/opt/app/policy/pdpx
 ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 ENV JAVA_HOME=/usr/lib64/jvm/java-11-openjdk-11
 
-RUN zypper -n -q install --no-recommends gzip java-11-openjdk-headless mariadb-client netcat-openbsd postgresql tar && \
+RUN zypper -n -q install --no-recommends java-11-openjdk-headless mariadb-client netcat-openbsd postgresql && \
     zypper -n -q update && zypper -n -q clean --all && \
     groupadd --system policy && \
     useradd --system --shell /bin/sh -G policy policy && \
-    mkdir -p $POLICY_LOGS $POLICY_HOME $POLICY_HOME/etc/ssl $POLICY_HOME/bin $POLICY_HOME/apps && \
-    chown -R policy:policy $POLICY_HOME $POLICY_LOGS && \
-    mkdir /packages
+    mkdir -p $POLICY_HOME $POLICY_LOGS && \
+    chown -R policy:policy $POLICY_HOME $POLICY_LOGS
 
-COPY /maven/* /packages
-RUN tar xvfz /packages/policy-xacmlpdp.tar.gz --directory $POLICY_HOME && \
-    rm /packages/policy-xacmlpdp.tar.gz
+COPY --chown=policy:policy --from=tarball /extracted $POLICY_HOME
 
 WORKDIR $POLICY_HOME
-COPY policy-pdpx.sh  bin/.
-COPY policy-pdpx-pg.sh  bin/.
-RUN chown -R policy:policy * && chmod 755 bin/*.sh && chmod 755 mysql/bin/*.sh && chmod 755 postgres/bin/*.sh
+COPY --chown=policy:policy policy-pdpx.sh bin/
+COPY --chown=policy:policy policy-pdpx-pg.sh bin/
+RUN chmod 755 bin/*.sh
 
 USER policy
 WORKDIR $POLICY_HOME/bin

@@ -19,6 +19,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # ============LICENSE_END=========================================================
 #-------------------------------------------------------------------------------
+
+FROM busybox AS tarball
+RUN mkdir /packages /extracted
+COPY /maven/lib/policy-xacmlpdp.tar.gz /packages/
+RUN tar xvzf /packages/policy-xacmlpdp.tar.gz --directory /extracted/
+
 FROM onap/policy-jre-alpine:2.4.3
 
 LABEL maintainer="Policy Team"
@@ -39,17 +45,15 @@ ENV POLICY_HOME=$POLICY_HOME/pdpx
 RUN apk update && \
     apk add mariadb-client && \
     apk add postgresql-client && \
-    mkdir -p $POLICY_HOME $POLICY_LOGS $POLICY_HOME/etc/ssl $POLICY_HOME/bin $POLICY_HOME/apps && \
-    chown -R policy:policy $POLICY_HOME $POLICY_LOGS && mkdir /packages
+    mkdir -p $POLICY_HOME $POLICY_LOGS && \
+    chown -R policy:policy $POLICY_HOME $POLICY_LOGS
 
-COPY /maven/* /packages
-RUN tar xvfz /packages/policy-xacmlpdp.tar.gz --directory $POLICY_HOME && \
-    rm /packages/policy-xacmlpdp.tar.gz
+COPY --chown=policy:policy --from=tarball /extracted $POLICY_HOME
 
 WORKDIR $POLICY_HOME
-COPY policy-pdpx.sh  bin/.
-COPY policy-pdpx-pg.sh  bin/.
-RUN chown -R policy:policy * && chmod 755 bin/*.sh && chmod 755 mysql/bin/*.sh && chmod 755 postgres/bin/*.sh
+COPY --chown=policy:policy policy-pdpx.sh bin/
+COPY --chown=policy:policy policy-pdpx-pg.sh bin/
+RUN chmod 755 bin/*.sh
 
 USER policy
 WORKDIR $POLICY_HOME/bin
