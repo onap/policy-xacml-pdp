@@ -42,7 +42,7 @@
 
     <properties>
         <policy.common.version>1.9.3-SNAPSHOT</policy.common.version>
-        <policy.models.version>2.5.3-SNAPSHOT</policy.models.version>
+        <policy.models.version>2.5.4-SNAPSHOT</policy.models.version>
         <jacoco.dataFile>${project.basedir}/target/code-coverage/jacoco-ut.exec</jacoco.dataFile>
     </properties>
 
