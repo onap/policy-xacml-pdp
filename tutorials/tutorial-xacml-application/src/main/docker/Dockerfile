@@ -1,6 +1,14 @@
-FROM onap/policy-xacml-pdp:2.7.0-SNAPSHOT
+ARG BUILD_VERSION=${BUILD_VERSION}
 
-ADD maven/${project.build.finalName}.jar /opt/app/policy/pdpx/lib/${project.build.finalName}.jar
+FROM onap/policy-xacml-pdp:${BUILD_VERSION}
+
+ARG BUILD_NAME=${BUILD_NAME}
+ARG BUILD_VERSION=${BUILD_VERSION}
+
+ENV BUILD_NAME $BUILD_NAME
+ENV BUILD_VERSION $BUILD_VERSION
+
+ADD maven/$BUILD_NAME-$BUILD_VERSION.jar /opt/app/policy/pdpx/lib/$BUILD_NAME-$BUILD_VERSION.jar
 
 RUN mkdir -p /opt/app/policy/pdpx/apps/tutorial
 

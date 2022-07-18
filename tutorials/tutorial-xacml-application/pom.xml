@@ -72,8 +72,12 @@
                   <build>
                     <contextDir>${project.basedir}/src/main/docker</contextDir>
                     <assembly>
-                        <descriptorRef>artifact-with-dependencies</descriptorRef>
+                      <descriptorRef>artifact-with-dependencies</descriptorRef>
                     </assembly>
+                    <args>
+                      <BUILD_NAME>${project.name}</BUILD_NAME>
+                      <BUILD_VERSION>${project.version}</BUILD_VERSION>
+                 </args>
                   </build>
                 </image>
               </images>
