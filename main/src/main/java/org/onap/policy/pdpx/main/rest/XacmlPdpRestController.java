@@ -68,7 +68,7 @@ import org.slf4j.LoggerFactory;
 @Consumes({MediaType.APPLICATION_JSON, XacmlPdpRestController.APPLICATION_YAML})
 @SwaggerDefinition(info = @Info(description = "Policy Xacml PDP Service", version = "1.0.0", title = "Policy Xacml PDP",
         extensions = {@Extension(properties = {@ExtensionProperty(name = "planned-retirement-date", value = "tbd"),
-                @ExtensionProperty(name = "component", value = "Policy Framework")})}),
+            @ExtensionProperty(name = "component", value = "Policy Framework")})}),
         schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
         securityDefinition = @SecurityDefinition(basicAuthDefinitions = {@BasicAuthDefinition(key = "basicAuth")}))
 public class XacmlPdpRestController {
@@ -82,27 +82,27 @@ public class XacmlPdpRestController {
     @ApiOperation(value = "Perform a system healthcheck",
             notes = "Provides healthy status of the Policy Xacml PDP component", response = HealthCheckReport.class,
             responseHeaders = {
-                    @ResponseHeader(name = "X-MinorVersion",
+                @ResponseHeader(name = "X-MinorVersion",
                             description = "Used to request or communicate a MINOR version back from the client"
                                     + " to the server, and from the server back to the client",
                             response = String.class),
-                    @ResponseHeader(name = "X-PatchVersion",
+                @ResponseHeader(name = "X-PatchVersion",
                             description = "Used only to communicate a PATCH version in a response for"
                                     + " troubleshooting purposes only, and will not be provided by"
                                     + " the client on request",
                             response = String.class),
-                    @ResponseHeader(name = "X-LatestVersion",
+                @ResponseHeader(name = "X-LatestVersion",
                             description = "Used only to communicate an API's latest version", response = String.class),
-                    @ResponseHeader(name = "X-ONAP-RequestID",
+                @ResponseHeader(name = "X-ONAP-RequestID",
                             description = "Used to track REST transactions for logging purpose",
                             response = UUID.class)},
             authorizations = @Authorization(value = "basicAuth"), tags = {"HealthCheck", },
             extensions = {@Extension(name = "interface info",
                     properties = {@ExtensionProperty(name = "pdpx-version", value = "1.0.0"),
-                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
+                        @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
     @ApiResponses(value = {@ApiResponse(code = 401, message = "Authentication Error"),
-            @ApiResponse(code = 403, message = "Authorization Error"),
-            @ApiResponse(code = 500, message = "Internal Server Error")})
+        @ApiResponse(code = 403, message = "Authorization Error"),
+        @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response healthcheck(
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
         return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
@@ -114,27 +114,27 @@ public class XacmlPdpRestController {
     @ApiOperation(value = "Fetch current statistics",
             notes = "Provides current statistics of the Policy Xacml PDP component", response = StatisticsReport.class,
             responseHeaders = {
-                    @ResponseHeader(name = "X-MinorVersion",
+                @ResponseHeader(name = "X-MinorVersion",
                             description = "Used to request or communicate a MINOR version back from the client"
                                     + " to the server, and from the server back to the client",
                             response = String.class),
-                    @ResponseHeader(name = "X-PatchVersion",
+                @ResponseHeader(name = "X-PatchVersion",
                             description = "Used only to communicate a PATCH version in a response for"
                                     + " troubleshooting purposes only, and will not be provided by"
                                     + " the client on request",
                             response = String.class),
-                    @ResponseHeader(name = "X-LatestVersion",
+                @ResponseHeader(name = "X-LatestVersion",
                             description = "Used only to communicate an API's latest version", response = String.class),
-                    @ResponseHeader(name = "X-ONAP-RequestID",
+                @ResponseHeader(name = "X-ONAP-RequestID",
                             description = "Used to track REST transactions for logging purpose",
                             response = UUID.class)},
             authorizations = @Authorization(value = "basicAuth"), tags = {"Statistics", },
             extensions = {@Extension(name = "interface info",
                     properties = {@ExtensionProperty(name = "pdpx-version", value = "1.0.0"),
-                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
+                        @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
     @ApiResponses(value = {@ApiResponse(code = 401, message = "Authentication Error"),
-            @ApiResponse(code = 403, message = "Authorization Error"),
-            @ApiResponse(code = 500, message = "Internal Server Error")})
+        @ApiResponse(code = 403, message = "Authorization Error"),
+        @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response statistics(
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
         return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
@@ -153,28 +153,28 @@ public class XacmlPdpRestController {
     @ApiOperation(value = "Fetch the decision using specified decision parameters",
             notes = "Returns the policy decision from Policy Xacml PDP", response = DecisionResponse.class,
             responseHeaders = {
-                    @ResponseHeader(name = "X-MinorVersion",
+                @ResponseHeader(name = "X-MinorVersion",
                             description = "Used to request or communicate a MINOR version back from the client"
                                     + " to the server, and from the server back to the client",
                             response = String.class),
-                    @ResponseHeader(name = "X-PatchVersion",
+                @ResponseHeader(name = "X-PatchVersion",
                             description = "Used only to communicate a PATCH version in a response for"
                                     + " troubleshooting purposes only, and will not be provided by"
                                     + " the client on request",
                             response = String.class),
-                    @ResponseHeader(name = "X-LatestVersion",
+                @ResponseHeader(name = "X-LatestVersion",
                             description = "Used only to communicate an API's latest version", response = String.class),
-                    @ResponseHeader(name = "X-ONAP-RequestID",
+                @ResponseHeader(name = "X-ONAP-RequestID",
                             description = "Used to track REST transactions for logging purpose",
                             response = UUID.class)},
             authorizations = @Authorization(value = "basicAuth"), tags = {"Decision", },
             extensions = {@Extension(name = "interface info",
                     properties = {@ExtensionProperty(name = "pdpx-version", value = "1.0.0"),
-                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
+                        @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
-            @ApiResponse(code = 401, message = "Authentication Error"),
-            @ApiResponse(code = 403, message = "Authorization Error"),
-            @ApiResponse(code = 500, message = "Internal Server Error")})
+        @ApiResponse(code = 401, message = "Authentication Error"),
+        @ApiResponse(code = 403, message = "Authorization Error"),
+        @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response decision(DecisionRequest body,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
             @Context HttpServletRequest request) {
@@ -205,28 +205,28 @@ public class XacmlPdpRestController {
             notes = "Returns the policy decision from Policy Xacml PDP",
             response = com.att.research.xacml.api.Response.class,
             responseHeaders = {
-                    @ResponseHeader(name = "X-MinorVersion",
+                @ResponseHeader(name = "X-MinorVersion",
                             description = "Used to request or communicate a MINOR version back from the client"
                                     + " to the server, and from the server back to the client",
                             response = String.class),
-                    @ResponseHeader(name = "X-PatchVersion",
+                @ResponseHeader(name = "X-PatchVersion",
                             description = "Used only to communicate a PATCH version in a response for"
                                     + " troubleshooting purposes only, and will not be provided by"
                                     + " the client on request",
                             response = String.class),
-                    @ResponseHeader(name = "X-LatestVersion",
+                @ResponseHeader(name = "X-LatestVersion",
                             description = "Used only to communicate an API's latest version", response = String.class),
-                    @ResponseHeader(name = "X-ONAP-RequestID",
+                @ResponseHeader(name = "X-ONAP-RequestID",
                             description = "Used to track REST transactions for logging purpose",
                             response = UUID.class)},
             authorizations = @Authorization(value = "basicAuth"), tags = {"Decision", },
             extensions = {@Extension(name = "interface info",
                     properties = {@ExtensionProperty(name = "pdpx-version", value = "1.0.0"),
-                            @ExtensionProperty(name = "last-mod-release", value = "Frankfurt")})})
+                        @ExtensionProperty(name = "last-mod-release", value = "Frankfurt")})})
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
-            @ApiResponse(code = 401, message = "Authentication Error"),
-            @ApiResponse(code = 403, message = "Authorization Error"),
-            @ApiResponse(code = 500, message = "Internal Server Error")})
+        @ApiResponse(code = 401, message = "Authentication Error"),
+        @ApiResponse(code = 403, message = "Authorization Error"),
+        @ApiResponse(code = 500, message = "Internal Server Error")})
     public Response xacml(Request body,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
         try {
