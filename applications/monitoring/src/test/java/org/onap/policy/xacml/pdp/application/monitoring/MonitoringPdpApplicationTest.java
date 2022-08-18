@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,9 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.att.research.xacml.api.Response;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -59,13 +57,12 @@ import org.slf4j.LoggerFactory;
 public class MonitoringPdpApplicationTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringPdpApplicationTest.class);
-    private static Properties properties = new Properties();
-    private static File propertiesFile;
+    private static final Properties properties = new Properties();
     private static XacmlApplicationServiceProvider service;
     private static DecisionRequest requestSinglePolicy;
     private static DecisionRequest requestPolicyType;
 
-    private static StandardCoder gson = new StandardCoder();
+    private static final StandardCoder gson = new StandardCoder();
 
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
@@ -93,9 +90,9 @@ public class MonitoringPdpApplicationTest {
         //
         // Setup our temporary folder
         //
-        XacmlPolicyUtils.FileCreator myCreator = (String filename) -> policyFolder.newFile(filename);
-        propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties",
-                properties, myCreator);
+        XacmlPolicyUtils.FileCreator myCreator = policyFolder::newFile;
+        File propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties",
+            properties, myCreator);
         //
         // Load XacmlApplicationServiceProvider service
         //
@@ -105,9 +102,7 @@ public class MonitoringPdpApplicationTest {
         // Look for our class instance and save it
         //
         StringBuilder strDump = new StringBuilder("Loaded applications:" + XacmlPolicyUtils.LINE_SEPARATOR);
-        Iterator<XacmlApplicationServiceProvider> iterator = applicationLoader.iterator();
-        while (iterator.hasNext()) {
-            XacmlApplicationServiceProvider application = iterator.next();
+        for (XacmlApplicationServiceProvider application : applicationLoader) {
             //
             // Is it our service?
             //
@@ -144,8 +139,13 @@ public class MonitoringPdpApplicationTest {
         assertThat(service.canSupportPolicyType(
                 new ToscaConceptIdentifier("onap.policies.monitoring.tcagen2", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(
+            new ToscaConceptIdentifier("onap.policies.monitoring.tcagen2", "2.0.0"))).isTrue();
+        assertThat(service.canSupportPolicyType(
                 new ToscaConceptIdentifier(
                 "onap.policies.monitoring.foobar", "1.0.1"))).isTrue();
+        assertThat(service.canSupportPolicyType(
+            new ToscaConceptIdentifier(
+                "onap.policies.monitoring.foobar", "2.0.1"))).isTrue();
         assertThat(service.canSupportPolicyType(
                 new ToscaConceptIdentifier("onap.foobar", "1.0.0"))).isFalse();
         //
@@ -185,14 +185,33 @@ public class MonitoringPdpApplicationTest {
         //
         // Monitoring applications should not have this information returned
         //
-        assertThat(decision.getKey().getAdvice()).isNull();
-        assertThat(decision.getKey().getObligations()).isNull();
-        assertThat(decision.getKey().getAttributes()).isNull();
+        assertNoInfo(decision);
+    }
+
+    @Test
+    public void tes3AddvDnsPolicy() throws CoderException, XacmlApplicationException {
+        testAddPolicy("src/test/resources/vDNS.policy.input.yaml",
+            "onap.policies.monitoring.cdap.tca.hi.lo.app",
+            "onap.scaleout.tca");
+    }
+
+    @Test
+    public void tes4AddvFirewall1Policy() throws CoderException, XacmlApplicationException {
+        testAddPolicy("policies/vFirewall.policy.monitoring.input.tosca.yaml",
+            "onap.policies.monitoring.tcagen2",
+            "onap.vfirewall.tca");
+    }
+
+    @Test
+    public void tes5AddvFirewall2Policy() throws CoderException, XacmlApplicationException {
+        testAddPolicy("policies/vFirewall.policy.monitoring.input.tosca.v2.yaml",
+            "onap.policies.monitoring.tcagen2",
+            "onap.vfirewall.tca");
     }
 
     @SuppressWarnings("unchecked")
-    @Test
-    public void test3AddvDnsPolicy() throws IOException, CoderException, XacmlApplicationException {
+    public void testAddPolicy(String policyResource, String policyType, String policyId)
+        throws CoderException, XacmlApplicationException {
         //
         // Now load the vDNS Policy - make sure
         // the pdp can support it and have it load
@@ -201,8 +220,13 @@ public class MonitoringPdpApplicationTest {
         //
         // Now load the monitoring policies
         //
-        final List<ToscaPolicy> loadedPolicies = TestUtils.loadPolicies("src/test/resources/vDNS.policy.input.yaml",
-                service);
+        final List<ToscaPolicy> loadedPolicies = TestUtils.loadPolicies(policyResource, service);
+
+        //
+        // Set the policy-id for the decision request.
+        //
+        requestSinglePolicy.getResource().put("policy-id", policyId);
+
         //
         // Ask for a decision
         //
@@ -216,13 +240,17 @@ public class MonitoringPdpApplicationTest {
         //
         // Monitoring applications should not have this information returned
         //
-        assertThat(decision.getKey().getAdvice()).isNull();
-        assertThat(decision.getKey().getObligations()).isNull();
-        assertThat(decision.getKey().getAttributes()).isNull();
+        assertNoInfo(decision);
         //
         // Dump it out as Json
         //
         LOGGER.info(gson.encode(decision.getKey()));
+
+        //
+        // Set the policy-type for the decision request.
+        //
+        requestPolicyType.getResource().put("policy-type", policyType);
+
         //
         // Ask for a decision based on policy-type
         //
@@ -236,13 +264,11 @@ public class MonitoringPdpApplicationTest {
         //
         // Monitoring applications should not have this information returned
         //
-        assertThat(decision.getKey().getAdvice()).isNull();
-        assertThat(decision.getKey().getObligations()).isNull();
-        assertThat(decision.getKey().getAttributes()).isNull();
+        assertNoInfo(decision);
         //
         // Validate the full policy is returned
         //
-        Map<String, Object> jsonPolicy = (Map<String, Object>) decision.getKey().getPolicies().get("onap.scaleout.tca");
+        Map<String, Object> jsonPolicy = (Map<String, Object>) decision.getKey().getPolicies().get(policyId);
         assertThat(jsonPolicy).isNotNull();
         assertThat(jsonPolicy.get("properties")).isNotNull();
         //
@@ -264,13 +290,11 @@ public class MonitoringPdpApplicationTest {
         //
         // Monitoring applications should not have this information returned
         //
-        assertThat(decision.getKey().getAdvice()).isNull();
-        assertThat(decision.getKey().getObligations()).isNull();
-        assertThat(decision.getKey().getAttributes()).isNull();
+        assertNoInfo(decision);
         //
         // Validate an abbreviated policy is returned
         //
-        jsonPolicy = (Map<String, Object>) decision.getKey().getPolicies().get("onap.scaleout.tca");
+        jsonPolicy = (Map<String, Object>) decision.getKey().getPolicies().get(policyId);
         assertThat(jsonPolicy).isNotNull().doesNotContainKey("properties");
         //
         // Don't Ask for abbreviated results
@@ -287,13 +311,11 @@ public class MonitoringPdpApplicationTest {
         //
         // Monitoring applications should not have this information returned
         //
-        assertThat(decision.getKey().getAdvice()).isNull();
-        assertThat(decision.getKey().getObligations()).isNull();
-        assertThat(decision.getKey().getAttributes()).isNull();
+        assertNoInfo(decision);
         //
         // And should have full policy returned
         //
-        jsonPolicy = (Map<String, Object>) decision.getKey().getPolicies().get("onap.scaleout.tca");
+        jsonPolicy = (Map<String, Object>) decision.getKey().getPolicies().get(policyId);
         assertThat(jsonPolicy).isNotNull();
         assertThat(jsonPolicy.get("properties")).isNotNull();
         //
@@ -306,7 +328,7 @@ public class MonitoringPdpApplicationTest {
 
         assertThat(decision.getKey()).isNotNull();
         assertThat(decision.getKey().getPolicies()).hasSize(1);
-        jsonPolicy = (Map<String, Object>) decision.getKey().getPolicies().get("onap.scaleout.tca");
+        jsonPolicy = (Map<String, Object>) decision.getKey().getPolicies().get(policyId);
         assertThat(jsonPolicy).isNotNull();
         assertThat(jsonPolicy.get("properties")).isNotNull();
         //
@@ -328,6 +350,12 @@ public class MonitoringPdpApplicationTest {
 
         assertThat(decision.getKey()).isNotNull();
         assertThat(decision.getKey().getPolicies()).isEmpty();
+    }
+
+    private void assertNoInfo(Pair<DecisionResponse, Response> decision) {
+        assertThat(decision.getKey().getAdvice()).isNull();
+        assertThat(decision.getKey().getObligations()).isNull();
+        assertThat(decision.getKey().getAttributes()).isNull();
     }
 
 }

@@ -55,7 +55,7 @@ public class XacmlPdpApplicationManagerTest {
     private static final StandardYamlCoder yamlCoder = new StandardYamlCoder();
     private static Path appsDirectory;
     private static ToscaServiceTemplate completedJtst;
-    private static CommonTestData testData = new CommonTestData();
+    private static final CommonTestData testData = new CommonTestData();
 
     @ClassRule
     public static final TemporaryFolder appsFolder = new TemporaryFolder();
@@ -97,9 +97,7 @@ public class XacmlPdpApplicationManagerTest {
         //
         Path src = Paths.get("src/test/resources/apps");
         File apps = appsFolder.newFolder("apps");
-        Files.walk(src).forEach(source -> {
-            copy(source, apps.toPath().resolve(src.relativize(source)));
-        });
+        Files.walk(src).forEach(source -> copy(source, apps.toPath().resolve(src.relativize(source))));
         appsDirectory = apps.toPath();
     }
 
@@ -146,10 +144,10 @@ public class XacmlPdpApplicationManagerTest {
         //
         assertThat(manager).isNotNull();
         assertThat(manager.getPolicyCount()).isZero();
-        assertThat(manager.getPolicyTypeCount()).isEqualTo(18);
+        assertThat(manager.getPolicyTypeCount()).isEqualTo(19);
         assertThat(manager.getToscaPolicies()).isEmpty();
         assertThat(manager.getToscaPolicyIdentifiers()).isEmpty();
-        assertThat(manager.getToscaPolicyTypeIdents()).hasSize(18);
+        assertThat(manager.getToscaPolicyTypeIdents()).hasSize(19);
 
         assertThat(manager.findNativeApplication()).isInstanceOf(NativePdpApplication.class);
 

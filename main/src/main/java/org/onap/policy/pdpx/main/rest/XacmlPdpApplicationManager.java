@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -50,10 +50,10 @@ public class XacmlPdpApplicationManager {
     @Setter
     private static XacmlPdpApplicationManager current;
 
-    private ServiceLoader<XacmlApplicationServiceProvider> applicationLoader;
-    private Map<String, XacmlApplicationServiceProvider> providerActionMap = new HashMap<>();
-    private List<ToscaConceptIdentifier> toscaPolicyTypeIdents = new ArrayList<>();
-    private Map<ToscaPolicy, XacmlApplicationServiceProvider> mapLoadedPolicies = new HashMap<>();
+    private final ServiceLoader<XacmlApplicationServiceProvider> applicationLoader;
+    private final Map<String, XacmlApplicationServiceProvider> providerActionMap = new HashMap<>();
+    private final List<ToscaConceptIdentifier> toscaPolicyTypeIdents = new ArrayList<>();
+    private final Map<ToscaPolicy, XacmlApplicationServiceProvider> mapLoadedPolicies = new HashMap<>();
 
 
     /**
