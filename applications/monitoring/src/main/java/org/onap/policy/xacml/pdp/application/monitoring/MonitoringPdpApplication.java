@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -53,6 +53,7 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
     public static final String ONAP_MONITORING_DERIVED_POLICY_TYPE = "onap.policies.monitoring.";
 
     public static final String VERSION_100 = "1.0.0";
+    public static final String VERSION_200 = "1.0.0";
 
     private StdCombinedPolicyResultsTranslator translator = new StdCombinedPolicyResultsTranslator();
 
@@ -68,6 +69,7 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
         // By default this supports just Monitoring policy types
         //
         supportedPolicyTypes.add(new ToscaConceptIdentifier(ONAP_MONITORING_BASE_POLICY_TYPE, VERSION_100));
+        supportedPolicyTypes.add(new ToscaConceptIdentifier(ONAP_MONITORING_BASE_POLICY_TYPE, VERSION_200));
     }
 
     @Override
