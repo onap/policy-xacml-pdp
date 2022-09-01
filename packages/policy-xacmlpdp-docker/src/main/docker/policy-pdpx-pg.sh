@@ -2,6 +2,7 @@
 #
 # ============LICENSE_START=======================================================
 #  Copyright (C) 2022 Nordix Foundation.
+#  Modifications Copyright (C) 2022 AT&T Intellectual Property.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,6 +19,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # ============LICENSE_END=========================================================
 #
+
+set -x
 
 KEYSTORE="${KEYSTORE:-$POLICY_HOME/etc/ssl/policy-keystore}"
 TRUSTSTORE="${TRUSTSTORE:-$POLICY_HOME/etc/ssl/policy-truststore}"
@@ -52,6 +55,16 @@ fi
 if [ -f "${POLICY_HOME}/etc/mounted/logback.xml" ]; then
     echo "overriding logback.xml"
     cp -f "${POLICY_HOME}"/etc/mounted/logback.xml "${POLICY_HOME}"/etc/
+fi
+
+if [ -f "${POLICY_HOME}/etc/mounted/createguardtable-pg.sql" ]; then
+    echo "overriding createguardtable.sql"
+    cp -f "${POLICY_HOME}"/etc/mounted/createguardtable-pg.sql "${POLICY_HOME}"/postgress/sql/
+fi
+
+if [ -f "${POLICY_HOME}/etc/mounted/db-pg.sql" ]; then
+    echo "adding additional db-pg.sql"
+    cp -f "${POLICY_HOME}"/etc/mounted/db-pg.sql "${POLICY_HOME}"/postgress/sql/
 fi
 
 # Create operationshistory table

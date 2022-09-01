@@ -2,6 +2,7 @@
 #
 # ============LICENSE_START=======================================================
 #  Copyright (C) 2022 Nordix Foundation. All rights reserved.
+#  Modifications Copyright (C) 2022 AT&T Intellectual Property.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,7 +19,11 @@
 # SPDX-License-Identifier: Apache-2.0
 # ============LICENSE_END=========================================================
 #
+
+set -x
+
 SQL_FILE="${POLICY_HOME}/mysql/sql/createguardtable-pg.sql"
+SQL_ADDON_FILE="${POLICY_HOME}/mysql/sql/db-pg.sql"
 
 # Remove escape backslashes if present and save output in temp file
 sed 's/\\//g' "${POLICY_HOME}"/apps/guard/xacml-pg.properties > /tmp/temp.xacml-pg.properties
@@ -54,3 +59,10 @@ fi
 
 # Execute sql command using sql file to create table
 psql -U postgres -h ${DB_HOSTNAME} -f ${SQL_FILE}
+
+# Execute additional SQL configuration if provided
+if [ -f "${POLICY_HOME}/mysql/sql/db-pg.sql" ]; then
+    echo "additional SQL to be loaded found"
+    psql -U postgres -h ${DB_HOSTNAME} -f ${SQL_ADDON_FILE}
+fi
+

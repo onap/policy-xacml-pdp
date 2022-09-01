@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 #
 # ============LICENSE_START=======================================================
-#  Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+#  Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
 #  Modifications Copyright (C) 2019-2022 Nordix Foundation.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # ============LICENSE_END=========================================================
 #
+
+set -x
 
 KEYSTORE="${KEYSTORE:-$POLICY_HOME/etc/ssl/policy-keystore}"
 TRUSTSTORE="${TRUSTSTORE:-$POLICY_HOME/etc/ssl/policy-truststore}"
@@ -53,6 +55,16 @@ fi
 if [ -f "${POLICY_HOME}/etc/mounted/logback.xml" ]; then
     echo "overriding logback.xml"
     cp -f "${POLICY_HOME}"/etc/mounted/logback.xml "${POLICY_HOME}"/etc/
+fi
+
+if [ -f "${POLICY_HOME}/etc/mounted/createguardtable.sql" ]; then
+    echo "overriding createguardtable.sql"
+    cp -f "${POLICY_HOME}"/etc/mounted/createguardtable.sql "${POLICY_HOME}"/mysql/sql/
+fi
+
+if [ -f "${POLICY_HOME}/etc/mounted/db.sql" ]; then
+    echo "adding additional db.sql"
+    cp -f "${POLICY_HOME}"/etc/mounted/db.sql "${POLICY_HOME}"/mysql/sql/
 fi
 
 # Create operationshistory table
