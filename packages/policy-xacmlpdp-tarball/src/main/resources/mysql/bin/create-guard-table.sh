@@ -20,7 +20,11 @@
 # SPDX-License-Identifier: Apache-2.0
 # ============LICENSE_END=========================================================
 #
+
+set -x
+
 SQL_FILE="${POLICY_HOME}/mysql/sql/createguardtable.sql"
+SQL_ADDON_FILE="${POLICY_HOME}/mysql/sql/db.sql"
 
 # Remove escape backslashes if present and save output in temp file
 sed 's/\\//g' "${POLICY_HOME}"/apps/guard/xacml.properties > /tmp/temp.xacml.properties
@@ -54,5 +58,15 @@ if [ -z "$DB_PASSWORD" ]; then
     exit 2
 fi
 
+if [ -z "$MYSQL_CMD" ]; then
+    MYSQL_CMD="mysql"
+fi
+
 # Execute sql command using sql file to create table
-mysql -u${DB_USERNAME} -p${DB_PASSWORD} -h${DB_HOSTNAME} < "${SQL_FILE}"
+${MYSQL_CMD} -u${DB_USERNAME} -p${DB_PASSWORD} -h${DB_HOSTNAME} < "${SQL_FILE}"
+
+# Execute additional SQL configuration if provided
+if [ -f "${POLICY_HOME}/mysql/sql/db.sql" ]; then
+    echo "additional SQL to be loaded found"
+    ${MYSQL_CMD} -u${DB_USERNAME} -p${DB_PASSWORD} -h${DB_HOSTNAME} < "${SQL_ADDON_FILE}"
+fi

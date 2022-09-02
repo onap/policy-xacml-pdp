@@ -1,5 +1,5 @@
 -- ============LICENSE_START=======================================================
--- Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+-- Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
 -- ================================================================================
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -14,25 +14,58 @@
 -- limitations under the License.
 -- ============LICENSE_END=========================================================
 
-use operationshistory;
+USE operationshistory;
 
-create table if not exists operationshistory (
-    id int(11) not null auto_increment,
-    closedLoopName varchar(255) not null,
-    requestId varchar(50),
-    actor varchar(50) not null,
-    operation varchar(50) not null,
-    target varchar(50) not null,
-    starttime timestamp not null,
-    outcome varchar(50) not null,
-    message varchar(255),
-    subrequestId varchar(50),
-    endtime timestamp not null default current_timestamp,
+CREATE TABLE IF NOT EXISTS operationshistory (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    closedLoopName VARCHAR(255) NOT NULL,
+    requestId VARCHAR(50),
+    actor VARCHAR(50) NOT NULL,
+    operation VARCHAR(50) NOT NULL,
+    target VARCHAR(50) NOT NULL,
+    starttime timestamp NOT NULL,
+    outcome VARCHAR(50) NOT NULL,
+    message VARCHAR(255),
+    subrequestId VARCHAR(50),
+    endtime timestamp NULL DEFAULT current_timestamp,
     PRIMARY KEY (id)
 );
 
-create index if not exists operationshistory_clreqid_index on
-    operationshistory(requestId, closedLoopName);
+DROP PROCEDURE IF EXISTS create_clreqid_index;
 
-create index if not exists operationshistory_target_index on
-    operationshistory(target, operation, actor, endtime);
+\d $$
+CREATE PROCEDURE create_clreqid_index()
+BEGIN
+    DECLARE index_count INT DEFAULT 1;
+
+    SELECT count(index_name) INTO index_count FROM information_schema.statistics
+    WHERE table_schema=DATABASE() AND table_name='operationshistory' AND index_name='operationshistory_clreqid_index';
+
+    IF index_count = 0 THEN
+        CREATE INDEX operationshistory_clreqid_index ON operationshistory(requestId, closedLoopName);
+    END IF;
+END
+$$
+
+\d ;
+
+CALL create_clreqid_index();
+
+DROP PROCEDURE IF EXISTS create_target_index;
+
+\d $$
+CREATE PROCEDURE create_target_index()
+BEGIN
+    DECLARE index_count INT DEFAULT 1;
+
+    SELECT count(index_name) INTO index_count FROM information_schema.statistics
+    WHERE table_schema=DATABASE() AND table_name='operationshistory' AND index_name='operationshistory_target_index';
+
+    IF index_count = 0 THEN
+        CREATE INDEX operationshistory_target_index ON operationshistory(target, operation, actor, endtime);
+    END IF;
+END
+$$
+
+CALL create_target_index();
+\d ;
