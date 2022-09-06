@@ -67,6 +67,11 @@ if [ -f "${POLICY_HOME}/etc/mounted/db.sql" ]; then
     cp -f "${POLICY_HOME}"/etc/mounted/db.sql "${POLICY_HOME}"/mysql/sql/
 fi
 
+if [ -f "${POLICY_HOME}/etc/mounted/guard.xacml.properties" ]; then
+    echo "overriding guard application xacml.properties"
+    cp -f "${POLICY_HOME}"/etc/mounted/guard.xacml.properties "${POLICY_HOME}"/apps/guard/xacml.properties
+fi
+
 # Create operationshistory table
 "${POLICY_HOME}"/mysql/bin/create-guard-table.sh
 

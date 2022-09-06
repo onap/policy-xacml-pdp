@@ -67,6 +67,11 @@ if [ -f "${POLICY_HOME}/etc/mounted/db-pg.sql" ]; then
     cp -f "${POLICY_HOME}"/etc/mounted/db-pg.sql "${POLICY_HOME}"/postgress/sql/
 fi
 
+if [ -f "${POLICY_HOME}/etc/mounted/guard.xacml.properties" ]; then
+    echo "overriding guard application xacml.properties"
+    cp -f "${POLICY_HOME}"/etc/mounted/guard.xacml.properties "${POLICY_HOME}"/apps/guard/xacml.properties
+fi
+
 # Create operationshistory table
 "${POLICY_HOME}"/postgres/bin/create-guard-table-pg.sh
 
