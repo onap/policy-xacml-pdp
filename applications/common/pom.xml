@@ -81,7 +81,7 @@
         <dependency>
             <groupId>com.att.research.xacml</groupId>
             <artifactId>xacml-pdp</artifactId>
-            <version>3.0</version>
+            <version>3.1.0</version>
         </dependency>
     </dependencies>
 </project>
