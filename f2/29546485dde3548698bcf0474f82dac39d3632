@@ -1,0 +1,9 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Liam Fallon <liam.fallon@est.tech>
+Code-Review+1: Ramesh Murugan Iyer <ramesh.murugan.iyer@est.tech>
+Code-Review+2: Pamela Dragosh <pd1248@att.com>
+Submitted-by: Liam Fallon <liam.fallon@est.tech>
+Submitted-at: Tue, 04 Oct 2022 06:51:51 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/xacml-pdp/+/131353
+Project: policy/xacml-pdp
+Branch: refs/heads/master
