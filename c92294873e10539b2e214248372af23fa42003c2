@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "74ed5f94_8911425e",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 7879
+      },
+      "writtenOn": "2022-10-11T19:32:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3f0468e_b67df2f8",
+      "range": {
+        "startLine": 136,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 1
+      },
+      "revId": "c92294873e10539b2e214248372af23fa42003c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6ec70ef0_71a2c3bb",
         "filename": "tutorials/tutorial-xacml-application/src/main/docker/README.md",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "3bcd116a_4866d749",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 7879
+      },
+      "writtenOn": "2022-10-11T19:32:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6ec70ef0_71a2c3bb",
+      "range": {
+        "startLine": 174,
+        "startChar": 0,
+        "endLine": 174,
+        "endChar": 2
+      },
+      "revId": "c92294873e10539b2e214248372af23fa42003c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3166102_93191950",
         "filename": "tutorials/tutorial-xacml-application/src/main/docker/README.md",
         "patchSetId": 2
@@ -62,6 +110,24 @@
       "revId": "c92294873e10539b2e214248372af23fa42003c2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac1de36b_be32aa97",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 7879
+      },
+      "writtenOn": "2022-10-11T19:32:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3166102_93191950",
+      "revId": "c92294873e10539b2e214248372af23fa42003c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
