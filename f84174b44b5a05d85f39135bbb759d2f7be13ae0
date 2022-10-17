@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d92de78_b0a54887",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/run-tutorial.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2022-10-17T16:05:23Z",
+      "side": 1,
+      "message": "Copyright !!",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 0
+      },
+      "revId": "f84174b44b5a05d85f39135bbb759d2f7be13ae0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
