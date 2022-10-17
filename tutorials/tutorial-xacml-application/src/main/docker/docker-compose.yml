@@ -18,7 +18,7 @@
 version: '2'
 services:
    mariadb:
-      image: mariadb:10.2.14
+      image: ${CONTAINER_LOCATION}mariadb:${POLICY_MARIADB_VER}
       container_name: mariadb
       hostname: mariadb
       command: ['--lower-case-table-names=1', '--wait_timeout=28800']
@@ -28,7 +28,7 @@ services:
       expose:
        - 3306
    message-router:
-      image: nexus3.onap.org:10001/onap/policy-models-simulator:2.7.0-SNAPSHOT
+      image: ${CONTAINER_LOCATION}onap/policy-models-simulator:${POLICY_MODELS_VERSION}
       container_name: dmaap-simulator
       hostname: dmaap-simulator
       volumes:
@@ -38,7 +38,7 @@ services:
       expose:
        - 3904
    api:
-      image: nexus3.onap.org:10001/onap/policy-api:2.7.0-SNAPSHOT
+      image: ${CONTAINER_LOCATION}onap/policy-api:${POLICY_API_VERSION}
       container_name: policy-api
       depends_on:
        - mariadb
@@ -48,7 +48,7 @@ services:
       expose:
        - 6767
    pap:
-      image: nexus3.onap.org:10001/onap/policy-pap:2.7.0-SNAPSHOT
+      image: ${CONTAINER_LOCATION}onap/policy-pap:${POLICY_PAP_VERSION}
       container_name: policy-pap
       depends_on:
        - mariadb
@@ -60,7 +60,7 @@ services:
       expose:
        - 6868
    xacml-pdp:
-      image: onap/policy-xacml-tutorial:2.7.0-SNAPSHOT
+      image: onap/policy-xacml-tutorial:${POLICY_XACML_TUTORIAL_VERSION}
       container_name: policy-xacml-pdp
       depends_on:
        - mariadb
