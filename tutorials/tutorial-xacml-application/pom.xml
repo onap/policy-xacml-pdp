@@ -3,6 +3,7 @@
   ONAP Policy Engine - XACML Application Tutorial
   ================================================================================
   Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+  Modifications Copyright (C) 2022 Nordix Foundation.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,96 +19,112 @@
   ============LICENSE_END=========================================================
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.onap.policy.xacml-pdp</groupId>
-    <artifactId>xacml-tutorials</artifactId>
-    <version>2.7.1-SNAPSHOT</version>
-  </parent>
+    <parent>
+        <groupId>org.onap.policy.xacml-pdp</groupId>
+        <artifactId>xacml-tutorials</artifactId>
+        <version>2.7.1-SNAPSHOT</version>
+    </parent>
 
-  <groupId>org.onap.policy.tutorial.xacml-application</groupId>
-  <artifactId>tutorial-xacml-application</artifactId>
-  <packaging>jar</packaging>
+    <packaging>jar</packaging>
+    <groupId>org.onap.policy.tutorial.xacml-application</groupId>
+    <artifactId>tutorial-xacml-application</artifactId>
+    <name>tutorial-xacml-application</name>
+    <description>Policy XACML-PDP tutorial</description>
 
-  <name>tutorial-xacml-application</name>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <dist.project.version>${project.version}</dist.project.version>
+        <docker.skip>false</docker.skip>
+        <docker.skip.build>false</docker.skip.build>
+        <docker.skip.push>false</docker.skip.push>
+        <docker.contextDir>${project.basedir}/src/main/docker</docker.contextDir>
+        <maven.build.timestamp.format>yyyyMMdd'T'HHmm</maven.build.timestamp.format>
+    </properties>
 
-  <properties>
-    <!-- There is code to support JUnit testing in this sub-module. -->
-    <sonar.skip>true</sonar.skip>
-  </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.onap.policy.xacml-pdp.applications</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.onap.policy.xacml-pdp</groupId>
+            <artifactId>xacml-test</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.onap.policy.xacml-pdp.applications</groupId>
-      <artifactId>common</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.onap.policy.xacml-pdp</groupId>
-      <artifactId>xacml-test</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-
-  <profiles>
-    <profile>
-      <id>docker</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>io.fabric8</groupId>
-            <artifactId>docker-maven-plugin</artifactId>
-            <configuration>
-              <verbose>true</verbose>
-              <imagePullPolicy>Always</imagePullPolicy>
-              <images>
-                <image>
-                  <name>onap/policy-xacml-tutorial:${project.version}</name>
-                  <alias>xacml-pdp</alias>
-                  <build>
-                    <contextDir>${project.basedir}/src/main/docker</contextDir>
-                    <assembly>
-                      <descriptorRef>artifact-with-dependencies</descriptorRef>
-                    </assembly>
-                    <args>
-                      <BUILD_NAME>${project.name}</BUILD_NAME>
-                      <BUILD_VERSION>${project.version}</BUILD_VERSION>
-                 </args>
-                  </build>
-                </image>
-              </images>
-            </configuration>
-            <executions>
-                <execution>
-                    <id>clean-images</id>
-                    <phase>pre-clean</phase>
-                    <goals>
-                        <goal>remove</goal>
-                    </goals>
-                </execution>
-                <execution>
-                    <id>generate-images</id>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>build</goal>
-                    </goals>
-                </execution>
-            </executions>
-          </plugin>
-          <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-deploy-plugin</artifactId>
-              <configuration>
-                  <skip>true</skip>
-              </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+    <profiles>
+        <profile>
+            <id>docker</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <configuration>
+                            <verbose>true</verbose>
+                            <apiVersion>1.23</apiVersion>
+                            <pullRegistry>${docker.pull.registry}</pullRegistry>
+                            <pushRegistry>${docker.push.registry}</pushRegistry>
+                            <images>
+                                <image>
+                                    <name>onap/policy-xacml-tutorial</name>
+                                    <build>
+                                        <cleanup>try</cleanup>
+                                        <dockerFile>Dockerfile</dockerFile>
+                                        <contextDir>${docker.contextDir}</contextDir>
+                                        <tags>
+                                            <tag>${project.version}</tag>
+                                            <tag>${project.version}-${maven.build.timestamp}</tag>
+                                            <tag>${project.docker.latest.minmax.tag.version}</tag>
+                                        </tags>
+                                        <contextDir>${project.basedir}/src/main/docker</contextDir>
+                                        <assembly>
+                                            <descriptorRef>artifact-with-dependencies</descriptorRef>
+                                        </assembly>
+                                        <args>
+                                            <BUILD_NAME>${project.name}</BUILD_NAME>
+                                            <BUILD_VERSION>${project.version}</BUILD_VERSION>
+                                        </args>
+                                    </build>
+                                </image>
+                            </images>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>clean-images</id>
+                                <phase>pre-clean</phase>
+                                <goals>
+                                    <goal>remove</goal>
+                                </goals>
+                                <configuration>
+                                    <removeAll>true</removeAll>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>generate-images</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
