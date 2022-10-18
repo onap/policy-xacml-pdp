@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d45dea33_6ba7a3cd",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/docker-compose.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-10-18T13:19:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ab8e36c_b18b9d26",
+      "revId": "f84174b44b5a05d85f39135bbb759d2f7be13ae0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d92de78_b0a54887",
         "filename": "tutorials/tutorial-xacml-application/src/main/docker/run-tutorial.sh",
         "patchSetId": 1
@@ -39,6 +57,30 @@
       "revId": "f84174b44b5a05d85f39135bbb759d2f7be13ae0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ce17dcf_ee94c453",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/run-tutorial.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-10-18T13:19:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d92de78_b0a54887",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 0
+      },
+      "revId": "f84174b44b5a05d85f39135bbb759d2f7be13ae0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
