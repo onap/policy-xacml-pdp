@@ -37,7 +37,7 @@ fi
 # Extract Maria DB Credential properties from xacml.properties file
 DB_HOSTNAME=$(awk -F[/:] '$1 == "javax.persistence.jdbc.url=jdbc" { print $3 $5 }' /tmp/temp.xacml-pg.properties)
 DB_USERNAME=$(awk -F= '$1 == "javax.persistence.jdbc.user" { print $2 }' /tmp/temp.xacml-pg.properties)
-DB_PASSWORD=$(awk -F= '$1 == "javax.persistence.jdbc.password" { print $2 }' /tmp/temp.xacml-pg.properties)
+DB_PASSWORD=$(awk -F= '$1 == "javax.persistence.jdbc.password" { st = index($0,"="); print substr($0,st+1) }' /tmp/temp.properties)
 
 # Remove temp file
 rm /tmp/temp.xacml-pg.properties
