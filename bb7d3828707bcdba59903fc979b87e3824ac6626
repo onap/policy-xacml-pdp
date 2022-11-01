@@ -46,6 +46,30 @@
       "revId": "bb7d3828707bcdba59903fc979b87e3824ac6626",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5adf4dd_a087b196",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-11-01T17:06:44Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "5d2d9a8a_a5ebec11",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 7
+      },
+      "revId": "bb7d3828707bcdba59903fc979b87e3824ac6626",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
