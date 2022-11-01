@@ -22,6 +22,30 @@
       "revId": "bb7d3828707bcdba59903fc979b87e3824ac6626",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d2d9a8a_a5ebec11",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/mysql/bin/create-guard-table.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-11-01T15:02:31Z",
+      "side": 1,
+      "message": "It should work preserving a password that contains a \"\u003d\" in it in a property in a properties file, see for example:\n\n[09:59|~] echo \"javax.persistence.jdbc.password\u003dmypassword\u003d\" | awk -F\u003d \u0027$1 \u003d\u003d \"javax.persistence.jdbc.password\" { st \u003d index($0,\"\u003d\"); print substr($0,st+1) }\u0027\nmypassword\u003d\n[09:59|~] echo \"javax.persistence.jdbc.password\u003dmypass\u003dword\" | awk -F\u003d \u0027$1 \u003d\u003d \"javax.persistence.jdbc.password\" { st \u003d index($0,\"\u003d\"); print substr($0,st+1) }\u0027\nmypass\u003dword\n[09:59|~] echo \"javax.persistence.jdbc.password\u003d\u003dmypassword\" | awk -F\u003d \u0027$1 \u003d\u003d \"javax.persistence.jdbc.password\" { st \u003d index($0,\"\u003d\"); print substr($0,st+1) }\u0027\n\u003dmypassword\n[09:59|~] \n\nbefore the password was truncated at the \"\u003d\" sign so the credentials were invalid.",
+      "parentUuid": "7dc57e27_a4654ac0",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 7
+      },
+      "revId": "bb7d3828707bcdba59903fc979b87e3824ac6626",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
