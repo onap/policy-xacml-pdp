@@ -1,0 +1,8 @@
+distribution_type: 'container'
+container_release_tag: '2.7.2'
+project: 'policy-xacml-pdp'
+log_dir: 'policy-xacml-pdp-maven-docker-stage-kohn/30'
+ref: 23b92a55a6fb5ac0b29123637eb7e36c677ae0b7
+containers:
+    - name: 'policy-xacml-pdp'
+      version: '2.7.2-20221122T1825'
