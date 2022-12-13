@@ -45,12 +45,11 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>${version.javax.bind}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
-            <version>${version.javax.bind}</version>
+            <version>${version.bind-jaxb-api}</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
