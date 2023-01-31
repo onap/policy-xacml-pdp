@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +41,7 @@ import org.onap.policy.pdpx.main.XacmlState;
 import org.onap.policy.pdpx.main.comm.XacmlPdpHearbeatPublisher;
 import org.onap.policy.pdpx.main.comm.XacmlPdpUpdatePublisher;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
-import org.powermock.reflect.Whitebox;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @RunWith(MockitoJUnitRunner.class)
 public class XacmlPdpUpdateListenerTest {
@@ -111,7 +112,7 @@ public class XacmlPdpUpdateListenerTest {
     public void testMakePublisher() {
         // create a plain listener to test the "real" makePublisher() method
         listener = new XacmlPdpUpdateListener(client, state, heartbeat, appmgr);
-        assertNotNull(Whitebox.getInternalState(listener, "publisher"));
+        assertNotNull(ReflectionTestUtils.getField(listener, "publisher"));
     }
 
     private class MyListener extends XacmlPdpUpdateListener {

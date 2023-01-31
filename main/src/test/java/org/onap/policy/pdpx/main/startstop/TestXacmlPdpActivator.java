@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019 Nordix Foundation.
+ * Modifications Copyright (C) 2019,2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterHandler;
-import org.powermock.reflect.Whitebox;
+import org.springframework.test.util.ReflectionTestUtils;
 
 
 /**
@@ -70,7 +70,7 @@ public class TestXacmlPdpActivator extends CommonRest {
     @Override
     @Before
     public void setUp() {
-        Whitebox.setInternalState(parGroup, PROBE_FIELD_NAME, 4);
+        ReflectionTestUtils.setField(parGroup, PROBE_FIELD_NAME, 4);
         activator = new XacmlPdpActivator(parGroup);
     }
 
@@ -96,7 +96,7 @@ public class TestXacmlPdpActivator extends CommonRest {
 
     @Test
     public void testXacmlPdpActivator_NoProbe() throws Exception {
-        Whitebox.setInternalState(parGroup, PROBE_FIELD_NAME, 0);
+        ReflectionTestUtils.setField(parGroup, PROBE_FIELD_NAME, 0);
         activator = new XacmlPdpActivator(parGroup);
         activator.start();
         assertTrue(activator.isAlive());

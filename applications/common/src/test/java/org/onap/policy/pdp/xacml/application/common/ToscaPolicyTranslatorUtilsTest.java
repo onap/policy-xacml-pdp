@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,6 +117,7 @@ public class ToscaPolicyTranslatorUtilsTest {
         assertThat(((ApplyType) obj).getExpression()).hasSize(2);
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     public void testDecodeProperties() throws ToscaPolicyConversionException {
         Data data = ToscaPolicyTranslatorUtils.decodeProperties(Map.of("value", 20), Data.class);

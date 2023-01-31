@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019 Nordix Foundation.
+ * Modifications Copyright (C) 2019,2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ import org.onap.policy.common.utils.security.SelfSignedKeyStore;
 import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 import org.onap.policy.pdpx.main.startstop.Main;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
-import org.powermock.reflect.Whitebox;
+import org.springframework.test.util.ReflectionTestUtils;
 
 /**
  * Common base class for REST service tests.
@@ -215,8 +215,8 @@ public class CommonRest {
      * @param newAlive the new "alive" status
      */
     private void markActivator(boolean newAlive) {
-        Object manager = Whitebox.getInternalState(XacmlPdpActivator.getCurrent(), "serviceManager");
-        AtomicBoolean running = Whitebox.getInternalState(manager, "running");
+        Object manager = ReflectionTestUtils.getField(XacmlPdpActivator.getCurrent(), "serviceManager");
+        AtomicBoolean running = (AtomicBoolean) ReflectionTestUtils.getField(manager, "running");
         running.set(newAlive);
     }
 }
