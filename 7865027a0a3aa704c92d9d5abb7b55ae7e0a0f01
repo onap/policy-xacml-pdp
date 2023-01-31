@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31b37be8_1a55f529",
+        "filename": "main/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2023-01-31T16:22:51Z",
+      "side": 1,
+      "message": "Nordix Foundation",
+      "range": {
+        "startLine": 7,
+        "startChar": 35,
+        "endLine": 7,
+        "endChar": 41
+      },
+      "revId": "7865027a0a3aa704c92d9d5abb7b55ae7e0a0f01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
