@@ -28,9 +28,8 @@
 
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="create" />
-            <property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
-            <property name="eclipselink.ddl-generation.output-mode" value="database" />
-            <property name="eclipselink.logging.level" value="WARNING" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <property name="hibernate.show_sql" value="false" />
         </properties>
     </persistence-unit>
 

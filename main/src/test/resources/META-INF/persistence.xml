@@ -27,11 +27,10 @@
         <class>org.onap.policy.guard.OperationsHistory</class>
 
         <properties>
-            <property name="eclipselink.ddl-generation" value="create-tables" />
-            <property name="eclipselink.logging.level" value="FINE" />
-            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
             <property name="javax.persistence.schema-generation.create-source" value="metadata"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <property name="hibernate.show_sql" value="false" />
         </properties>
     </persistence-unit>
 

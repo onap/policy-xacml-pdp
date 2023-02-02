@@ -114,6 +114,11 @@
             <artifactId>policy-models-tosca</artifactId>
             <version>${policy.models.version}</version>
         </dependency>
+                <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <distributionManagement>

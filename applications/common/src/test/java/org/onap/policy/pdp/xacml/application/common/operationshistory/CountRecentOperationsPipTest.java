@@ -221,7 +221,7 @@ public class CountRecentOperationsPipTest {
         //
         // Directly check ground truth
         //
-        Query queryCount = em.createNativeQuery("select count(*) as numops from operationshistory").setParameter(1, 1);
+        Query queryCount = em.createNativeQuery("select count(*) as numops from operationshistory");
         LOGGER.info("{} entries", queryCount.getSingleResult());
         //
         // Should count 1 entry now
