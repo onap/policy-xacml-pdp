@@ -3,7 +3,7 @@
   ONAP Policy Engine - XACML PDP
   ================================================================================
   Copyright (C) 2018-2021 AT&T Intellectual Property. All rights reserved.
-  Modifications Copyright (C) 2020 Nordix Foundation.
+  Modifications Copyright (C) 2020,2023 Nordix Foundation.
   Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -113,6 +113,11 @@
             <groupId>org.onap.policy.models</groupId>
             <artifactId>policy-models-tosca</artifactId>
             <version>${policy.models.version}</version>
+        </dependency>
+                <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
