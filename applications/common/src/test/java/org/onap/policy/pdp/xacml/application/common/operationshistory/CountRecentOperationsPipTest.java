@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -221,7 +222,7 @@ public class CountRecentOperationsPipTest {
         //
         // Directly check ground truth
         //
-        Query queryCount = em.createNativeQuery("select count(*) as numops from operationshistory").setParameter(1, 1);
+        Query queryCount = em.createNativeQuery("select count(*) as numops from operationshistory");
         LOGGER.info("{} entries", queryCount.getSingleResult());
         //
         // Should count 1 entry now
