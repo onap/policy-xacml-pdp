@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "091b17ff_16367e50",
+        "filename": "testsuites/run-s3p-test.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2023-02-15T13:10:10Z",
+      "side": 1,
+      "message": "Should this be the ONAP gerrit or public github?",
+      "range": {
+        "startLine": 33,
+        "startChar": 28,
+        "endLine": 33,
+        "endChar": 34
+      },
+      "revId": "4d8f610d68f9159794fd24f806cb44a8caa268e8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
