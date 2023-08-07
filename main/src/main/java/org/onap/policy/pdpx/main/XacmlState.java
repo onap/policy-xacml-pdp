@@ -20,21 +20,18 @@
 
 package org.onap.policy.pdpx.main;
 
-import java.time.Instant;
 import java.util.Collections;
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.pdp.concepts.PdpMessage;
 import org.onap.policy.models.pdp.concepts.PdpResponseDetails;
 import org.onap.policy.models.pdp.concepts.PdpStateChange;
-import org.onap.policy.models.pdp.concepts.PdpStatistics;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.models.pdp.enums.PdpHealthStatus;
 import org.onap.policy.models.pdp.enums.PdpResponseStatus;
 import org.onap.policy.models.pdp.enums.PdpState;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
-import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,40 +93,7 @@ public class XacmlState {
             : PdpHealthStatus.NOT_HEALTHY);
 
         PdpStatus heartbeat = new PdpStatus(status);
-        heartbeat.setStatistics(getStatistics());
         return heartbeat;
-    }
-
-    /**
-     * Generates statistics to be used in a heart beat message.
-     *
-     * @return statistics for heart beat message
-     */
-    protected PdpStatistics getStatistics() {
-        XacmlPdpStatisticsManager stats = XacmlPdpStatisticsManager.getCurrent();
-        if (stats == null) {
-            LOGGER.warn("XacmlPdpStatisticsManager is null");
-            return null;
-        }
-        stats.setTotalPolicyCount(appManager.getPolicyCount());
-
-        PdpStatistics pdpStats = new PdpStatistics();
-        pdpStats.setPdpGroupName(this.status.getPdpGroup());
-        pdpStats.setPdpSubGroupName(this.status.getPdpSubgroup());
-        pdpStats.setTimeStamp(Instant.ofEpochSecond(this.status.getTimestampMs()));
-
-        pdpStats.setPolicyExecutedCount(stats.getPermitDecisionsCount() + stats.getDenyDecisionsCount());
-        pdpStats.setPolicyExecutedSuccessCount(stats.getPermitDecisionsCount());
-        pdpStats.setPolicyExecutedFailCount(stats.getDenyDecisionsCount());
-
-        pdpStats.setPolicyDeployCount(stats.getDeploySuccessCount() + stats.getDeployFailureCount());
-        pdpStats.setPolicyDeploySuccessCount(stats.getDeploySuccessCount());
-        pdpStats.setPolicyDeployFailCount(stats.getDeployFailureCount());
-
-        pdpStats.setPolicyUndeployCount(stats.getUndeploySuccessCount() + stats.getUndeployFailureCount());
-        pdpStats.setPolicyUndeploySuccessCount(stats.getUndeploySuccessCount());
-        pdpStats.setPolicyUndeployFailCount(stats.getUndeployFailureCount());
-        return pdpStats;
     }
 
     /**

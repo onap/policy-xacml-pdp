@@ -42,7 +42,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpResponseDetails;
 import org.onap.policy.models.pdp.concepts.PdpStateChange;
-import org.onap.policy.models.pdp.concepts.PdpStatistics;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.models.pdp.enums.PdpHealthStatus;
@@ -132,26 +131,6 @@ public class XacmlStateTest {
         TopicSinkClient client = Mockito.mock(TopicSinkClient.class);
         XacmlPdpUpdatePublisher publisher = new XacmlPdpUpdatePublisher(client, state, appmgr);
         publisher.handlePdpUpdate(message);
-
-        PdpStatistics stats = state.getStatistics();
-        assertNotNull(stats);
-        assertEquals(GROUP, stats.getPdpGroupName());
-        assertEquals(1, stats.getPolicyDeployCount());
-        assertEquals(1, stats.getPolicyDeploySuccessCount());
-        assertEquals(0, stats.getPolicyDeployFailCount());
-        assertEquals(1, stats.getPolicyUndeployCount());
-        assertEquals(1, stats.getPolicyUndeployFailCount());
-        assertEquals(0, stats.getPolicyUndeploySuccessCount());
-
-        PdpStatistics test = new PdpStatistics();
-        test.setTimeStamp(stats.getTimeStamp());
-        test.setPdpGroupName(GROUP);
-        test.setPolicyDeployCount(1);
-        test.setPolicyDeploySuccessCount(1);
-        test.setPolicyUndeployCount(1);
-        test.setPolicyUndeployFailCount(1);
-
-        assertEquals(stats.toString(), test.toString());
     }
 
     @Test
