@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +21,9 @@
 
 package org.onap.policy.pdpx.main.startstop;
 
+import jakarta.servlet.Filter;
 import java.util.List;
 import java.util.Properties;
-import javax.servlet.Filter;
 import org.onap.policy.common.endpoints.http.server.JsonExceptionMapper;
 import org.onap.policy.common.endpoints.http.server.RestServer;
 import org.onap.policy.common.endpoints.http.server.YamlExceptionMapper;

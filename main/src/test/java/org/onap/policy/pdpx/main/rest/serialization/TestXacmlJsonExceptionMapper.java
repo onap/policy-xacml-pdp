@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +23,8 @@ package org.onap.policy.pdpx.main.rest.serialization;
 
 import static org.junit.Assert.assertEquals;
 
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
-import javax.ws.rs.core.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.common.utils.coder.CoderException;

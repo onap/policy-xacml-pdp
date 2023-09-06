@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +21,8 @@
 
 package org.onap.policy.pdpx.main.rest.serialization;
 
-import javax.ws.rs.Produces;
-import javax.ws.rs.ext.Provider;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.ext.Provider;
 
 /**
  * Catches IOException when decoding/encoding a REST xacml request/response and converts them from an HTTP 500

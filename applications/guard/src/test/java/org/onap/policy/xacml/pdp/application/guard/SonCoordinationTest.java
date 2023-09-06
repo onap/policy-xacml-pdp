@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +26,8 @@ package org.onap.policy.xacml.pdp.application.guard;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.att.research.xacml.api.Response;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
@@ -34,8 +37,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.UUID;
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.AfterClass;
 import org.junit.Before;

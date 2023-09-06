@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 #
 # ============LICENSE_START=======================================================
-#  Copyright (C) 2022 Nordix Foundation. All rights reserved.
+#  Copyright (C) 2022-2023 Nordix Foundation. All rights reserved.
 #  Modifications Copyright (C) 2022 AT&T Intellectual Property.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,9 +35,9 @@ if [ ! -f /tmp/temp.xacml-pg.properties ]; then
 fi
 
 # Extract Maria DB Credential properties from xacml.properties file
-DB_HOSTNAME=$(awk -F[/:] '$1 == "javax.persistence.jdbc.url=jdbc" { print $3 $5 }' /tmp/temp.xacml-pg.properties)
-DB_USERNAME=$(awk -F= '$1 == "javax.persistence.jdbc.user" { print $2 }' /tmp/temp.xacml-pg.properties)
-DB_PASSWORD=$(awk -F= '$1 == "javax.persistence.jdbc.password" { st = index($0,"="); print substr($0,st+1) }' /tmp/temp.properties)
+DB_HOSTNAME=$(awk -F[/:] '$1 == "jakarta.persistence.jdbc.url=jdbc" { print $3 $5 }' /tmp/temp.xacml-pg.properties)
+DB_USERNAME=$(awk -F= '$1 == "jakarta.persistence.jdbc.user" { print $2 }' /tmp/temp.xacml-pg.properties)
+DB_PASSWORD=$(awk -F= '$1 == "jakarta.persistence.jdbc.password" { st = index($0,"="); print substr($0,st+1) }' /tmp/temp.properties)
 
 # Remove temp file
 rm /tmp/temp.xacml-pg.properties

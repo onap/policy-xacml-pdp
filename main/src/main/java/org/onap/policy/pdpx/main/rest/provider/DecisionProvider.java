@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2020, 2022 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,7 +99,7 @@ public class DecisionProvider {
         if (application != null) {
             return application;
         }
-        throw new DecisionException(javax.ws.rs.core.Response.Status.BAD_REQUEST,
+        throw new DecisionException(jakarta.ws.rs.core.Response.Status.BAD_REQUEST,
                 "No application for action " + request.getAction());
     }
 
@@ -107,7 +108,7 @@ public class DecisionProvider {
         if (application instanceof NativePdpApplication) {
             return application;
         }
-        throw new DecisionException(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR,
+        throw new DecisionException(jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR,
                 "Native PDP application cannot be found");
     }
 
@@ -126,10 +127,7 @@ public class DecisionProvider {
                     XacmlPdpStatisticsManager.getCurrent().updateDenyDecisionsCount(appName);
                     break;
 
-                case INDETERMINATE:
-                case INDETERMINATE_DENY:
-                case INDETERMINATE_DENYPERMIT:
-                case INDETERMINATE_PERMIT:
+                case INDETERMINATE, INDETERMINATE_DENY, INDETERMINATE_DENYPERMIT, INDETERMINATE_PERMIT:
                     XacmlPdpStatisticsManager.getCurrent().updateIndeterminantDecisionsCount(appName);
                     break;
 

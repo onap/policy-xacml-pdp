@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +26,9 @@ import static org.junit.Assert.assertTrue;
 
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
+import jakarta.ws.rs.core.MediaType;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import javax.ws.rs.core.MediaType;
 
 public class CommonSerialization {
 

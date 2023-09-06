@@ -4,6 +4,7 @@
   ================================================================================
   Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
   Modifications Copyright (C) 2020 Bell Canada.
+  Modifications Copyright (C) 2023 Nordix Foundation.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -26,7 +27,7 @@
     <parent>
         <groupId>org.onap.policy.xacml-pdp</groupId>
         <artifactId>xacml-tutorials</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.1-SNAPSHOT</version>
     </parent>
 
     <groupId>org.onap.policy.tutorial</groupId>

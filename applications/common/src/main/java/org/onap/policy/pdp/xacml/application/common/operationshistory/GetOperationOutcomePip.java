@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +27,9 @@ import com.att.research.xacml.api.pip.PIPResponse;
 import com.att.research.xacml.std.pip.StdMutablePIPResponse;
 import com.att.research.xacml.std.pip.StdPIPResponse;
 import com.google.common.base.Strings;
+import jakarta.persistence.NoResultException;
 import java.util.Arrays;
 import java.util.Collection;
-import javax.persistence.NoResultException;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.std.StdOnapPip;
 import org.slf4j.Logger;

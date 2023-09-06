@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +26,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.att.research.xacml.api.Status;
@@ -33,27 +35,23 @@ import com.att.research.xacml.api.pip.PIPFinder;
 import com.att.research.xacml.api.pip.PIPRequest;
 import com.att.research.xacml.api.pip.PIPResponse;
 import com.att.research.xacml.std.pip.StdPIPResponse;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
 import java.io.FileInputStream;
 import java.lang.reflect.Method;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Properties;
 import java.util.UUID;
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.onap.policy.guard.OperationsHistory;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@RunWith(MockitoJUnitRunner.class)
 public class GetOperationOutcomePipTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(GetOperationOutcomePipTest.class);
     private static final String TEST_PROPERTIES = "src/test/resources/test.properties";
@@ -63,17 +61,13 @@ public class GetOperationOutcomePipTest {
     private Properties properties;
     private GetOperationOutcomePip pipEngine;
 
-    @Mock
-    private PIPRequest pipRequest;
+    private final PIPRequest pipRequest = mock(PIPRequest.class);
 
-    @Mock
-    private PIPFinder pipFinder;
+    private final PIPFinder pipFinder = mock(PIPFinder.class);
 
-    @Mock
-    private PIPResponse resp1;
+    private final PIPResponse resp1 = mock(PIPResponse.class);
 
-    @Mock
-    private Status okStatus;
+    private final Status okStatus = mock(Status.class);
 
     /**
      * Create an instance of our engine and also the persistence
@@ -148,7 +142,7 @@ public class GetOperationOutcomePipTest {
 
     @Test
     public void testConfigure_DbException() throws Exception {
-        properties.put("javax.persistence.jdbc.url", "invalid");
+        properties.put("jakarta.persistence.jdbc.url", "invalid");
         assertThatCode(() ->
             pipEngine.configure("issuer", properties)
         ).doesNotThrowAnyException();

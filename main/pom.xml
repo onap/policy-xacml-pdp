@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.onap.policy.xacml-pdp</groupId>
         <artifactId>policy-xacml-pdp</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>xacml-main</artifactId>
@@ -164,6 +164,7 @@
             <plugin>
                 <groupId>io.swagger.codegen.v3</groupId>
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <version>3.0.46</version>
                 <executions>
                     <execution>
                         <id>code-gen</id>
@@ -190,13 +191,14 @@
                                 HealthCheckProvider=org.onap.policy.pdpx.main.rest.provider.HealthCheckProvider,
                                 StatisticsProvider=org.onap.policy.pdpx.main.rest.provider.StatisticsProvider,
                                 Request=com.att.research.xacml.api.Request,
-                                Response=javax.ws.rs.core.Response
+                                Response=jakarta.ws.rs.core.Response
                             </importMappings>
                             <configOptions>
                                 <sourceFolder>src/gen/java</sourceFolder>
                                 <dateLibrary>java11</dateLibrary>
                                 <interfaceOnly>true</interfaceOnly>
                                 <useTags>true</useTags>
+                                <jakarta>true</jakarta>
                             </configOptions>
                         </configuration>
                     </execution>
