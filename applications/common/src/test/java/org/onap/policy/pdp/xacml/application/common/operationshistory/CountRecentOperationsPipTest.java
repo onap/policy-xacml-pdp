@@ -32,6 +32,9 @@ import com.att.research.xacml.api.pip.PIPFinder;
 import com.att.research.xacml.api.pip.PIPRequest;
 import com.att.research.xacml.api.pip.PIPResponse;
 import com.att.research.xacml.std.pip.StdPIPResponse;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.Query;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Date;
@@ -41,9 +44,6 @@ import java.util.LinkedList;
 import java.util.Properties;
 import java.util.Queue;
 import java.util.UUID;
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -154,7 +154,7 @@ public class CountRecentOperationsPipTest {
 
     @Test
     public void testConfigure_DbException() throws Exception {
-        properties.put("javax.persistence.jdbc.url", "invalid");
+        properties.put("jakarta.persistence.jdbc.url", "invalid");
         assertThatCode(() ->
             pipEngine.configure("issuer", properties)
         ).doesNotThrowAnyException();

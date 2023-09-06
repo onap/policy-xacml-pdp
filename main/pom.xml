@@ -21,18 +21,19 @@
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.onap.policy.xacml-pdp</groupId>
         <artifactId>policy-xacml-pdp</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>xacml-main</artifactId>
 
     <name>${project.artifactId}</name>
-    <description>The main module of Policy PDP-X that handles startup, lifecycle management, and parameters.</description>
+    <description>The main module of Policy PDP-X that handles startup, lifecycle management, and parameters.
+    </description>
 
     <properties>
         <jacoco.dataFile>${project.basedir}/../target/code-coverage/jacoco-ut.exec</jacoco.dataFile>
@@ -128,16 +129,10 @@
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
         <!-- Swagger v3 annotations -->
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
-        <artifactId>swagger-annotations</artifactId>
-        <version>2.2.7</version>
+            <artifactId>swagger-annotations</artifactId>
         </dependency>
     </dependencies>
 
@@ -178,7 +173,6 @@
                             <language>jaxrs-spec</language>
                             <generateModels>false</generateModels>
                             <generateSupportingFiles>false</generateSupportingFiles>
-                            <sortParamsByRequiredFlag>false</sortParamsByRequiredFlag>
                             <importMappings>
                                 HealthCheckReport=org.onap.policy.common.endpoints.report.HealthCheckReport,
                                 DecisionException=org.onap.policy.models.decisions.concepts.DecisionException,
@@ -190,13 +184,14 @@
                                 HealthCheckProvider=org.onap.policy.pdpx.main.rest.provider.HealthCheckProvider,
                                 StatisticsProvider=org.onap.policy.pdpx.main.rest.provider.StatisticsProvider,
                                 Request=com.att.research.xacml.api.Request,
-                                Response=javax.ws.rs.core.Response
+                                Response=jakarta.ws.rs.core.Response
                             </importMappings>
                             <configOptions>
                                 <sourceFolder>src/gen/java</sourceFolder>
-                                <dateLibrary>java11</dateLibrary>
+                                <dateLibrary>java17</dateLibrary>
                                 <interfaceOnly>true</interfaceOnly>
                                 <useTags>true</useTags>
+                                <jakarta>true</jakarta>
                             </configOptions>
                         </configuration>
                     </execution>

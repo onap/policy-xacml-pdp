@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +40,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
-import java.util.stream.Collectors;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
@@ -113,7 +113,7 @@ public class XacmlPolicyUtilsTest {
             //
             if (!"/".equals(File.separator)) {
                 List<String> fileProps = properties.keySet().stream().map(Object::toString)
-                                .filter(key -> key.endsWith(".file")).collect(Collectors.toList());
+                                .filter(key -> key.endsWith(".file")).toList();
                 for (String fileProp : fileProps) {
                     properties.setProperty(fileProp, properties.getProperty(fileProp).replace("/", File.separator));
                 }

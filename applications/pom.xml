@@ -3,6 +3,7 @@
   ONAP
   ================================================================================
   Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+  Modifications Copyright (C) 2023 Nordix Foundation.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,32 +19,32 @@
   ============LICENSE_END=========================================================
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <packaging>pom</packaging>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
 
-  <parent>
-    <groupId>org.onap.policy.xacml-pdp</groupId>
-    <artifactId>policy-xacml-pdp</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
-  </parent>
+    <parent>
+        <groupId>org.onap.policy.xacml-pdp</groupId>
+        <artifactId>policy-xacml-pdp</artifactId>
+        <version>3.0.1-SNAPSHOT</version>
+    </parent>
 
-  <groupId>org.onap.policy.xacml-pdp.applications</groupId>
-  <artifactId>applications</artifactId>
+    <groupId>org.onap.policy.xacml-pdp.applications</groupId>
+    <artifactId>applications</artifactId>
 
-  <properties>
-    <jacoco.dataFile>${project.basedir}/../../target/code-coverage/jacoco-ut.exec</jacoco.dataFile>
-  </properties>
+    <properties>
+        <jacoco.dataFile>${project.basedir}/../../target/code-coverage/jacoco-ut.exec</jacoco.dataFile>
+    </properties>
 
-  <modules>
-    <module>common</module>
-    <module>guard</module>
-    <module>match</module>
-    <module>monitoring</module>
-    <module>naming</module>
-    <module>native</module>
-    <module>optimization</module>
-  </modules>
-
+    <modules>
+        <module>common</module>
+        <module>guard</module>
+        <module>match</module>
+        <module>monitoring</module>
+        <module>naming</module>
+        <module>native</module>
+        <module>optimization</module>
+    </modules>
 
 </project>
