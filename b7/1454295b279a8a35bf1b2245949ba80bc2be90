@@ -1,0 +1,9 @@
+Verified+1: ONAP Required GHA <releng+onap.required.gha@linuxfoundation.org>
+Code-Review+2: Liam Fallon <liam.fallon@est.tech>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Adheli Tavares <adheli.tavares@est.tech>
+Submitted-by: Liam Fallon <liam.fallon@est.tech>
+Submitted-at: Sun, 17 Sep 2023 17:37:04 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/xacml-pdp/+/135966
+Project: policy/xacml-pdp
+Branch: refs/heads/java-17
