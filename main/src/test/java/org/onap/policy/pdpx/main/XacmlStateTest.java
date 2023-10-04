@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021-2022 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2021,2023 Nordix Foundation.
+ * Modifications Copyright (C) 2021, 2023 Nordix Foundation.
  * Modifications Copyright (C) 2023 Bell Canada.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,19 +27,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpResponseDetails;
 import org.onap.policy.models.pdp.concepts.PdpStateChange;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
@@ -47,11 +43,7 @@ import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.models.pdp.enums.PdpHealthStatus;
 import org.onap.policy.models.pdp.enums.PdpResponseStatus;
 import org.onap.policy.models.pdp.enums.PdpState;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
-import org.onap.policy.pdpx.main.comm.XacmlPdpUpdatePublisher;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
-import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -112,25 +104,6 @@ public class XacmlStateTest {
 
         status = state.genHeartbeat();
         assertEquals(PdpHealthStatus.HEALTHY, status.getHealthy());
-    }
-
-    @Test
-    public void testGetStatistics() {
-        XacmlPdpStatisticsManager statmgr = new XacmlPdpStatisticsManager();
-        XacmlPdpStatisticsManager.setCurrent(statmgr);
-
-        ToscaPolicy policy1 = mock(ToscaPolicy.class);
-        ToscaPolicy policy2 = mock(ToscaPolicy.class);
-        ToscaConceptIdentifier ident = new ToscaConceptIdentifier("undeployed", "2.3.4");
-        when(policy2.getIdentifier()).thenReturn(ident);
-
-        PdpUpdate message = new PdpUpdate();
-        message.setPoliciesToBeDeployed(Arrays.asList(policy1));
-        message.setPoliciesToBeUndeployed(Arrays.asList(policy2.getIdentifier()));
-
-        TopicSinkClient client = Mockito.mock(TopicSinkClient.class);
-        XacmlPdpUpdatePublisher publisher = new XacmlPdpUpdatePublisher(client, state, appmgr);
-        publisher.handlePdpUpdate(message);
     }
 
     @Test

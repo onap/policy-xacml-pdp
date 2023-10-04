@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +34,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.std.StdOnapPip;
 import org.slf4j.Logger;
@@ -41,7 +43,7 @@ import org.slf4j.LoggerFactory;
 
 public class CountRecentOperationsPip extends StdOnapPip {
     public static final String ISSUER_NAME = "count-recent-operations";
-    private static Logger logger = LoggerFactory.getLogger(CountRecentOperationsPip.class);
+    private static final Logger logger = LoggerFactory.getLogger(CountRecentOperationsPip.class);
 
     public CountRecentOperationsPip() {
         super();
@@ -57,7 +59,7 @@ public class CountRecentOperationsPip extends StdOnapPip {
      * getAttributes.
      *
      * @param pipRequest the request
-     * @param pipFinder the pip finder
+     * @param pipFinder  the pip finder
      * @return PIPResponse
      */
     @Override
@@ -66,21 +68,21 @@ public class CountRecentOperationsPip extends StdOnapPip {
             throw new PIPException("Engine is shutdown");
         }
         logger.debug("getAttributes requesting attribute {} of type {} for issuer {}",
-                pipRequest.getAttributeId(), pipRequest.getDataTypeId(), pipRequest.getIssuer());
+            pipRequest.getAttributeId(), pipRequest.getDataTypeId(), pipRequest.getIssuer());
         //
         // Determine if the issuer is correct
         //
         if (Strings.isNullOrEmpty(pipRequest.getIssuer())) {
             logger.debug("issuer is null - returning empty response");
             //
-            // We only respond to ourself as the issuer
+            // We only respond to ourselves as the issuer
             //
             return StdPIPResponse.PIP_RESPONSE_EMPTY;
         }
-        if (! pipRequest.getIssuer().startsWith(ToscaDictionary.GUARD_ISSUER_PREFIX)) {
+        if (!pipRequest.getIssuer().startsWith(ToscaDictionary.GUARD_ISSUER_PREFIX)) {
             logger.debug("Issuer does not start with guard");
             //
-            // We only respond to ourself as the issuer
+            // We only respond to ourselves as the issuer
             //
             return StdPIPResponse.PIP_RESPONSE_EMPTY;
         }
@@ -100,7 +102,7 @@ public class CountRecentOperationsPip extends StdOnapPip {
         String target = getAttribute(pipFinder, PIP_REQUEST_TARGET);
         String timeWindow = timeWindowVal + " " + timeWindowScale;
         logger.info("Going to query DB about: actor {} operation {} target {} time window {}",
-                actor, operation, target, timeWindow);
+            actor, operation, target, timeWindow);
         //
         // Sanity check
         //
@@ -120,17 +122,17 @@ public class CountRecentOperationsPip extends StdOnapPip {
         //
         var pipResponse = new StdMutablePIPResponse();
         this.addLongAttribute(pipResponse,
-                XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
-                ToscaDictionary.ID_RESOURCE_GUARD_OPERATIONCOUNT,
-                operationCount,
-                pipRequest);
+            XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
+            ToscaDictionary.ID_RESOURCE_GUARD_OPERATIONCOUNT,
+            operationCount,
+            pipRequest);
         return new StdPIPResponse(pipResponse);
     }
 
     private long doDatabaseQuery(String actor, String operation, String target, int timeWindowVal,
-            String timeWindowScale) {
+                                 String timeWindowScale) {
         logger.info("Querying operations history for {} {} {} {} {}",
-                actor, operation, target, timeWindowVal, timeWindowScale);
+            actor, operation, target, timeWindowVal, timeWindowScale);
         //
         // Only can query if we have an EntityManager
         //
@@ -146,19 +148,18 @@ public class CountRecentOperationsPip extends StdOnapPip {
             // We are expecting a single result
             //
             return em.createQuery("select count(e) from OperationsHistory e"
-                                  + " where e.outcome<>'Failure_Guard'"
-                                  + " and e.actor= ?1"
-                                  + " and e.operation= ?2"
-                                  + " and e.target= ?3"
-                                  + " and e.endtime between"
-                                  + " ?4 and CURRENT_TIMESTAMP",
-                                  Long.class)
+                        + " where e.outcome<>'Failure_Guard'"
+                        + " and e.actor= ?1"
+                        + " and e.operation= ?2"
+                        + " and e.target= ?3"
+                        + " and e.endtime between"
+                        + " ?4 and CURRENT_TIMESTAMP",
+                    Long.class)
                 .setParameter(1, actor)
                 .setParameter(2, operation)
                 .setParameter(3, target)
                 .setParameter(4, Timestamp.from(Instant.now()
-                                                .minus(timeWindowVal,
-                                                       stringToChronoUnit(timeWindowScale))))
+                    .minus(timeWindowVal, Objects.requireNonNull(stringToChronoUnit(timeWindowScale)))))
                 .getSingleResult();
         } catch (Exception e) {
             logger.error("Typed query failed ", e);

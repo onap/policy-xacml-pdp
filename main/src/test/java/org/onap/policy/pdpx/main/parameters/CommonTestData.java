@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019 Nordix Foundation.
+ * Modifications Copyright (C) 2019, 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,6 @@
 
 package org.onap.policy.pdpx.main.parameters;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -43,7 +41,6 @@ public class CommonTestData {
     private static final String PORT_KEY = "port";
     private static final String SERVER_HOST_KEY = "host";
     private static final String API_HOST_KEY = "hostname";
-    private static final String AAF_KEY = "aaf";
     private static final String HTTPS_KEY = "useHttps";
 
     private static final String REST_SERVER_PASS = "zb!XztG34";
@@ -51,20 +48,15 @@ public class CommonTestData {
     private static final int REST_SERVER_PORT = 6969;
     private static final String REST_SERVER_HOST = "0.0.0.0";
     private static final boolean REST_SERVER_HTTPS = false;
-    private static final boolean REST_SERVER_AAF = false;
-
     private static final String POLICY_API_PASS = "zb!XztG34";
     private static final String POLICY_API_USER = "healthcheck";
     private static final int POLICY_API_PORT = 6970;
     private static final String POLICY_API_HOST = "0.0.0.0";
     private static final boolean POLICY_API_HTTPS = false;
-    private static final boolean POLICY_API_AAF = false;
-
     public static final String PDPX_PARAMETER_GROUP_NAME = "XacmlPdpParameters";
     public static final String PDPX_GROUP = "XacmlPdpGroup";
     public static final String PDPX_TYPE = "xacml";
-    public static final List<TopicParameters> TOPIC_PARAMS =
-                    Collections.unmodifiableList(Arrays.asList(getTopicParams()));
+    public static final List<TopicParameters> TOPIC_PARAMS = List.of(getTopicParams());
 
     public static final Coder coder = new StandardCoder();
 
@@ -77,7 +69,7 @@ public class CommonTestData {
         final TopicParameters topicParams = new TopicParameters();
         topicParams.setTopic("POLICY-PDP-PAP");
         topicParams.setTopicCommInfrastructure("noop");
-        topicParams.setServers(Arrays.asList("message-router"));
+        topicParams.setServers(List.of("message-router"));
         return topicParams;
     }
 
@@ -90,7 +82,6 @@ public class CommonTestData {
     public Map<String, Object> getRestServerParametersMap(final boolean isEmpty) {
         final Map<String, Object> map = new TreeMap<>();
         map.put(HTTPS_KEY, REST_SERVER_HTTPS);
-        map.put(AAF_KEY, REST_SERVER_AAF);
 
         if (!isEmpty) {
             map.put(SERVER_HOST_KEY, REST_SERVER_HOST);
@@ -111,7 +102,6 @@ public class CommonTestData {
     public Map<String, Object> getRestServerParametersMap(final int port) {
         final Map<String, Object> map = new TreeMap<>();
         map.put(HTTPS_KEY, REST_SERVER_HTTPS);
-        map.put(AAF_KEY, REST_SERVER_AAF);
         map.put(SERVER_HOST_KEY, REST_SERVER_HOST);
         map.put(PORT_KEY, port);
         map.put(USER_KEY, REST_SERVER_USER);
@@ -146,7 +136,6 @@ public class CommonTestData {
         final Map<String, Object> map = new TreeMap<>();
         map.put(CLIENT_NAME, XacmlPdpParameterGroup.PARAM_POLICY_API);
         map.put(HTTPS_KEY, POLICY_API_HTTPS);
-        map.put(AAF_KEY, POLICY_API_AAF);
 
         if (!isEmpty) {
             map.put(API_HOST_KEY, POLICY_API_HOST);

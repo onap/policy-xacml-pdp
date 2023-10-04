@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +43,6 @@ import org.onap.policy.pdpx.main.comm.XacmlPdpHearbeatPublisher;
 import org.onap.policy.pdpx.main.comm.listeners.XacmlPdpStateChangeListener;
 import org.onap.policy.pdpx.main.comm.listeners.XacmlPdpUpdateListener;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
-import org.onap.policy.pdpx.main.rest.XacmlPdpAafFilter;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
 import org.onap.policy.pdpx.main.rest.XacmlPdpRestController;
 import org.onap.policy.pdpx.main.rest.XacmlPdpServiceFilter;
@@ -132,8 +132,7 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
             XacmlPdpServiceFilter.disableApi();
 
             restServer = new XacmlPdpRestServer(xacmlPdpParameterGroup.getRestServerParameters(),
-                                List.of(XacmlPdpServiceFilter.class, XacmlPdpAafFilter.class),
-                                List.of(XacmlPdpRestController.class));
+                                List.of(XacmlPdpServiceFilter.class), List.of(XacmlPdpRestController.class));
 
         } catch (RuntimeException | HttpClientConfigException | BidirectionalTopicClientException e) {
             throw new PolicyXacmlPdpRuntimeException(e.getMessage(), e);

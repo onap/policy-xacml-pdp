@@ -8,7 +8,6 @@
         "userName": "healthcheck",
         "password": "zb!XztG34",
         "https": true,
-        "aaf": false,
         "prometheus": true
     },
     "policyApiParameters": {
@@ -16,8 +15,7 @@
         "port": 6969,
         "userName": "healthcheck",
         "password": "zb!XztG34",
-        "useHttps": true,
-        "aaf": false
+        "useHttps": true
     },
     "applicationParameters": {
         "applicationPath": "/opt/app/policy/pdpx/apps"

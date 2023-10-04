@@ -26,13 +26,13 @@ import static org.mockito.Mockito.when;
 
 import com.att.research.xacml.api.Attribute;
 import com.att.research.xacml.api.AttributeValue;
-import com.att.research.xacml.api.Status;
 import com.att.research.xacml.api.pip.PIPException;
 import com.att.research.xacml.api.pip.PIPFinder;
 import com.att.research.xacml.api.pip.PIPRequest;
 import com.att.research.xacml.api.pip.PIPResponse;
 import com.att.research.xacml.std.pip.StdPIPResponse;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.Query;
 import java.io.FileInputStream;
@@ -44,6 +44,7 @@ import java.util.LinkedList;
 import java.util.Properties;
 import java.util.Queue;
 import java.util.UUID;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -64,6 +65,7 @@ public class CountRecentOperationsPipTest {
     private static final String TARGET = "my-target";
     private static final String TEST_PROPERTIES = "src/test/resources/test.properties";
 
+    private static EntityManagerFactory emf;
     private static EntityManager em;
 
     @Mock
@@ -80,9 +82,6 @@ public class CountRecentOperationsPipTest {
 
     @Mock
     private PIPResponse resp3;
-
-    @Mock
-    private Status okStatus;
 
     private Properties properties;
     private Queue<PIPResponse> responses;
@@ -110,11 +109,12 @@ public class CountRecentOperationsPipTest {
         //
         String persistenceUnit = CountRecentOperationsPip.ISSUER_NAME + ".persistenceunit";
         LOGGER.info("persistenceunit {}", persistenceUnit);
-        em = Persistence.createEntityManagerFactory(props2.getProperty(persistenceUnit), props2).createEntityManager();
+        emf = Persistence.createEntityManagerFactory(props2.getProperty(persistenceUnit), props2);
+        em = emf.createEntityManager();
         //
         //
         //
-        LOGGER.info("Configured own entity manager", em.toString());
+        LOGGER.info("Configured own entity manager {}", em.toString());
     }
 
     /**
@@ -153,7 +153,7 @@ public class CountRecentOperationsPipTest {
     }
 
     @Test
-    public void testConfigure_DbException() throws Exception {
+    public void testConfigure_DbException() {
         properties.put("jakarta.persistence.jdbc.url", "invalid");
         assertThatCode(() ->
             pipEngine.configure("issuer", properties)
@@ -208,7 +208,7 @@ public class CountRecentOperationsPipTest {
         //
         // create entry
         //
-        OperationsHistory newEntry = createEntry("cl-foobar-1", "vnf-1", "SUCCESS");
+        OperationsHistory newEntry = createEntry();
         //
         // No entries yet
         //
@@ -231,9 +231,9 @@ public class CountRecentOperationsPipTest {
     }
 
     @Test
-    public void testStringToChronoUnit() throws PIPException {
+    public void testStringToChronosUnit() throws PIPException {
         // not configured yet
-        OperationsHistory newEntry = createEntry("cl-foobar-1", "vnf-1", "SUCCESS");
+        OperationsHistory newEntry = createEntry();
         assertEquals(-1, getCount(newEntry));
 
         // now configure it
@@ -271,14 +271,14 @@ public class CountRecentOperationsPipTest {
         return ((Number) value.getValue()).longValue();
     }
 
-    private OperationsHistory createEntry(String cl, String target, String outcome) {
+    private OperationsHistory createEntry() {
         //
         // Create entry
         //
         OperationsHistory newEntry = new OperationsHistory();
-        newEntry.setClosedLoopName(cl);
-        newEntry.setTarget(target);
-        newEntry.setOutcome(outcome);
+        newEntry.setClosedLoopName("cl-foobar-1");
+        newEntry.setTarget("vnf-1");
+        newEntry.setOutcome("SUCCESS");
         newEntry.setActor("Controller");
         newEntry.setOperation("operationA");
         newEntry.setStarttime(Date.from(Instant.now().minusMillis(20000)));

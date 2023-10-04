@@ -37,6 +37,7 @@ import com.att.research.xacml.std.pip.StdMutablePIPResponse;
 import com.att.research.xacml.std.pip.StdPIPRequest;
 import com.att.research.xacml.std.pip.engines.StdConfigurableEngine;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import java.math.BigInteger;
 import java.util.Collection;
@@ -53,22 +54,23 @@ import org.slf4j.LoggerFactory;
 public abstract class StdOnapPip extends StdConfigurableEngine {
     protected static Logger logger = LoggerFactory.getLogger(StdOnapPip.class);
 
-    protected static final PIPRequest PIP_REQUEST_ACTOR   = new StdPIPRequest(
-            XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
-            ToscaDictionary.ID_RESOURCE_GUARD_ACTOR,
-            XACML3.ID_DATATYPE_STRING);
+    protected static final PIPRequest PIP_REQUEST_ACTOR = new StdPIPRequest(
+        XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
+        ToscaDictionary.ID_RESOURCE_GUARD_ACTOR,
+        XACML3.ID_DATATYPE_STRING);
 
-    protected static final PIPRequest PIP_REQUEST_RECIPE  = new StdPIPRequest(
-            XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
-            ToscaDictionary.ID_RESOURCE_GUARD_RECIPE,
-            XACML3.ID_DATATYPE_STRING);
+    protected static final PIPRequest PIP_REQUEST_RECIPE = new StdPIPRequest(
+        XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
+        ToscaDictionary.ID_RESOURCE_GUARD_RECIPE,
+        XACML3.ID_DATATYPE_STRING);
 
-    protected static final PIPRequest PIP_REQUEST_TARGET  = new StdPIPRequest(
-            XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
-            ToscaDictionary.ID_RESOURCE_GUARD_TARGETID,
-            XACML3.ID_DATATYPE_STRING);
+    protected static final PIPRequest PIP_REQUEST_TARGET = new StdPIPRequest(
+        XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
+        ToscaDictionary.ID_RESOURCE_GUARD_TARGETID,
+        XACML3.ID_DATATYPE_STRING);
 
     protected Properties properties;
+    protected EntityManagerFactory emf;
     protected EntityManager em;
     protected String issuer;
     protected boolean shutdown = false;
@@ -104,9 +106,9 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
             //
             // Create the entity manager factory
             //
-            em = Persistence.createEntityManagerFactory(
-                    properties.getProperty(this.issuer + ".persistenceunit"),
-                    emProperties).createEntityManager();
+            emf = Persistence.createEntityManagerFactory(
+                properties.getProperty(this.issuer + ".persistenceunit"), emProperties);
+            em = emf.createEntityManager();
         } catch (Exception e) {
             logger.error("Persistence failed {} operations history db", e.getLocalizedMessage(), e);
         }
@@ -142,7 +144,7 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
             pipResponse = pipFinder.getMatchingAttributes(pipRequest, this);
             if (pipResponse.getStatus() != null && !pipResponse.getStatus().isOk()) {
                 logger.info("get attribute error retrieving {}: {}", pipRequest.getAttributeId(),
-                                pipResponse.getStatus());
+                    pipResponse.getStatus());
                 pipResponse = null;
             }
             if (pipResponse != null && pipResponse.getAttributes().isEmpty()) {
@@ -156,10 +158,10 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
     }
 
     protected String findFirstAttributeValue(PIPResponse pipResponse) {
-        for (Attribute attribute: pipResponse.getAttributes()) {
-            Iterator<AttributeValue<String>> iterAttributeValues    = attribute.findValues(DataTypes.DT_STRING);
+        for (Attribute attribute : pipResponse.getAttributes()) {
+            Iterator<AttributeValue<String>> iterAttributeValues = attribute.findValues(DataTypes.DT_STRING);
             while (iterAttributeValues.hasNext()) {
-                String value   = iterAttributeValues.next().getValue();
+                String value = iterAttributeValues.next().getValue();
                 if (value != null) {
                     return value;
                 }
@@ -169,35 +171,35 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
     }
 
     protected void addIntegerAttribute(StdMutablePIPResponse stdPipResponse, Identifier category,
-            Identifier attributeId, int value, PIPRequest pipRequest) {
-        AttributeValue<BigInteger> attributeValue   = null;
+                                       Identifier attributeId, int value, PIPRequest pipRequest) {
+        AttributeValue<BigInteger> attributeValue = null;
         try {
-            attributeValue  = makeInteger(value);
+            attributeValue = makeInteger(value);
         } catch (Exception e) {
             logger.error("Failed to convert {} to integer", value, e);
         }
         if (attributeValue != null) {
             stdPipResponse.addAttribute(new StdMutableAttribute(category, attributeId, attributeValue,
-                    pipRequest.getIssuer(), false));
+                pipRequest.getIssuer(), false));
         }
     }
 
     protected void addLongAttribute(StdMutablePIPResponse stdPipResponse, Identifier category,
-            Identifier attributeId, long value, PIPRequest pipRequest) {
-        AttributeValue<BigInteger> attributeValue   = null;
+                                    Identifier attributeId, long value, PIPRequest pipRequest) {
+        AttributeValue<BigInteger> attributeValue = null;
         try {
-            attributeValue  = makeLong(value);
+            attributeValue = makeLong(value);
         } catch (Exception e) {
             logger.error("Failed to convert {} to long", value, e);
         }
         if (attributeValue != null) {
             stdPipResponse.addAttribute(new StdMutableAttribute(category, attributeId, attributeValue,
-                    pipRequest.getIssuer(), false));
+                pipRequest.getIssuer(), false));
         }
     }
 
     protected void addStringAttribute(StdMutablePIPResponse stdPipResponse, Identifier category, Identifier attributeId,
-            String value, PIPRequest pipRequest) {
+                                      String value, PIPRequest pipRequest) {
         AttributeValue<String> attributeValue = null;
         try {
             attributeValue = makeString(value);
@@ -206,7 +208,7 @@ public abstract class StdOnapPip extends StdConfigurableEngine {
         }
         if (attributeValue != null) {
             stdPipResponse.addAttribute(new StdMutableAttribute(category, attributeId, attributeValue,
-                    pipRequest.getIssuer(), false));
+                pipRequest.getIssuer(), false));
         }
     }
 

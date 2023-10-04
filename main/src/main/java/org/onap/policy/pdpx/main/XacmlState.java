@@ -93,8 +93,7 @@ public class XacmlState {
         status.setHealthy(XacmlPdpActivator.getCurrent().isAlive() ? PdpHealthStatus.HEALTHY
             : PdpHealthStatus.NOT_HEALTHY);
 
-        PdpStatus heartbeat = new PdpStatus(status);
-        return heartbeat;
+        return new PdpStatus(status);
     }
 
     /**
