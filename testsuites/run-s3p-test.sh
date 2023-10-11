@@ -35,10 +35,10 @@ then
 
   if [ $2 == "performance" ]
   then
-    bash start-s3p-tests.sh run $XACML_PERF_TEST_FILE;
+    bash start-s3p-tests.sh run $XACML_PERF_TEST_FILE xacml-pdp;
   elif [ $2 == "stability" ]
   then
-    bash start-s3p-tests.sh run $XACML_STAB_TEST_FILE;
+    bash start-s3p-tests.sh run $XACML_STAB_TEST_FILE xacml-pdp;
   else
     echo "echo Invalid arguments provided. Usage: $0 [option..] {performance | stability}"
   fi
