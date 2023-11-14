@@ -10,12 +10,12 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="DURATION" elementType="Argument">
             <stringProp name="Argument.name">DURATION</stringProp>
-            <stringProp name="Argument.value">${__P(duration, 5)}</stringProp>
+            <stringProp name="Argument.value">${__P(duration, 86400)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="USERS" elementType="Argument">
             <stringProp name="Argument.name">USERS</stringProp>
-            <stringProp name="Argument.value">${__P(users, 10)}</stringProp>
+            <stringProp name="Argument.value">${__P(users, 2)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="HTTP" elementType="Argument">
