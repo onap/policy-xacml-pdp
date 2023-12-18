@@ -60,12 +60,11 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpActivator.class);
 
     private static final String[] MSG_TYPE_NAMES = {"messageName"};
-    private static final String TOPIC = "POLICY-PDP-PAP";
+    private static final String TOPIC = "policy-pdp-pap";
 
     @Getter
     @Setter
     private static XacmlPdpActivator current = null;
-    private final XacmlPdpRestServer restServer;
 
     // The parameters of this policy xacml pdp activator
     private final XacmlPdpParameterGroup xacmlPdpParameterGroup;
@@ -73,7 +72,7 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
     /**
      * POLICY-PDP-PAP client.
      */
-    private BidirectionalTopicClient topicClient;
+    private final BidirectionalTopicClient topicClient;
 
     /**
      * Listens for messages on the topic, decodes them into a {@link PdpStatus} message, and then
@@ -97,6 +96,7 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
         final TopicSinkClient sinkClient;
         final XacmlState state;
 
+        XacmlPdpRestServer restServer;
         try {
             HttpClient apiClient = HttpClientFactoryInstance.getClientFactory().build(apiClientParams);
 
