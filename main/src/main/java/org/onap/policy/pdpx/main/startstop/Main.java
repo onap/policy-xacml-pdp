@@ -44,7 +44,7 @@ public class Main {
     private XacmlPdpActivator activator;
 
     @Getter
-    private String argumentMessage = null;
+    private String argumentMessage;
 
     /**
      * Instantiates the policy xacml pdp service.
@@ -88,7 +88,6 @@ public class Main {
     /**
      * Shut down Execution.
      *
-     * @throws PolicyXacmlPdpException on shutdown errors
      */
     public synchronized void shutdown() {
         // clear the xacml pdp activator

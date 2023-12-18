@@ -35,7 +35,7 @@ POLICY_XACML_TUTORIAL_VERSION=$(
 
 if [ -z "$POLICY_XACML_TUTORIAL_VERSION" ]
 then
-    echo "Look up of the XACML tutorial version failed, have you built the tutorial docker iamge?"
+    echo "Look up of the XACML tutorial version failed, have you built the tutorial docker image?"
     exit 1
 else
     export POLICY_XACML_TUTORIAL_VERSION

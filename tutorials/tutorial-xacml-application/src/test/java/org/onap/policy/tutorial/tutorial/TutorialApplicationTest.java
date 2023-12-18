@@ -38,7 +38,6 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
-import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationServiceProvider;
 import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.onap.policy.pdp.xacml.xacmltest.TestUtils;
@@ -47,27 +46,26 @@ import org.slf4j.LoggerFactory;
 
 public class TutorialApplicationTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(TutorialApplicationTest.class);
-    private static Properties properties = new Properties();
-    private static File propertiesFile;
+    private static final Properties properties = new Properties();
     private static XacmlApplicationServiceProvider service;
-    private static StandardCoder gson = new StandardCoder();
+    private static final StandardCoder gson = new StandardCoder();
 
     @ClassRule
     public static final TemporaryFolder policyFolder = new TemporaryFolder();
 
     /**
-     * setup the tests.
+     * set up the tests.
      *
      * @throws Exception Should not have exceptions thrown.
      */
     @BeforeClass
     public static void setup() throws Exception {
         //
-        // Setup our temporary folder
+        // Set up our temporary folder
         //
-        XacmlPolicyUtils.FileCreator myCreator = (String filename) -> policyFolder.newFile(filename);
-        propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties", properties,
-                myCreator);
+        XacmlPolicyUtils.FileCreator myCreator = policyFolder::newFile;
+        File propertiesFile = XacmlPolicyUtils
+            .copyXacmlPropertiesContents("src/test/resources/xacml.properties", properties, myCreator);
         //
         // Load XacmlApplicationServiceProvider service
         //
@@ -96,7 +94,7 @@ public class TutorialApplicationTest {
     }
 
     @Test
-    public void testSingleDecision() throws CoderException, XacmlApplicationException, IOException {
+    public void testSingleDecision() throws CoderException, IOException {
         //
         // Load a Decision request
         //
@@ -116,7 +114,7 @@ public class TutorialApplicationTest {
         assertThat(decision.getLeft().getAttributes()).isNotNull().hasSize(1)
                 .containsKey(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue());
         //
-        // This should be a deny
+        // This should be a "deny"
         //
         decisionRequest.getResource().put("user", "audit");
         LOGGER.info("{}", gson.encode(decisionRequest, true));
@@ -132,7 +130,7 @@ public class TutorialApplicationTest {
 
 
     @Test
-    public void testMultiDecision() throws CoderException, XacmlApplicationException, IOException {
+    public void testMultiDecision() throws CoderException, IOException {
         //
         // Load a Decision request
         //
@@ -156,7 +154,7 @@ public class TutorialApplicationTest {
         assertThat(decision.getLeft()).isInstanceOf(TutorialResponse.class);
         TutorialResponse tutorialResponse = (TutorialResponse) decision.getLeft();
         assertThat(tutorialResponse.getPermissions()).hasSize(7);
-        tutorialResponse.getPermissions().forEach(p -> checkPermission(p));
+        tutorialResponse.getPermissions().forEach(this::checkPermission);
     }
 
     private void checkPermission(TutorialResponsePermission permission) {
@@ -164,28 +162,13 @@ public class TutorialApplicationTest {
         Object resourceAttributes = permission.getAttributes().get(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue());
         assertThat(resourceAttributes).isNotNull().isInstanceOf(Map.class);
         @SuppressWarnings("unchecked")
-        String multiId = ((Map<String, String>) resourceAttributes).get("urn:org:onap:tutorial-multi-id").toString();
+        String multiId = ((Map<String, String>) resourceAttributes).get("urn:org:onap:tutorial-multi-id");
         assertThat(Integer.parseInt(multiId)).isBetween(1, 7);
         switch (multiId) {
-            case "1":
+            case "1", "2", "4":
                 assertThat(permission.getStatus()).isEqualTo("Permit");
                 return;
-            case "2":
-                assertThat(permission.getStatus()).isEqualTo("Permit");
-                return;
-            case "3":
-                assertThat(permission.getStatus()).isEqualTo("Deny");
-                return;
-            case "4":
-                assertThat(permission.getStatus()).isEqualTo("Permit");
-                return;
-            case "5":
-                assertThat(permission.getStatus()).isEqualTo("Deny");
-                return;
-            case "6":
-                assertThat(permission.getStatus()).isEqualTo("Deny");
-                return;
-            case "7":
+            case "3", "5", "6", "7":
                 assertThat(permission.getStatus()).isEqualTo("Deny");
                 return;
             default:

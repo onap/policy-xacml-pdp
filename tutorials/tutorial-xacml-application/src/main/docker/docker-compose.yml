@@ -16,90 +16,117 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # ============LICENSE_END=========================================================
-version: '2'
+version: '3'
 services:
-   mariadb:
-      image: ${CONTAINER_LOCATION}mariadb:${POLICY_MARIADB_VER}
-      container_name: mariadb
-      hostname: mariadb
-      command: ['--lower-case-table-names=1', '--wait_timeout=28800']
-      env_file: config/db/db.conf
-      volumes:
-         - ./config/db:/docker-entrypoint-initdb.d
-      expose:
-       - 3306
-   message-router:
-      image: ${CONTAINER_LOCATION}onap/policy-models-simulator:${POLICY_MODELS_VERSION}
-      container_name: dmaap-simulator
-      hostname: dmaap-simulator
-      volumes:
-       - ./config/sim:/opt/app/policy/simulators/etc/mounted:ro
-      ports:
-       - "3904:3904"
-      expose:
-       - 3904
-   api:
-      image: ${CONTAINER_LOCATION}onap/policy-api:${POLICY_API_VERSION}
-      container_name: policy-api
-      depends_on:
-       - mariadb
-      hostname: policy-api
-      ports:
-       - "6767:6969"
-      expose:
-       - 6767
-   pap:
-      image: ${CONTAINER_LOCATION}onap/policy-pap:${POLICY_PAP_VERSION}
-      container_name: policy-pap
-      depends_on:
-       - mariadb
-       - message-router
-       - api
-      hostname: policy-pap
-      ports:
-       - "6868:6969"
-      expose:
-       - 6868
-   xacml-pdp:
-      image: onap/policy-xacml-tutorial:${POLICY_XACML_TUTORIAL_VERSION}
-      container_name: policy-xacml-pdp
-      depends_on:
-       - mariadb
-       - message-router
-       - api
-       - pap
-      hostname: policy-xacml-pdp
-      ports:
-       - "6969:6969"
-      expose:
-       - 6969
-   start_dependencies:
-      image: dadarek/wait-for-dependencies
-      environment:
-        TIMEOUT_LENGTH: 60
-      container_name: policy-wait
-      depends_on:
-        - mariadb
-        - message-router
-      hostname: policy-wait
-      command:
-        mariadb:3306
-        message-router:3904
-   start_all:
-      image: dadarek/wait-for-dependencies
-      environment:
-        TIMEOUT_LENGTH: 60
-      container_name: policy-wait-all
-      depends_on:
-        - mariadb
-        - message-router
-        - api
-        - pap
-        - xacml-pdp
-      hostname: policy-wait-all
-      command:
-        mariadb:3306
-        message-router:3904
-        api:6969
-        pap:6969
-        xacml-pdp:6969
+  mariadb:
+    image: ${CONTAINER_LOCATION}mariadb:${POLICY_MARIADB_VER}
+    container_name: mariadb
+    hostname: mariadb
+    command: [ '--lower-case-table-names=1', '--wait_timeout=28800' ]
+    env_file: config/db/db.conf
+    volumes:
+      - ./config/db:/docker-entrypoint-initdb.d
+    expose:
+      - 3306
+  api:
+    image: ${CONTAINER_LOCATION}onap/policy-api:${POLICY_API_VERSION}
+    container_name: policy-api
+    depends_on:
+      - mariadb
+    hostname: policy-api
+    ports:
+      - "6767:6969"
+    expose:
+      - 6767
+  pap:
+    image: ${CONTAINER_LOCATION}onap/policy-pap:${POLICY_PAP_VERSION}
+    container_name: policy-pap
+    depends_on:
+      - mariadb
+      - kafka-rest-proxy
+      - api
+    hostname: policy-pap
+    ports:
+      - "6868:6969"
+    expose:
+      - 6868
+  xacml-pdp:
+    image: onap/policy-xacml-tutorial:${POLICY_XACML_TUTORIAL_VERSION}
+    container_name: policy-xacml-pdp
+    depends_on:
+      - mariadb
+      - pap
+    hostname: policy-xacml-pdp
+    ports:
+      - "6969:6969"
+    expose:
+      - 6969
+  start_dependencies:
+    image: dadarek/wait-for-dependencies
+    environment:
+      TIMEOUT_LENGTH: 60
+    container_name: policy-wait
+    depends_on:
+      - mariadb
+      - kafka-rest-proxy
+    hostname: policy-wait
+    command:
+      mariadb:3306
+      kafka:9092
+  start_all:
+    image: dadarek/wait-for-dependencies
+    environment:
+      TIMEOUT_LENGTH: 60
+    container_name: policy-wait-all
+    depends_on:
+      - mariadb
+      - kafka-rest-proxy
+      - api
+      - pap
+      - xacml-pdp
+    hostname: policy-wait-all
+    command:
+      mariadb:3306
+      kafka:9092
+      api:6969
+      pap:6969
+      xacml-pdp:6969
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+  kafka-rest-proxy:
+    image: confluentinc/cp-kafka-rest:latest
+    depends_on:
+      - kafka
+    ports:
+      - "8082:8082"
+    environment:
+      KAFKA_REST_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
+      KAFKA_REST_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      KAFKA_REST_HOST_NAME: kafka-rest-proxy
+    links:
+      - kafka
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    networks:
+      default:
+        aliases:
+          - message-router
+    ports:
+      - "29092:29092"
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1

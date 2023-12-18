@@ -23,14 +23,12 @@
     "topicParameterGroup": {
         "topicSources" : [{
             "topic" : "POLICY-PDP-PAP",
-            "servers" : [ "message-router" ],
-            "topicCommInfrastructure" : "dmaap",
+            "topicCommInfrastructure" : "noop",
             "fetchTimeout": 15000
         }],
         "topicSinks" : [{
             "topic" : "POLICY-PDP-PAP",
-            "servers" : [ "message-router" ],
-            "topicCommInfrastructure" : "dmaap"
+            "topicCommInfrastructure" : "noop"
         }]
     }
 }
