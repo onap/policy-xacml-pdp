@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fcf20d4a_1dc4d833",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/etc/defaultConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2023-12-19T12:04:08Z",
+      "side": 1,
+      "message": "I wonder this should be kafka? Does it break the unit tests if the value is kafka?",
+      "range": {
+        "startLine": 26,
+        "startChar": 41,
+        "endLine": 26,
+        "endChar": 45
+      },
+      "revId": "895886265acca7875655e3c656b62d8b869539d5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be34be02_57fc8616",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/docker-compose.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2023-12-19T12:04:08Z",
+      "side": 1,
+      "message": "kafka-rest-proxy is a rest wrapper around kafka. It was not added in the docker compose file in policy-docker. If not needed for xacml, it can be removed",
+      "range": {
+        "startLine": 101,
+        "startChar": 1,
+        "endLine": 101,
+        "endChar": 18
+      },
+      "revId": "895886265acca7875655e3c656b62d8b869539d5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
