@@ -48,6 +48,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8ab4850_91001f51",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/resources/etc/defaultConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2023-12-19T13:49:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ea7078b_92c273d8",
+      "range": {
+        "startLine": 26,
+        "startChar": 41,
+        "endLine": 26,
+        "endChar": 45
+      },
+      "revId": "895886265acca7875655e3c656b62d8b869539d5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "be34be02_57fc8616",
@@ -85,6 +109,30 @@
       "side": 1,
       "message": "I will remove, but this is not working yet, I will do on next review 😊",
       "parentUuid": "be34be02_57fc8616",
+      "range": {
+        "startLine": 101,
+        "startChar": 1,
+        "endLine": 101,
+        "endChar": 18
+      },
+      "revId": "895886265acca7875655e3c656b62d8b869539d5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32effbb1_5d60b775",
+        "filename": "tutorials/tutorial-xacml-application/src/main/docker/docker-compose.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2023-12-19T13:49:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bdcd149d_b040d6e3",
       "range": {
         "startLine": 101,
         "startChar": 1,
