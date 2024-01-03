@@ -19,7 +19,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -70,7 +70,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -125,7 +125,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -184,7 +184,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -235,7 +235,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -286,7 +286,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -342,7 +342,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -393,7 +393,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -444,7 +444,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -487,44 +487,6 @@
 			"response": []
 		},
 		{
-			"name": "Dmaap Simulator - Policy Update Notification",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					},
-					{
-						"key": "Accept",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"messageName\": \"PDP_STATE_CHANGE\",\n  \"requestId\": \"05d08a05-e182-46fa-a6d1-5500e52cd3e5\",\n  \"timestampMs\": \"1576598570797\", \n  \"name\": \"PamelaDragosh.local\",\n  \"pdpGroup\": \"defaultGroup\",\n  \"pdpSubgroup\":\"XacmlPdpGroup\",\n  \"state\":\"ACTIVE\"\n}"
-				},
-				"url": {
-					"raw": "http://localhost:3904/events/POLICY-PDP-PAP",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3904",
-					"path": [
-						"events",
-						"POLICY-PDP-PAP"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Simple Undeploy Policy Copy",
 			"request": {
 				"auth": {
@@ -537,7 +499,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]

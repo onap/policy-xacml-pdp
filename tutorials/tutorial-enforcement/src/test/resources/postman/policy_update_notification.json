@@ -1,0 +1,9 @@
+{
+  "messageName": "PDP_STATE_CHANGE",
+  "requestId": "05d08a05-e182-46fa-a6d1-5500e52cd3e5",
+  "timestampMs": "1576598570797",
+  "name": "PamelaDragosh.local",
+  "pdpGroup": "defaultGroup",
+  "pdpSubgroup":"XacmlPdpGroup",
+  "state":"ACTIVE"
+}

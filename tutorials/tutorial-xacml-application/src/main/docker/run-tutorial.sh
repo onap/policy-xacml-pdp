@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # ============LICENSE_START====================================================
-#  Copyright 2022 Nordix Foundation.
+#  Copyright 2022, 2024 Nordix Foundation.
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ fi
 
 echo "Looking up latest versions of Policy Framework images . . ."
 GETVERS_SCRIPT=$(mktemp)
-curl -qL --silent "https://raw.githubusercontent.com/onap/policy-docker/master/csit/get-versions.sh" > "$GETVERS_SCRIPT"
+curl -qL --silent "https://raw.githubusercontent.com/onap/policy-docker/master/compose/get-versions.sh" > "$GETVERS_SCRIPT"
 export GERRIT_BRANCH="master"
 chmod +x "$GETVERS_SCRIPT"
 source "$GETVERS_SCRIPT"
@@ -57,4 +57,4 @@ echo "Tutorial run completed"
 
 echo "Cleaning up . . ."
 rm "$GETVERS_SCRIPT"
-echo "Cleanup competed"
+echo "Cleanup completed"

@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +56,7 @@ public class TutorialTranslator extends StdBaseTranslator {
             new IdentifierImpl(ToscaDictionary.ID_URN_ONAP, "tutorial-permission");
 
     /**
-     * Constructor will setup some defaults.
+     * Constructor will set up some defaults.
      */
     public TutorialTranslator() {
         //
@@ -71,7 +72,7 @@ public class TutorialTranslator extends StdBaseTranslator {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public PolicyType convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
+    public PolicyType convertPolicy(ToscaPolicy toscaPolicy) {
         //
         // Here is our policy with a version and default combining algo
         //
@@ -102,7 +103,7 @@ public class TutorialTranslator extends StdBaseTranslator {
                 XACML3.ID_DATATYPE_STRING, ID_TUTORIAL_USER, XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
         var anyOf = new AnyOfType();
         //
-        // Create AllOf (AND) of just Policy Id
+        // Create AllOf (AND) of just Policy ID
         //
         anyOf.getAllOf().add(ToscaPolicyTranslatorUtils.buildAllOf(matchAction, matchUser));
         var target = new TargetType();

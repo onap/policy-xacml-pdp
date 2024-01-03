@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2021 Nordix Foundation.
+ * Modifications Copyright (C) 2021, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ package org.onap.policy.xacml.pdp.application.monitoring;
 
 import com.att.research.xacml.api.Response;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.apache.commons.lang3.tuple.Pair;
@@ -54,7 +55,7 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
 
     public static final String VERSION_100 = "1.0.0";
 
-    private StdCombinedPolicyResultsTranslator translator = new StdCombinedPolicyResultsTranslator();
+    private final StdCombinedPolicyResultsTranslator translator = new StdCombinedPolicyResultsTranslator();
 
     /**
      * Constructor.
@@ -63,9 +64,9 @@ public class MonitoringPdpApplication extends StdXacmlApplicationServiceProvider
         super();
 
         applicationName = "monitoring";
-        actions = Arrays.asList("configure");
+        actions = List.of("configure");
         //
-        // By default this supports just Monitoring policy types
+        // By default, this supports just Monitoring policy types
         //
         supportedPolicyTypes.add(new ToscaConceptIdentifier(ONAP_MONITORING_BASE_POLICY_TYPE, VERSION_100));
     }

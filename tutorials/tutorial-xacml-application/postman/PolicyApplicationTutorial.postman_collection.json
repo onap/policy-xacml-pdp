@@ -19,7 +19,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -66,7 +66,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -122,7 +122,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -182,7 +182,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -229,7 +229,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -276,7 +276,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -332,7 +332,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -382,7 +382,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -436,7 +436,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -476,54 +476,6 @@
 			]
 		},
 		{
-			"name": "Dmaap Simulator - Policy Update Notification",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					},
-					{
-						"key": "Accept",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "{{DMAAP-URL}}/events/POLICY-NOTIFICATION/group/id?timeout=5000",
-					"host": [
-						"{{DMAAP-URL}}"
-					],
-					"path": [
-						"events",
-						"POLICY-NOTIFICATION",
-						"group",
-						"id"
-					],
-					"query": [
-						{
-							"key": "timeout",
-							"value": "5000"
-						}
-					]
-				}
-			},
-			"response": [
-			]
-		},
-		{
 			"name": "Xacml Healthcheck",
 			"request": {
 				"auth": {
@@ -536,7 +488,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -583,7 +535,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -630,7 +582,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]
@@ -681,7 +633,7 @@
 						},
 						{
 							"key": "username",
-							"value": "healthcheck",
+							"value": "policyadmin",
 							"type": "string"
 						}
 					]

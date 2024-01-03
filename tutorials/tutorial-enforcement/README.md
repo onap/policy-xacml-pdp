@@ -14,16 +14,14 @@ The Policy Enforcement Tutorial can be built:
 Be sure to start the Policy Framework application components in *docker* if you are not testing this in a lab.
 - Ensure you have docker and docker-compose installed
 - Check out the *policy/docker* repo from the ONAP gerrit or from github: https://github.com/onap/policy-docker
-- In a console, change directory into the *csit* directory of the *policy/docker* repo
-- Start *xacml-pdp* by running the *start-containter.sh* script
+- In a console, change directory into the *compose* directory of the *policy/docker* repo
+- Start *xacml-pdp* by running the *start-compose.sh* script
 
-    start-container.sh xacml-pdp
+    start-compose.sh xacml-pdp
 
-- Ensure that DMaaP is up
-
-    > curl -X POST http://0.0.0.0:30227/events/POLICY-PDP-PAP
-    Should return JSON similar to this:
-    {"serverTimeMs":0,"count":0}
+- Run python script ```kafka_producer.py``` under docker repository with topic name and message as parameters.
+  i.e. ```python3 /docker/csit/resources/tests/kafka_producer.py POLICY-PDP-PAP "message"```
+  (update "message" to the usual json body)
 
 - Run the xacml-pdp health check
 
@@ -58,11 +56,11 @@ Be sure to start the Policy Framework application components in *docker* if you 
 # Run the Tutorial
 
 You can run the application via code by running the *App.main* method with command line argument with IP then Port
-of the XACML PDP, followed by the IP then Port of Dmaap.
+of the XACML PDP, followed by the IP then Port of kafka.
 
-    App.main(new String[] {"0.0.0.0", "6969", "0.0.0.0", "3904"});
+    App.main(new String[] {"0.0.0.0", "6969", "0.0.0.0", "9092"});
 
 or from Eclipse by right-clicking App.java and selecting *Run As* and select *Java Application*. Edit the
-configuration by adding these command line arguments: "0.0.0.0" "6969" "0.0.0.0" "3904"
+configuration by adding these command line arguments: "0.0.0.0" "6969" "0.0.0.0" "9092"
 
 Quit the application by typing 'q' into stdin.
