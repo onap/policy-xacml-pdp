@@ -27,7 +27,7 @@
     <parent>
         <groupId>org.onap.policy.parent</groupId>
         <artifactId>integration</artifactId>
-        <version>4.1.1-SNAPSHOT</version>
+        <version>4.1.1</version>
         <relativePath />
     </parent>
 
@@ -41,8 +41,8 @@
     <description>This code implements the XACML PDP engine</description>
 
     <properties>
-        <policy.common.version>2.1.1-SNAPSHOT</policy.common.version>
-        <policy.models.version>3.1.1-SNAPSHOT</policy.models.version>
+        <policy.common.version>2.1.1</policy.common.version>
+        <policy.models.version>3.1.1</policy.models.version>
         <jacoco.dataFile>${project.basedir}/target/code-coverage/jacoco-ut.exec</jacoco.dataFile>
     </properties>
 
