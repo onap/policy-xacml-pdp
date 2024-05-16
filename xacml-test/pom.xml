@@ -27,7 +27,7 @@
     <parent>
         <groupId>org.onap.policy.xacml-pdp</groupId>
         <artifactId>policy-xacml-pdp</artifactId>
-        <version>3.1.3-SNAPSHOT</version>
+        <version>3.1.3</version>
         <relativePath>..</relativePath>
     </parent>
 
