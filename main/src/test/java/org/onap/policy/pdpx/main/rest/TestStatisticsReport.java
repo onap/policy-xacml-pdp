@@ -20,15 +20,11 @@
 
 package org.onap.policy.pdpx.main.rest;
 
-import com.openpojo.reflection.filters.FilterClassName;
-import com.openpojo.validation.Validator;
-import com.openpojo.validation.ValidatorBuilder;
-import com.openpojo.validation.rule.impl.GetterMustExistRule;
-import com.openpojo.validation.rule.impl.SetterMustExistRule;
-import com.openpojo.validation.test.impl.GetterTester;
-import com.openpojo.validation.test.impl.SetterTester;
-import org.junit.Test;
-import org.onap.policy.common.utils.test.ToStringTester;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.pdpx.main.rest.model.StatisticsReport;
 
 /**
@@ -37,11 +33,39 @@ import org.onap.policy.pdpx.main.rest.model.StatisticsReport;
  */
 public class TestStatisticsReport {
 
+    static StatisticsReport report;
+
+    @BeforeAll
+    static void setUp() {
+        report = new StatisticsReport();
+    }
+
     @Test
-    public void testStatisticsReport() {
-        final Validator validator = ValidatorBuilder.create().with(new ToStringTester()).with(new SetterMustExistRule())
-                .with(new GetterMustExistRule()).with(new SetterTester()).with(new GetterTester()).build();
-        validator.validate(StatisticsReport.class.getPackage().getName(),
-                new FilterClassName(StatisticsReport.class.getName()));
+    void testStatisticsReportConstructor() {
+        assertNotNull(report);
+    }
+
+    @Test
+    void testGettersAndSetters() {
+        report.setCode(123);
+        report.setApplicationMetrics(null);
+        report.setDenyDecisionsCount(123456);
+        report.setDeployFailureCount(1111);
+        report.setDeploySuccessCount(2222);
+        report.setPermitDecisionsCount(3333);
+        report.setIndeterminantDecisionsCount(4444);
+        report.setNotApplicableDecisionsCount(5555);
+        report.setTotalErrorCount(6666);
+        report.setTotalPoliciesCount(7777);
+        report.setUndeployFailureCount(8888);
+        report.setUndeploySuccessCount(9999);
+        report.setTotalPolicyTypesCount(9898);
+
+        assertThat(report.toString()).contains("code=123", "totalPolicyTypesCount=9898",
+            "totalPoliciesCount=7777", "totalErrorCount=6666", "permitDecisionsCount=3333",
+            "denyDecisionsCount=123456", "deploySuccessCount=2222", "deployFailureCount=1111",
+            "undeploySuccessCount=9999", "undeployFailureCount=8888",
+            "indeterminantDecisionsCount=4444", "notApplicableDecisionsCount=5555",
+            "applicationMetrics=null");
     }
 }
