@@ -27,13 +27,13 @@
     <parent>
         <groupId>org.onap.policy.parent</groupId>
         <artifactId>integration</artifactId>
-        <version>5.0.0</version>
+        <version>5.0.1-SNAPSHOT</version>
         <relativePath />
     </parent>
 
     <groupId>org.onap.policy.xacml-pdp</groupId>
     <artifactId>policy-xacml-pdp</artifactId>
-    <version>4.0.0-SNAPSHOT</version>
+    <version>4.0.1-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -41,8 +41,8 @@
     <description>This code implements the XACML PDP engine</description>
 
     <properties>
-        <policy.common.version>3.0.0</policy.common.version>
-        <policy.models.version>4.0.0</policy.models.version>
+        <policy.common.version>3.0.1-SNAPSHOT</policy.common.version>
+        <policy.models.version>4.0.1-SNAPSHOT</policy.models.version>
         <jacoco.dataFile>${project.basedir}/target/code-coverage/jacoco-ut.exec</jacoco.dataFile>
     </properties>
 
