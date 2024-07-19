@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 #
 # ============LICENSE_START=======================================================
-#  Copyright (C) 2022 Nordix Foundation.
+#  Copyright (C) 2022, 2024 Nordix Foundation.
 #  Modifications Copyright (C) 2022 AT&T Intellectual Property.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -59,12 +59,12 @@ fi
 
 if [ -f "${POLICY_HOME}/etc/mounted/createguardtable-pg.sql" ]; then
     echo "overriding createguardtable.sql"
-    cp -f "${POLICY_HOME}"/etc/mounted/createguardtable-pg.sql "${POLICY_HOME}"/postgress/sql/
+    cp -f "${POLICY_HOME}"/etc/mounted/createguardtable-pg.sql "${POLICY_HOME}"/postgres/sql/
 fi
 
 if [ -f "${POLICY_HOME}/etc/mounted/db-pg.sql" ]; then
     echo "adding additional db-pg.sql"
-    cp -f "${POLICY_HOME}"/etc/mounted/db-pg.sql "${POLICY_HOME}"/postgress/sql/
+    cp -f "${POLICY_HOME}"/etc/mounted/db-pg.sql "${POLICY_HOME}"/postgres/sql/
 fi
 
 if [ -f "${POLICY_HOME}/etc/mounted/guard.xacml.properties" ]; then

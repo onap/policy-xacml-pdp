@@ -1,5 +1,5 @@
 -- ============LICENSE_START=======================================================
--- Copyright (C) 2022 Nordix Foundation. All rights reserved.
+-- Copyright (C) 2022, 2024 Nordix Foundation. All rights reserved.
 -- ================================================================================
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -16,22 +16,23 @@
 
 \c operationshistory;
 
-create table if not exists operationshistory (
-    id int(11) SERIAL PRIMARY KEY,
-    closedLoopName varchar(255) not null,
-    requestId varchar(50),
-    actor varchar(50) not null,
-    operation varchar(50) not null,
-    target varchar(50) not null,
-    starttime timestamp not null,
-    outcome varchar(50) not null,
-    message varchar(255),
-    subrequestId varchar(50),
-    endtime timestamp not null default current_timestamp
+CREATE TABLE IF NOT EXISTS operationshistory
+(
+    id             SERIAL PRIMARY KEY,
+    closedLoopName VARCHAR(255) NOT NULL,
+    requestId      VARCHAR(50),
+    actor          VARCHAR(50)  NOT NULL,
+    operation      VARCHAR(50)  NOT NULL,
+    target         VARCHAR(50)  NOT NULL,
+    starttime      TIMESTAMP    NOT NULL,
+    outcome        VARCHAR(50)  NOT NULL,
+    message        VARCHAR(255),
+    subrequestId   VARCHAR(50),
+    endtime        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 create index if not exists operationshistory_clreqid_index on
-    operationshistory(requestId, closedLoopName);
+    operationshistory (requestId, closedLoopName);
 
 create index if not exists operationshistory_target_index on
-    operationshistory(target, operation, actor, endtime);
+    operationshistory (target, operation, actor, endtime);

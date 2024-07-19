@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 #
 # ============LICENSE_START=======================================================
-#  Copyright (C) 2022-2023 Nordix Foundation. All rights reserved.
+#  Copyright (C) 2022-2024 Nordix Foundation. All rights reserved.
 #  Modifications Copyright (C) 2022 AT&T Intellectual Property.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,8 +22,8 @@
 
 set -x
 
-SQL_FILE="${POLICY_HOME}/mysql/sql/createguardtable-pg.sql"
-SQL_ADDON_FILE="${POLICY_HOME}/mysql/sql/db-pg.sql"
+SQL_FILE="${POLICY_HOME}/postgres/sql/createguardtable-pg.sql"
+SQL_ADDON_FILE="${POLICY_HOME}/postgres/sql/db-pg.sql"
 
 # Remove escape backslashes if present and save output in temp file
 sed 's/\\//g' "${POLICY_HOME}"/apps/guard/xacml-pg.properties > /tmp/temp.xacml-pg.properties
@@ -37,7 +37,7 @@ fi
 # Extract Maria DB Credential properties from xacml.properties file
 DB_HOSTNAME=$(awk -F[/:] '$1 == "jakarta.persistence.jdbc.url=jdbc" { print $3 $5 }' /tmp/temp.xacml-pg.properties)
 DB_USERNAME=$(awk -F= '$1 == "jakarta.persistence.jdbc.user" { print $2 }' /tmp/temp.xacml-pg.properties)
-DB_PASSWORD=$(awk -F= '$1 == "jakarta.persistence.jdbc.password" { st = index($0,"="); print substr($0,st+1) }' /tmp/temp.properties)
+DB_PASSWORD=$(awk -F= '$1 == "jakarta.persistence.jdbc.password" { st = index($0,"="); print substr($0,st+1) }' /tmp/temp.xacml-pg.properties)
 
 # Remove temp file
 rm /tmp/temp.xacml-pg.properties
@@ -61,7 +61,7 @@ fi
 psql -U postgres -h ${DB_HOSTNAME} -f ${SQL_FILE}
 
 # Execute additional SQL configuration if provided
-if [ -f "${POLICY_HOME}/mysql/sql/db-pg.sql" ]; then
+if [ -f "${POLICY_HOME}/postgres/sql/db-pg.sql" ]; then
     echo "additional SQL to be loaded found"
     psql -U postgres -h ${DB_HOSTNAME} -f ${SQL_ADDON_FILE}
 fi
