@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,17 +24,16 @@ package org.onap.policy.pdpx.main.comm;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.when;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
-import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClientException;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 
-@RunWith(MockitoJUnitRunner.class)
-public class XacmlPdpPapRegistrationTest {
+@ExtendWith(MockitoExtension.class)
+class XacmlPdpPapRegistrationTest {
 
     @Mock
     private TopicSinkClient client;
@@ -46,22 +46,22 @@ public class XacmlPdpPapRegistrationTest {
     /**
      * Initializes objects, including the registration object.
      */
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         when(client.send(status)).thenReturn(true);
 
         reg = new XacmlPdpPapRegistration(client);
     }
 
     @Test
-    public void testPdpRegistration_SendOk() throws TopicSinkClientException {
+    void testPdpRegistration_SendOk() {
         assertThatCode(() ->
             reg.pdpRegistration(status)
         ).doesNotThrowAnyException();
     }
 
     @Test
-    public void testPdpRegistration_SendFail() throws TopicSinkClientException {
+    void testPdpRegistration_SendFail() {
         when(client.send(status)).thenReturn(false);
         assertThatCode(() ->
             reg.pdpRegistration(status)
@@ -69,7 +69,7 @@ public class XacmlPdpPapRegistrationTest {
     }
 
     @Test
-    public void testPdpRegistration_SendEx() throws TopicSinkClientException {
+    void testPdpRegistration_SendEx() {
         when(client.send(status)).thenThrow(new IllegalStateException());
         assertThatCode(() ->
             reg.pdpRegistration(status)

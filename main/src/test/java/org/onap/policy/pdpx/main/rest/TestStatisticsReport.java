@@ -32,7 +32,7 @@ import org.onap.policy.pdpx.main.rest.model.StatisticsReport;
  * Class to perform unit testing of {@link StatisticsReport}.
  *
  */
-public class TestStatisticsReport {
+class TestStatisticsReport {
 
     static StatisticsReport report;
 

@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,25 +21,25 @@
 
 package org.onap.policy.pdp.xacml.application.common.std;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 
-@RunWith(MockitoJUnitRunner.class)
-public class StdCombinedPolicyRequestTest {
+@ExtendWith(MockitoExtension.class)
+class StdCombinedPolicyRequestTest {
     private static final String ACTION = "my-action";
     private static final String ONAP_NAME = "my-name";
     private static final String ONAP_INSTANCE = "my-instance";
@@ -56,8 +57,8 @@ public class StdCombinedPolicyRequestTest {
     /**
      * Initializes objects.
      */
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         resources = new TreeMap<>();
 
         when(decreq.getResource()).thenReturn(resources);
@@ -68,7 +69,7 @@ public class StdCombinedPolicyRequestTest {
     }
 
     @Test
-    public void testCreateInstance() {
+    void testCreateInstance() {
         resources.put(StdCombinedPolicyRequest.POLICY_ID_KEY, 100);
         resources.put(StdCombinedPolicyRequest.POLICY_TYPE_KEY, 101);
 
@@ -86,7 +87,7 @@ public class StdCombinedPolicyRequestTest {
     }
 
     @Test
-    public void testCreateInstance_StringValues() {
+    void testCreateInstance_StringValues() {
         resources.put(StdCombinedPolicyRequest.POLICY_ID_KEY, POLICY_ID);
         resources.put(StdCombinedPolicyRequest.POLICY_ID_KEY + "-x", "unused value");
         resources.put(StdCombinedPolicyRequest.POLICY_TYPE_KEY, POLICY_TYPE);
@@ -103,7 +104,7 @@ public class StdCombinedPolicyRequestTest {
     }
 
     @Test
-    public void testCreateInstance_Collections() {
+    void testCreateInstance_Collections() {
         resources.put(StdCombinedPolicyRequest.POLICY_ID_KEY, Collections.singleton(POLICY_ID));
         resources.put(StdCombinedPolicyRequest.POLICY_TYPE_KEY, Collections.singleton(POLICY_TYPE));
 

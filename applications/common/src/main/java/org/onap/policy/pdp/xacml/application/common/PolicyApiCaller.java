@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2021,2023 Nordix Foundation.
+ * Modifications Copyright (C) 2021, 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * Methods to access policy-api via REST service calls.
  */
 public class PolicyApiCaller {
-    private static Logger logger = LoggerFactory.getLogger(PolicyApiCaller.class);
+    private static final Logger logger = LoggerFactory.getLogger(PolicyApiCaller.class);
 
     private static final String POLICY_TYPE_URI = "/policy/api/v1/policytypes/";
     private static final String POLICY_TYPE_VERSION_URI = "/versions/";
@@ -60,18 +60,19 @@ public class PolicyApiCaller {
 
         try {
             Response resp = httpClient
-                            .get(POLICY_TYPE_URI + type.getName() + POLICY_TYPE_VERSION_URI + type.getVersion());
+                .get(POLICY_TYPE_URI + type.getName() + POLICY_TYPE_VERSION_URI + type.getVersion());
 
-            switch (resp.getStatus()) {
-                case HttpURLConnection.HTTP_OK:
-                    return resp.readEntity(ToscaServiceTemplate.class);
-                case HttpURLConnection.HTTP_NOT_FOUND:
+            return switch (resp.getStatus()) {
+                case HttpURLConnection.HTTP_OK -> resp.readEntity(ToscaServiceTemplate.class);
+                case HttpURLConnection.HTTP_NOT_FOUND -> {
                     logger.warn("policy-api not found {}", resp);
                     throw new NotFoundException(type.toString());
-                default:
+                }
+                default -> {
                     logger.warn("policy-api request error {}", resp);
                     throw new PolicyApiException(type.toString());
-            }
+                }
+            };
 
         } catch (RuntimeException e) {
             logger.warn("policy-api connection error, client info: {} ", httpClient);

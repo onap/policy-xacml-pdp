@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2021 Nordix Foundation.
+ * Modifications Copyright (C) 2021, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import com.att.research.xacml.api.pdp.PDPEngineFactory;
 import com.att.research.xacml.api.pdp.PDPException;
 import com.att.research.xacml.util.FactoryException;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -70,7 +69,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
     private HttpClient policyApiClient;
     private Properties pdpProperties = null;
     private PDPEngine pdpEngine = null;
-    private Map<ToscaPolicy, Path> mapLoadedPolicies = new HashMap<>();
+    private final Map<ToscaPolicy, Path> mapLoadedPolicies = new HashMap<>();
 
     @Override
     public String applicationName() {
@@ -84,7 +83,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
 
     @Override
     public void initialize(Path pathForData, HttpClient policyApiClient)
-            throws XacmlApplicationException {
+        throws XacmlApplicationException {
         //
         // Save our path
         //
@@ -146,7 +145,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             }
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info("Xacml Policy is {}{}", XacmlPolicyUtils.LINE_SEPARATOR,
-                    new String(Files.readAllBytes(refPath), StandardCharsets.UTF_8));
+                    Files.readString(refPath));
             }
             //
             // Add root policy to properties object
@@ -156,7 +155,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             // Write the properties to disk
             //
             XacmlPolicyUtils.storeXacmlProperties(newProperties,
-                    XacmlPolicyUtils.getPropertiesPath(this.getDataPath()));
+                XacmlPolicyUtils.getPropertiesPath(this.getDataPath()));
             //
             // Reload the engine
             //
@@ -175,14 +174,14 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
     }
 
     @Override
-    public synchronized boolean unloadPolicy(ToscaPolicy toscaPolicy) throws XacmlApplicationException {
+    public synchronized boolean unloadPolicy(ToscaPolicy toscaPolicy) {
         //
         // Find it in our map
         //
         Path refPolicy = this.mapLoadedPolicies.get(toscaPolicy);
         if (refPolicy == null) {
             LOGGER.error("Failed to find ToscaPolicy {} in our map size {}", toscaPolicy.getMetadata(),
-                    this.mapLoadedPolicies.size());
+                this.mapLoadedPolicies.size());
             return false;
         }
         //
@@ -200,14 +199,14 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
             Files.delete(refPolicy);
         } catch (IOException e) {
             LOGGER.error("Failed to delete policy {} from disk {}", toscaPolicy.getMetadata(),
-                    refPolicy.toAbsolutePath(), e);
+                refPolicy.toAbsolutePath(), e);
         }
         //
         // Write the properties to disk
         //
         try {
             XacmlPolicyUtils.storeXacmlProperties(newProperties,
-                    XacmlPolicyUtils.getPropertiesPath(this.getDataPath()));
+                XacmlPolicyUtils.getPropertiesPath(this.getDataPath()));
         } catch (IOException e) {
             LOGGER.error("Failed to save the properties to disk {}", newProperties, e);
         }
@@ -224,7 +223,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
         //
         if (this.mapLoadedPolicies.remove(toscaPolicy) == null) {
             LOGGER.error("Failed to remove toscaPolicy {} from internal map size {}", toscaPolicy.getMetadata(),
-                    this.mapLoadedPolicies.size());
+                this.mapLoadedPolicies.size());
         }
         //
         // Not sure if any of the errors above warrant returning false
@@ -234,7 +233,7 @@ public abstract class StdXacmlApplicationServiceProvider implements XacmlApplica
 
     @Override
     public Pair<DecisionResponse, Response> makeDecision(DecisionRequest request,
-            Map<String, String[]> requestQueryParams) {
+                                                         Map<String, String[]> requestQueryParams) {
         //
         // Convert to a XacmlRequest
         //

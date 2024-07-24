@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +21,8 @@
 
 package org.onap.policy.pdpx.main.rest.serialization;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.RequestAttributes;
@@ -34,11 +35,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 
-public class TestXacmlJsonMessageBodyHandler {
+class TestXacmlJsonMessageBodyHandler {
 
     private static final String PRIMARY_TYPE = "application";
     private static final String SUB_TYPE = "xacml+json";
@@ -50,35 +51,35 @@ public class TestXacmlJsonMessageBodyHandler {
 
     private XacmlJsonMessageBodyHandler hdlr;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         hdlr = new XacmlJsonMessageBodyHandler();
     }
 
     @Test
-    public void testIsWriteable() {
+    void testIsWriteable() {
         CommonSerialization.testIsWritableOrReadable(PRIMARY_TYPE, SUB_TYPE, hdlr::isWriteable);
     }
 
     @Test
-    public void testWriteTo() throws IOException, DOMStructureException, JSONStructureException {
+    void testWriteTo() throws IOException, DOMStructureException, JSONStructureException {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         Response resp = DOMResponse.load(ResourceUtils.getResourceAsString(
-                "src/test/resources/decisions/decision.native.response.xml"));
+            "src/test/resources/decisions/decision.native.response.xml"));
         hdlr.writeTo(resp, RESPONSE_CLASS, RESPONSE_CLASS, null, null, null, stream);
         assertEquals(resp, JsonResponseTranslator.load(new ByteArrayInputStream(stream.toByteArray())));
     }
 
     @Test
-    public void testIsReadable() {
+    void testIsReadable() {
         CommonSerialization.testIsWritableOrReadable(PRIMARY_TYPE, SUB_TYPE, hdlr::isReadable);
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testReadFrom() throws IOException {
+    void testReadFrom() throws IOException {
         Request req = hdlr.readFrom(REQUEST_CLASS, REQUEST_CLASS, null, null, null, ResourceUtils.getResourceAsStream(
-                "src/test/resources/decisions/decision.native.request.json"));
+            "src/test/resources/decisions/decision.native.request.json"));
         assertFalse(req.getCombinedDecision());
         assertFalse(req.getReturnPolicyIdList());
         assertEquals(3, req.getRequestAttributes().size());
@@ -87,16 +88,16 @@ public class TestXacmlJsonMessageBodyHandler {
         RequestAttributes firstRequestAttributes = iter.next();
         assertEquals(1, firstRequestAttributes.getAttributes().size());
         assertEquals("Julius Hibbert", firstRequestAttributes.getAttributes().iterator().next()
-                .getValues().iterator().next().getValue().toString());
+            .getValues().iterator().next().getValue().toString());
 
         RequestAttributes secondRequestAttributes = iter.next();
         assertEquals(1, secondRequestAttributes.getAttributes().size());
         assertEquals("http://medico.com/record/patient/BartSimpson", secondRequestAttributes.getAttributes()
-                .iterator().next().getValues().iterator().next().getValue().toString());
+            .iterator().next().getValues().iterator().next().getValue().toString());
 
         RequestAttributes thirdRequestAttributes = iter.next();
         assertEquals(1, thirdRequestAttributes.getAttributes().size());
         assertEquals("read", thirdRequestAttributes.getAttributes().iterator().next()
-                .getValues().iterator().next().getValue().toString());
+            .getValues().iterator().next().getValue().toString());
     }
 }

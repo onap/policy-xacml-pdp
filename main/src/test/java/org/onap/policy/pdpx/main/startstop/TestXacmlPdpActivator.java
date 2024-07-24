@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019,2023 Nordix Foundation.
+ * Modifications Copyright (C) 2019, 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,17 +21,16 @@
 
 package org.onap.policy.pdpx.main.startstop;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.pdpx.main.CommonRest;
-import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterHandler;
@@ -40,7 +39,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 /**
  * Class to perform unit test of XacmlPdpActivator.
- *
  */
 public class TestXacmlPdpActivator extends CommonRest {
     private static final String PROBE_FIELD_NAME = "probeHeartbeatTopicSec";
@@ -52,7 +50,7 @@ public class TestXacmlPdpActivator extends CommonRest {
     /**
      * Loads properties.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
         CommonRest.setUpBeforeClass();
 
@@ -68,14 +66,14 @@ public class TestXacmlPdpActivator extends CommonRest {
      * Creates the activator.
      */
     @Override
-    @Before
+    @BeforeEach
     public void setUp() {
         ReflectionTestUtils.setField(parGroup, PROBE_FIELD_NAME, 4);
         activator = new XacmlPdpActivator(parGroup);
     }
 
     @Test
-    public void testXacmlPdpActivator() throws Exception {
+    void testXacmlPdpActivator() {
         assertFalse(activator.isAlive());
         assertFalse(activator.isApiEnabled());
         activator.start();
@@ -95,7 +93,7 @@ public class TestXacmlPdpActivator extends CommonRest {
     }
 
     @Test
-    public void testXacmlPdpActivator_NoProbe() throws Exception {
+    void testXacmlPdpActivator_NoProbe() {
         ReflectionTestUtils.setField(parGroup, PROBE_FIELD_NAME, 0);
         activator = new XacmlPdpActivator(parGroup);
         activator.start();
@@ -103,13 +101,13 @@ public class TestXacmlPdpActivator extends CommonRest {
     }
 
     @Test
-    public void testGetCurrent_testSetCurrent() {
+    void testGetCurrent_testSetCurrent() {
         XacmlPdpActivator.setCurrent(activator);
         assertSame(activator, XacmlPdpActivator.getCurrent());
     }
 
     @Test
-    public void testTerminate() throws Exception {
+    void testTerminate() {
         activator.start();
         activator.stop();
         assertFalse(activator.isAlive());
@@ -117,10 +115,9 @@ public class TestXacmlPdpActivator extends CommonRest {
 
     /**
      * Teardown tests.
-     * @throws PolicyXacmlPdpException on termination errors
      */
-    @After
-    public void teardown() throws PolicyXacmlPdpException {
+    @AfterEach
+    public void teardown() {
         if (activator != null && activator.isAlive()) {
             activator.stop();
         }

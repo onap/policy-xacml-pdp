@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021-2022 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,22 +21,21 @@
 
 package org.onap.policy.pdpx.main.comm;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.startsWith;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
@@ -51,8 +51,8 @@ import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 /**
  * Initializes objects, including the publisher.
  */
-@RunWith(MockitoJUnitRunner.class)
-public class XacmlPdpUpdatePublisherTest {
+@ExtendWith(MockitoExtension.class)
+class XacmlPdpUpdatePublisherTest {
 
     private static final int NEW_COUNT = 5;
 
@@ -108,8 +108,8 @@ public class XacmlPdpUpdatePublisherTest {
     /**
      * Initializes objects, including the publisher.
      */
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         ToscaConceptIdentifier deployedId1 = new ToscaConceptIdentifier("deployed-1", "1.0.0");
         ToscaConceptIdentifier deployedId2 = new ToscaConceptIdentifier("deployed-2", "1.0.0");
         ToscaConceptIdentifier deployedId4 = new ToscaConceptIdentifier("deployed-4", "1.0.0");
@@ -117,15 +117,15 @@ public class XacmlPdpUpdatePublisherTest {
         ToscaConceptIdentifier addedId1 = new ToscaConceptIdentifier("added-1", "1.0.0");
         ToscaConceptIdentifier addedId2 = new ToscaConceptIdentifier("added-2", "1.0.0");
 
-        when(deployed1.getIdentifier()).thenReturn(deployedId1);
-        when(deployed2.getIdentifier()).thenReturn(deployedId2);
-        when(deployed3.getIdentifier()).thenReturn(new ToscaConceptIdentifier("deployed-3", "1.0.0"));
-        when(deployed4.getIdentifier()).thenReturn(deployedId4);
-        when(deployed5.getIdentifier()).thenReturn(deployedId5);
-        when(added1.getIdentifier()).thenReturn(addedId1);
-        when(added2.getIdentifier()).thenReturn(addedId2);
-        when(failPolicy1.getIdentifier()).thenReturn(new ToscaConceptIdentifier("failPolicy-1", "1.0.0"));
-        when(failPolicy2.getIdentifier()).thenReturn(new ToscaConceptIdentifier("failPolicy-2", "1.0.0"));
+        lenient().when(deployed1.getIdentifier()).thenReturn(deployedId1);
+        lenient().when(deployed2.getIdentifier()).thenReturn(deployedId2);
+        lenient().when(deployed3.getIdentifier()).thenReturn(new ToscaConceptIdentifier("deployed-3", "1.0.0"));
+        lenient().when(deployed4.getIdentifier()).thenReturn(deployedId4);
+        lenient().when(deployed5.getIdentifier()).thenReturn(deployedId5);
+        lenient().when(added1.getIdentifier()).thenReturn(addedId1);
+        lenient().when(added2.getIdentifier()).thenReturn(addedId2);
+        lenient().when(failPolicy1.getIdentifier()).thenReturn(new ToscaConceptIdentifier("failPolicy-1", "1.0.0"));
+        lenient().when(failPolicy2.getIdentifier()).thenReturn(new ToscaConceptIdentifier("failPolicy-2", "1.0.0"));
 
         Map<ToscaPolicy, XacmlApplicationServiceProvider> deployedPolicies = new HashMap<>();
         deployedPolicies.put(deployed1, null);
@@ -133,22 +133,23 @@ public class XacmlPdpUpdatePublisherTest {
         deployedPolicies.put(deployed3, null);
         deployedPolicies.put(deployed4, null);
         deployedPolicies.put(deployed5, null);
-        when(appmgr.getToscaPolicies()).thenReturn(deployedPolicies);
+        lenient().when(appmgr.getToscaPolicies()).thenReturn(deployedPolicies);
 
         // update includes one overlap with existing and one overlap between the two
-        when(update.getPoliciesToBeDeployed()).thenReturn(List.of(added1, deployed2, deployed5, added2));
-        when(update.getPoliciesToBeUndeployed()).thenReturn(List.of(addedId1, deployedId1, deployedId5, deployedId4));
+        lenient().when(update.getPoliciesToBeDeployed()).thenReturn(List.of(added1, deployed2, deployed5, added2));
+        lenient().when(update.getPoliciesToBeUndeployed())
+            .thenReturn(List.of(addedId1, deployedId1, deployedId5, deployedId4));
 
-        when(failurePdpUpdate.getPoliciesToBeDeployed())
-                        .thenReturn(List.of(added1, deployed2, deployed5, failPolicy1, failPolicy2));
-        when(failurePdpUpdate.getPoliciesToBeUndeployed())
-                        .thenReturn(List.of(addedId1, deployedId1, deployedId5, deployedId4));
+        lenient().when(failurePdpUpdate.getPoliciesToBeDeployed())
+            .thenReturn(List.of(added1, deployed2, deployed5, failPolicy1, failPolicy2));
+        lenient().when(failurePdpUpdate.getPoliciesToBeUndeployed())
+            .thenReturn(List.of(addedId1, deployedId1, deployedId5, deployedId4));
 
-        when(appmgr.getPolicyCount()).thenReturn(NEW_COUNT);
+        lenient().when(appmgr.getPolicyCount()).thenReturn(NEW_COUNT);
 
-        when(state.updateInternalState(any(), any())).thenReturn(status);
+        lenient().when(state.updateInternalState(any(), any())).thenReturn(status);
 
-        when(client.send(any())).thenReturn(true);
+        lenient().when(client.send(any())).thenReturn(true);
 
         publisher = new XacmlPdpUpdatePublisher(client, state, appmgr);
 
@@ -157,7 +158,7 @@ public class XacmlPdpUpdatePublisherTest {
     }
 
     @Test
-    public void testHandlePdpUpdate() throws XacmlApplicationException {
+    void testHandlePdpUpdate() throws XacmlApplicationException {
         publisher.handlePdpUpdate(update);
 
         // two removed
@@ -182,8 +183,8 @@ public class XacmlPdpUpdatePublisherTest {
     }
 
     @Test
-    public void testHandlePdpUpdate_Deploy() throws XacmlApplicationException {
-        when(update.getPoliciesToBeUndeployed()).thenReturn(null);
+    void testHandlePdpUpdate_Deploy() throws XacmlApplicationException {
+        lenient().when(update.getPoliciesToBeUndeployed()).thenReturn(null);
 
         publisher.handlePdpUpdate(update);
 
@@ -201,8 +202,8 @@ public class XacmlPdpUpdatePublisherTest {
     }
 
     @Test
-    public void testHandlePdpUpdate_Undeploy() throws XacmlApplicationException {
-        when(update.getPoliciesToBeDeployed()).thenReturn(null);
+    void testHandlePdpUpdate_Undeploy() throws XacmlApplicationException {
+        lenient().when(update.getPoliciesToBeDeployed()).thenReturn(null);
 
         publisher.handlePdpUpdate(update);
 
@@ -220,10 +221,10 @@ public class XacmlPdpUpdatePublisherTest {
     }
 
     @Test
-    public void testHandlePdpUpdate_LoadPolicyFailed() throws XacmlApplicationException {
+    void testHandlePdpUpdate_LoadPolicyFailed() throws XacmlApplicationException {
         // Set loadPolicy to fail
-        doThrow(new XacmlApplicationException()).when(appmgr).loadDeployedPolicy(failPolicy1);
-        doThrow(new XacmlApplicationException()).when(appmgr).loadDeployedPolicy(failPolicy2);
+        lenient().doThrow(new XacmlApplicationException()).when(appmgr).loadDeployedPolicy(failPolicy1);
+        lenient().doThrow(new XacmlApplicationException()).when(appmgr).loadDeployedPolicy(failPolicy2);
 
         publisher.handlePdpUpdate(failurePdpUpdate);
 
@@ -239,9 +240,9 @@ public class XacmlPdpUpdatePublisherTest {
     }
 
     @Test
-    public void testHandlePdpUpdate_NullPolicies() throws XacmlApplicationException {
-        when(update.getPoliciesToBeDeployed()).thenReturn(null);
-        when(update.getPoliciesToBeUndeployed()).thenReturn(null);
+    void testHandlePdpUpdate_NullPolicies() throws XacmlApplicationException {
+        lenient().when(update.getPoliciesToBeDeployed()).thenReturn(null);
+        lenient().when(update.getPoliciesToBeUndeployed()).thenReturn(null);
 
         publisher.handlePdpUpdate(update);
 
@@ -255,9 +256,9 @@ public class XacmlPdpUpdatePublisherTest {
     }
 
     @Test
-    public void testHandlePdpUpdate_SendFail() {
+    void testHandlePdpUpdate_SendFail() {
 
-        when(client.send(any())).thenReturn(false);
+        lenient().when(client.send(any())).thenReturn(false);
 
         publisher.handlePdpUpdate(update);
 

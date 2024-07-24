@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2021 Nordix Foundation.
+ * Modifications Copyright (C) 2021, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,10 +82,9 @@ import org.slf4j.LoggerFactory;
  * to translate policies.
  *
  * @author pameladragosh
- *
  */
 @NoArgsConstructor
-public class StdMatchableTranslator  extends StdBaseTranslator implements MatchableCallback {
+public class StdMatchableTranslator extends StdBaseTranslator implements MatchableCallback {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StdMatchableTranslator.class);
     private static final StandardYamlCoder standardYamlCoder = new StandardYamlCoder();
@@ -112,7 +111,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
      * scanObligations - scans the list of obligations and make appropriate method calls to process
      * obligations.
      *
-     * @param obligations Collection of obligation objects
+     * @param obligations      Collection of obligation objects
      * @param decisionResponse DecisionResponse object used to store any results from obligations.
      */
     @Override
@@ -165,10 +164,10 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
      * contents and their details.
      *
      * @param closestMatches Map holding the current set of highest weight policy types
-     * @param obligation Obligation object
+     * @param obligation     Obligation object
      */
     protected void scanClosestMatchObligation(
-            Map<String, Map<Integer, List<Pair<String, Map<String, Object>>>>> closestMatches, Obligation obligation) {
+        Map<String, Map<Integer, List<Pair<String, Map<String, Object>>>>> closestMatches, Obligation obligation) {
         //
         // Create our OnapObligation object
         //
@@ -177,7 +176,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
         // All 4 *should* be there
         //
         if (onapObligation.getPolicyId() == null || onapObligation.getPolicyContent() == null
-                || onapObligation.getPolicyType() == null || onapObligation.getWeight() == null) {
+            || onapObligation.getPolicyType() == null || onapObligation.getWeight() == null) {
             LOGGER.error("Missing an expected attribute in obligation.");
             return;
         }
@@ -197,13 +196,13 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
             // Only need to check first one - as we will ensure there is only one weight
             //
             Entry<Integer, List<Pair<String, Map<String, Object>>>> firstEntry =
-                    weightMap.entrySet().iterator().next();
+                weightMap.entrySet().iterator().next();
             if (policyWeight < firstEntry.getKey()) {
                 //
                 // Existing policies have a greater weight, so we will not add it
                 //
                 LOGGER.info("{} is lesser weight {} than current policies, will not return it", policyWeight,
-                        firstEntry.getKey());
+                    firstEntry.getKey());
             } else if (firstEntry.getKey().equals(policyWeight)) {
                 //
                 // Same weight - we will add it
@@ -246,7 +245,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
         //
         if (toscaPolicyTypeTemplate == null) {
             throw new ToscaPolicyConversionException(
-                    "Cannot retrieve Policy Type definition for policy " + toscaPolicy.getName());
+                "Cannot retrieve Policy Type definition for policy " + toscaPolicy.getName());
         }
         //
         // Policy name should be at the root
@@ -340,14 +339,8 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
         return null;
     }
 
-    private class MyMatchableCallback implements MatchableCallback {
-        private StdMatchableTranslator translator;
-        private ToscaServiceTemplate template;
-
-        public MyMatchableCallback(StdMatchableTranslator translator, ToscaServiceTemplate template) {
-            this.translator = translator;
-            this.template = template;
-        }
+    private record MyMatchableCallback(StdMatchableTranslator translator, ToscaServiceTemplate template)
+        implements MatchableCallback {
 
         @Override
         public ToscaPolicyType retrievePolicyType(String derivedFrom) {
@@ -369,7 +362,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
      * For generating target type, we scan for matchable properties
      * and use those to build the policy.
      *
-     * @param policy the policy
+     * @param policy   the policy
      * @param template template containing the policy
      * @return {@code Pair<TargetType, Integer>} Returns a TargetType and a Total Weight of matchables.
      */
@@ -394,7 +387,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
             // Create the matchable
             //
             matchablePolicyType = new MatchablePolicyType(
-                    template.getPolicyTypes().get(policy.getType()), myCallback);
+                template.getPolicyTypes().get(policy.getType()), myCallback);
             //
             // Cache it
             //
@@ -422,7 +415,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
 
     @SuppressWarnings("unchecked")
     protected void fillTargetTypeWithMatchables(TargetType target, MatchablePolicyType matchablePolicyType,
-            Map<String, Object> properties) throws ToscaPolicyConversionException {
+                                                Map<String, Object> properties) throws ToscaPolicyConversionException {
         for (Entry<String, Object> entrySet : properties.entrySet()) {
             String propertyName = entrySet.getKey();
             Object propertyValue = entrySet.getValue();
@@ -436,7 +429,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
                 // Depending on what type it is, add it into the target
                 //
                 ToscaPolicyTranslatorUtils.buildAndAppendTarget(target,
-                        matchable.getType().generate(propertyValue, id));
+                    matchable.getType().generate(propertyValue, id));
 
                 continue;
             }
@@ -480,7 +473,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
         // Is it loaded in memory?
         //
         ToscaServiceTemplate policyTemplate = this.matchablePolicyTypes.get(policyTypeId);
-        if (policyTemplate == null)  {
+        if (policyTemplate == null) {
             //
             // Load the policy
             //
@@ -540,7 +533,7 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
             // Decode the template
             //
             ToscaServiceTemplate template = standardYamlCoder.decode(new String(bytes, StandardCharsets.UTF_8),
-                    ToscaServiceTemplate.class);
+                ToscaServiceTemplate.class);
             //
             // Ensure all the fields are setup correctly
             //
@@ -561,12 +554,12 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
      * pullPolicyType - pulls the given ToscaConceptIdentifier from the Policy Lifecycle API.
      * If successful, will store it locally given the policyTypePath.
      *
-     * @param policyTypeId ToscaConceptIdentifier
+     * @param policyTypeId   ToscaConceptIdentifier
      * @param policyTypePath Path object to store locally
      * @return ToscaPolicyType object. Null if failure.
      */
     protected synchronized ToscaServiceTemplate pullPolicyType(ToscaConceptIdentifier policyTypeId,
-            Path policyTypePath) {
+                                                               Path policyTypePath) {
         //
         // This is what we return
         //
@@ -603,6 +596,6 @@ public class StdMatchableTranslator  extends StdBaseTranslator implements Matcha
      */
     protected Path constructLocalFilePath(ToscaConceptIdentifier policyTypeId) {
         return Paths.get(this.pathForData.toAbsolutePath().toString(), policyTypeId.getName() + "-"
-                + policyTypeId.getVersion() + ".yaml");
+            + policyTypeId.getVersion() + ".yaml");
     }
 }

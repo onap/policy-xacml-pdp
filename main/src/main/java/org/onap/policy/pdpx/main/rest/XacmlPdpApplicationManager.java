@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2021 Nordix Foundation.
+ * Modifications Copyright (C) 2021, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,7 @@ public class XacmlPdpApplicationManager {
 
     private final ServiceLoader<XacmlApplicationServiceProvider> applicationLoader;
     private final Map<String, XacmlApplicationServiceProvider> providerActionMap = new HashMap<>();
+    @Getter
     private final List<ToscaConceptIdentifier> toscaPolicyTypeIdents = new ArrayList<>();
     private final Map<ToscaPolicy, XacmlApplicationServiceProvider> mapLoadedPolicies = new HashMap<>();
 
@@ -89,7 +90,7 @@ public class XacmlPdpApplicationManager {
             //
             var applicationInitialized = false;
             //
-            // Have it initialize at a path
+            // Have it initialized at a path
             //
             try {
                 initializeApplicationPath(Paths.get(applicationParameters.getApplicationPath()), application,
@@ -148,13 +149,9 @@ public class XacmlPdpApplicationManager {
      */
     public List<ToscaConceptIdentifier> getToscaPolicyIdentifiers() {
         //
-        // converting map to return List of ToscaPolicyIdentiers
+        // converting map to return List of ToscaPolicyIdentifiers
         //
         return mapLoadedPolicies.keySet().stream().map(ToscaPolicy::getIdentifier).collect(Collectors.toList());
-    }
-
-    public List<ToscaConceptIdentifier> getToscaPolicyTypeIdents() {
-        return toscaPolicyTypeIdents;
     }
 
     /**

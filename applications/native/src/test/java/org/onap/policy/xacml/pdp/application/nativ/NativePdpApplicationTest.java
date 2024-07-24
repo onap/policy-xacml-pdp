@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2021 Nordix Foundation.
+ * Modifications Copyright (C) 2021, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,13 +32,13 @@ import com.att.research.xacml.api.Response;
 import com.att.research.xacml.std.dom.DOMRequest;
 import com.att.research.xacml.std.dom.DOMResponse;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.common.utils.resources.TextFileUtils;
@@ -53,38 +53,38 @@ import org.onap.policy.pdp.xacml.xacmltest.TestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NativePdpApplicationTest {
+class NativePdpApplicationTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NativePdpApplicationTest.class);
     private static final String PERMIT = "Permit";
     private static final StandardYamlCoder yamlCoder = new StandardYamlCoder();
-    private static Properties properties = new Properties();
+    private static final Properties properties = new Properties();
     private static File propertiesFile;
     private static NativePdpApplication service;
     private static Request request;
 
-    @ClassRule
-    public static final TemporaryFolder policyFolder = new TemporaryFolder();
+    @TempDir
+    static Path policyFolder;
 
     /**
      * Copies the xacml.properties and policies files into
      * temporary folder and loads the service provider saving
      * instance of provider off for other tests to use.
      */
-    @BeforeClass
-    public static void setup() throws Exception {
+    @BeforeAll
+    static void setup() throws Exception {
         LOGGER.info("Setting up class");
         //
         // Setup our temporary folder
         //
-        XacmlPolicyUtils.FileCreator myCreator = (filename) -> policyFolder.newFile(filename);
+        XacmlPolicyUtils.FileCreator myCreator = (String filename) -> policyFolder.resolve(filename).toFile();
         propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties",
-                properties, myCreator);
+            properties, myCreator);
         //
         // Load service
         //
         ServiceLoader<XacmlApplicationServiceProvider> applicationLoader =
-                ServiceLoader.load(XacmlApplicationServiceProvider.class);
+            ServiceLoader.load(XacmlApplicationServiceProvider.class);
         //
         // Find the native application and save for use in all the tests
         //
@@ -115,12 +115,12 @@ public class NativePdpApplicationTest {
         // Load XACML Request
         //
         request = DOMRequest.load(
-                TextFileUtils.getTextFileAsString(
-                        "src/test/resources/requests/native.policy.request.xml"));
+            TextFileUtils.getTextFileAsString(
+                "src/test/resources/requests/native.policy.request.xml"));
     }
 
     @Test
-    public void testUncommon() {
+    void testUncommon() {
         NativePdpApplicationTranslator translator = new NativePdpApplicationTranslator();
         assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
             translator.convertRequest(null)
@@ -132,12 +132,12 @@ public class NativePdpApplicationTest {
         assertThat(application.canSupportPolicyType(new ToscaConceptIdentifier(
             "onap.policies.native.Xacml", "1.0.0"))).isTrue();
         assertThat(application.canSupportPolicyType(new ToscaConceptIdentifier(
-                "onap.policies.native.SomethingElse", "1.0.0"))).isFalse();
+            "onap.policies.native.SomethingElse", "1.0.0"))).isFalse();
         assertThat(application.actionDecisionsSupported()).contains("native");
     }
 
     @Test
-    public void testBadPolicies() throws Exception {
+    void testBadPolicies() throws Exception {
         NativePdpApplicationTranslator translator = new NativePdpApplicationTranslator();
         String policyYaml = ResourceUtils.getResourceAsString("src/test/resources/policies/bad.native.policies.yaml");
         //
@@ -173,7 +173,7 @@ public class NativePdpApplicationTest {
     }
 
     @Test
-    public void testNativePolicy() throws Exception {
+    void testNativePolicy() throws Exception {
 
         LOGGER.info("*********** Running native policy test *************");
         //
@@ -184,18 +184,16 @@ public class NativePdpApplicationTest {
         //
         // Send the request and verify decision result
         //
-        requestAndCheckDecision(request, PERMIT);
+        requestAndCheckDecision(request);
     }
 
     /**
      * Request a decision and check that it matches expectation.
      *
      * @param request to send to XACML PDP
-     * @param expected from the response
      * @throws Exception on errors requesting a decision and checking the returned decision
-     *
      **/
-    private void requestAndCheckDecision(Request request, String expected) throws Exception {
+    private void requestAndCheckDecision(Request request) throws Exception {
         //
         // Ask for a decision
         //
@@ -203,23 +201,21 @@ public class NativePdpApplicationTest {
         //
         // Check decision
         //
-        checkDecision(expected, decision);
+        checkDecision(decision);
     }
 
     /**
      * Check that decision matches expectation.
      *
-     * @param expected from the response
      * @param response received
      * @throws Exception on errors checking the decision
-     *
      **/
-    private void checkDecision(String expected, Response response) throws Exception {
-        LOGGER.info("Looking for {} Decision", expected);
+    private void checkDecision(Response response) throws Exception {
+        LOGGER.info("Looking for {} Decision", NativePdpApplicationTest.PERMIT);
         assertThat(response).isNotNull();
         Decision decision = response.getResults().iterator().next().getDecision();
         assertThat(decision).isNotNull();
-        assertThat(decision).hasToString(expected);
+        assertThat(decision).hasToString(NativePdpApplicationTest.PERMIT);
         LOGGER.info("Xacml response we received {}", DOMResponse.toString(response));
     }
 }

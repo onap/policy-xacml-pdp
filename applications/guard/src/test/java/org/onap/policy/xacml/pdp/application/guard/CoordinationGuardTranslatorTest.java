@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,30 +26,30 @@ package org.onap.policy.xacml.pdp.application.guard;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 
-public class CoordinationGuardTranslatorTest {
+class CoordinationGuardTranslatorTest {
 
     @Test
-    public void testUnsupportedMethods() {
+    void testUnsupportedMethods() {
         CoordinationGuardTranslator translator = new CoordinationGuardTranslator();
 
         assertThatExceptionOfType(ToscaPolicyConversionException.class)
-                .isThrownBy(() -> translator.convertRequest(null))
-                .withMessageContaining("this convertRequest shouldn't be used");
+            .isThrownBy(() -> translator.convertRequest(null))
+            .withMessageContaining("this convertRequest shouldn't be used");
 
         assertThat(translator.convertResponse(null)).isNull();
     }
 
     @Test
-    public void testLoadingDirectives() {
+    void testLoadingDirectives() {
         assertThat(CoordinationGuardTranslator.loadCoordinationDirectiveFromFile(null)).isNull();
 
         assertThat(CoordinationGuardTranslator.loadCoordinationDirectiveFromFile("nonexistent.yaml")).isNull();
 
         CoordinationDirective directive = CoordinationGuardTranslator
-                .loadCoordinationDirectiveFromFile("src/test/resources/test-directive.yaml");
+            .loadCoordinationDirectiveFromFile("src/test/resources/test-directive.yaml");
         assertThat(directive).isNotNull();
         assertThat(directive.getCoordinationFunction()).isEqualTo("whatisthisvaluesupposedtobe");
         assertThat(directive.getControlLoop()).hasSize(2);
@@ -56,14 +57,14 @@ public class CoordinationGuardTranslatorTest {
     }
 
     @Test
-    public void testGeneratingXacml() {
+    void testGeneratingXacml() {
         CoordinationDirective directive = CoordinationGuardTranslator
-                .loadCoordinationDirectiveFromFile("src/test/resources/test-directive.yaml");
+            .loadCoordinationDirectiveFromFile("src/test/resources/test-directive.yaml");
 
         assertThatExceptionOfType(ToscaPolicyConversionException.class)
-                .isThrownBy(() -> CoordinationGuardTranslator
-                        .generateXacmlFromCoordinationDirective(directive, "idontexist.yaml"))
-                .withMessageContaining("Unable to find prototype ");
+            .isThrownBy(() -> CoordinationGuardTranslator
+                .generateXacmlFromCoordinationDirective(directive, "idontexist.yaml"))
+            .withMessageContaining("Unable to find prototype ");
     }
 
 }

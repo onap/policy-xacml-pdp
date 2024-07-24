@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ package org.onap.policy.pdp.xacml.application.common.operationshistory;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -43,16 +43,16 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.Properties;
 import java.util.UUID;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.guard.OperationsHistory;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GetOperationOutcomePipTest {
+class GetOperationOutcomePipTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(GetOperationOutcomePipTest.class);
     private static final String TEST_PROPERTIES = "src/test/resources/test.properties";
 
@@ -75,8 +75,8 @@ public class GetOperationOutcomePipTest {
      *
      * @throws Exception connectivity issues
      */
-    @BeforeClass
-    public static void setupDatabase() throws Exception {
+    @BeforeAll
+    static void setupDatabase() throws Exception {
         LOGGER.info("Setting up PIP Testing");
         //
         // Load our test properties to use
@@ -95,14 +95,14 @@ public class GetOperationOutcomePipTest {
         //
         //
         //
-        LOGGER.info("Configured own entity manager", em.toString());
+        LOGGER.info("Configured own entity manager {}", em);
     }
 
     /**
      * Close the entity manager.
      */
-    @AfterClass
-    public static void cleanup() {
+    @AfterAll
+    static void cleanup() {
         if (em != null) {
             em.close();
         }
@@ -113,8 +113,8 @@ public class GetOperationOutcomePipTest {
      *
      * @throws Exception if an error occurs
      */
-    @Before
-    public void setupEngine() throws Exception {
+    @BeforeEach
+    void setupEngine() throws Exception {
         when(pipRequest.getIssuer()).thenReturn("urn:org:onap:xacml:guard:tw:1:hour");
         //
         // Create instance
@@ -136,12 +136,12 @@ public class GetOperationOutcomePipTest {
     }
 
     @Test
-    public void testAttributesRequired() {
+    void testAttributesRequired() {
         assertEquals(1, pipEngine.attributesRequired().size());
     }
 
     @Test
-    public void testConfigure_DbException() throws Exception {
+    void testConfigure_DbException() {
         properties.put("jakarta.persistence.jdbc.url", "invalid");
         assertThatCode(() ->
             pipEngine.configure("issuer", properties)
@@ -149,19 +149,19 @@ public class GetOperationOutcomePipTest {
     }
 
     @Test
-    public void testGetAttributes_NullIssuer() throws PIPException {
+    void testGetAttributes_NullIssuer() throws PIPException {
         when(pipRequest.getIssuer()).thenReturn(null);
         assertEquals(StdPIPResponse.PIP_RESPONSE_EMPTY, pipEngine.getAttributes(pipRequest, pipFinder));
     }
 
     @Test
-    public void testGetAttributes_WrongIssuer() throws PIPException {
+    void testGetAttributes_WrongIssuer() throws PIPException {
         when(pipRequest.getIssuer()).thenReturn("wrong-issuer");
         assertEquals(StdPIPResponse.PIP_RESPONSE_EMPTY, pipEngine.getAttributes(pipRequest, pipFinder));
     }
 
     @Test
-    public void testGetAttributes() throws Exception {
+    void testGetAttributes() throws Exception {
         //
         //
         //
@@ -179,12 +179,12 @@ public class GetOperationOutcomePipTest {
     }
 
     @Test
-    public void testGetOutcomeFromDb() throws Exception {
+    void testGetOutcomeFromDb() throws Exception {
         //
         // Use reflection to run getCountFromDB
         //
         Method method = GetOperationOutcomePip.class.getDeclaredMethod("doDatabaseQuery",
-                                                                       String.class);
+            String.class);
         method.setAccessible(true);
         //
         // Test pipEngine

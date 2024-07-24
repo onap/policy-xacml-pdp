@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ package org.onap.policy.pdp.xacml.application.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.att.research.xacml.api.XACML3;
 import java.lang.reflect.Constructor;
@@ -42,15 +42,15 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.utils.coder.CoderException;
 
-public class ToscaPolicyTranslatorUtilsTest {
+class ToscaPolicyTranslatorUtilsTest {
     private static final ObjectFactory factory = new ObjectFactory();
 
     @Test
-    public void test() throws NoSuchMethodException, SecurityException {
+    void test() throws NoSuchMethodException, SecurityException {
         final Constructor<ToscaPolicyTranslatorUtils> constructor
             = ToscaPolicyTranslatorUtils.class.getDeclaredConstructor();
         assertTrue(Modifier.isPrivate(constructor.getModifiers()));
@@ -58,35 +58,35 @@ public class ToscaPolicyTranslatorUtilsTest {
     }
 
     @Test
-    public void testTimeInRange() {
+    void testTimeInRange() {
         ApplyType apply = ToscaPolicyTranslatorUtils.generateTimeInRange("00:00:00Z", "08:00:00Z", true);
         assertThat(apply).isNotNull();
         assertThat(apply.getExpression()).hasSize(3);
     }
 
     @Test
-    public void testBuildAndAppend() {
+    void testBuildAndAppend() {
         assertThat(ToscaPolicyTranslatorUtils.buildAndAppendAllof(null, new MatchType())).isInstanceOf(AnyOfType.class);
         assertThat(ToscaPolicyTranslatorUtils.buildAndAppendAllof(null, new AllOfType())).isInstanceOf(AnyOfType.class);
-        assertThat(ToscaPolicyTranslatorUtils.buildAndAppendAllof(null, new String())).isNull();
+        assertThat(ToscaPolicyTranslatorUtils.buildAndAppendAllof(null, "")).isNull();
 
         assertThat(ToscaPolicyTranslatorUtils.buildAndAppendTarget(new TargetType(),
-                new AnyOfType()).getAnyOf()).hasSize(1);
+            new AnyOfType()).getAnyOf()).hasSize(1);
         assertThat(ToscaPolicyTranslatorUtils.buildAndAppendTarget(new TargetType(),
-                new MatchType()).getAnyOf()).hasSize(1);
+            new MatchType()).getAnyOf()).hasSize(1);
         assertThat(ToscaPolicyTranslatorUtils.buildAndAppendTarget(new TargetType(),
-                new String()).getAnyOf()).isEmpty();
+            "").getAnyOf()).isEmpty();
     }
 
     @Test
-    public void testInteger() {
+    void testInteger() {
         assertThat(ToscaPolicyTranslatorUtils.parseInteger("foo")).isNull();
         assertThat(ToscaPolicyTranslatorUtils.parseInteger("1")).isEqualTo(1);
         assertThat(ToscaPolicyTranslatorUtils.parseInteger("1.0")).isEqualTo(1);
     }
 
     @Test
-    public void testAddingVariables() {
+    void testAddingVariables() {
         ApplyType applyType = new ApplyType();
         applyType.setFunctionId(XACML3.ID_FUNCTION_STRING_EQUAL.stringValue());
 
@@ -109,7 +109,7 @@ public class ToscaPolicyTranslatorUtilsTest {
         variable.setVariableId("my-variable-id");
 
         ConditionType newCondition = ToscaPolicyTranslatorUtils.addVariableToCondition(condition, variable,
-                XACML3.ID_FUNCTION_AND);
+            XACML3.ID_FUNCTION_AND);
 
         assertThat(newCondition.getExpression().getValue()).isInstanceOf(ApplyType.class);
         Object obj = newCondition.getExpression().getValue();
@@ -119,23 +119,23 @@ public class ToscaPolicyTranslatorUtilsTest {
 
     @SuppressWarnings("deprecation")
     @Test
-    public void testDecodeProperties() throws ToscaPolicyConversionException {
+    void testDecodeProperties() throws ToscaPolicyConversionException {
         Data data = ToscaPolicyTranslatorUtils.decodeProperties(Map.of("value", 20), Data.class);
         assertThat(data.getValue()).isEqualTo(20);
 
         // null value - invalid
         assertThatThrownBy(() -> ToscaPolicyTranslatorUtils.decodeProperties(Map.of(), Data.class))
-                        .isInstanceOf(ToscaPolicyConversionException.class).hasMessageContaining("item \"value\"");
+            .isInstanceOf(ToscaPolicyConversionException.class).hasMessageContaining("item \"value\"");
 
         // value is not an integer - cannot even decode it
         assertThatThrownBy(() -> ToscaPolicyTranslatorUtils.decodeProperties(Map.of("value", "abc"), Data.class))
-                        .isInstanceOf(ToscaPolicyConversionException.class).getCause()
-                        .isInstanceOf(CoderException.class);
+            .isInstanceOf(ToscaPolicyConversionException.class).getCause()
+            .isInstanceOf(CoderException.class);
 
         // null properties - cannot even decode
         assertThatThrownBy(() -> ToscaPolicyTranslatorUtils.decodeProperties(null, Data.class))
-                        .isInstanceOf(ToscaPolicyConversionException.class)
-                        .hasMessage("Cannot decode Data from null properties");
+            .isInstanceOf(ToscaPolicyConversionException.class)
+            .hasMessage("Cannot decode Data from null properties");
     }
 
     @Getter

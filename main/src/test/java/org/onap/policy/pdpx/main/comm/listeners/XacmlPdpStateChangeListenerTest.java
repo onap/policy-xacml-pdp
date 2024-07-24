@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,23 +22,23 @@
 package org.onap.policy.pdpx.main.comm.listeners;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpStateChange;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.pdpx.main.XacmlState;
 
-@RunWith(MockitoJUnitRunner.class)
-public class XacmlPdpStateChangeListenerTest {
+@ExtendWith(MockitoExtension.class)
+class XacmlPdpStateChangeListenerTest {
     private static final String TOPIC = "my-topic";
 
     @Mock
@@ -57,19 +58,19 @@ public class XacmlPdpStateChangeListenerTest {
     /**
      * Initializes objects, including the listener.
      */
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         listener = new XacmlPdpStateChangeListener(client, state);
 
-        when(state.shouldHandle(change)).thenReturn(true);
-        when(state.updateInternalState(change)).thenReturn(status);
+        lenient().when(state.shouldHandle(change)).thenReturn(true);
+        lenient().when(state.updateInternalState(change)).thenReturn(status);
 
-        when(client.send(status)).thenReturn(true);
+        lenient().when(client.send(status)).thenReturn(true);
     }
 
     @Test
-    public void testOnTopicEvent_Unhandled() {
-        when(state.shouldHandle(change)).thenReturn(false);
+    void testOnTopicEvent_Unhandled() {
+        lenient().when(state.shouldHandle(change)).thenReturn(false);
         listener.onTopicEvent(CommInfrastructure.NOOP, TOPIC, null, change);
 
         verify(state, never()).updateInternalState(any(PdpStateChange.class));
@@ -77,8 +78,8 @@ public class XacmlPdpStateChangeListenerTest {
     }
 
     @Test
-    public void testOnTopicEvent_SendFailed() {
-        when(client.send(status)).thenReturn(false);
+    void testOnTopicEvent_SendFailed() {
+        lenient().when(client.send(status)).thenReturn(false);
 
         listener.onTopicEvent(CommInfrastructure.NOOP, TOPIC, null, change);
 
@@ -87,7 +88,7 @@ public class XacmlPdpStateChangeListenerTest {
     }
 
     @Test
-    public void testOnTopicEvent_SendOk() {
+    void testOnTopicEvent_SendOk() {
         listener.onTopicEvent(CommInfrastructure.NOOP, TOPIC, null, change);
 
         verify(state).updateInternalState(change);

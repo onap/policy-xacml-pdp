@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@
 package org.onap.policy.pdp.xacml.application.common.std;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -54,11 +54,10 @@ import java.util.UUID;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.onap.policy.common.endpoints.http.client.HttpClient;
 import org.onap.policy.common.endpoints.http.client.HttpClientFactoryInstance;
 import org.onap.policy.common.endpoints.http.server.HttpServletServer;
@@ -92,8 +91,8 @@ public class StdMatchableTranslatorTest {
     private static ToscaServiceTemplate testTemplate;
     private static HttpClient apiClient;
 
-    @ClassRule
-    public static final TemporaryFolder policyFolder = new TemporaryFolder();
+    @TempDir
+    static java.nio.file.Path policyFolder;
 
     /**
      * Initializes {@link #clientParams} and starts a simple REST server to handle the
@@ -101,8 +100,8 @@ public class StdMatchableTranslatorTest {
      *
      * @throws IOException if an error occurs
      */
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    @BeforeAll
+    static void setUpBeforeClass() throws Exception {
         System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StdErrLog");
         System.setProperty("org.eclipse.jetty.LEVEL", "OFF");
         //
@@ -115,21 +114,7 @@ public class StdMatchableTranslatorTest {
         when(clientParams.getHostname()).thenReturn("localhost");
         when(clientParams.getPort()).thenReturn(port);
 
-        Properties props = new Properties();
-        props.setProperty(PolicyEndPointProperties.PROPERTY_HTTP_SERVER_SERVICES, CLIENT_NAME);
-
-        final String svcpfx =
-                        PolicyEndPointProperties.PROPERTY_HTTP_SERVER_SERVICES + "." + CLIENT_NAME;
-
-        props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_HOST_SUFFIX, clientParams.getHostname());
-        props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_PORT_SUFFIX,
-                        Integer.toString(clientParams.getPort()));
-        props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_REST_CLASSES_SUFFIX,
-                        ApiRestController.class.getName());
-        props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_MANAGED_SUFFIX, "true");
-        props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_HTTPS_SUFFIX, "false");
-        props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_SERIALIZATION_PROVIDER,
-                        GsonMessageBodyHandler.class.getName());
+        Properties props = getProperties();
 
         HttpServletServerFactoryInstance.getServerFactory().build(props).forEach(HttpServletServer::start);
         apiClient = HttpClientFactoryInstance.getClientFactory().build(clientParams);
@@ -144,7 +129,7 @@ public class StdMatchableTranslatorTest {
         //
         ToscaServiceTemplate serviceTemplate = yamlCoder.decode(policyYaml, ToscaServiceTemplate.class);
         //
-        // Make sure all the fields are setup properly
+        // Make sure all the fields are set up properly
         //
         JpaToscaServiceTemplate jtst = new JpaToscaServiceTemplate();
         jtst.fromAuthorative(serviceTemplate);
@@ -159,13 +144,32 @@ public class StdMatchableTranslatorTest {
         logger.info("Test Policy Type {}{}", XacmlPolicyUtils.LINE_SEPARATOR, testTemplate);
     }
 
-    @AfterClass
+    private static Properties getProperties() {
+        Properties props = new Properties();
+        props.setProperty(PolicyEndPointProperties.PROPERTY_HTTP_SERVER_SERVICES, CLIENT_NAME);
+
+        final String svcpfx =
+            PolicyEndPointProperties.PROPERTY_HTTP_SERVER_SERVICES + "." + CLIENT_NAME;
+
+        props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_HOST_SUFFIX, clientParams.getHostname());
+        props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_PORT_SUFFIX,
+            Integer.toString(clientParams.getPort()));
+        props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_REST_CLASSES_SUFFIX,
+            ApiRestController.class.getName());
+        props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_MANAGED_SUFFIX, "true");
+        props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_HTTPS_SUFFIX, "false");
+        props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_SERIALIZATION_PROVIDER,
+            GsonMessageBodyHandler.class.getName());
+        return props;
+    }
+
+    @AfterAll
     public static void tearDownAfterClass() {
         HttpServletServerFactoryInstance.getServerFactory().destroy();
     }
 
     @Test
-    public void testMatchableTranslator() throws CoderException, ToscaPolicyConversionException, ParseException {
+     void testMatchableTranslator() throws CoderException, ToscaPolicyConversionException, ParseException {
         //
         // Create our translator
         //
@@ -174,19 +178,19 @@ public class StdMatchableTranslatorTest {
         //
         // Set it up
         //
-        translator.setPathForData(policyFolder.getRoot().toPath());
+        translator.setPathForData(policyFolder.getRoot().toAbsolutePath());
         translator.setApiClient(apiClient);
         //
         // Load policies to test
         //
         String policyYaml = ResourceUtils.getResourceAsString(
-                "src/test/resources/matchable/test.policies.input.tosca.yaml");
+            "src/test/resources/matchable/test.policies.input.tosca.yaml");
         //
         // Serialize it into a class
         //
         ToscaServiceTemplate serviceTemplate = yamlCoder.decode(policyYaml, ToscaServiceTemplate.class);
         //
-        // Make sure all the fields are setup properly
+        // Make sure all the fields are set up properly
         //
         JpaToscaServiceTemplate jtst = new JpaToscaServiceTemplate();
         jtst.fromAuthorative(serviceTemplate);
@@ -209,7 +213,7 @@ public class StdMatchableTranslatorTest {
                 //
                 List<AttributeAssignment> listAttributes = new ArrayList<>();
                 ObligationExpressionType xacmlObligation = translatedPolicy.getObligationExpressions()
-                        .getObligationExpression().get(0);
+                    .getObligationExpression().get(0);
                 assertThat(xacmlObligation.getAttributeAssignmentExpression()).hasSize(4);
                 //
                 // Copy into the list
@@ -217,23 +221,23 @@ public class StdMatchableTranslatorTest {
                 xacmlObligation.getAttributeAssignmentExpression().forEach(assignment -> {
                     Object value = ((AttributeValueType) assignment.getExpression().getValue()).getContent().get(0);
                     listAttributes.add(TestUtilsCommon.createAttributeAssignment(assignment.getAttributeId(),
-                            assignment.getCategory(), value));
+                        assignment.getCategory(), value));
                 });
                 //
                 // Pretend we got multiple policies to match a fictional request
                 //
                 Obligation obligation1 = TestUtilsCommon.createXacmlObligation(
-                        ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue(),
-                        listAttributes);
+                    ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue(),
+                    listAttributes);
                 Obligation obligation2 = TestUtilsCommon.createXacmlObligation(
-                        ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue(),
-                        listAttributes);
+                    ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue(),
+                    listAttributes);
                 //
                 // Should ignore this obligation
                 //
                 Obligation obligation3 = TestUtilsCommon.createXacmlObligation(
-                        "nobody:cares",
-                        listAttributes);
+                    "nobody:cares",
+                    listAttributes);
                 //
                 // Create a test XACML Response
                 //
@@ -242,8 +246,8 @@ public class StdMatchableTranslatorTest {
                 Collection<IdReference> policyIds = TestUtilsCommon.createPolicyIdList(ids);
 
                 com.att.research.xacml.api.Response xacmlResponse = TestUtilsCommon.createXacmlResponse(
-                        StdStatusCode.STATUS_CODE_OK, null, Decision.PERMIT,
-                        Arrays.asList(obligation1, obligation2, obligation3), policyIds);
+                    StdStatusCode.STATUS_CODE_OK, null, Decision.PERMIT,
+                    Arrays.asList(obligation1, obligation2, obligation3), policyIds);
                 //
                 // Test the response
                 //
@@ -280,15 +284,15 @@ public class StdMatchableTranslatorTest {
          * Retrieves the specified version of a particular policy type.
          *
          * @param policyTypeId ID of desired policy type
-         * @param versionId version of desired policy type
-         * @param requestId optional request ID
-         *
+         * @param versionId    version of desired policy type
+         * @param requestId    optional request ID
          * @return the Response object containing the results of the API operation
          */
         @GET
         @Path("/policytypes/{policyTypeId}/versions/{versionId}")
         public Response getSpecificVersionOfPolicyType(@PathParam("policyTypeId") String policyTypeId,
-                        @PathParam("versionId") String versionId, @HeaderParam("X-ONAP-RequestID") UUID requestId) {
+                                                       @PathParam("versionId") String versionId,
+                                                       @HeaderParam("X-ONAP-RequestID") UUID requestId) {
             logger.info("request for policy type={} version={}", policyTypeId, versionId);
             return Response.status(Response.Status.OK).entity(testTemplate).build();
 

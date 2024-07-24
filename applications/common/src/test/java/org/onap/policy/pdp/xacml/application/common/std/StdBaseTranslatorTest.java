@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +25,9 @@ package org.onap.policy.pdp.xacml.application.common.std;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.att.research.xacml.api.Advice;
 import com.att.research.xacml.api.AttributeAssignment;
@@ -39,13 +40,15 @@ import com.att.research.xacml.std.StdStatusCode;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
@@ -54,7 +57,7 @@ import org.onap.policy.pdp.xacml.application.common.TestUtilsCommon;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 
-public class StdBaseTranslatorTest {
+class StdBaseTranslatorTest {
 
     String policyJson;
     String policyBadJson;
@@ -70,57 +73,57 @@ public class StdBaseTranslatorTest {
 
     /**
      * beforeSetup - loads and creates objects used later by the tests.
-     * @throws CoderException CoderException
      *
+     * @throws CoderException CoderException
      */
-    @Before
-    public void beforeSetup() throws CoderException {
+    @BeforeEach
+    void beforeSetup() throws CoderException {
         policyJson = ResourceUtils.getResourceAsString("test.policy.json");
         policyBadJson = ResourceUtils.getResourceAsString("test.policy.bad.json");
 
         assignmentPolicyId = TestUtilsCommon.createAttributeAssignment(
-                ToscaDictionary.ID_OBLIGATION_POLICY_ID.stringValue(),
-                ToscaDictionary.ID_OBLIGATION_POLICY_ID_CATEGORY.stringValue(),
-                "policy.id"
-                );
+            ToscaDictionary.ID_OBLIGATION_POLICY_ID.stringValue(),
+            ToscaDictionary.ID_OBLIGATION_POLICY_ID_CATEGORY.stringValue(),
+            "policy.id"
+        );
 
         assignmentPolicy = TestUtilsCommon.createAttributeAssignment(
-                ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT.stringValue(),
-                ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT_CATEGORY.stringValue(),
-                policyJson
-                );
+            ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT.stringValue(),
+            ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT_CATEGORY.stringValue(),
+            policyJson
+        );
 
         assignmentBadPolicy = TestUtilsCommon.createAttributeAssignment(
-                ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT.stringValue(),
-                ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT_CATEGORY.stringValue(),
-                policyBadJson
-                );
+            ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT.stringValue(),
+            ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT_CATEGORY.stringValue(),
+            policyBadJson
+        );
 
         assignmentWeight = TestUtilsCommon.createAttributeAssignment(
-                ToscaDictionary.ID_OBLIGATION_POLICY_WEIGHT.stringValue(),
-                ToscaDictionary.ID_OBLIGATION_POLICY_WEIGHT_CATEGORY.stringValue(),
-                0
-                );
+            ToscaDictionary.ID_OBLIGATION_POLICY_WEIGHT.stringValue(),
+            ToscaDictionary.ID_OBLIGATION_POLICY_WEIGHT_CATEGORY.stringValue(),
+            0
+        );
 
         assignmentPolicyType = TestUtilsCommon.createAttributeAssignment(
-                ToscaDictionary.ID_OBLIGATION_POLICY_TYPE.stringValue(),
-                ToscaDictionary.ID_OBLIGATION_POLICY_TYPE_CATEGORY.stringValue(),
-                "onap.policies.Test"
-                );
+            ToscaDictionary.ID_OBLIGATION_POLICY_TYPE.stringValue(),
+            ToscaDictionary.ID_OBLIGATION_POLICY_TYPE_CATEGORY.stringValue(),
+            "onap.policies.Test"
+        );
 
         assignmentUnknown = TestUtilsCommon.createAttributeAssignment(
-                "foo:bar",
-                XACML3.ID_SUBJECT_CATEGORY_ACCESS_SUBJECT.stringValue(),
-                10.2
-                );
+            "foo:bar",
+            XACML3.ID_SUBJECT_CATEGORY_ACCESS_SUBJECT.stringValue(),
+            10.2
+        );
 
         obligation = TestUtilsCommon.createXacmlObligation(
-                ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue(),
-                Arrays.asList(assignmentPolicyId, assignmentPolicy, assignmentWeight, assignmentPolicyType));
+            ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue(),
+            Arrays.asList(assignmentPolicyId, assignmentPolicy, assignmentWeight, assignmentPolicyType));
     }
 
     @Test
-    public void testTranslatorNormalFlow() throws Exception {
+    void testTranslatorNormalFlow() throws Exception {
         StdBaseTranslator translator = new MyStdBaseTranslator();
         assertNotNull(translator);
         assertThatThrownBy(() -> translator.convertPolicy(null)).isInstanceOf(ToscaPolicyConversionException.class);
@@ -141,33 +144,33 @@ public class StdBaseTranslatorTest {
 
         assertThat(policySet.getObligationExpressions().getObligationExpression()).hasSize(1);
         assertThat(policySet.getObligationExpressions().getObligationExpression().get(0)
-                .getAttributeAssignmentExpression()).hasSize(4);
+            .getAttributeAssignmentExpression()).hasSize(4);
 
         PolicyType policy = new PolicyType();
         translator.addObligation(policy, null, policyJson, null, null);
 
         assertThat(policy.getObligationExpressions().getObligationExpression()).hasSize(1);
         assertThat(policy.getObligationExpressions().getObligationExpression().get(0)
-                .getAttributeAssignmentExpression()).hasSize(1);
+            .getAttributeAssignmentExpression()).hasSize(1);
 
         RuleType rule = new RuleType();
         translator.addObligation(rule, "policy.id", null, null, "foo.bar");
 
         assertThat(rule.getObligationExpressions().getObligationExpression()).hasSize(1);
         assertThat(rule.getObligationExpressions().getObligationExpression().get(0)
-                .getAttributeAssignmentExpression()).hasSize(2);
+            .getAttributeAssignmentExpression()).hasSize(2);
 
         rule = new RuleType();
         translator.addObligation(rule, null, null, null, null);
 
         assertThat(rule.getObligationExpressions().getObligationExpression()).hasSize(1);
         assertThat(rule.getObligationExpressions().getObligationExpression().get(0)
-                .getAttributeAssignmentExpression()).isEmpty();
+            .getAttributeAssignmentExpression()).isEmpty();
 
         //
         // Should not throw an exception
         //
-        translator.addObligation(new String(), "policy.id", policyJson, null, "foo.bar");
+        translator.addObligation("", "policy.id", policyJson, null, "foo.bar");
 
         //
         // Test the response conversion
@@ -177,7 +180,7 @@ public class StdBaseTranslatorTest {
         Collection<IdReference> policyIds = TestUtilsCommon.createPolicyIdList(ids);
 
         Response xacmlResponse = TestUtilsCommon.createXacmlResponse(StdStatusCode.STATUS_CODE_OK, null,
-                Decision.PERMIT, Arrays.asList(obligation), policyIds);
+            Decision.PERMIT, Collections.singletonList(obligation), policyIds);
 
         DecisionResponse decision = translator.convertResponse(xacmlResponse);
 
@@ -188,18 +191,18 @@ public class StdBaseTranslatorTest {
     }
 
     @Test
-    public void testBadData() throws ToscaPolicyConversionException, ParseException {
+    void testBadData() throws ToscaPolicyConversionException, ParseException {
         TestTranslator translator = new TestTranslator();
 
         assertThatThrownBy(() -> translator.convertPolicy(
-                new ToscaPolicy())).isInstanceOf(ToscaPolicyConversionException.class)
-                    .hasMessageContaining("missing metadata");
+            new ToscaPolicy())).isInstanceOf(ToscaPolicyConversionException.class)
+            .hasMessageContaining("missing metadata");
 
         translator.metadata.put(StdBaseTranslator.POLICY_ID, "random.policy.id");
 
         assertThatThrownBy(() -> translator.convertPolicy(
-                new ToscaPolicy())).isInstanceOf(ToscaPolicyConversionException.class)
-                    .hasMessageContaining("missing metadata");
+            new ToscaPolicy())).isInstanceOf(ToscaPolicyConversionException.class)
+            .hasMessageContaining("missing metadata");
 
         translator.metadata.put(StdBaseTranslator.POLICY_VERSION, "1.0.0");
 
@@ -211,7 +214,7 @@ public class StdBaseTranslatorTest {
         Collection<IdReference> policyIds = TestUtilsCommon.createPolicyIdList(ids);
 
         Response xacmlResponse = TestUtilsCommon.createXacmlResponse(StdStatusCode.STATUS_CODE_OK, null,
-                Decision.PERMIT, Arrays.asList(obligation), policyIds);
+            Decision.PERMIT, Collections.singletonList(obligation), policyIds);
 
         DecisionResponse decision = translator.convertResponse(xacmlResponse);
 
@@ -221,18 +224,18 @@ public class StdBaseTranslatorTest {
         assertThat(decision.getPolicies()).isEmpty();
 
         Obligation badObligation = TestUtilsCommon.createXacmlObligation(
-                ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue(),
-                Arrays.asList(assignmentBadPolicy, assignmentUnknown));
+            ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue(),
+            Arrays.asList(assignmentBadPolicy, assignmentUnknown));
 
         xacmlResponse = TestUtilsCommon.createXacmlResponse(StdStatusCode.STATUS_CODE_MISSING_ATTRIBUTE, null,
-                Decision.PERMIT, Arrays.asList(badObligation), policyIds);
+            Decision.PERMIT, List.of(badObligation), policyIds);
 
         decision = translator.convertResponse(xacmlResponse);
 
         assertNotNull(decision);
 
         xacmlResponse = TestUtilsCommon.createXacmlResponse(StdStatusCode.STATUS_CODE_PROCESSING_ERROR,
-                "Bad obligation", Decision.DENY, Arrays.asList(badObligation), policyIds);
+            "Bad obligation", Decision.DENY, List.of(badObligation), policyIds);
 
         decision = translator.convertResponse(xacmlResponse);
 
@@ -241,27 +244,31 @@ public class StdBaseTranslatorTest {
         assertThat(decision.getMessage()).isEqualTo("Bad obligation");
     }
 
-    private class MyStdBaseTranslator extends StdBaseTranslator {
+    private static class MyStdBaseTranslator extends StdBaseTranslator {
 
         @Override
         protected void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse) {
+            // do nothing for unit test
         }
 
         @Override
         protected void scanAdvice(Collection<Advice> advice, DecisionResponse decisionResponse) {
+            // do nothing for unit test
         }
 
     }
 
-    private class TestTranslator extends StdBaseTranslator {
-        public Map<String, Object> metadata = new HashMap<>();
+    private static class TestTranslator extends StdBaseTranslator {
+        Map<String, Object> metadata = new HashMap<>();
 
         @Override
         protected void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse) {
+            // do nothing for unit test
         }
 
         @Override
         protected void scanAdvice(Collection<Advice> advice, DecisionResponse decisionResponse) {
+            // do nothing for unit test
         }
 
         @Override

@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021-2022 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,12 @@
 
 package org.onap.policy.pdpx.main.rest;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import jakarta.ws.rs.client.Invocation;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.pdpx.main.CommonRest;
 import org.onap.policy.pdpx.main.XacmlState;
@@ -35,10 +35,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Class to perform unit test of {@link XacmlPdpRestServer}.
- *
+ * Class to perform unit test of {@link org.onap.policy.pdpx.main.startstop.XacmlPdpRestServer}.
  */
-public class TestXacmlPdpRestServer extends CommonRest {
+class TestXacmlPdpRestServer extends CommonRest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestXacmlPdpRestServer.class);
     private static final String NOT_ALIVE = "not alive";
@@ -51,16 +50,16 @@ public class TestXacmlPdpRestServer extends CommonRest {
     private int nupdates = 0;
 
     @Test
-    public void testHealthCheckSuccess() throws Exception {
+    void testHealthCheckSuccess() throws Exception {
         LOGGER.info("***************************** Running testHealthCheckSuccess *****************************");
         final Invocation.Builder invocationBuilder = sendHttpsRequest(HEALTHCHECK_ENDPOINT);
         final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
         LOGGER.info("test1HealthCheckSuccess health report {}", report);
-        validateHealthCheckReport(NAME, SELF, true, 200, ALIVE, report);
+        validateHealthCheckReport(true, 200, ALIVE, report);
     }
 
     @Test
-    public void testHealthCheckFailure() throws Exception {
+    void testHealthCheckFailure() throws Exception {
         LOGGER.info("***************************** Running testHealthCheckFailure *****************************");
 
         markActivatorDead();
@@ -68,20 +67,20 @@ public class TestXacmlPdpRestServer extends CommonRest {
         final Invocation.Builder invocationBuilder = sendHttpsRequest(HEALTHCHECK_ENDPOINT);
         final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
         LOGGER.info("testHealthCheckFailure health report {}", report);
-        validateHealthCheckReport(NAME, SELF, false, 500, NOT_ALIVE, report);
+        validateHealthCheckReport(false, 500, NOT_ALIVE, report);
     }
 
     @Test
-    public void testHttpsHealthCheckSuccess() throws Exception {
+    void testHttpsHealthCheckSuccess() throws Exception {
         LOGGER.info("***************************** Running testHttpsHealthCheckSuccess *****************************");
         final Invocation.Builder invocationBuilder = sendHttpsRequest(HEALTHCHECK_ENDPOINT);
         final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
         LOGGER.info("testHttpsHealthCheckSuccess health report {}", report);
-        validateHealthCheckReport(NAME, SELF, true, 200, ALIVE, report);
+        validateHealthCheckReport(true, 200, ALIVE, report);
     }
 
     @Test
-    public void testStatistics_200() throws Exception {
+    void testStatistics_200() throws Exception {
         LOGGER.info("***************************** Running testStatistics_200 *****************************");
         Invocation.Builder invocationBuilder = sendHttpsRequest(STATISTICS_ENDPOINT);
         StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
@@ -95,7 +94,7 @@ public class TestXacmlPdpRestServer extends CommonRest {
     }
 
     @Test
-    public void testStatistics_500() throws Exception {
+    void testStatistics_500() throws Exception {
         LOGGER.info("***************************** Running testStatistics_500 *****************************");
 
         markActivatorDead();
@@ -107,7 +106,7 @@ public class TestXacmlPdpRestServer extends CommonRest {
     }
 
     @Test
-    public void testHttpsStatistic() throws Exception {
+    void testHttpsStatistic() throws Exception {
         LOGGER.info("***************************** Running testHttpsStatistic *****************************");
         final Invocation.Builder invocationBuilder = sendHttpsRequest(STATISTICS_ENDPOINT);
         final StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
@@ -151,10 +150,10 @@ public class TestXacmlPdpRestServer extends CommonRest {
         assertEquals(decisionsMap, report.getApplicationMetrics());
     }
 
-    private void validateHealthCheckReport(final String name, final String url, final boolean healthy, final int code,
-                    final String message, final HealthCheckReport report) {
-        assertEquals(name, report.getName());
-        assertEquals(url, report.getUrl());
+    private void validateHealthCheckReport(final boolean healthy, final int code,
+                                           final String message, final HealthCheckReport report) {
+        assertEquals(TestXacmlPdpRestServer.NAME, report.getName());
+        assertEquals(TestXacmlPdpRestServer.SELF, report.getUrl());
         assertEquals(healthy, report.isHealthy());
         assertEquals(code, report.getCode());
         assertEquals(message, report.getMessage());

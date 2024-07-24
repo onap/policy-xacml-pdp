@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +34,8 @@ import com.att.research.xacml.std.StdMutableRequest;
 import com.att.research.xacml.std.StdMutableRequestAttributes;
 import com.att.research.xacml.std.annotations.XACMLSubject;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -75,12 +76,12 @@ public class OptimizationSubscriberRequest extends StdMatchablePolicyRequest {
                 // Should always be a collection, but in case someone changes
                 // the class without checking this repo.
                 //
-                if (entrySet.getValue() instanceof Collection) {
-                    addSubject(contextAttributes, (Collection) entrySet.getValue(),
-                            ToscaDictionary.ID_SUBJECT_OPTIMIZATION_SUBSCRIBER_NAME);
+                if (entrySet.getValue() instanceof Collection collection) {
+                    addSubject(contextAttributes, collection,
+                        ToscaDictionary.ID_SUBJECT_OPTIMIZATION_SUBSCRIBER_NAME);
                 } else {
-                    addSubject(contextAttributes, Arrays.asList(entrySet.getValue().toString()),
-                            ToscaDictionary.ID_SUBJECT_OPTIMIZATION_SUBSCRIBER_NAME);
+                    addSubject(contextAttributes, Collections.singletonList(entrySet.getValue().toString()),
+                        ToscaDictionary.ID_SUBJECT_OPTIMIZATION_SUBSCRIBER_NAME);
                 }
             } catch (DataTypeException e) {
                 throw new XacmlApplicationException("Failed to add resource ", e);
@@ -91,19 +92,20 @@ public class OptimizationSubscriberRequest extends StdMatchablePolicyRequest {
     }
 
     protected static StdMutableRequestAttributes addSubject(StdMutableRequestAttributes attributes,
-            Collection<Object> values, Identifier id) throws DataTypeException {
+                                                            Collection<Object> values, Identifier id)
+        throws DataTypeException {
 
         var factory = getDataTypeFactory();
         if (factory == null) {
             return null;
         }
         for (Object value : values) {
-            var mutableAttribute    = new StdMutableAttribute();
+            var mutableAttribute = new StdMutableAttribute();
             mutableAttribute.setCategory(XACML3.ID_SUBJECT_CATEGORY_ACCESS_SUBJECT);
             mutableAttribute.setAttributeId(id);
             mutableAttribute.setIncludeInResults(true);
 
-            DataType<?> dataTypeExtended    = factory.getDataType(XACML3.ID_DATATYPE_STRING);
+            DataType<?> dataTypeExtended = factory.getDataType(XACML3.ID_DATATYPE_STRING);
             AttributeValue<?> attributeValue = dataTypeExtended.createAttributeValue(value);
             Collection<AttributeValue<?>> attributeValues = new ArrayList<>();
             attributeValues.add(attributeValue);

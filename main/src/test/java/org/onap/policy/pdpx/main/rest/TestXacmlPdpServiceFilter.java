@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,15 +29,15 @@ import static org.mockito.Mockito.when;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class TestXacmlPdpServiceFilter {
+@ExtendWith(MockitoExtension.class)
+class TestXacmlPdpServiceFilter {
 
     // pick an arbitrary service
     private static final String PERM_SVC = XacmlPdpServiceFilter.PERMANENT_SERVICES.iterator().next();
@@ -56,8 +56,8 @@ public class TestXacmlPdpServiceFilter {
     /**
      * Initializes the fields.
      */
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         XacmlPdpServiceFilter.disableApi();
 
         filterChain = (req, resp) -> {
@@ -69,7 +69,7 @@ public class TestXacmlPdpServiceFilter {
     }
 
     @Test
-    public void testDoFilter() throws Exception {
+    void testDoFilter() throws Exception {
         XacmlPdpServiceFilter.enableApi();
         lenient().when(request.getRequestURI()).thenReturn("/other");
         assertThat(getFilterResponse()).isEqualTo(HttpServletResponse.SC_OK);
@@ -79,7 +79,7 @@ public class TestXacmlPdpServiceFilter {
      * Tests doFilter() when the API is disabled, but a permanent service is requested.
      */
     @Test
-    public void testDoFilter_DisabledPermanentServiceReq() throws Exception {
+    void testDoFilter_DisabledPermanentServiceReq() throws Exception {
         XacmlPdpServiceFilter.disableApi();
         when(request.getRequestURI()).thenReturn(PERM_SVC);
         assertThat(getFilterResponse()).isEqualTo(HttpServletResponse.SC_OK);
@@ -89,7 +89,7 @@ public class TestXacmlPdpServiceFilter {
      * Tests doFilter() when the API is disabled, but a permanent service is requested, with a leading slash.
      */
     @Test
-    public void testDoFilter_DisabledPermanentServiceReqLeadingSlash() throws Exception {
+    void testDoFilter_DisabledPermanentServiceReqLeadingSlash() throws Exception {
         XacmlPdpServiceFilter.disableApi();
         when(request.getRequestURI()).thenReturn("/" + PERM_SVC);
         assertThat(getFilterResponse()).isEqualTo(HttpServletResponse.SC_OK);
@@ -99,7 +99,7 @@ public class TestXacmlPdpServiceFilter {
      * Tests doFilter() when the API is disabled, but a permanent service is requested, with extra URI prefix.
      */
     @Test
-    public void testDoFilter_DisabledPermanentServiceReqExtraUri() throws Exception {
+    void testDoFilter_DisabledPermanentServiceReqExtraUri() throws Exception {
         XacmlPdpServiceFilter.disableApi();
         when(request.getRequestURI()).thenReturn("/some/stuff/" + PERM_SVC);
         assertThat(getFilterResponse()).isEqualTo(HttpServletResponse.SC_OK);
@@ -110,7 +110,7 @@ public class TestXacmlPdpServiceFilter {
      * the service name.
      */
     @Test
-    public void testDoFilter_DisabledPermanentServiceReqExtraChars() throws Exception {
+    void testDoFilter_DisabledPermanentServiceReqExtraChars() throws Exception {
         XacmlPdpServiceFilter.disableApi();
         when(request.getRequestURI()).thenReturn("/ExtraStuff" + PERM_SVC);
         assertThat(getFilterResponse()).isEqualTo(HttpServletResponse.SC_CONFLICT);
@@ -120,24 +120,14 @@ public class TestXacmlPdpServiceFilter {
      * Tests doFilter() when the API is disabled and an API service is requested.
      */
     @Test
-    public void testDoFilter_DisabledApiReq() throws Exception {
+    void testDoFilter_DisabledApiReq() throws Exception {
         XacmlPdpServiceFilter.disableApi();
         when(request.getRequestURI()).thenReturn("/other");
         assertThat(getFilterResponse()).isEqualTo(HttpServletResponse.SC_CONFLICT);
     }
 
-    /**
-     * Tests doFilter() when the API is disabled and an API service is requested.
-     */
     @Test
-    public void testDoFilter_EnabledApiReq() throws Exception {
-        XacmlPdpServiceFilter.enableApi();
-        lenient().when(request.getRequestURI()).thenReturn("/other");
-        assertThat(getFilterResponse()).isEqualTo(HttpServletResponse.SC_OK);
-    }
-
-    @Test
-    public void testEnableApi_testDisableApi_testIsApiEnabled() {
+    void testEnableApi_testDisableApi_testIsApiEnabled() {
 
         XacmlPdpServiceFilter.enableApi();
         assertThat(XacmlPdpServiceFilter.isApiEnabled()).isTrue();
@@ -148,9 +138,10 @@ public class TestXacmlPdpServiceFilter {
 
     /**
      * Invokes doFilter().
+     *
      * @return the response code set by the filter
      */
-    private int getFilterResponse()  throws Exception {
+    private int getFilterResponse() throws Exception {
         filter.doFilter(request, response, filterChain);
 
         // should only be called once

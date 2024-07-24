@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +21,8 @@
 
 package org.onap.policy.pdp.xacml.application.common.std;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.att.research.xacml.api.Request;
@@ -32,17 +33,17 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.XacmlApplicationException;
 
-@RunWith(MockitoJUnitRunner.class)
-public class StdMatchablePolicyRequestTest {
+@ExtendWith(MockitoExtension.class)
+class StdMatchablePolicyRequestTest {
     private static final String ACTION = "my-action";
     private static final String ONAP_NAME = "my-name";
     private static final String ONAP_INSTANCE = "my-instance";
@@ -57,13 +58,11 @@ public class StdMatchablePolicyRequestTest {
 
     private Map<String, Object> resources;
 
-    private Request stdreq;
-
     /**
      * Initializes objects.
      */
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         resources = new TreeMap<>();
 
         when(decreq.getResource()).thenReturn(resources);
@@ -74,12 +73,12 @@ public class StdMatchablePolicyRequestTest {
     }
 
     @Test
-    public void testCreateInstance() throws XacmlApplicationException {
+    void testCreateInstance() throws XacmlApplicationException {
         resources.put("resource1", RESOURCE1);
         resources.put("resource2", RESOURCE2);
         resources.put("resource3", Arrays.asList(RESOURCE3, RESOURCE4));
 
-        stdreq = StdMatchablePolicyRequest.createInstance(decreq);
+        Request stdreq = StdMatchablePolicyRequest.createInstance(decreq);
 
         assertNotNull(stdreq);
 

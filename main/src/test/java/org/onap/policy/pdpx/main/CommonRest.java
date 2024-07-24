@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019,2023 Nordix Foundation.
+ * Modifications Copyright (C) 2019, 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,10 +37,10 @@ import java.security.SecureRandom;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.net.ssl.SSLContext;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.common.utils.security.SelfSignedKeyStore;
@@ -108,7 +108,7 @@ public class CommonRest {
      *
      * @throws Exception if an error occurs
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
         System.setProperty("javax.net.ssl.keyStore", new SelfSignedKeyStore().getKeystoreName());
         System.setProperty("javax.net.ssl.keyStorePassword", SelfSignedKeyStore.KEYSTORE_PASSWORD);
@@ -132,7 +132,7 @@ public class CommonRest {
     /**
      * Stops the "Main".
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() {
         stopMain();
     }
@@ -140,7 +140,7 @@ public class CommonRest {
     /**
      * Resets the statistics.
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         activatorWasAlive = XacmlPdpActivator.getCurrent().isAlive();
         XacmlPdpStatisticsManager.getCurrent().resetAllStatistics();
@@ -149,7 +149,7 @@ public class CommonRest {
     /**
      * Restores the "alive" status of the activator.
      */
-    @After
+    @AfterEach
     public void tearDown() {
         markActivator(activatorWasAlive);
     }

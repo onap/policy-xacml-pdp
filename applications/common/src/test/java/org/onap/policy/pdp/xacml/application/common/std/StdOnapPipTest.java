@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +23,11 @@ package org.onap.policy.pdp.xacml.application.common.std;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -46,15 +48,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Properties;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 
-@RunWith(MockitoJUnitRunner.class)
-public class StdOnapPipTest {
+@ExtendWith(MockitoExtension.class)
+class StdOnapPipTest {
     private static final String EXPECTED_EXCEPTION = "expected exception";
     private static final String MY_ID = "my-id";
     private static final String ISSUER = "my-issuer";
@@ -81,25 +83,25 @@ public class StdOnapPipTest {
      *
      * @throws PIPException if an error occurs
      */
-    @Before
+    @BeforeEach
     public void setUp() throws PIPException {
         resp = new StdMutablePIPResponse();
 
-        when(request.getIssuer()).thenReturn(ISSUER);
-        when(request.getAttributeId()).thenReturn(ATTRIBUTE_ID);
+        lenient().when(request.getIssuer()).thenReturn(ISSUER);
+        lenient().when(request.getAttributeId()).thenReturn(ATTRIBUTE_ID);
 
         pip = new MyPip();
 
-        when(finder.getMatchingAttributes(request, pip)).thenReturn(resp);
+        lenient().when(finder.getMatchingAttributes(request, pip)).thenReturn(resp);
     }
 
     @Test
-    public void testAttributesProvided() {
+    void testAttributesProvided() {
         assertTrue(pip.attributesProvided().isEmpty());
     }
 
     @Test
-    public void testConfigureStringProperties() throws PIPException {
+    void testConfigureStringProperties() throws PIPException {
         Properties props = new Properties();
         pip.configure(MY_ID, props);
 
@@ -108,19 +110,19 @@ public class StdOnapPipTest {
     }
 
     @Test
-    public void testGetAttributePipFinderPipRequest_NullResponse() {
+    void testGetAttributePipFinderPipRequest_NullResponse() {
         assertNull(pip.getAttribute(finder, request));
     }
 
     @Test
-    public void testGetAttributePipFinderPipRequest() {
+    void testGetAttributePipFinderPipRequest() {
         pip.addStringAttribute(resp, CATEGORY, CATEGORY, STRING_VALUE, request);
 
         assertEquals(STRING_VALUE, pip.getAttribute(finder, request));
     }
 
     @Test
-    public void testGetAttributePipRequestPipFinder_NoStatus() {
+    void testGetAttributePipRequestPipFinder_NoStatus() {
         resp.setStatus(null);
         pip.addStringAttribute(resp, CATEGORY, CATEGORY, STRING_VALUE, request);
 
@@ -128,7 +130,7 @@ public class StdOnapPipTest {
     }
 
     @Test
-    public void testGetAttributePipRequestPipFinder_StatusNotOk() {
+    void testGetAttributePipRequestPipFinder_StatusNotOk() {
         Status status = mock(Status.class);
         when(status.isOk()).thenReturn(false);
         resp.setStatus(status);
@@ -139,7 +141,7 @@ public class StdOnapPipTest {
     }
 
     @Test
-    public void testGetAttributePipRequestPipFinder_StatusOk() {
+    void testGetAttributePipRequestPipFinder_StatusOk() {
         Status status = mock(Status.class);
         when(status.isOk()).thenReturn(true);
         resp.setStatus(status);
@@ -150,12 +152,12 @@ public class StdOnapPipTest {
     }
 
     @Test
-    public void testGetAttributePipRequestPipFinder_NoAttributes() {
+    void testGetAttributePipRequestPipFinder_NoAttributes() {
         assertNull(pip.getAttribute(request, finder));
     }
 
     @Test
-    public void testGetAttributePipRequestPipFinder_Ex() throws PIPException {
+    void testGetAttributePipRequestPipFinder_Ex() throws PIPException {
         when(finder.getMatchingAttributes(request, pip)).thenThrow(new PIPException(EXPECTED_EXCEPTION));
 
         pip.addStringAttribute(resp, CATEGORY, CATEGORY, STRING_VALUE, request);
@@ -164,19 +166,19 @@ public class StdOnapPipTest {
     }
 
     @Test
-    public void testFindFirstAttributeValue_NoAttributes() {
+    void testFindFirstAttributeValue_NoAttributes() {
         assertNull(pip.findFirstAttributeValue(resp));
     }
 
     @Test
-    public void testFindFirstAttributeValue_NullAttributeValue() {
+    void testFindFirstAttributeValue_NullAttributeValue() {
         pip.addIntegerAttribute(resp, CATEGORY, ATTRIBUTE_ID, INT_VALUE, request);
 
         assertNull(pip.findFirstAttributeValue(resp));
     }
 
     @Test
-    public void testFindFirstAttributeValue_NullValues() {
+    void testFindFirstAttributeValue_NullValues() {
         pip.addStringAttribute(resp, CATEGORY, ATTRIBUTE_ID, null, request);
         pip.addStringAttribute(resp, CATEGORY, ATTRIBUTE_ID, STRING_VALUE, request);
         pip.addStringAttribute(resp, CATEGORY, ATTRIBUTE_ID, null, request);
@@ -185,7 +187,7 @@ public class StdOnapPipTest {
     }
 
     @Test
-    public void testAddIntegerAttribute() {
+    void testAddIntegerAttribute() {
         pip.addIntegerAttribute(resp, CATEGORY, ATTRIBUTE_ID, INT_VALUE, request);
         assertEquals(1, resp.getAttributes().size());
 
@@ -200,7 +202,7 @@ public class StdOnapPipTest {
     }
 
     @Test
-    public void testAddIntegerAttribute_Ex() {
+    void testAddIntegerAttribute_Ex() {
         pip = new MyPip() {
             @Override
             protected AttributeValue<BigInteger> makeInteger(int value) throws DataTypeException {
@@ -212,7 +214,7 @@ public class StdOnapPipTest {
     }
 
     @Test
-    public void testAddIntegerAttribute_Null() {
+    void testAddIntegerAttribute_Null() {
         pip = new MyPip() {
             @Override
             protected AttributeValue<BigInteger> makeInteger(int value) throws DataTypeException {
@@ -224,7 +226,7 @@ public class StdOnapPipTest {
     }
 
     @Test
-    public void testAddLongAttribute() {
+    void testAddLongAttribute() {
         pip.addLongAttribute(resp, CATEGORY, ATTRIBUTE_ID, LONG_VALUE, request);
         assertEquals(1, resp.getAttributes().size());
 
@@ -239,7 +241,7 @@ public class StdOnapPipTest {
     }
 
     @Test
-    public void testAddLongAttribute_Ex() {
+    void testAddLongAttribute_Ex() {
         pip = new MyPip() {
             @Override
             protected AttributeValue<BigInteger> makeLong(long value) throws DataTypeException {
@@ -251,7 +253,7 @@ public class StdOnapPipTest {
     }
 
     @Test
-    public void testAddLongAttribute_NullAttrValue() {
+    void testAddLongAttribute_NullAttrValue() {
         pip = new MyPip() {
             @Override
             protected AttributeValue<BigInteger> makeLong(long value) throws DataTypeException {
@@ -263,7 +265,7 @@ public class StdOnapPipTest {
     }
 
     @Test
-    public void testAddStringAttribute() {
+    void testAddStringAttribute() {
         pip.addStringAttribute(resp, CATEGORY, ATTRIBUTE_ID, STRING_VALUE, request);
         assertEquals(1, resp.getAttributes().size());
 
@@ -278,7 +280,7 @@ public class StdOnapPipTest {
     }
 
     @Test
-    public void testAddStringAttribute_Ex() {
+    void testAddStringAttribute_Ex() {
         pip = new MyPip() {
             @Override
             protected AttributeValue<String> makeString(String value) throws DataTypeException {
@@ -290,7 +292,7 @@ public class StdOnapPipTest {
     }
 
     @Test
-    public void testAddStringAttribute_NullAttrValue() {
+    void testAddStringAttribute_NullAttrValue() {
         pip = new MyPip() {
             @Override
             protected AttributeValue<String> makeString(String value) throws DataTypeException {
@@ -302,13 +304,13 @@ public class StdOnapPipTest {
     }
 
     @Test
-    public void testShutdown() {
+    void testShutdown() {
         assertThatCode(() -> pip.shutdown()).doesNotThrowAnyException();
         assertThatExceptionOfType(PIPException.class).isThrownBy(() -> pip.configure("foo", new Properties()))
             .withMessageContaining("Engine is shutdown");
     }
 
-    private class MyPip extends StdOnapPip {
+    private static class MyPip extends StdOnapPip {
 
         @Override
         public Collection<PIPRequest> attributesRequired() {
@@ -316,7 +318,7 @@ public class StdOnapPipTest {
         }
 
         @Override
-        public PIPResponse getAttributes(PIPRequest pipRequest, PIPFinder pipFinder) throws PIPException {
+        public PIPResponse getAttributes(PIPRequest pipRequest, PIPFinder pipFinder) {
             return null;
         }
     }

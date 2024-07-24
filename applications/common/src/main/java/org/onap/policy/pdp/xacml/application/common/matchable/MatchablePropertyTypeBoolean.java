@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020 Nordix Foundation.
+ * Modifications Copyright (C) 2020, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,8 +42,8 @@ public class MatchablePropertyTypeBoolean extends MatchablePropertyTypeBase<Bool
 
     @Override
     public Boolean validate(Object value) throws ToscaPolicyConversionException {
-        if (value instanceof Boolean) {
-            return (Boolean) value;
+        if (value instanceof Boolean bolValue) {
+            return bolValue;
         }
         return Boolean.parseBoolean(value.toString());
     }

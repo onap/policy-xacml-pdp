@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020 Nordix Foundation.
+ * Modifications Copyright (C) 2020, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class MatchablePropertyTypeTimestamp extends MatchablePropertyTypeBase<IS
         try {
             return ISO8601DateTime.fromISO8601DateTimeString(value.toString());
         } catch (ParseException e) {
-            throw new ToscaPolicyConversionException("bad ISO8601 timevalue " + value.toString(), e);
+            throw new ToscaPolicyConversionException("bad ISO8601 time value " + value, e);
         }
     }
 

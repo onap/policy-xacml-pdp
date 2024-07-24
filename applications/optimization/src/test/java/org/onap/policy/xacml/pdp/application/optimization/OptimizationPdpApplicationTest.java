@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019-2021 Nordix Foundation.
+ * Modifications Copyright (C) 2019-2021, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,9 @@ import com.att.research.xacml.api.Response;
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,12 +40,11 @@ import java.util.Properties;
 import java.util.ServiceLoader;
 import org.apache.commons.lang3.tuple.Pair;
 import org.assertj.core.api.Condition;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.io.TempDir;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
@@ -64,16 +63,16 @@ import org.onap.policy.pdp.xacml.xacmltest.TestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class OptimizationPdpApplicationTest {
+@TestMethodOrder(MethodOrderer.MethodName.class)
+class OptimizationPdpApplicationTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OptimizationPdpApplicationTest.class);
-    private static Properties properties = new Properties();
+    private static final Properties properties = new Properties();
     private static File propertiesFile;
     private static XacmlApplicationServiceProvider service;
-    private static StandardCoder gson = new StandardCoder();
+    private static final StandardCoder gson = new StandardCoder();
     private static DecisionRequest baseRequest;
-    private static String[] listPolicyTypeFiles = {
+    private static final String[] listPolicyTypeFiles = {
         "onap.policies.Optimization",
         "onap.policies.optimization.Resource",
         "onap.policies.optimization.Service",
@@ -87,53 +86,51 @@ public class OptimizationPdpApplicationTest {
         "onap.policies.optimization.resource.Vim_fit",
         "onap.policies.optimization.resource.VnfPolicy"};
 
-    @ClassRule
-    public static final TemporaryFolder policyFolder = new TemporaryFolder();
+    @TempDir
+    static Path policyFolder;
 
     /**
      * Copies the xacml.properties and policies files into
      * temporary folder and loads the service provider saving
      * instance of provider off for other tests to use.
      */
-    @BeforeClass
-    public static void setUp() throws Exception {
+    @BeforeAll
+    static void setUp() throws Exception {
         //
         // Load Single Decision Request
         //
         baseRequest = gson.decode(
-                TextFileUtils
-                    .getTextFileAsString(
-                            "src/test/resources/decision.optimization.input.json"),
-                    DecisionRequest.class);
+            TextFileUtils
+                .getTextFileAsString(
+                    "src/test/resources/decision.optimization.input.json"),
+            DecisionRequest.class);
         //
         // Setup our temporary folder
         //
-        XacmlPolicyUtils.FileCreator myCreator = (String filename) -> policyFolder.newFile(filename);
+        XacmlPolicyUtils.FileCreator myCreator = (String filename) -> policyFolder.resolve(filename).toFile();
         propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties",
-                properties, myCreator);
+            properties, myCreator);
         //
         // Copy the test policy types into data area
         //
         for (String policy : listPolicyTypeFiles) {
             String policyType = ResourceUtils.getResourceAsString("policytypes/" + policy + ".yaml");
             LOGGER.info("Copying {}", policyType);
-            Files.write(Paths.get(policyFolder.getRoot().getAbsolutePath(), policy + "-1.0.0.yaml"),
-                    policyType.getBytes());
+            Files.write(Paths.get(policyFolder.toFile().getAbsolutePath(), policy + "-1.0.0.yaml"),
+                policyType.getBytes());
         }
         //
         // Load service
         //
         ServiceLoader<XacmlApplicationServiceProvider> applicationLoader =
-                ServiceLoader.load(XacmlApplicationServiceProvider.class);
+            ServiceLoader.load(XacmlApplicationServiceProvider.class);
         //
         // Iterate through Xacml application services and find
         // the optimization service. Save it for use throughout
         // all the Junit tests.
         //
         StringBuilder strDump = new StringBuilder("Loaded applications:" + XacmlPolicyUtils.LINE_SEPARATOR);
-        Iterator<XacmlApplicationServiceProvider> iterator = applicationLoader.iterator();
-        while (iterator.hasNext()) {
-            XacmlApplicationServiceProvider application = iterator.next();
+        for (XacmlApplicationServiceProvider application : applicationLoader) {
             //
             // Is it our service?
             //
@@ -162,7 +159,7 @@ public class OptimizationPdpApplicationTest {
      * Simply test some of the simple methods for the application.
      */
     @Test
-    public void test01Basics() {
+    void test01Basics() {
         //
         // Make sure there's an application name
         //
@@ -177,13 +174,13 @@ public class OptimizationPdpApplicationTest {
         // can support the correct policy types.
         //
         assertThat(service.canSupportPolicyType(new ToscaConceptIdentifier(
-                "onap.policies.optimization.resource.AffinityPolicy", "1.0.0"))).isTrue();
+            "onap.policies.optimization.resource.AffinityPolicy", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(new ToscaConceptIdentifier(
-                "onap.policies.optimization.service.SubscriberPolicy", "1.0.0"))).isTrue();
+            "onap.policies.optimization.service.SubscriberPolicy", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(new ToscaConceptIdentifier(
-                "onap.policies.optimization.service.CustomUseCase", "1.0.0"))).isTrue();
+            "onap.policies.optimization.service.CustomUseCase", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(new ToscaConceptIdentifier(
-                "onap.foobar", "1.0.0"))).isFalse();
+            "onap.foobar", "1.0.0"))).isFalse();
     }
 
     /**
@@ -192,7 +189,7 @@ public class OptimizationPdpApplicationTest {
      * @throws CoderException CoderException
      */
     @Test
-    public void test02NoPolicies() throws CoderException {
+    void test02NoPolicies() throws CoderException {
         //
         // Ask for a decision when there are no policies loaded
         //
@@ -217,12 +214,12 @@ public class OptimizationPdpApplicationTest {
      * @throws XacmlApplicationException could not load policies
      */
     @Test
-    public void test03OptimizationDefault() throws XacmlApplicationException {
+    void test03OptimizationDefault() throws XacmlApplicationException {
         //
         // Now load all the optimization policies
         //
         List<ToscaPolicy> loadedPolicies = TestUtils.loadPolicies("src/test/resources/test-optimization-policies.yaml",
-                service);
+            service);
         assertThat(loadedPolicies).isNotNull().hasSize(14);
 
         validateDecisionCount(2);
@@ -233,7 +230,7 @@ public class OptimizationPdpApplicationTest {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public void test04OptimizationDefaultHpa() {
+    void test04OptimizationDefaultHpa() {
         //
         // Add in policy type
         //
@@ -248,7 +245,7 @@ public class OptimizationPdpApplicationTest {
         assertThat(response.getPolicies()).hasSize(1);
         response.getPolicies().forEach((key, value) -> {
             assertThat(((Map<String, Object>) value)).containsEntry("type",
-                            "onap.policies.optimization.resource.HpaPolicy");
+                "onap.policies.optimization.resource.HpaPolicy");
         });
         //
         // Validate it
@@ -261,7 +258,7 @@ public class OptimizationPdpApplicationTest {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public void test05OptimizationDefaultGeography() throws CoderException {
+    void test05OptimizationDefaultGeography() {
         //
         // Remove all the policy-type resources from the request
         //
@@ -279,7 +276,7 @@ public class OptimizationPdpApplicationTest {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public void test06OptimizationDefaultGeographyAndService() {
+    void test06OptimizationDefaultGeographyAndService() {
         //
         // Add vCPE to the service list
         //
@@ -293,7 +290,7 @@ public class OptimizationPdpApplicationTest {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public void test07OptimizationDefaultGeographyAndServiceAndResource() {
+    void test07OptimizationDefaultGeographyAndServiceAndResource() {
         //
         // Add vG to the resource list
         //
@@ -307,7 +304,7 @@ public class OptimizationPdpApplicationTest {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public void test08OptimizationGeographyAndServiceAndResourceAndScopeIsGoldSubscriber() {
+    void test08OptimizationGeographyAndServiceAndResourceAndScopeIsGoldSubscriber() {
         //
         // Add gold as a scope
         //
@@ -321,7 +318,7 @@ public class OptimizationPdpApplicationTest {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public void test09OptimizationGeographyAndServiceAndResourceAndScopeGoldOrPlatinumSubscriber() {
+    void test09OptimizationGeographyAndServiceAndResourceAndScopeGoldOrPlatinumSubscriber() {
         //
         // Add platinum to the scope list: this is now gold OR platinum
         //
@@ -336,7 +333,7 @@ public class OptimizationPdpApplicationTest {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public void test10OptimizationGeographyAndServiceAndResourceAndScopeNotGoldStillPlatinum() {
+    void test10OptimizationGeographyAndServiceAndResourceAndScopeNotGoldStillPlatinum() {
         //
         // Add gold as a scope
         //
@@ -351,7 +348,7 @@ public class OptimizationPdpApplicationTest {
      * Filter by Affinity policy.
      */
     @Test
-    public void test11OptimizationPolicyTypeDefault() {
+    void test11OptimizationPolicyTypeDefault() {
         //
         // Add in policy type
         //
@@ -366,7 +363,7 @@ public class OptimizationPdpApplicationTest {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public void test12OptimizationPolicyTypeDefault() {
+    void test12OptimizationPolicyTypeDefault() {
         //
         // Add in another policy type
         //
@@ -377,7 +374,7 @@ public class OptimizationPdpApplicationTest {
     }
 
     @Test
-    public void test999BadSubscriberPolicies() throws Exception {
+    void test999BadSubscriberPolicies() throws Exception {
         final StandardYamlCoder yamlCoder = new StandardYamlCoder();
         //
         // Decode it
@@ -460,16 +457,16 @@ public class OptimizationPdpApplicationTest {
             Map<String, Object> policyProperties = (Map<String, Object>) policyContents.get("properties");
 
             validateMatchable((Collection<String>) request.getResource().get("scope"),
-                    (Collection<String>) policyProperties.get("scope"));
+                (Collection<String>) policyProperties.get("scope"));
 
             validateMatchable((Collection<String>) request.getResource().get("services"),
-                    (Collection<String>) policyProperties.get("services"));
+                (Collection<String>) policyProperties.get("services"));
 
             validateMatchable((Collection<String>) request.getResource().get("resources"),
-                    (Collection<String>) policyProperties.get("resources"));
+                (Collection<String>) policyProperties.get("resources"));
 
             validateMatchable((Collection<String>) request.getResource().get("geography"),
-                    (Collection<String>) policyProperties.get("geography"));
+                (Collection<String>) policyProperties.get("geography"));
         }
     }
 
@@ -483,8 +480,8 @@ public class OptimizationPdpApplicationTest {
             return;
         }
         Condition<String> condition = new Condition<>(
-                requestList::contains,
-                "Request list is contained");
+            requestList::contains,
+            "Request list is contained");
         assertThat(policyProperties).haveAtLeast(1, condition);
 
     }

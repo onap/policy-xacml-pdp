@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020,2023 Nordix Foundation
+ * Modifications Copyright (C) 2020, 2023-2024 Nordix Foundation
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@
 package org.onap.policy.pdpx.main.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
@@ -42,18 +42,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.onap.policy.common.endpoints.http.client.HttpClient;
-import org.onap.policy.common.endpoints.http.client.HttpClientConfigException;
 import org.onap.policy.common.endpoints.http.client.internal.JerseyClient;
 import org.onap.policy.common.endpoints.parameters.RestClientParameters;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
-import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
@@ -72,23 +69,21 @@ import org.onap.policy.xacml.pdp.application.monitoring.MonitoringPdpApplication
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TestAbbreviateDecisionResults {
+class TestAbbreviateDecisionResults {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestDecision.class);
 
     private static int port;
     private static Main main;
     private static HttpClient client;
-    private static CommonTestData testData = new CommonTestData();
+    private static final CommonTestData testData = new CommonTestData();
 
-    private static Properties properties = new Properties();
+    private static final Properties properties = new Properties();
     private static File propertiesFile;
     private static XacmlApplicationServiceProvider service;
 
-    private static RestClientParameters policyApiParameters;
-
-    @ClassRule
-    public static final TemporaryFolder appsFolder = new TemporaryFolder();
+    @TempDir
+    static Path appsFolder;
 
     /**
      * BeforeClass setup environment.
@@ -96,17 +91,15 @@ public class TestAbbreviateDecisionResults {
      * @throws IOException Cannot create temp apps folder
      * @throws Exception   exception if service does not start
      */
-    @BeforeClass
-    public static void beforeClass() throws Exception {
+    @BeforeAll
+    static void beforeClass() throws Exception {
         port = NetworkUtil.allocPort();
         //
         // Copy test directory over of the application directories
         //
         Path src = Paths.get("src/test/resources/apps");
-        File apps = appsFolder.newFolder("apps");
-        Files.walk(src).forEach(source -> {
-            copy(source, apps.toPath().resolve(src.relativize(source)));
-        });
+        File apps = appsFolder.resolve("apps").toFile();
+        Files.walk(src).forEach(source -> copy(source, apps.toPath().resolve(src.relativize(source))));
 
         // Start the Monitoring Application
         startXacmlApplicationService(apps);
@@ -116,18 +109,19 @@ public class TestAbbreviateDecisionResults {
 
         // Create parameters for XacmlPdPService
         RestServerParameters rest = testData.toObject(testData.getRestServerParametersMap(port),
-                RestServerParameters.class);
-        policyApiParameters = testData.toObject(testData.getPolicyApiParametersMap(false), RestClientParameters.class);
+            RestServerParameters.class);
+        RestClientParameters policyApiParameters =
+            testData.toObject(testData.getPolicyApiParametersMap(false), RestClientParameters.class);
         TopicParameterGroup topicParameterGroup = testData.toObject(testData.getTopicParametersMap(false),
-                TopicParameterGroup.class);
+            TopicParameterGroup.class);
         final XacmlApplicationParameters xacmlApplicationParameters =
-                testData.toObject(testData.getXacmlapplicationParametersMap(false,
-                        apps.getAbsolutePath().toString()), XacmlApplicationParameters.class);
+            testData.toObject(testData.getXacmlapplicationParametersMap(false,
+                apps.getAbsolutePath()), XacmlApplicationParameters.class);
         XacmlPdpParameterGroup params =
-                new XacmlPdpParameterGroup("XacmlPdpParameters", "XacmlPdpGroup", "xacml", rest, policyApiParameters,
+            new XacmlPdpParameterGroup("XacmlPdpParameters", "XacmlPdpGroup", "xacml", rest, policyApiParameters,
                 topicParameterGroup, xacmlApplicationParameters);
         StandardCoder gson = new StandardCoder();
-        File fileParams = appsFolder.newFile("params.json");
+        File fileParams = appsFolder.resolve("params.json").toFile();
         String jsonParams = gson.encode(params);
         LOGGER.info("Creating new params: {}", jsonParams);
         Files.write(fileParams.toPath(), jsonParams.getBytes());
@@ -151,8 +145,8 @@ public class TestAbbreviateDecisionResults {
     /**
      * Clean up.
      */
-    @AfterClass
-    public static void after() throws PolicyXacmlPdpException {
+    @AfterAll
+    static void after() {
         stopXacmlPdpService(main);
         client.shutdown();
     }
@@ -162,7 +156,7 @@ public class TestAbbreviateDecisionResults {
      * should have been removed from the response.
      */
     @Test
-    public void testAbbreviateDecisionResult() throws HttpClientConfigException {
+    void testAbbreviateDecisionResult() {
 
         LOGGER.info("Running testAbbreviateDecisionResult");
 
@@ -192,19 +186,18 @@ public class TestAbbreviateDecisionResults {
     }
 
     private static Main startXacmlPdpService(File params) throws PolicyXacmlPdpException {
-        final String[] XacmlPdpConfigParameters = { "-c", params.getAbsolutePath() };
-        return new Main(XacmlPdpConfigParameters);
+        final String[] xacmlPdpConfigParameters = {"-c", params.getAbsolutePath()};
+        return new Main(xacmlPdpConfigParameters);
     }
 
-    private static void stopXacmlPdpService(final Main main) throws PolicyXacmlPdpException {
+    private static void stopXacmlPdpService(final Main main) {
         main.shutdown();
     }
 
     /**
      * Performs the POST request to Decision API.
-     *
      */
-    private DecisionResponse getDecision(DecisionRequest request) throws HttpClientConfigException {
+    private DecisionResponse getDecision(DecisionRequest request) {
 
         Entity<DecisionRequest> entityRequest = Entity.entity(request, MediaType.APPLICATION_JSON);
         Response response = client.post("", entityRequest, Collections.emptyMap());
@@ -215,10 +208,9 @@ public class TestAbbreviateDecisionResults {
 
     /**
      * Create HttpClient.
-     *
      */
     private static HttpClient getNoAuthHttpClient()
-            throws HttpClientConfigException, KeyManagementException, NoSuchAlgorithmException, ClassNotFoundException {
+        throws KeyManagementException, NoSuchAlgorithmException, ClassNotFoundException {
         RestClientParameters clientParams = new RestClientParameters();
         clientParams.setClientName("testName");
         clientParams.setUseHttps(false);
@@ -248,22 +240,22 @@ public class TestAbbreviateDecisionResults {
      * @param apps - the path to xacml.properties file
      */
     private static void startXacmlApplicationService(File apps)
-            throws XacmlApplicationException, CoderException, IOException {
+        throws XacmlApplicationException, IOException {
         LOGGER.info("****** Starting Xacml Application Service ******");
         //
         // Setup our temporary folder
         //
         XacmlPolicyUtils.FileCreator myCreator = (String filename) -> {
             new File(apps, "monitoring/" + filename).delete();
-            return appsFolder.newFile("apps/monitoring/" + filename);
+            return appsFolder.resolve("apps/monitoring/" + filename).toFile();
         };
         propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents(
-                "../applications/monitoring/src/test/resources/xacml.properties", properties, myCreator);
+            "../applications/monitoring/src/test/resources/xacml.properties", properties, myCreator);
         //
         // Load XacmlApplicationServiceProvider service
         //
         ServiceLoader<XacmlApplicationServiceProvider> applicationLoader = ServiceLoader
-                .load(XacmlApplicationServiceProvider.class);
+            .load(XacmlApplicationServiceProvider.class);
         //
         // Look for our class instance and save it
         //

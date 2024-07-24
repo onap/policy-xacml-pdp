@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,25 +27,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.att.research.xacml.api.Response;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import java.io.File;
-import java.io.IOException;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.UUID;
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.io.TempDir;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
@@ -60,36 +59,37 @@ import org.onap.policy.pdp.xacml.xacmltest.TestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SonCoordinationTest {
+@TestMethodOrder(MethodOrderer.MethodName.class)
+class SonCoordinationTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SonCoordinationTest.class);
-    private static Properties properties = new Properties();
+    private static final Properties properties = new Properties();
     private static File propertiesFile;
     private static XacmlApplicationServiceProvider service;
     private static DecisionRequest requestVpciNode1;
     private static DecisionRequest requestVsonhNode1;
-    private static StandardCoder gson = new StandardCoder();
+    private static final StandardCoder gson = new StandardCoder();
     private static EntityManager em;
+    private static EntityManagerFactory emf;
     private static final String DENY = "Deny";
     private static final String PERMIT = "Permit";
 
-    @ClassRule
-    public static final TemporaryFolder policyFolder = new TemporaryFolder();
+    @TempDir
+    static Path policyFolder;
 
     /**
      * Copies the xacml.properties and policies files into
      * temporary folder and loads the service provider saving
      * instance of provider off for other tests to use.
      */
-    @BeforeClass
-    public static void setup() throws Exception {
+    @BeforeAll
+    static void setup() throws Exception {
         LOGGER.info("Setting up class");
         //
-        // Setup our temporary folder
+        // Set up our temporary folder
         //
         XacmlPolicyUtils.FileCreator myCreator =
-            (String filename) -> policyFolder.newFile(filename);
+            (String filename) -> policyFolder.resolve(filename).toFile();
         propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents(
             "src/test/resources/xacml.properties", properties, myCreator);
         //
@@ -102,9 +102,7 @@ public class SonCoordinationTest {
         //
         StringBuilder strDump =
             new StringBuilder("Loaded applications:" + XacmlPolicyUtils.LINE_SEPARATOR);
-        Iterator<XacmlApplicationServiceProvider> iterator = applicationLoader.iterator();
-        while (iterator.hasNext()) {
-            XacmlApplicationServiceProvider application = iterator.next();
+        for (XacmlApplicationServiceProvider application : applicationLoader) {
             //
             // Is it our service?
             //
@@ -138,18 +136,16 @@ public class SonCoordinationTest {
                 "src/test/resources/requests/coordination.cl.vSonh.node.1.json"),
             DecisionRequest.class);
         String persistenceUnit = CountRecentOperationsPip.ISSUER_NAME + ".persistenceunit";
-        em = Persistence
-            .createEntityManagerFactory(SonCoordinationTest.properties.getProperty(persistenceUnit),
-                properties)
-            .createEntityManager();
+        emf = Persistence.createEntityManagerFactory(
+            SonCoordinationTest.properties.getProperty(persistenceUnit), properties);
+        em = emf.createEntityManager();
     }
 
     /**
      * Clears the database before each test.
-     *
      */
-    @Before
-    public void startClean() throws Exception {
+    @BeforeEach
+    void startClean() {
         em.getTransaction().begin();
         em.createQuery("DELETE FROM OperationsHistory").executeUpdate();
         em.getTransaction().commit();
@@ -158,10 +154,13 @@ public class SonCoordinationTest {
     /**
      * Close the entity manager.
      */
-    @AfterClass
-    public static void cleanup() throws Exception {
+    @AfterAll
+    static void cleanup() {
         if (em != null) {
             em.close();
+        }
+        if (emf != null) {
+            emf.close();
         }
     }
 
@@ -170,9 +169,8 @@ public class SonCoordinationTest {
      *
      * @param expected from the response
      * @param response received
-     *
      **/
-    public void checkDecision(String expected, DecisionResponse response) throws CoderException {
+    void checkDecision(String expected, DecisionResponse response) throws CoderException {
         LOGGER.info("Looking for {} Decision", expected);
         assertThat(response).isNotNull();
         assertThat(response.getStatus()).isNotNull();
@@ -186,11 +184,10 @@ public class SonCoordinationTest {
     /**
      * Request a decision and check that it matches expectation.
      *
-     * @param request to send to Xacml PDP
+     * @param request  to send to Xacml PDP
      * @param expected from the response
-     *
      **/
-    public void requestAndCheckDecision(DecisionRequest request, String expected)
+    void requestAndCheckDecision(DecisionRequest request, String expected)
         throws CoderException {
 
         //
@@ -204,7 +201,7 @@ public class SonCoordinationTest {
     }
 
     @Test
-    public void test1() throws CoderException, IOException, XacmlApplicationException {
+    void test1() throws CoderException, XacmlApplicationException {
         LOGGER.info("**************** Running vPci and vSonh Control Loops ****************");
         //
         // Now load the test coordination policy - make sure
@@ -228,7 +225,7 @@ public class SonCoordinationTest {
         //
         // Open vSonh on node1
         //
-        long vsonhId = insertOperationEvent(requestVsonhNode1, "Started");
+        long vsonhId = insertOperationEvent(requestVsonhNode1);
         //
         // Under current coordination policy vPci should get a deny
         //
@@ -244,7 +241,7 @@ public class SonCoordinationTest {
         //
         // Open vPci on node1
         //
-        long vpciId = insertOperationEvent(requestVpciNode1, "Started");
+        long vpciId = insertOperationEvent(requestVpciNode1);
         //
         // Under current coordination policy vSonh should get a deny
         //
@@ -260,23 +257,23 @@ public class SonCoordinationTest {
     }
 
     @SuppressWarnings("unchecked")
-    private long insertOperationEvent(DecisionRequest request, String outcome) {
+    private long insertOperationEvent(DecisionRequest request) {
         //
         // Get the properties
         //
-        Map<String, Object> properties = (Map<String, Object>) request.getResource().get("guard");
+        Map<String, Object> localProps = (Map<String, Object>) request.getResource().get("guard");
         //
         // Add an entry
         //
         OperationsHistory newEntry = new OperationsHistory();
-        newEntry.setActor(properties.get("actor").toString());
-        newEntry.setOperation(properties.get("operation").toString());
-        newEntry.setClosedLoopName(properties.get("clname").toString());
-        newEntry.setOutcome(outcome);
+        newEntry.setActor(localProps.get("actor").toString());
+        newEntry.setOperation(localProps.get("operation").toString());
+        newEntry.setClosedLoopName(localProps.get("clname").toString());
+        newEntry.setOutcome("Started");
         newEntry.setStarttime(Date.from(Instant.now().minusMillis(20000)));
         newEntry.setEndtime(Date.from(Instant.now()));
         newEntry.setRequestId(UUID.randomUUID().toString());
-        newEntry.setTarget(properties.get("target").toString());
+        newEntry.setTarget(localProps.get("target").toString());
         em.getTransaction().begin();
         em.persist(newEntry);
         em.getTransaction().commit();
@@ -284,7 +281,6 @@ public class SonCoordinationTest {
     }
 
     private void updateOperationEvent(long id, String outcome) {
-
         OperationsHistory updateEntry = em.find(OperationsHistory.class, id);
         updateEntry.setOutcome(outcome);
         updateEntry.setEndtime(Date.from(Instant.now()));

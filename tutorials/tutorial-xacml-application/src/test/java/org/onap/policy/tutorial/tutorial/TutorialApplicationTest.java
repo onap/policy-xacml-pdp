@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +20,20 @@
 package org.onap.policy.tutorial.tutorial;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.XACML3;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
@@ -44,33 +45,33 @@ import org.onap.policy.pdp.xacml.xacmltest.TestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TutorialApplicationTest {
+class TutorialApplicationTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(TutorialApplicationTest.class);
     private static final Properties properties = new Properties();
     private static XacmlApplicationServiceProvider service;
     private static final StandardCoder gson = new StandardCoder();
 
-    @ClassRule
-    public static final TemporaryFolder policyFolder = new TemporaryFolder();
+    @TempDir
+    static Path policyFolder;
 
     /**
      * set up the tests.
      *
      * @throws Exception Should not have exceptions thrown.
      */
-    @BeforeClass
-    public static void setup() throws Exception {
+    @BeforeAll
+    static void setup() throws Exception {
         //
         // Set up our temporary folder
         //
-        XacmlPolicyUtils.FileCreator myCreator = policyFolder::newFile;
+        XacmlPolicyUtils.FileCreator myCreator = (String filename) -> policyFolder.resolve(filename).toFile();
         File propertiesFile = XacmlPolicyUtils
             .copyXacmlPropertiesContents("src/test/resources/xacml.properties", properties, myCreator);
         //
         // Load XacmlApplicationServiceProvider service
         //
         ServiceLoader<XacmlApplicationServiceProvider> applicationLoader =
-                ServiceLoader.load(XacmlApplicationServiceProvider.class);
+            ServiceLoader.load(XacmlApplicationServiceProvider.class);
         //
         // Look for our class instance and save it
         //
@@ -94,13 +95,13 @@ public class TutorialApplicationTest {
     }
 
     @Test
-    public void testSingleDecision() throws CoderException, IOException {
+    void testSingleDecision() throws CoderException, IOException {
         //
         // Load a Decision request
         //
         DecisionRequest decisionRequest =
-                gson.decode(TextFileUtils.getTextFileAsString("src/test/resources/tutorial-decision-request.json"),
-                        DecisionRequest.class);
+            gson.decode(TextFileUtils.getTextFileAsString("src/test/resources/tutorial-decision-request.json"),
+                DecisionRequest.class);
         LOGGER.info("{}", gson.encode(decisionRequest, true));
         //
         // Test a decision - should start with a permit
@@ -112,7 +113,7 @@ public class TutorialApplicationTest {
         // Check that there are attributes
         //
         assertThat(decision.getLeft().getAttributes()).isNotNull().hasSize(1)
-                .containsKey(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue());
+            .containsKey(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue());
         //
         // This should be a "deny"
         //
@@ -125,18 +126,18 @@ public class TutorialApplicationTest {
         // Check that there are attributes
         //
         assertThat(decision.getLeft().getAttributes()).isNotNull().hasSize(1)
-                .containsKey(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue());
+            .containsKey(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue());
     }
 
 
     @Test
-    public void testMultiDecision() throws CoderException, IOException {
+    void testMultiDecision() throws CoderException, IOException {
         //
         // Load a Decision request
         //
         DecisionRequest decisionRequest = gson.decode(
-                TextFileUtils.getTextFileAsString("src/test/resources/tutorial-decision-multi-request.json"),
-                DecisionRequest.class);
+            TextFileUtils.getTextFileAsString("src/test/resources/tutorial-decision-multi-request.json"),
+            DecisionRequest.class);
         LOGGER.info("{}", gson.encode(decisionRequest, true));
         //
         // Test a decision - should start with a permit

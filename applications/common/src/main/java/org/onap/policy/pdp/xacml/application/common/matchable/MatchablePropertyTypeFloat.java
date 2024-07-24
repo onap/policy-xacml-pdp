@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020 Nordix Foundation.
+ * Modifications Copyright (C) 2020, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,13 +45,13 @@ public class MatchablePropertyTypeFloat extends MatchablePropertyTypeBase<Float>
         //
         // Most likely it isn't because Gson does not recognize floats
         //
-        if (value instanceof Float) {
-            return (Float) value;
+        if (value instanceof Float floatValue) {
+            return floatValue;
         }
         try {
             return Float.parseFloat(value.toString());
         } catch (NumberFormatException e) {
-            throw new ToscaPolicyConversionException("Bad float value" + value.toString(), e);
+            throw new ToscaPolicyConversionException("Bad float value" + value, e);
         }
     }
 

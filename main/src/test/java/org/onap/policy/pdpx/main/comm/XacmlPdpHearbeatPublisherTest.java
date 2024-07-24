@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +22,15 @@
 package org.onap.policy.pdpx.main.comm;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -37,19 +38,19 @@ import java.util.Queue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.event.comm.client.BidirectionalTopicClient;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.pdpx.main.XacmlState;
 
-@RunWith(MockitoJUnitRunner.class)
-public class XacmlPdpHearbeatPublisherTest {
+@ExtendWith(MockitoExtension.class)
+class XacmlPdpHearbeatPublisherTest {
 
     private static final long INTERVAL1 = 1000L;
     private static final long INTERVAL2 = 2000L;
@@ -83,23 +84,24 @@ public class XacmlPdpHearbeatPublisherTest {
     /**
      * Initializes objects, including the publisher.
      */
-    @Before
-    public void setUp() {
-        when(sink.getTopic()).thenReturn("my-topic");
-        when(checker.getSink()).thenReturn(sink);
-        when(checker.isReady()).thenReturn(true);
-        when(state.genHeartbeat()).thenReturn(status);
+    @BeforeEach
+    void setUp() {
+        lenient().when(sink.getTopic()).thenReturn("my-topic");
+        lenient().when(checker.getSink()).thenReturn(sink);
+        lenient().when(checker.isReady()).thenReturn(true);
+        lenient().when(state.genHeartbeat()).thenReturn(status);
 
         status = new PdpStatus();
         timers = new LinkedList<>(Arrays.asList(timer1, timer2));
 
-        when(executor.scheduleWithFixedDelay(any(), anyLong(), anyLong(), any())).thenAnswer(args -> timers.remove());
+        lenient().when(executor.scheduleWithFixedDelay(any(), anyLong(), anyLong(), any()))
+            .thenAnswer(args -> timers.remove());
 
         publisher = new MyPublisher(checker, 10, state);
     }
 
     @Test
-    public void testRun() {
+    void testRun() {
         publisher.run();
 
         verify(state).genHeartbeat();
@@ -110,7 +112,7 @@ public class XacmlPdpHearbeatPublisherTest {
      * Tests the run() method when the probe is disabled.
      */
     @Test
-    public void testRunNoProbe() throws CoderException {
+    void testRunNoProbe() throws CoderException {
         publisher = new MyPublisher(checker, 0, state);
 
         publisher.run();
@@ -126,24 +128,24 @@ public class XacmlPdpHearbeatPublisherTest {
      * Tests the run() method when the topic is not ready, and then becomes ready.
      */
     @Test
-    public void testRunNotReady() throws CoderException {
+    void testRunNotReady() throws CoderException {
         // not ready yet
-        when(checker.isReady()).thenReturn(false);
-        when(checker.awaitReady(any(), anyLong())).thenReturn(false);
+        lenient().when(checker.isReady()).thenReturn(false);
+        lenient().when(checker.awaitReady(any(), anyLong())).thenReturn(false);
 
         publisher.run();
         verify(state, never()).genHeartbeat();
         verify(checker, never()).send(any());
 
         // isReady is still false, but awaitReady is now true - should generate heartbeat
-        when(checker.awaitReady(any(), anyLong())).thenReturn(true);
+        lenient().when(checker.awaitReady(any(), anyLong())).thenReturn(true);
 
         publisher.run();
         verify(state).genHeartbeat();
         verify(checker).send(any());
 
         // now isReady is true, too - should not rerun awaitReady
-        when(checker.isReady()).thenReturn(true);
+        lenient().when(checker.isReady()).thenReturn(true);
 
         publisher.run();
         verify(state, times(2)).genHeartbeat();
@@ -155,11 +157,11 @@ public class XacmlPdpHearbeatPublisherTest {
      * Tests the run() method when the checker throws an exception.
      */
     @Test
-    public void testRunCheckerEx() throws CoderException {
+    void testRunCheckerEx() throws CoderException {
         // force it to call awaitReady
-        when(checker.isReady()).thenReturn(false);
+        lenient().when(checker.isReady()).thenReturn(false);
 
-        when(checker.awaitReady(any(), anyLong()))
+        lenient().when(checker.awaitReady(any(), anyLong()))
             .thenThrow(new CoderException("expected exception"))
             .thenReturn(true);
 
@@ -175,7 +177,7 @@ public class XacmlPdpHearbeatPublisherTest {
     }
 
     @Test
-    public void testTerminate() {
+    void testTerminate() {
         // not yet started
         publisher.terminate();
 
@@ -198,7 +200,7 @@ public class XacmlPdpHearbeatPublisherTest {
     }
 
     @Test
-    public void testRestart() {
+    void testRestart() {
         // not started yet - should only update the interval
         publisher.restart(INTERVAL1);
 
@@ -231,11 +233,11 @@ public class XacmlPdpHearbeatPublisherTest {
     }
 
     @Test
-    public void testStart() {
+    void testStart() {
         publisher.start();
 
         verify(executor).scheduleWithFixedDelay(publisher, 0, XacmlPdpHearbeatPublisher.DEFAULT_HB_INTERVAL_MS,
-                        TimeUnit.MILLISECONDS);
+            TimeUnit.MILLISECONDS);
 
         // repeat - nothing more should happen
         publisher.start();
@@ -244,7 +246,7 @@ public class XacmlPdpHearbeatPublisherTest {
     }
 
     @Test
-    public void testMakeTimerThread() {
+    void testMakeTimerThread() {
         // create a plain listener to test the "real" makeTimer() method
         publisher = new XacmlPdpHearbeatPublisher(checker, 1, state);
 
@@ -257,7 +259,7 @@ public class XacmlPdpHearbeatPublisherTest {
 
     private class MyPublisher extends XacmlPdpHearbeatPublisher {
 
-        public MyPublisher(BidirectionalTopicClient topicChecker, long probeHeartbeatTopicMs, XacmlState state) {
+        MyPublisher(BidirectionalTopicClient topicChecker, long probeHeartbeatTopicMs, XacmlState state) {
             super(topicChecker, probeHeartbeatTopicMs, state);
         }
 

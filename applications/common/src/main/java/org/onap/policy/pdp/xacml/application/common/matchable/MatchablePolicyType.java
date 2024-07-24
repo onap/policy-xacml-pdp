@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020-2021 Nordix Foundation.
+ * Modifications Copyright (C) 2020-2021, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,8 +69,8 @@ public class MatchablePolicyType {
             );
     //@formatter:on
 
-    private ToscaConceptIdentifier policyId;
-    private Map<String, MatchableProperty> matchables = new HashMap<>();
+    private final ToscaConceptIdentifier policyId;
+    private final Map<String, MatchableProperty> matchables = new HashMap<>();
 
     public MatchablePolicyType(@NonNull ToscaPolicyType policyType, @NonNull MatchableCallback callback) {
         this.policyId = new ToscaConceptIdentifier(policyType.getName(), policyType.getVersion());
@@ -119,7 +119,7 @@ public class MatchablePolicyType {
             final String property = entrySet.getKey();
             final var toscaProperty = entrySet.getValue();
             //
-            // Most likely case is its a primitive
+            // Most likely case is it's a primitive
             //
             if (isPrimitive(toscaProperty.getType())) {
                 MatchableProperty primitiveProperty = handlePrimitive(property, toscaProperty);

@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019,2023 Nordix Foundation.
+ * Modifications Copyright (C) 2019, 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 package org.onap.policy.pdpx.main.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,16 +36,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.onap.policy.common.endpoints.http.client.HttpClient;
 import org.onap.policy.common.endpoints.http.client.HttpClientConfigException;
 import org.onap.policy.common.endpoints.http.client.HttpClientFactoryInstance;
@@ -66,27 +63,28 @@ import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TestDecision {
+class TestDecision {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestDecision.class);
 
     private static int port;
     private static Main main;
     private static HttpClient client;
-    private static CommonTestData testData = new CommonTestData();
+    private static final CommonTestData testData = new CommonTestData();
     private static final String APPLICATION_XACML_XML = "application/xacml+xml";
     private static final String APPLICATION_XACML_JSON = "application/xacml+json";
 
-    @ClassRule
-    public static final TemporaryFolder appsFolder = new TemporaryFolder();
+    @TempDir
+    static Path appsFolder;
 
     /**
      * BeforeClass setup environment.
+     *
      * @throws IOException Cannot create temp apps folder
-     * @throws Exception exception if service does not start
+     * @throws Exception   exception if service does not start
      */
-    @BeforeClass
-    public static void beforeClass() throws Exception {
+    @BeforeAll
+    static void beforeClass() throws Exception {
         System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StdErrLog");
         System.setProperty("org.eclipse.jetty.LEVEL", "OFF");
 
@@ -96,7 +94,7 @@ public class TestDecision {
         // Copy test directory over of the application directories
         //
         Path src = Paths.get("src/test/resources/apps");
-        File apps = appsFolder.newFolder("apps");
+        File apps = appsFolder.resolve("apps").toFile();
         Files.walk(src).forEach(source -> {
             copy(source, apps.toPath().resolve(src.relativize(source)));
         });
@@ -106,17 +104,17 @@ public class TestDecision {
         RestServerParameters rest =
             testData.toObject(testData.getRestServerParametersMap(port), RestServerParameters.class);
         RestClientParameters policyApiParameters =
-                        testData.toObject(testData.getPolicyApiParametersMap(false), RestClientParameters.class);
+            testData.toObject(testData.getPolicyApiParametersMap(false), RestClientParameters.class);
         TopicParameterGroup topicParameterGroup =
-                        testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
+            testData.toObject(testData.getTopicParametersMap(false), TopicParameterGroup.class);
         final XacmlApplicationParameters xacmlApplicationParameters =
-                testData.toObject(testData.getXacmlapplicationParametersMap(false,
-                        apps.getAbsolutePath().toString()), XacmlApplicationParameters.class);
+            testData.toObject(testData.getXacmlapplicationParametersMap(false,
+                apps.getAbsolutePath()), XacmlApplicationParameters.class);
         XacmlPdpParameterGroup params =
-                new XacmlPdpParameterGroup("XacmlPdpParameters", "XacmlPdpGroup", "xacml", rest, policyApiParameters,
-                        topicParameterGroup, xacmlApplicationParameters);
+            new XacmlPdpParameterGroup("XacmlPdpParameters", "XacmlPdpGroup", "xacml", rest, policyApiParameters,
+                topicParameterGroup, xacmlApplicationParameters);
         final Gson gson = new GsonBuilder().create();
-        File fileParams = appsFolder.newFile("params.json");
+        File fileParams = appsFolder.resolve("params.json").toFile();
         String jsonParams = gson.toJson(params);
         LOGGER.info("Creating new params: {}", jsonParams);
         Files.write(fileParams.toPath(), jsonParams.getBytes());
@@ -137,14 +135,14 @@ public class TestDecision {
         client = getNoAuthHttpClient();
     }
 
-    @AfterClass
-    public static void after() throws PolicyXacmlPdpException {
+    @AfterAll
+    static void after() {
         stopXacmlPdpService(main);
         client.shutdown();
     }
 
     @Test
-    public void testDecision_UnsupportedAction() throws Exception {
+    void testDecision_UnsupportedAction() {
         LOGGER.info("Running test testDecision_UnsupportedAction");
 
         DecisionRequest request = new DecisionRequest();
@@ -164,8 +162,7 @@ public class TestDecision {
     }
 
     @Test
-    public void testDecision_Guard() throws KeyManagementException, NoSuchAlgorithmException,
-        ClassNotFoundException {
+    void testDecision_Guard() {
         LOGGER.info("Running test testDecision_Guard");
 
         DecisionRequest request = new DecisionRequest();
@@ -184,17 +181,17 @@ public class TestDecision {
     }
 
     @Test
-    public void testDecision_Native() throws IOException {
+    void testDecision_Native() throws IOException {
         LOGGER.info("Running test testDecision_Native");
 
         String xmlRequestAsString = ResourceUtils.getResourceAsString(
-                "src/test/resources/decisions/decision.native.request.xml");
+            "src/test/resources/decisions/decision.native.request.xml");
         if (xmlRequestAsString == null) {
             throw new IOException("failed to read the xml request");
         }
 
         String jsonRequestAsString = ResourceUtils.getResourceAsString(
-                "src/test/resources/decisions/decision.native.request.json");
+            "src/test/resources/decisions/decision.native.request.json");
         if (jsonRequestAsString == null) {
             throw new IOException("failed to read the json request");
         }
@@ -209,11 +206,11 @@ public class TestDecision {
     }
 
     private static Main startXacmlPdpService(File params) throws PolicyXacmlPdpException {
-        final String[] XacmlPdpConfigParameters = {"-c", params.getAbsolutePath()};
-        return new Main(XacmlPdpConfigParameters);
+        final String[] xacmlPdpConfigParameters = {"-c", params.getAbsolutePath()};
+        return new Main(xacmlPdpConfigParameters);
     }
 
-    private static void stopXacmlPdpService(final Main main) throws PolicyXacmlPdpException {
+    private static void stopXacmlPdpService(final Main main) {
         main.shutdown();
     }
 
@@ -246,10 +243,10 @@ public class TestDecision {
 
     private static HttpClient getNoAuthHttpClient() throws HttpClientConfigException {
         return HttpClientFactoryInstance.getClientFactory().build(RestClientParameters.builder()
-                .clientName("testDecisionClient")
-                .useHttps(false).allowSelfSignedCerts(false).hostname("localhost").port(port)
-                .basePath("policy/pdpx/v1")
-                .userName("healthcheck").password("zb!XztG34").managed(true).build());
+            .clientName("testDecisionClient")
+            .useHttps(false).allowSelfSignedCerts(false).hostname("localhost").port(port)
+            .basePath("policy/pdpx/v1")
+            .userName("healthcheck").password("zb!XztG34").managed(true).build());
     }
 
     private static void copy(Path source, Path dest) {

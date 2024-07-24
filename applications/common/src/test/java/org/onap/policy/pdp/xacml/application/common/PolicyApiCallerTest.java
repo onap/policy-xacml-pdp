@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2021, 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2021, 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@
 package org.onap.policy.pdp.xacml.application.common;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -38,10 +38,10 @@ import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.UUID;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.common.endpoints.http.client.HttpClient;
 import org.onap.policy.common.endpoints.http.client.HttpClientFactoryInstance;
 import org.onap.policy.common.endpoints.http.server.HttpServletServer;
@@ -55,7 +55,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PolicyApiCallerTest {
+class PolicyApiCallerTest {
     private static final String MY_TYPE = "my-type";
 
     private static final String MY_VERSION = "1.0.0";
@@ -80,8 +80,8 @@ public class PolicyApiCallerTest {
      *
      * @throws IOException if an error occurs
      */
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    @BeforeAll
+    static void setUpBeforeClass() throws Exception {
         port = NetworkUtil.allocPort();
 
         clientParams = mock(RestClientParameters.class);
@@ -93,17 +93,17 @@ public class PolicyApiCallerTest {
         props.setProperty(PolicyEndPointProperties.PROPERTY_HTTP_SERVER_SERVICES, CLIENT_NAME);
 
         final String svcpfx =
-                        PolicyEndPointProperties.PROPERTY_HTTP_SERVER_SERVICES + "." + CLIENT_NAME;
+            PolicyEndPointProperties.PROPERTY_HTTP_SERVER_SERVICES + "." + CLIENT_NAME;
 
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_HOST_SUFFIX, clientParams.getHostname());
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_PORT_SUFFIX,
-                        Integer.toString(clientParams.getPort()));
+            Integer.toString(clientParams.getPort()));
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_REST_CLASSES_SUFFIX,
-                        ApiRestController.class.getName());
+            ApiRestController.class.getName());
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_MANAGED_SUFFIX, "true");
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_HTTPS_SUFFIX, "false");
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_SERIALIZATION_PROVIDER,
-                        GsonMessageBodyHandler.class.getName());
+            GsonMessageBodyHandler.class.getName());
 
         HttpServletServerFactoryInstance.getServerFactory().build(props).forEach(HttpServletServer::start);
         apiClient = HttpClientFactoryInstance.getClientFactory().build(clientParams);
@@ -111,8 +111,8 @@ public class PolicyApiCallerTest {
         assertTrue(NetworkUtil.isTcpPortOpen(clientParams.getHostname(), clientParams.getPort(), 100, 100));
     }
 
-    @AfterClass
-    public static void tearDownAfterClass() {
+    @AfterAll
+    static void tearDownAfterClass() {
         HttpServletServerFactoryInstance.getServerFactory().destroy();
     }
 
@@ -121,26 +121,26 @@ public class PolicyApiCallerTest {
      *
      * @throws PolicyApiException if an error occurs
      */
-    @Before
-    public void setUp() throws PolicyApiException {
+    @BeforeEach
+    void setUp() throws PolicyApiException {
         when(clientParams.getPort()).thenReturn(port);
 
         api = new PolicyApiCaller(apiClient);
     }
 
     @Test
-    public void testGetPolicyType() throws Exception {
+    void testGetPolicyType() throws Exception {
 
         assertNotNull(api.getPolicyType(new ToscaConceptIdentifier(MY_TYPE, MY_VERSION)));
 
         assertThatThrownBy(() -> api.getPolicyType(new ToscaConceptIdentifier(INVALID_TYPE, MY_VERSION)))
-                        .isInstanceOf(PolicyApiException.class);
+            .isInstanceOf(PolicyApiException.class);
 
         assertThatThrownBy(() -> api.getPolicyType(new ToscaConceptIdentifier(UNKNOWN_TYPE, MY_VERSION)))
-                        .isInstanceOf(NotFoundException.class);
+            .isInstanceOf(NotFoundException.class);
 
         assertThatThrownBy(() -> api.getPolicyType(new ToscaConceptIdentifier(NOT_A_TYPE, MY_VERSION)))
-                        .isInstanceOf(PolicyApiException.class);
+            .isInstanceOf(PolicyApiException.class);
 
         // connect to a port that has no server
         RestClientParameters params2 = mock(RestClientParameters.class);
@@ -152,7 +152,7 @@ public class PolicyApiCallerTest {
         api = new PolicyApiCaller(apiClient2);
 
         assertThatThrownBy(() -> api.getPolicyType(new ToscaConceptIdentifier(MY_TYPE, MY_VERSION)))
-                        .isInstanceOf(PolicyApiException.class);
+            .isInstanceOf(PolicyApiException.class);
     }
 
     /**
@@ -168,32 +168,36 @@ public class PolicyApiCallerTest {
          * Retrieves the specified version of a particular policy type.
          *
          * @param policyTypeId ID of desired policy type
-         * @param versionId version of desired policy type
-         * @param requestId optional request ID
-         *
+         * @param versionId    version of desired policy type
+         * @param requestId    optional request ID
          * @return the Response object containing the results of the API operation
          */
         @GET
         @Path("/policytypes/{policyTypeId}/versions/{versionId}")
         public Response getSpecificVersionOfPolicyType(@PathParam("policyTypeId") String policyTypeId,
-                        @PathParam("versionId") String versionId, @HeaderParam("X-ONAP-RequestID") UUID requestId) {
+                                                       @PathParam("versionId") String versionId,
+                                                       @HeaderParam("X-ONAP-RequestID") UUID requestId) {
 
             assertEquals(MY_VERSION, versionId);
 
-            switch (policyTypeId) {
-                case UNKNOWN_TYPE:
+            return switch (policyTypeId) {
+                case UNKNOWN_TYPE -> {
                     logger.info("request for unknown policy type");
-                    return Response.status(Response.Status.NOT_FOUND).build();
-                case INVALID_TYPE:
+                    yield Response.status(Response.Status.NOT_FOUND).build();
+                }
+                case INVALID_TYPE -> {
                     logger.info("invalid request for policy type");
-                    return Response.status(Response.Status.BAD_REQUEST).build();
-                case NOT_A_TYPE:
+                    yield Response.status(Response.Status.BAD_REQUEST).build();
+                }
+                case NOT_A_TYPE -> {
                     logger.info("invalid request for policy type");
-                    return Response.status(Response.Status.OK).entity("string-type").build();
-                default:
+                    yield Response.status(Response.Status.OK).entity("string-type").build();
+                }
+                default -> {
                     logger.info("request for policy type={} version={}", policyTypeId, versionId);
-                    return Response.status(Response.Status.OK).entity(new ToscaPolicyType()).build();
-            }
+                    yield Response.status(Response.Status.OK).entity(new ToscaPolicyType()).build();
+                }
+            };
         }
     }
 }

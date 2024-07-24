@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,8 @@ package org.onap.policy.pdp.xacml.application.common.operationshistory;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 import com.att.research.xacml.api.Attribute;
@@ -44,20 +45,19 @@ import java.util.LinkedList;
 import java.util.Properties;
 import java.util.Queue;
 import java.util.UUID;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.policy.guard.OperationsHistory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@RunWith(MockitoJUnitRunner.class)
-public class CountRecentOperationsPipTest {
+@ExtendWith(MockitoExtension.class)
+class CountRecentOperationsPipTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(CountRecentOperationsPipTest.class);
 
     private static final String ACTOR = "my-actor";
@@ -95,8 +95,8 @@ public class CountRecentOperationsPipTest {
      *
      * @throws IOException if properties cannot be loaded
      */
-    @BeforeClass
-    public static void setUpBeforeClass() throws IOException {
+    @BeforeAll
+    static void setUpBeforeClass() throws IOException {
         //
         // Load our test properties to use
         //
@@ -114,14 +114,17 @@ public class CountRecentOperationsPipTest {
         //
         //
         //
-        LOGGER.info("Configured own entity manager {}", em.toString());
+        LOGGER.info("Configured own entity manager {}", em);
     }
 
     /**
      * Close the entity manager.
      */
-    @AfterClass
-    public static void cleanup() {
+    @AfterAll
+    static void cleanup() {
+        if (emf != null) {
+            emf.close();
+        }
         if (em != null) {
             em.close();
         }
@@ -132,9 +135,9 @@ public class CountRecentOperationsPipTest {
      *
      * @throws Exception if an error occurs
      */
-    @Before
-    public void setUp() throws Exception {
-        when(pipRequest.getIssuer()).thenReturn("urn:org:onap:xacml:guard:tw:1:hour");
+    @BeforeEach
+    void setUp() throws Exception {
+        lenient().when(pipRequest.getIssuer()).thenReturn("urn:org:onap:xacml:guard:tw:1:hour");
 
         pipEngine = new MyPip();
 
@@ -148,12 +151,12 @@ public class CountRecentOperationsPipTest {
     }
 
     @Test
-    public void testAttributesRequired() {
+    void testAttributesRequired() {
         assertEquals(3, pipEngine.attributesRequired().size());
     }
 
     @Test
-    public void testConfigure_DbException() {
+    void testConfigure_DbException() {
         properties.put("jakarta.persistence.jdbc.url", "invalid");
         assertThatCode(() ->
             pipEngine.configure("issuer", properties)
@@ -161,44 +164,44 @@ public class CountRecentOperationsPipTest {
     }
 
     @Test
-    public void testGetAttributes_NullIssuer() throws PIPException {
+    void testGetAttributes_NullIssuer() throws PIPException {
         when(pipRequest.getIssuer()).thenReturn(null);
         assertEquals(StdPIPResponse.PIP_RESPONSE_EMPTY, pipEngine.getAttributes(pipRequest, pipFinder));
     }
 
     @Test
-    public void testGetAttributes_WrongIssuer() throws PIPException {
+    void testGetAttributes_WrongIssuer() throws PIPException {
         when(pipRequest.getIssuer()).thenReturn("wrong-issuer");
         assertEquals(StdPIPResponse.PIP_RESPONSE_EMPTY, pipEngine.getAttributes(pipRequest, pipFinder));
     }
 
     @Test
-    public void testGetAttributes_NullActor() throws PIPException {
+    void testGetAttributes_NullActor() throws PIPException {
         attributes = new LinkedList<>(Arrays.asList(null, RECIPE, TARGET));
         assertEquals(StdPIPResponse.PIP_RESPONSE_EMPTY, pipEngine.getAttributes(pipRequest, pipFinder));
     }
 
     @Test
-    public void testGetAttributes_NullRecipe() throws PIPException {
+    void testGetAttributes_NullRecipe() throws PIPException {
         attributes = new LinkedList<>(Arrays.asList(ACTOR, null, TARGET));
         assertEquals(StdPIPResponse.PIP_RESPONSE_EMPTY, pipEngine.getAttributes(pipRequest, pipFinder));
     }
 
     @Test
-    public void testGetAttributes_NullTarget() throws PIPException {
+    void testGetAttributes_NullTarget() throws PIPException {
         attributes = new LinkedList<>(Arrays.asList(ACTOR, RECIPE, null));
         assertEquals(StdPIPResponse.PIP_RESPONSE_EMPTY, pipEngine.getAttributes(pipRequest, pipFinder));
     }
 
     @Test
-    public void testShutdown() {
+    void testShutdown() {
         pipEngine.shutdown();
         assertThatExceptionOfType(PIPException.class).isThrownBy(() -> pipEngine.getAttributes(pipRequest, pipFinder))
             .withMessageContaining("Engine is shutdown");
     }
 
     @Test
-    public void testGetCountFromDb() throws Exception {
+    void testGetCountFromDb() throws Exception {
         //
         // Configure it using properties
         //
@@ -231,7 +234,7 @@ public class CountRecentOperationsPipTest {
     }
 
     @Test
-    public void testStringToChronosUnit() throws PIPException {
+    void testStringToChronosUnit() throws PIPException {
         // not configured yet
         OperationsHistory newEntry = createEntry();
         assertEquals(-1, getCount(newEntry));
@@ -260,8 +263,8 @@ public class CountRecentOperationsPipTest {
 
     private long getCount(OperationsHistory newEntry) throws PIPException {
         responses = new LinkedList<>(Arrays.asList(resp1, resp2, resp3));
-        attributes = new LinkedList<>(
-                        Arrays.asList(newEntry.getActor(), newEntry.getOperation(), newEntry.getTarget()));
+        attributes = new LinkedList<>(Arrays.asList(newEntry.getActor(),
+            newEntry.getOperation(), newEntry.getTarget()));
 
         PIPResponse result = pipEngine.getAttributes(pipRequest, pipFinder);
 

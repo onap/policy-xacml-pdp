@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020-2022 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2021 Nordix Foundation.
+ * Modifications Copyright (C) 2021, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,21 +27,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.att.research.xacml.api.Response;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.io.TempDir;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
@@ -56,52 +54,52 @@ import org.onap.policy.pdp.xacml.xacmltest.TestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class MatchPdpApplicationTest {
+@TestMethodOrder(MethodOrderer.MethodName.class)
+class MatchPdpApplicationTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(MatchPdpApplicationTest.class);
-    private static Properties properties = new Properties();
+    private static final Properties properties = new Properties();
     private static File propertiesFile;
     private static XacmlApplicationServiceProvider service;
-    private static StandardCoder gson = new StandardCoder();
+    private static final StandardCoder gson = new StandardCoder();
     private static DecisionRequest baseRequest;
 
-    @ClassRule
-    public static final TemporaryFolder policyFolder = new TemporaryFolder();
+    @TempDir
+    static Path policyFolder;
 
     /**
      * Copies the xacml.properties and policies files into
      * temporary folder and loads the service provider saving
      * instance of provider off for other tests to use.
      */
-    @BeforeClass
-    public static void setUp() throws Exception {
+    @BeforeAll
+    static void setUp() throws Exception {
         //
         // Load Single Decision Request
         //
         baseRequest = gson.decode(
-                TextFileUtils
-                    .getTextFileAsString(
-                            "src/test/resources/decision.match.input.json"),
-                    DecisionRequest.class);
+            TextFileUtils
+                .getTextFileAsString(
+                    "src/test/resources/decision.match.input.json"),
+            DecisionRequest.class);
         //
         // Setup our temporary folder
         //
-        XacmlPolicyUtils.FileCreator myCreator = (String filename) -> policyFolder.newFile(filename);
+        XacmlPolicyUtils.FileCreator myCreator = (String filename) -> policyFolder.resolve(filename).toFile();
         propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties",
-                properties, myCreator);
+            properties, myCreator);
         //
         // Copy the test policy types into data area
         //
         String policy = "onap.policies.match.Test";
         String policyType = ResourceUtils.getResourceAsString("src/test/resources/" + policy + ".yaml");
         LOGGER.info("Copying {}", policyType);
-        Files.write(Paths.get(policyFolder.getRoot().getAbsolutePath(), policy + "-1.0.0.yaml"),
-                policyType.getBytes());
+        Files.write(Paths.get(policyFolder.toFile().getAbsolutePath(), policy + "-1.0.0.yaml"),
+            policyType.getBytes());
         //
         // Load service
         //
         ServiceLoader<XacmlApplicationServiceProvider> applicationLoader =
-                ServiceLoader.load(XacmlApplicationServiceProvider.class);
+            ServiceLoader.load(XacmlApplicationServiceProvider.class);
         //
         // Iterate through Xacml application services and find
         // the optimization service. Save it for use throughout
@@ -134,7 +132,7 @@ public class MatchPdpApplicationTest {
     }
 
     @Test
-    public void test01Basics() {
+    void test01Basics() {
         //
         // Make sure there's an application name
         //
@@ -149,13 +147,13 @@ public class MatchPdpApplicationTest {
         // can support the correct policy types.
         //
         assertThat(service.canSupportPolicyType(new ToscaConceptIdentifier(
-                "onap.policies.match.Test", "1.0.0"))).isTrue();
+            "onap.policies.match.Test", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(new ToscaConceptIdentifier(
-                "onap.foobar", "1.0.0"))).isFalse();
+            "onap.foobar", "1.0.0"))).isFalse();
     }
 
     @Test
-    public void test02NoPolicies() throws CoderException {
+    void test02NoPolicies() throws CoderException {
         //
         // Ask for a decision when there are no policies loaded
         //
@@ -168,7 +166,7 @@ public class MatchPdpApplicationTest {
     }
 
     @Test
-    public void test03Match() throws CoderException, FileNotFoundException, IOException,
+    void test03Match() throws
         XacmlApplicationException {
         //
         // Now load all the test match policies
@@ -208,7 +206,7 @@ public class MatchPdpApplicationTest {
         //
         // Validate it
         //
-        validateDecision(response, baseRequest, "value1");
+        validateDecision(response, "value1");
         //
         // Ask for bar
         //
@@ -222,7 +220,7 @@ public class MatchPdpApplicationTest {
         //
         // Validate it
         //
-        validateDecision(response, baseRequest, "value2");
+        validateDecision(response, "value2");
         //
         // Ask for hello (should return nothing)
         //
@@ -246,7 +244,7 @@ public class MatchPdpApplicationTest {
     }
 
     @SuppressWarnings("unchecked")
-    private void validateDecision(DecisionResponse decision, DecisionRequest request, String value) {
+    private void validateDecision(DecisionResponse decision, String value) {
         for (Entry<String, Object> entrySet : decision.getPolicies().entrySet()) {
             LOGGER.info("Decision Returned Policy {}", entrySet.getKey());
             assertThat(entrySet.getValue()).isInstanceOf(Map.class);

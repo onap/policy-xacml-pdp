@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +39,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.IdReferenceType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
@@ -62,9 +62,9 @@ public final class XacmlPolicyUtils {
      * file name. Does nothing for other OSs.
      */
     private static final Function<String, String> SANITIZE_FILE_NAME =
-                    System.getProperty("os.name").startsWith("Windows")
-                    ? filename -> filename.replace(':', '_')
-                    : filename -> filename;
+        System.getProperty("os.name").startsWith("Windows")
+            ? filename -> filename.replace(':', '_')
+            : filename -> filename;
 
     private XacmlPolicyUtils() {
         super();
@@ -74,7 +74,7 @@ public final class XacmlPolicyUtils {
      * Creates an empty PolicySetType object given the id and combining algorithm. Note,there
      * will also be an empty Target created. You can easily override that if need be.
      *
-     * @param policyId Policy Id
+     * @param policyId                 Policy Id
      * @param policyCombiningAlgorithm Policy Combining Algorithm
      * @return PolicySetType object
      */
@@ -90,7 +90,7 @@ public final class XacmlPolicyUtils {
      * Creates an empty PolicySetType object given the id and combining algorithm. Note,there
      * will also be an empty Target created. You can easily override that if need be.
      *
-     * @param policyId Policy Id
+     * @param policyId               Policy Id
      * @param ruleCombiningAlgorithm Rule Combining Algorithm
      * @return PolicyType object
      */
@@ -106,12 +106,12 @@ public final class XacmlPolicyUtils {
      * This method adds a list of PolicyType objects to a root PolicySetType as
      * referenced policies.
      *
-     * @param rootPolicy Root PolicySet being updated
+     * @param rootPolicy         Root PolicySet being updated
      * @param referencedPolicies A list of PolicyType being added as a references
      * @return the rootPolicy PolicySet object
      */
     public static PolicySetType addPoliciesToXacmlRootPolicy(PolicySetType rootPolicy,
-            PolicyType... referencedPolicies) {
+                                                             PolicyType... referencedPolicies) {
         var factory = new ObjectFactory();
         //
         // Iterate each policy
@@ -133,12 +133,12 @@ public final class XacmlPolicyUtils {
     /**
      * This method updates a root PolicySetType by adding in a PolicyType as a reference.
      *
-     * @param rootPolicy Root PolicySet being updated
+     * @param rootPolicy           Root PolicySet being updated
      * @param referencedPolicySets A list of PolicySetType being added as a references
      * @return the rootPolicy PolicySet object
      */
     public static PolicySetType addPolicySetsToXacmlRootPolicy(PolicySetType rootPolicy,
-            PolicySetType... referencedPolicySets) {
+                                                               PolicySetType... referencedPolicySets) {
         var factory = new ObjectFactory();
         //
         // Iterate each policy
@@ -160,7 +160,7 @@ public final class XacmlPolicyUtils {
     /**
      * Adds in the root policy to the PDP properties object.
      *
-     * @param properties Input properties
+     * @param properties     Input properties
      * @param rootPolicyPath Path to the root policy file
      * @return Properties object
      */
@@ -187,14 +187,14 @@ public final class XacmlPolicyUtils {
         // Set the new comma separated list
         //
         properties.setProperty(XACMLProperties.PROP_ROOTPOLICIES,
-                rootPolicies.stream().collect(Collectors.joining(",")));
+            String.join(",", rootPolicies));
         return properties;
     }
 
     /**
      * Adds in the referenced policy to the PDP properties object.
      *
-     * @param properties Input properties
+     * @param properties    Input properties
      * @param refPolicyPath Path to the referenced policy file
      * @return Properties object
      */
@@ -221,7 +221,7 @@ public final class XacmlPolicyUtils {
         // Set the new comma separated list
         //
         properties.setProperty(XACMLProperties.PROP_REFERENCEDPOLICIES,
-                referencedPolicies.stream().collect(Collectors.joining(",")));
+            String.join(",", referencedPolicies));
         return properties;
     }
 
@@ -229,7 +229,7 @@ public final class XacmlPolicyUtils {
      * Removes a root policy from the Properties object. Both in the line
      * that identifies the policy and the .file property that points to the path.
      *
-     * @param properties Input Properties object to remove
+     * @param properties     Input Properties object to remove
      * @param rootPolicyPath The policy file path
      * @return Properties object
      */
@@ -273,7 +273,7 @@ public final class XacmlPolicyUtils {
      * Removes a referenced policy from the Properties object. Both in the line
      * that identifies the policy and the .file property that points to the path.
      *
-     * @param properties Input Properties object to remove
+     * @param properties    Input Properties object to remove
      * @param refPolicyPath The policy file path
      * @return Properties object
      */
@@ -317,7 +317,7 @@ public final class XacmlPolicyUtils {
      * Does a debug dump of referenced and root policy values.
      *
      * @param properties Input Properties object
-     * @param logger Logger object to use
+     * @param logger     Logger object to use
      */
     public static void debugDumpPolicyProperties(Properties properties, Logger logger) {
         //
@@ -356,18 +356,18 @@ public final class XacmlPolicyUtils {
      * <P>How do we track that in case we need to know what policies we have loaded?
      *
      * @param policy PolicyType object
-     * @param path Path for policy
+     * @param path   Path for policy
      * @return Path unique file path for the Policy
      */
     public static Path constructUniquePolicyFilename(Object policy, Path path) {
         String id;
         String version;
-        if (policy instanceof PolicyType) {
-            id = ((PolicyType) policy).getPolicyId();
-            version = ((PolicyType) policy).getVersion();
-        } else if (policy instanceof PolicySetType) {
-            id = ((PolicySetType) policy).getPolicySetId();
-            version = ((PolicySetType) policy).getVersion();
+        if (policy instanceof PolicyType policyType) {
+            id = policyType.getPolicyId();
+            version = policyType.getVersion();
+        } else if (policy instanceof PolicySetType policySetType) {
+            id = policySetType.getPolicySetId();
+            version = policySetType.getVersion();
         } else {
             throw new IllegalArgumentException("Must pass a PolicyType or PolicySetType");
         }
@@ -435,13 +435,13 @@ public final class XacmlPolicyUtils {
      * Copies a xacml.properties file to another location and all the policies defined within it.
      *
      * @param propertiesPath Path to an existing properties file
-     * @param properties Properties object
-     * @param creator A callback that can create files. Allows JUnit test to pass Temporary folder
+     * @param properties     Properties object
+     * @param creator        A callback that can create files. Allows JUnit test to pass Temporary folder
      * @return File object that points to new Properties file
      * @throws IOException Could not read/write files
      */
     public static File copyXacmlPropertiesContents(String propertiesPath, Properties properties,
-            FileCreator creator) throws IOException {
+                                                   FileCreator creator) throws IOException {
         //
         // Open the properties file
         //
@@ -516,15 +516,15 @@ public final class XacmlPolicyUtils {
     /**
      * Wraps the call to XACMLPolicyWriter.
      *
-     * @param path Path to file to be written to.
+     * @param path   Path to file to be written to.
      * @param policy PolicyType or PolicySetType
      * @return Path - the same path passed in most likely from XACMLPolicyWriter. Or NULL if an error occurs.
      */
     public static Path writePolicyFile(Path path, Object policy) {
-        if (policy instanceof PolicyType) {
-            return XACMLPolicyWriter.writePolicyFile(path, (PolicyType) policy);
-        } else if (policy instanceof PolicySetType) {
-            return XACMLPolicyWriter.writePolicyFile(path, (PolicySetType) policy);
+        if (policy instanceof PolicyType policyType) {
+            return XACMLPolicyWriter.writePolicyFile(path, policyType);
+        } else if (policy instanceof PolicySetType policySetType) {
+            return XACMLPolicyWriter.writePolicyFile(path, policySetType);
         } else {
             throw new IllegalArgumentException("Expecting PolicyType or PolicySetType");
         }

@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,18 +24,18 @@
 package org.onap.policy.pdp.xacml.application.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.att.research.xacml.api.AttributeAssignment;
 import com.att.research.xacml.api.Obligation;
 import com.att.research.xacml.api.XACML3;
 import java.util.Arrays;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionType;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 
-public class OnapObligationTest {
+class OnapObligationTest {
 
     String policyJson;
     String policyBadJson;
@@ -51,55 +52,55 @@ public class OnapObligationTest {
     /**
      * setup - create test data.
      */
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         policyJson = ResourceUtils.getResourceAsString("test.policy.json");
         policyBadJson = ResourceUtils.getResourceAsString("test.policy.bad.json");
 
         assignmentPolicyId = TestUtilsCommon.createAttributeAssignment(
-                ToscaDictionary.ID_OBLIGATION_POLICY_ID.stringValue(),
-                ToscaDictionary.ID_OBLIGATION_POLICY_ID_CATEGORY.stringValue(),
-                policyJson
-                );
+            ToscaDictionary.ID_OBLIGATION_POLICY_ID.stringValue(),
+            ToscaDictionary.ID_OBLIGATION_POLICY_ID_CATEGORY.stringValue(),
+            policyJson
+        );
 
         assignmentPolicy = TestUtilsCommon.createAttributeAssignment(
-                ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT.stringValue(),
-                ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT_CATEGORY.stringValue(),
-                policyJson
-                );
+            ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT.stringValue(),
+            ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT_CATEGORY.stringValue(),
+            policyJson
+        );
 
         assignmentBadPolicy = TestUtilsCommon.createAttributeAssignment(
-                ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT.stringValue(),
-                ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT_CATEGORY.stringValue(),
-                policyBadJson
-                );
+            ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT.stringValue(),
+            ToscaDictionary.ID_OBLIGATION_POLICY_CONTENT_CATEGORY.stringValue(),
+            policyBadJson
+        );
 
         assignmentWeight = TestUtilsCommon.createAttributeAssignment(
-                ToscaDictionary.ID_OBLIGATION_POLICY_WEIGHT.stringValue(),
-                ToscaDictionary.ID_OBLIGATION_POLICY_WEIGHT_CATEGORY.stringValue(),
-                0
-                );
+            ToscaDictionary.ID_OBLIGATION_POLICY_WEIGHT.stringValue(),
+            ToscaDictionary.ID_OBLIGATION_POLICY_WEIGHT_CATEGORY.stringValue(),
+            0
+        );
 
         assignmentPolicyType = TestUtilsCommon.createAttributeAssignment(
-                ToscaDictionary.ID_OBLIGATION_POLICY_TYPE.stringValue(),
-                ToscaDictionary.ID_OBLIGATION_POLICY_TYPE_CATEGORY.stringValue(),
-                "onap.policies.Test"
-                );
+            ToscaDictionary.ID_OBLIGATION_POLICY_TYPE.stringValue(),
+            ToscaDictionary.ID_OBLIGATION_POLICY_TYPE_CATEGORY.stringValue(),
+            "onap.policies.Test"
+        );
 
         assignmentUnknown = TestUtilsCommon.createAttributeAssignment(
-                "foo:bar",
-                XACML3.ID_SUBJECT_CATEGORY_ACCESS_SUBJECT.stringValue(),
-                10.2
-                );
+            "foo:bar",
+            XACML3.ID_SUBJECT_CATEGORY_ACCESS_SUBJECT.stringValue(),
+            10.2
+        );
 
         obligation = TestUtilsCommon.createXacmlObligation(
-                ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue(),
-                Arrays.asList(assignmentPolicyId, assignmentPolicy, assignmentWeight, assignmentPolicyType,
-                        assignmentUnknown));
+            ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue(),
+            Arrays.asList(assignmentPolicyId, assignmentPolicy, assignmentWeight, assignmentPolicyType,
+                assignmentUnknown));
     }
 
     @Test
-    public void testObligation() {
+    void testObligation() {
         OnapObligation onapObligation = new OnapObligation(obligation);
         assertNotNull(onapObligation);
         assertThat(onapObligation.getPolicyId()).isEqualTo(assignmentPolicyId.getAttributeValue().getValue());
@@ -109,7 +110,7 @@ public class OnapObligationTest {
     }
 
     @Test
-    public void testSimplePolicy() {
+    void testSimplePolicy() {
         OnapObligation onapObligation = new OnapObligation("my.policy.id", policyJson);
         assertNotNull(onapObligation);
         assertThat(onapObligation.getPolicyId()).isEqualTo("my.policy.id");
@@ -126,7 +127,7 @@ public class OnapObligationTest {
 
 
     @Test
-    public void testWeightedPolicy() {
+    void testWeightedPolicy() {
         OnapObligation onapObligation = new OnapObligation("my.policy.id", policyJson, "onap.policies.Test", 5);
         assertNotNull(onapObligation);
         assertThat(onapObligation.getPolicyId()).isEqualTo("my.policy.id");

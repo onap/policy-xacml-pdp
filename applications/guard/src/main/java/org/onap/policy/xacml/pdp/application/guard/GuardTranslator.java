@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020, 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2020, 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,17 +75,8 @@ public class GuardTranslator implements ToscaPolicyTranslator {
     //
     // common guard property fields
     //
-    public static final String FIELD_ACTOR = "actor";
-    public static final String FIELD_OPERATION = "operation";
     public static final String FIELD_CONTROLLOOP = "id";
     public static final String FIELD_TIMERANGE = "timeRange";
-
-    //
-    // frequency property fields
-    //
-    public static final String FIELD_TIMEWINDOW = "timeWindow";
-    public static final String FIELD_TIMEUNITS = "timeUnits";
-    public static final String FIELD_LIMIT = "limit";
 
     //
     // minmax property fields
@@ -98,17 +89,6 @@ public class GuardTranslator implements ToscaPolicyTranslator {
     // blacklist property fields
     //
     public static final String FIELD_BLACKLIST = "blacklist";
-
-    //
-    // filter property fields
-    //
-    public static final String FIELD_FILTER_WHITELIST = "whitelist";
-    public static final String FIELD_FILTER_ALGORITHM = "algorithm";
-    public static final String FIELD_FILTER_FILTERS = "filters";
-    public static final String FIELD_FILTER_FIELD = "field";
-    public static final String FIELD_FILTER_FUNCTION = "function";
-    public static final String FIELD_FILTER_FILTER = "filter";
-    public static final String FIELD_FILTER_BLACKLIST = "blacklist";
 
     public static final String POLICYTYPE_FREQUENCY = "onap.policies.controlloop.guard.common.FrequencyLimiter";
     public static final String POLICYTYPE_MINMAX = "onap.policies.controlloop.guard.common.MinMax";
@@ -286,7 +266,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
     }
 
     /**
-     * Generate the targetType for the policy. Optional to add MatchType for the target. eg. the
+     * Generate the targetType for the policy. Optional to add MatchType for the target. e.g. the
      * blacklist policy type uses the target in a different manner.
      *
      * @param properties TOSCA properties object
@@ -327,7 +307,6 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         return target;
     }
 
-    @SuppressWarnings("unchecked")
     protected AllOfType addMatch(AllOfType allOf, Object value, Identifier attributeId) {
         if (value instanceof String) {
             if (".*".equals(value.toString())) {
@@ -350,8 +329,8 @@ public class GuardTranslator implements ToscaPolicyTranslator {
             }
             return allOf;
         }
-        if (value instanceof Collection) {
-            ((Collection<String>) value).forEach(val -> {
+        if (value instanceof Collection<?> collection) {
+            collection.forEach(val -> {
                 var match = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
                     XACML3.ID_FUNCTION_STRING_EQUAL,
                     val,
@@ -363,27 +342,6 @@ public class GuardTranslator implements ToscaPolicyTranslator {
             });
         }
         return allOf;
-    }
-
-    protected void addTimeRangeMatch(AllOfType allOf, TimeRange timeRange) {
-
-        var matchStart = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
-            XACML3.ID_FUNCTION_TIME_GREATER_THAN_OR_EQUAL,
-            timeRange.getStartTime(),
-            XACML3.ID_DATATYPE_TIME,
-            XACML3.ID_ENVIRONMENT_CURRENT_TIME,
-            XACML3.ID_ATTRIBUTE_CATEGORY_ENVIRONMENT);
-
-        allOf.getMatch().add(matchStart);
-
-        var matchEnd = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
-            XACML3.ID_FUNCTION_TIME_LESS_THAN_OR_EQUAL,
-            timeRange.getEndTime(),
-            XACML3.ID_DATATYPE_TIME,
-            XACML3.ID_ENVIRONMENT_CURRENT_TIME,
-            XACML3.ID_ATTRIBUTE_CATEGORY_ENVIRONMENT);
-
-        allOf.getMatch().add(matchEnd);
     }
 
     protected VariableReferenceType createTimeRangeVariable(Map<String, Object> properties, PolicyType newPolicyType)
@@ -456,7 +414,7 @@ public class GuardTranslator implements ToscaPolicyTranslator {
         FrequencyDefinition frequencyDef = ToscaPolicyTranslatorUtils.decodeProperties(toscaPolicy.getProperties(),
             FrequencyDefinition.class);
         //
-        // See if its possible to generate a count
+        // See if it's possible to generate a count
         //
         String timeWindow = null;
         if (frequencyDef.getTimeWindow() != null) {

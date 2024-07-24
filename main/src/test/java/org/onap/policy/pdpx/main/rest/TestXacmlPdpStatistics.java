@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2022 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +22,11 @@
 
 package org.onap.policy.pdpx.main.rest;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.pdpx.main.CommonRest;
 import org.onap.policy.pdpx.main.rest.model.StatisticsReport;
 import org.slf4j.Logger;
@@ -33,16 +34,15 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Class to perform unit test of {@link XacmlPdpRestController}.
- *
  */
-public class TestXacmlPdpStatistics extends CommonRest {
+class TestXacmlPdpStatistics extends CommonRest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestXacmlPdpStatistics.class);
 
     private int nupdates = 0;
 
     @Test
-    public void testXacmlPdpStatistics_200() throws Exception {
+    void testXacmlPdpStatistics_200() throws Exception {
         LOGGER.info("*************************** Running testXacmlPdpStatistics_200 ***************************");
         StatisticsReport report = getXacmlPdpStatistics();
         validateReport(report, 0, 200, new HashMap<>());
@@ -52,7 +52,7 @@ public class TestXacmlPdpStatistics extends CommonRest {
     }
 
     @Test
-    public void testXacmlPdpStatistics_500() throws Exception {
+    void testXacmlPdpStatistics_500() throws Exception {
         LOGGER.info("***************************** Running testXacmlPdpStatistics_500 *****************************");
         markActivatorDead();
         final StatisticsReport report = getXacmlPdpStatistics();

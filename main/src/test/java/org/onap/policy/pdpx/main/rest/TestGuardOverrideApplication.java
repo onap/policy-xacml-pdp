@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,13 +59,9 @@ public class TestGuardOverrideApplication extends GuardPdpApplication {
 
     @Override
     public boolean canSupportPolicyType(ToscaConceptIdentifier policyTypeId) {
-        boolean canSuper = super.canSupportPolicyType(policyTypeId);
-        if (canSuper) {
-            return canSuper;
-        }
-        if (MY_EXTRAGUARD_POLICY_TYPE.equals(policyTypeId.getName())) {
+        if (super.canSupportPolicyType(policyTypeId)) {
             return true;
         }
-        return false;
+        return MY_EXTRAGUARD_POLICY_TYPE.equals(policyTypeId.getName());
     }
 }

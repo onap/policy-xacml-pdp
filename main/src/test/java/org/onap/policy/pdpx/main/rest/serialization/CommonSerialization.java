@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@
 
 package org.onap.policy.pdpx.main.rest.serialization;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
@@ -46,14 +46,11 @@ public class CommonSerialization {
         assertFalse(getter.apply(null, null, null, null));
 
         // valid media type and class type
-        assertTrue("writeable " + subType, getter.apply(
-                REQUEST_CLASS, null, null, new MediaType(primaryType, subType)));
-        assertTrue("writeable " + subType, getter.apply(
-                RESPONSE_CLASS, null, null, new MediaType(primaryType, subType)));
+        assertTrue(getter.apply(REQUEST_CLASS, null, null, new MediaType(primaryType, subType)));
+        assertTrue(getter.apply(RESPONSE_CLASS, null, null, new MediaType(primaryType, subType)));
 
         // valid media type but invalid class type
-        assertFalse(getter.apply(
-                GENERAL_CLASS, null, null, new MediaType(primaryType, subType)));
+        assertFalse(getter.apply(GENERAL_CLASS, null, null, new MediaType(primaryType, subType)));
 
         // null subtype or invalid media type
         assertFalse(getter.apply(null, null, null, new MediaType(primaryType, null)));

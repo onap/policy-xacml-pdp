@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021-2022 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2021, 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2021, 2023-2024 Nordix Foundation.
  * Modifications Copyright (C) 2023 Bell Canada.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,20 +22,20 @@
 
 package org.onap.policy.pdpx.main;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.policy.models.pdp.concepts.PdpResponseDetails;
 import org.onap.policy.models.pdp.concepts.PdpStateChange;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
@@ -46,8 +46,8 @@ import org.onap.policy.models.pdp.enums.PdpState;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
 
-@RunWith(MockitoJUnitRunner.class)
-public class XacmlStateTest {
+@ExtendWith(MockitoExtension.class)
+class XacmlStateTest {
     private static final String PDP_TYPE = "xacml-flavor";
     private static final String GROUP = "my-group";
     private static final String SUBGROUP = "my-subgroup";
@@ -66,21 +66,21 @@ public class XacmlStateTest {
     /**
      * Initializes objects, including the state.
      */
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         pdpName = XacmlState.PDP_NAME;
 
         XacmlPdpActivator.setCurrent(act);
         state = new XacmlState(appmgr, GROUP, PDP_TYPE);
     }
 
-    @AfterClass
-    public static void tearDownAfterClass() {
+    @AfterAll
+    static void tearDownAfterClass() {
         XacmlPdpActivator.setCurrent(null);
     }
 
     @Test
-    public void testShouldHandle() {
+    void testShouldHandle() {
         PdpUpdate msg = new PdpUpdate();
         assertFalse(state.shouldHandle(msg));
 
@@ -89,7 +89,7 @@ public class XacmlStateTest {
     }
 
     @Test
-    public void testGenHeartbeat() {
+    void testGenHeartbeat() {
         // not healthy
         PdpStatus status = state.genHeartbeat();
         assertEquals(PdpHealthStatus.NOT_HEALTHY, status.getHealthy());
@@ -107,7 +107,7 @@ public class XacmlStateTest {
     }
 
     @Test
-    public void testUpdateInternalStatePdpStateChange() {
+    void testUpdateInternalStatePdpStateChange() {
         PdpStateChange req = new PdpStateChange();
         req.setName(pdpName);
         req.setPdpGroup("wrong-pdp-group");
@@ -139,7 +139,7 @@ public class XacmlStateTest {
     }
 
     @Test
-    public void testUpdateInternalStatePdpUpdate() {
+    void testUpdateInternalStatePdpUpdate() {
         PdpUpdate req = new PdpUpdate();
         req.setPdpGroup("wrong-pdp-group");
         req.setPdpSubgroup(SUBGROUP);
@@ -164,7 +164,7 @@ public class XacmlStateTest {
     }
 
     @Test
-    public void testTerminatePdpMessage() {
+    void testTerminatePdpMessage() {
         PdpStatus status = state.terminatePdpMessage();
         assertEquals(PdpState.TERMINATED, status.getState());
     }

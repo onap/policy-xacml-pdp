@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,16 +28,16 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 
-public class GuardPolicyRequestTest {
+class GuardPolicyRequestTest {
 
     @Test
-    public void testAnomalies() throws ToscaPolicyConversionException {
+    void testAnomalies() throws ToscaPolicyConversionException {
         DecisionRequest decisionRequest = new DecisionRequest();
         assertThat(GuardPolicyRequest.createInstance(decisionRequest)).isNotNull();
 
@@ -95,12 +96,12 @@ public class GuardPolicyRequestTest {
     }
 
     @Test
-    public void testFilterResources() throws Exception {
+    void testFilterResources() throws Exception {
         StandardCoder gson = new StandardCoder();
 
         DecisionRequest request = gson.decode(
-                TextFileUtils.getTextFileAsString("src/test/resources/requests/guard.filter.json"),
-                DecisionRequest.class);
+            TextFileUtils.getTextFileAsString("src/test/resources/requests/guard.filter.json"),
+            DecisionRequest.class);
 
         GuardPolicyRequest guardRequest = GuardPolicyRequest.createInstance(request);
 

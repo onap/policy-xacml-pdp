@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,10 +51,10 @@ public class TestUtilsCommon {
     /**
      * createAttributeAssignment.
      *
-     * @param <T> Object can be String, Integer, Double, Boolean
-     * @param id String attribute id
+     * @param <T>      Object can be String, Integer, Double, Boolean
+     * @param id       String attribute id
      * @param category String for the attribute category
-     * @param value Object containing a value
+     * @param value    Object containing a value
      * @return AttributeAssignment object
      */
     public static <T> AttributeAssignment createAttributeAssignment(String id, String category, T value) {
@@ -71,13 +72,13 @@ public class TestUtilsCommon {
         }
 
         return new StdAttributeAssignment(new IdentifierImpl(category),
-                new IdentifierImpl(id), "", attributeValue);
+            new IdentifierImpl(id), "", attributeValue);
     }
 
     /**
      * createXacmlObligation.
      *
-     * @param id String obligation id
+     * @param id                   String obligation id
      * @param attributeAssignments Collection of AttributeAssignment objects
      * @return Obligation object
      */
@@ -97,7 +98,7 @@ public class TestUtilsCommon {
 
         for (Entry<String, String> entrySet : ids.entrySet()) {
             policyIds.add(new StdIdReference(new IdentifierImpl(entrySet.getKey()),
-                    StdVersion.newInstance(entrySet.getValue())));
+                StdVersion.newInstance(entrySet.getValue())));
         }
 
         return policyIds;
@@ -106,15 +107,15 @@ public class TestUtilsCommon {
     /**
      * createXacmlResponse.
      *
-     * @param code StatusCode
-     * @param decision Decision
+     * @param code        StatusCode
+     * @param decision    Decision
      * @param obligations Collection of Obligation objects
-     * @param policyIds Collection of IdReference objects
+     * @param policyIds   Collection of IdReference objects
      * @return Response object
      */
-    public static Response createXacmlResponse(StatusCode code, String message, Decision decision, 
-            Collection<Obligation> obligations,
-            Collection<IdReference> policyIds) {
+    public static Response createXacmlResponse(StatusCode code, String message, Decision decision,
+                                               Collection<Obligation> obligations,
+                                               Collection<IdReference> policyIds) {
 
         StdStatus status = new StdStatus(code, message);
 

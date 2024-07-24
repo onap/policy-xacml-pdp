@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +27,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.FileInputStream;
 import java.util.Properties;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class OnapPolicyFinderFactoryTest {
+class OnapPolicyFinderFactoryTest {
 
     @Test
-    public void testFinder() throws Exception {
+    void testFinder() throws Exception {
         //
         // Load our test properties to use
         //
@@ -47,7 +48,7 @@ public class OnapPolicyFinderFactoryTest {
     }
 
     @Test
-    public void testFinderWithCombiningAlgorithm() throws Exception {
+    void testFinderWithCombiningAlgorithm() throws Exception {
         //
         // Load our test properties to use
         //
@@ -59,7 +60,7 @@ public class OnapPolicyFinderFactoryTest {
         // Set a combining algorithm
         //
         properties.put("xacml.att.policyFinderFactory.combineRootPolicies",
-                "urn:com:att:xacml:3.0:policy-combining-algorithm:combined-permit-overrides");
+            "urn:com:att:xacml:3.0:policy-combining-algorithm:combined-permit-overrides");
         OnapPolicyFinderFactory finder = new OnapPolicyFinderFactory(properties);
         assertThat(finder).isNotNull();
     }

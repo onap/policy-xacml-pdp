@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020 Nordix Foundation.
+ * Modifications Copyright (C) 2020, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableDefinitionType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
@@ -58,26 +58,26 @@ import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionExcepti
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GuardTranslatorTest {
+class GuardTranslatorTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(GuardTranslatorTest.class);
     private static final StandardYamlCoder yamlCoder = new StandardYamlCoder();
-    private static StandardCoder gson = new StandardCoder();
+    private static final StandardCoder gson = new StandardCoder();
 
-    private GuardTranslator translator = new GuardTranslator();
+    private final GuardTranslator translator = new GuardTranslator();
 
     @Test
-    public void testRequest() throws Exception {
+    void testRequest() throws Exception {
         DecisionRequest decisionRequest = gson.decode(
-                TextFileUtils.getTextFileAsString(
-                        "src/test/resources/requests/guard.vfCount.json"),
-                        DecisionRequest.class);
+            TextFileUtils.getTextFileAsString(
+                "src/test/resources/requests/guard.vfCount.json"),
+            DecisionRequest.class);
         Request xacmlRequest = translator.convertRequest(decisionRequest);
 
         assertThat(xacmlRequest).isNotNull();
     }
 
     @Test
-    public void testResponse() {
+    void testResponse() {
         StdStatus status = new StdStatus(StdStatusCode.STATUS_CODE_OK);
         StdMutableResult result = new StdMutableResult(Decision.PERMIT, status);
         StdMutableResponse response = new StdMutableResponse(result);
@@ -101,7 +101,7 @@ public class GuardTranslatorTest {
 
 
     @Test
-    public void testBadPolicies() throws Exception {
+    void testBadPolicies() throws Exception {
         String policyYaml = ResourceUtils.getResourceAsString("src/test/resources/test-bad-policies.yaml");
         //
         // Serialize it into a class
@@ -127,7 +127,7 @@ public class GuardTranslatorTest {
         name2message.put("blacklist-noblacklist", "item \"blacklist\"");
         name2message.put("filter-noalgorithm", "item \"algorithm\"");
         name2message.put("filter-badalgorithm",
-                            "Unexpected value for algorithm, should be whitelist-overrides or blacklist-overrides");
+            "Unexpected value for algorithm, should be whitelist-overrides or blacklist-overrides");
         name2message.put("filter-nofilter", "item \"filters\"");
         name2message.put("filter-nocollection", "Cannot decode FilterDefinition");
         name2message.put("filter-noarray", "Cannot decode FilterDefinition");
@@ -142,7 +142,7 @@ public class GuardTranslatorTest {
         //
         for (Map<String, ToscaPolicy> policies : completedJtst.getToscaTopologyTemplate().getPolicies()) {
             for (ToscaPolicy policy : policies.values()) {
-                LOGGER.info("Testing policy " + policy.getName());
+                LOGGER.info("Testing policy {}", policy.getName());
                 String expectedMsg = name2message.get(policy.getName());
                 assertThat(expectedMsg).as(policy.getName()).isNotNull();
 
@@ -154,7 +154,7 @@ public class GuardTranslatorTest {
     }
 
     @Test
-    public void testPolicyConversion() throws Exception {
+    void testPolicyConversion() throws Exception {
         String policyYaml = ResourceUtils.getResourceAsString("src/test/resources/test-policies.yaml");
         //
         // Serialize it into a class
@@ -198,13 +198,13 @@ public class GuardTranslatorTest {
                 // Validate each policy type
                 //
                 if (GuardTranslator.POLICYTYPE_FREQUENCY.equals(policy.getType())) {
-                    validateFrequency(policy, xacmlPolicy);
+                    validateFrequency(xacmlPolicy);
                 } else if (GuardTranslator.POLICYTYPE_MINMAX.equals(policy.getType())) {
                     validateMinMax(policy, xacmlPolicy);
                 } else if (GuardTranslator.POLICYTYPE_BLACKLIST.equals(policy.getType())) {
                     validateBlacklist(policy, xacmlPolicy);
                 } else if (GuardTranslator.POLICYTYPE_FILTER.equals(policy.getType())) {
-                    validateFilter(policy, xacmlPolicy);
+                    validateFilter(xacmlPolicy);
                 }
             }
         }
@@ -213,11 +213,11 @@ public class GuardTranslatorTest {
 
         testPol.setProperties(new LinkedHashMap<>());
         assertThatExceptionOfType(ToscaPolicyConversionException.class)
-                .isThrownBy(() -> translator.convertPolicy(testPol));
+            .isThrownBy(() -> translator.convertPolicy(testPol));
 
         testPol.setProperties(null);
         assertThatExceptionOfType(ToscaPolicyConversionException.class)
-                .isThrownBy(() -> translator.convertPolicy(testPol));
+            .isThrownBy(() -> translator.convertPolicy(testPol));
     }
 
     private void validateCommon(ToscaPolicy policy, PolicyType xacmlPolicy) {
@@ -225,7 +225,6 @@ public class GuardTranslatorTest {
         boolean foundOperation = false;
         boolean foundTarget = false;
         boolean foundControlLoop = false;
-        //boolean foundTimeRange = false;
 
         assertThat(xacmlPolicy.getTarget()).isNotNull();
         assertThat(xacmlPolicy.getTarget().getAnyOf()).isNotEmpty();
@@ -238,11 +237,11 @@ public class GuardTranslatorTest {
                     // These fields are required
                     //
                     if (ToscaDictionary.ID_RESOURCE_GUARD_ACTOR.toString().equals(
-                            match.getAttributeDesignator().getAttributeId())) {
+                        match.getAttributeDesignator().getAttributeId())) {
                         assertThat(match.getAttributeValue().getContent()).isNotNull();
                         foundActor = true;
                     } else if (ToscaDictionary.ID_RESOURCE_GUARD_RECIPE.toString().equals(
-                            match.getAttributeDesignator().getAttributeId())) {
+                        match.getAttributeDesignator().getAttributeId())) {
                         assertThat(match.getAttributeValue().getContent()).isNotNull();
                         foundOperation = true;
                     } else {
@@ -250,22 +249,16 @@ public class GuardTranslatorTest {
                         // These fields are optional
                         //
                         if (ToscaDictionary.ID_RESOURCE_GUARD_TARGETID.toString().equals(
-                                match.getAttributeDesignator().getAttributeId())) {
+                            match.getAttributeDesignator().getAttributeId())) {
                             assertThat(policy.getProperties()).containsKey("target");
                             foundTarget = true;
                         }
                         if (ToscaDictionary.ID_RESOURCE_GUARD_CLNAME.toString().equals(
-                                match.getAttributeDesignator().getAttributeId())) {
+                            match.getAttributeDesignator().getAttributeId())) {
                             assertThat(policy.getProperties()).containsKey(GuardTranslator.FIELD_CONTROLLOOP);
                             foundControlLoop = true;
                         }
-                        /*
-                        if (XACML3.ID_ENVIRONMENT_CURRENT_TIME.toString().equals(
-                                match.getAttributeDesignator().getAttributeId())) {
-                            assertThat(policy.getProperties()).containsKey(GuardTranslator.FIELD_TIMERANGE);
-                            foundTimeRange = true;
-                        }
-                        */
+
                     }
                 }
             }
@@ -283,9 +276,9 @@ public class GuardTranslatorTest {
         }
     }
 
-    private void validateFrequency(ToscaPolicy policy, PolicyType xacmlPolicy) {
+    private void validateFrequency(PolicyType xacmlPolicy) {
         for (Object rule : xacmlPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition()) {
-            if (! (rule instanceof RuleType)) {
+            if (!(rule instanceof RuleType)) {
                 continue;
             }
             assertThat(((RuleType) rule).getCondition()).isNotNull();
@@ -297,7 +290,7 @@ public class GuardTranslatorTest {
         boolean foundTarget = false;
         boolean foundMinOrMax = false;
         for (Object rule : xacmlPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition()) {
-            if (! (rule instanceof RuleType)) {
+            if (!(rule instanceof RuleType)) {
                 continue;
             }
             for (AnyOfType anyOf : ((RuleType) rule).getTarget().getAnyOf()) {
@@ -306,13 +299,13 @@ public class GuardTranslatorTest {
                     assertThat(allOf.getMatch()).isNotEmpty();
                     for (MatchType match : allOf.getMatch()) {
                         if (ToscaDictionary.ID_RESOURCE_GUARD_TARGETID.toString().equals(
-                                match.getAttributeDesignator().getAttributeId())) {
+                            match.getAttributeDesignator().getAttributeId())) {
                             assertThat(policy.getProperties()).containsKey(GuardTranslator.FIELD_TARGET);
                             foundTarget = true;
                         } else if (ToscaDictionary.ID_RESOURCE_GUARD_VFCOUNT.toString().equals(
-                                match.getAttributeDesignator().getAttributeId())) {
+                            match.getAttributeDesignator().getAttributeId())) {
                             assertThat(policy.getProperties().keySet()).containsAnyOf(GuardTranslator.FIELD_MIN,
-                                    GuardTranslator.FIELD_MAX);
+                                GuardTranslator.FIELD_MAX);
                             foundMinOrMax = true;
                         }
                     }
@@ -325,7 +318,7 @@ public class GuardTranslatorTest {
     private void validateBlacklist(ToscaPolicy policy, PolicyType xacmlPolicy) {
         boolean foundBlacklist = false;
         for (Object rule : xacmlPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition()) {
-            if (! (rule instanceof RuleType)) {
+            if (!(rule instanceof RuleType)) {
                 continue;
             }
             assertThat(((RuleType) rule).getTarget()).isNotNull();
@@ -337,7 +330,7 @@ public class GuardTranslatorTest {
                     assertThat(allOf.getMatch()).hasSize(1);
                     for (MatchType match : allOf.getMatch()) {
                         assertThat(match.getAttributeDesignator().getAttributeId())
-                                .isEqualTo(ToscaDictionary.ID_RESOURCE_GUARD_TARGETID.toString());
+                            .isEqualTo(ToscaDictionary.ID_RESOURCE_GUARD_TARGETID.toString());
                         assertThat(match.getAttributeValue().getContent()).containsAnyOf("vnf1", "vnf2");
                         //
                         // This just checks that policy did have a blacklist in it.
@@ -351,10 +344,10 @@ public class GuardTranslatorTest {
         assertThat(foundBlacklist).isTrue();
     }
 
-    private void validateFilter(ToscaPolicy policy, PolicyType xacmlPolicy) {
+    private void validateFilter(PolicyType xacmlPolicy) {
         assertThat(xacmlPolicy.getRuleCombiningAlgId()).endsWith("-overrides");
         for (Object rule : xacmlPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition()) {
-            if (! (rule instanceof RuleType)) {
+            if (!(rule instanceof RuleType)) {
                 continue;
             }
             assertThat(((RuleType) rule).getTarget()).isNotNull();

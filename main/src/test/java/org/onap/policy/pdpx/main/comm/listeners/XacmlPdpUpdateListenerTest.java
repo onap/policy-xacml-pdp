@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,19 +21,18 @@
 
 package org.onap.policy.pdpx.main.comm.listeners;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
@@ -43,8 +42,8 @@ import org.onap.policy.pdpx.main.comm.XacmlPdpUpdatePublisher;
 import org.onap.policy.pdpx.main.rest.XacmlPdpApplicationManager;
 import org.springframework.test.util.ReflectionTestUtils;
 
-@RunWith(MockitoJUnitRunner.class)
-public class XacmlPdpUpdateListenerTest {
+@ExtendWith(MockitoExtension.class)
+class XacmlPdpUpdateListenerTest {
     private static final String EXPECTED_EXCEPTION = "expected exception";
     private static final String TOPIC = "my-topic";
     private static final long HB_INTERVAL = 100L;
@@ -71,19 +70,19 @@ public class XacmlPdpUpdateListenerTest {
     /**
      * Initializes objects, including the listener.
      */
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         listener = new MyListener(client, state, heartbeat, appmgr);
         update = new PdpUpdate();
 
-        when(state.shouldHandle(update)).thenReturn(true);
+        lenient().when(state.shouldHandle(update)).thenReturn(true);
 
         update.setPdpHeartbeatIntervalMs(HB_INTERVAL);
     }
 
     @Test
-    public void testOnTopicEvent_Unhandled() {
-        when(state.shouldHandle(update)).thenReturn(false);
+    void testOnTopicEvent_Unhandled() {
+        lenient().when(state.shouldHandle(update)).thenReturn(false);
         listener.onTopicEvent(CommInfrastructure.NOOP, TOPIC, null, update);
 
         verify(publisher, never()).handlePdpUpdate(any());
@@ -91,7 +90,7 @@ public class XacmlPdpUpdateListenerTest {
     }
 
     @Test
-    public void testOnTopicEvent_SendOk() {
+    void testOnTopicEvent_SendOk() {
         listener.onTopicEvent(CommInfrastructure.NOOP, TOPIC, null, update);
 
         verify(publisher).handlePdpUpdate(update);
@@ -99,8 +98,8 @@ public class XacmlPdpUpdateListenerTest {
     }
 
     @Test
-    public void testOnTopicEvent_SendEx() {
-        doThrow(new RuntimeException(EXPECTED_EXCEPTION)).when(publisher).handlePdpUpdate(update);
+    void testOnTopicEvent_SendEx() {
+        lenient().doThrow(new RuntimeException(EXPECTED_EXCEPTION)).when(publisher).handlePdpUpdate(update);
 
         listener.onTopicEvent(CommInfrastructure.NOOP, TOPIC, null, update);
 
@@ -109,7 +108,7 @@ public class XacmlPdpUpdateListenerTest {
     }
 
     @Test
-    public void testMakePublisher() {
+    void testMakePublisher() {
         // create a plain listener to test the "real" makePublisher() method
         listener = new XacmlPdpUpdateListener(client, state, heartbeat, appmgr);
         assertNotNull(ReflectionTestUtils.getField(listener, "publisher"));
@@ -117,14 +116,14 @@ public class XacmlPdpUpdateListenerTest {
 
     private class MyListener extends XacmlPdpUpdateListener {
 
-        public MyListener(TopicSinkClient client, XacmlState state, XacmlPdpHearbeatPublisher heartbeat,
-                        XacmlPdpApplicationManager appManager) {
+        MyListener(TopicSinkClient client, XacmlState state, XacmlPdpHearbeatPublisher heartbeat,
+                   XacmlPdpApplicationManager appManager) {
             super(client, state, heartbeat, appManager);
         }
 
         @Override
         protected XacmlPdpUpdatePublisher makePublisher(TopicSinkClient client, XacmlState state,
-                        XacmlPdpApplicationManager appManager) {
+                                                        XacmlPdpApplicationManager appManager) {
             return publisher;
         }
     }

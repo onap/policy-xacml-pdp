@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +53,7 @@ public class StdCombinedPolicyRequest {
     @XACMLSubject(attributeId = "urn:org:onap:onap-component", includeInResults = true)
     private String onapComponent;
 
-    @XACMLSubject(attributeId = "urn:org:onap:onap-instance",  includeInResults = true)
+    @XACMLSubject(attributeId = "urn:org:onap:onap-instance", includeInResults = true)
     private String onapInstance;
 
     @XACMLAction()
@@ -92,18 +93,18 @@ public class StdCombinedPolicyRequest {
         Map<String, Object> resources = decisionRequest.getResource();
         for (Entry<String, Object> entrySet : resources.entrySet()) {
             if (POLICY_ID_KEY.equals(entrySet.getKey())) {
-                if (entrySet.getValue() instanceof Collection) {
-                    addPolicyIds(request, (Collection) entrySet.getValue());
-                } else if (entrySet.getValue() instanceof String) {
-                    request.resource.add(entrySet.getValue().toString());
+                if (entrySet.getValue() instanceof Collection collection) {
+                    addPolicyIds(request, collection);
+                } else if (entrySet.getValue() instanceof String stringValue) {
+                    request.resource.add(stringValue);
                 }
                 continue;
             }
             if (POLICY_TYPE_KEY.equals(entrySet.getKey())) {
-                if (entrySet.getValue() instanceof Collection) {
-                    addPolicyTypes(request, (Collection) entrySet.getValue());
-                } else if (entrySet.getValue() instanceof String) {
-                    request.resourcePolicyType.add(entrySet.getValue().toString());
+                if (entrySet.getValue() instanceof Collection collection) {
+                    addPolicyTypes(request, collection);
+                } else if (entrySet.getValue() instanceof String stringValue) {
+                    request.resourcePolicyType.add(stringValue);
                 }
             }
         }
@@ -118,7 +119,7 @@ public class StdCombinedPolicyRequest {
     }
 
     protected static StdCombinedPolicyRequest addPolicyTypes(StdCombinedPolicyRequest request,
-            Collection<Object> types) {
+                                                             Collection<Object> types) {
         for (Object type : types) {
             request.resourcePolicyType.add(type.toString());
         }

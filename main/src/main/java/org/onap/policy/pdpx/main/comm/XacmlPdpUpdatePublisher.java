@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,8 +93,8 @@ public class XacmlPdpUpdatePublisher {
                 } catch (XacmlApplicationException e) {
                     // Failed to load policy, return error(s) to PAP
                     LOGGER.error("Failed to load policy: {}", policy, e);
-                    errorMessage.append("Failed to load policy: " + policy + ": "
-                        + e.getMessage() + XacmlPolicyUtils.LINE_SEPARATOR);
+                    errorMessage.append("Failed to load policy: ").append(policy).append(": ").append(e.getMessage())
+                        .append(XacmlPolicyUtils.LINE_SEPARATOR);
                     stats.updateDeployFailureCount();
                 }
             }

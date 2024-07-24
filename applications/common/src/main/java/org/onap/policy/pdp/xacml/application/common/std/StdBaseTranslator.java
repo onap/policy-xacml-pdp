@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,16 +60,14 @@ import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Setter
+@Getter
 public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
     private static final Logger LOGGER = LoggerFactory.getLogger(StdBaseTranslator.class);
     private static final ObjectFactory factory = new ObjectFactory();
 
-    @Getter
-    @Setter
     protected boolean booleanReturnAttributes = false;
 
-    @Getter
-    @Setter
     protected boolean booleanReturnSingleValueAttributesAsCollection = false;
 
     public static final String POLICY_ID = "policy-id";
@@ -131,7 +130,7 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
      * obligations. This method must be overridden and be implemented for the specific application as
      * obligations may have different expected attributes per application.
      *
-     * @param obligations Collection of obligation objects
+     * @param obligations      Collection of obligation objects
      * @param decisionResponse DecisionResponse object used to store any results from obligations.
      */
     protected abstract void scanObligations(Collection<Obligation> obligations, DecisionResponse decisionResponse);
@@ -141,7 +140,7 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
      * can be overridden for each specific application as advice may have different expected attributes per
      * application.
      *
-     * @param advice Collection of Advice objects
+     * @param advice           Collection of Advice objects
      * @param decisionResponse DecisionResponse object used to store any results from advice.
      */
     protected abstract void scanAdvice(Collection<Advice> advice, DecisionResponse decisionResponse);
@@ -151,10 +150,10 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
      * DecisionResponse object.
      *
      * @param attributeCategories Collection of AttributeCategory objects
-     * @param decisionResponse DecisionResponse object used to store any attributes
+     * @param decisionResponse    DecisionResponse object used to store any attributes
      */
     protected void scanAttributes(Collection<AttributeCategory> attributeCategories,
-            DecisionResponse decisionResponse) {
+                                  DecisionResponse decisionResponse) {
         var returnedAttributes = new HashMap<String, Object>();
         for (AttributeCategory attributeCategory : attributeCategories) {
             var mapCategory = new HashMap<String, Object>();
@@ -163,7 +162,7 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
                 // Most attributes have a single value, thus the collection is not necessary to
                 // return. However, we will allow this to be configurable.
                 //
-                if (! booleanReturnSingleValueAttributesAsCollection && attribute.getValues().size() == 1) {
+                if (!booleanReturnSingleValueAttributesAsCollection && attribute.getValues().size() == 1) {
                     var iterator = attribute.getValues().iterator();
                     var value = iterator.next();
                     mapCategory.put(attribute.getAttributeId().stringValue(), value.getValue().toString());
@@ -173,7 +172,7 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
             }
             returnedAttributes.put(attributeCategory.getCategory().stringValue(), mapCategory);
         }
-        if (! returnedAttributes.isEmpty()) {
+        if (!returnedAttributes.isEmpty()) {
             decisionResponse.setAttributes(returnedAttributes);
         }
     }
@@ -182,25 +181,25 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
      * From the TOSCA metadata section, pull in values that are needed into the XACML policy.
      *
      * @param policy Policy Object to store the metadata
-     * @param map The Metadata TOSCA Map
+     * @param map    The Metadata TOSCA Map
      * @return Same Policy Object
      * @throws ToscaPolicyConversionException If there is something missing from the metadata
      */
-    protected PolicyType fillMetadataSection(PolicyType policy,
-            Map<String, Object> map) throws ToscaPolicyConversionException {
+    protected PolicyType fillMetadataSection(PolicyType policy, Map<String, Object> map)
+        throws ToscaPolicyConversionException {
         //
         // Ensure the policy-id exists - we don't use it here. It
         // is saved in the TOSCA Policy Name field.
         //
-        if (! map.containsKey(POLICY_ID)) {
+        if (!map.containsKey(POLICY_ID)) {
             throw new ToscaPolicyConversionException(policy.getPolicyId() + " missing metadata " + POLICY_ID);
         }
         //
         // Ensure the policy-version exists
         //
-        if (! map.containsKey(POLICY_VERSION)) {
+        if (!map.containsKey(POLICY_VERSION)) {
             throw new ToscaPolicyConversionException(policy.getPolicyId() + " missing metadata "
-                    + POLICY_VERSION);
+                + POLICY_VERSION);
         }
         //
         // Add in the Policy Version
@@ -214,20 +213,20 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
      * return the obligation only instead of adding it directly to a rule/policy/policyset.
      * But this is fine for now.
      *
-     * @param <T> RuleType, PolicyType, PolicySetType object
-     * @Param policyId The policy-id
+     * @param <T>          RuleType, PolicyType, PolicySetType object
+     * @param policyId     The policy-id
      * @param ruleOrPolicy Incoming RuleType, PolicyType, PolicySetType object
-     * @param jsonPolicy JSON String representation of policy.
-     * @param weight Weighting for the policy (optional)
+     * @param jsonPolicy   JSON String representation of policy.
+     * @param weight       Weighting for the policy (optional)
      * @return Return the Incoming RuleType, PolicyType, PolicySetType object for convenience.
      */
     protected <T> T addObligation(T ruleOrPolicy, String policyId, String jsonPolicy, Integer weight,
-            String policyType) {
+                                  String policyType) {
         //
         // Creating obligation for returning policy
         //
         LOGGER.info("Obligation Policy id: {} type: {} weight: {} policy:{}{}", policyId, policyType, weight,
-                XacmlPolicyUtils.LINE_SEPARATOR, jsonPolicy);
+            XacmlPolicyUtils.LINE_SEPARATOR, jsonPolicy);
         //
         // Create our OnapObligation
         //
@@ -241,12 +240,12 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
         //
         var obligations = new ObligationExpressionsType();
         obligations.getObligationExpression().add(obligation);
-        if (ruleOrPolicy instanceof RuleType) {
-            ((RuleType) ruleOrPolicy).setObligationExpressions(obligations);
-        } else if (ruleOrPolicy instanceof PolicyType) {
-            ((PolicyType) ruleOrPolicy).setObligationExpressions(obligations);
-        } else if (ruleOrPolicy instanceof PolicySetType) {
-            ((PolicySetType) ruleOrPolicy).setObligationExpressions(obligations);
+        if (ruleOrPolicy instanceof RuleType ruleType) {
+            ruleType.setObligationExpressions(obligations);
+        } else if (ruleOrPolicy instanceof PolicyType policyType1) {
+            policyType1.setObligationExpressions(obligations);
+        } else if (ruleOrPolicy instanceof PolicySetType policySetType) {
+            policySetType.setObligationExpressions(obligations);
         } else {
             LOGGER.error("Unsupported class for adding obligation {}", ruleOrPolicy.getClass());
         }
@@ -268,11 +267,11 @@ public abstract class StdBaseTranslator implements ToscaPolicyTranslator {
         // Create the match for the policy type
         //
         var match = ToscaPolicyTranslatorUtils.buildMatchTypeDesignator(
-                XACML3.ID_FUNCTION_STRING_EQUAL,
-                type,
-                XACML3.ID_DATATYPE_STRING,
-                ToscaDictionary.ID_RESOURCE_POLICY_TYPE,
-                XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
+            XACML3.ID_FUNCTION_STRING_EQUAL,
+            type,
+            XACML3.ID_DATATYPE_STRING,
+            ToscaDictionary.ID_RESOURCE_POLICY_TYPE,
+            XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE);
         //
         // Add it to an AnyOfType object
         //

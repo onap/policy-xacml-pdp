@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,13 +30,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
 
-public class OptimizationSubscriberRequestTest {
+class OptimizationSubscriberRequestTest {
     private static StandardCoder gson = new StandardCoder();
     private DecisionRequest request;
 
@@ -44,19 +45,19 @@ public class OptimizationSubscriberRequestTest {
      *
      * @throws Exception Exception if unable to load
      */
-    @Before
-    public void setupLoadDecision() throws Exception {
+    @BeforeEach
+    void setupLoadDecision() throws Exception {
         request = gson.decode(
-                TextFileUtils
-                    .getTextFileAsString(
-                            "src/test/resources/decision.optimization.input.json"),
-                    DecisionRequest.class);
+            TextFileUtils
+                .getTextFileAsString(
+                    "src/test/resources/decision.optimization.input.json"),
+            DecisionRequest.class);
 
         assertThat(request).isNotNull();
     }
 
     @Test
-    public void testDecisionRequest() throws Exception {
+    void testDecisionRequest() throws Exception {
         //
         // Add context
         //

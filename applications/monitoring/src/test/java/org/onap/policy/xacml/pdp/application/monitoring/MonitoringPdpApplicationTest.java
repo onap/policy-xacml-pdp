@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2021 Nordix Foundation.
+ * Modifications Copyright (C) 2021, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,18 +27,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.att.research.xacml.api.Response;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.io.TempDir;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
@@ -53,8 +53,8 @@ import org.onap.policy.pdp.xacml.xacmltest.TestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class MonitoringPdpApplicationTest {
+@TestMethodOrder(MethodOrderer.MethodName.class)
+class MonitoringPdpApplicationTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringPdpApplicationTest.class);
     private static final Properties properties = new Properties();
@@ -64,40 +64,40 @@ public class MonitoringPdpApplicationTest {
 
     private static final StandardCoder gson = new StandardCoder();
 
-    @ClassRule
-    public static final TemporaryFolder policyFolder = new TemporaryFolder();
+    @TempDir
+    static Path policyFolder;
 
     /**
      * Copies the xacml.properties and policies files into
      * temporary folder and loads the service provider saving
      * instance of provider off for other tests to use.
      */
-    @BeforeClass
-    public static void setup() throws Exception {
+    @BeforeAll
+    static void setup() throws Exception {
         //
         // Load Single Decision Request
         //
         requestSinglePolicy = gson.decode(
-                TextFileUtils
-                    .getTextFileAsString("../../main/src/test/resources/decisions/decision.single.input.json"),
-                    DecisionRequest.class);
+            TextFileUtils
+                .getTextFileAsString("../../main/src/test/resources/decisions/decision.single.input.json"),
+            DecisionRequest.class);
         // Load Single Decision Request
         //
         requestPolicyType = gson.decode(
-                TextFileUtils
+            TextFileUtils
                 .getTextFileAsString("../../main/src/test/resources/decisions/decision.policytype.input.json"),
-                DecisionRequest.class);
+            DecisionRequest.class);
         //
-        // Setup our temporary folder
+        // Set up our temporary folder
         //
-        XacmlPolicyUtils.FileCreator myCreator = policyFolder::newFile;
+        XacmlPolicyUtils.FileCreator myCreator = (String filename) -> policyFolder.resolve(filename).toFile();
         File propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties",
             properties, myCreator);
         //
         // Load XacmlApplicationServiceProvider service
         //
         ServiceLoader<XacmlApplicationServiceProvider> applicationLoader =
-                ServiceLoader.load(XacmlApplicationServiceProvider.class);
+            ServiceLoader.load(XacmlApplicationServiceProvider.class);
         //
         // Look for our class instance and save it
         //
@@ -127,7 +127,7 @@ public class MonitoringPdpApplicationTest {
     }
 
     @Test
-    public void test1Basics() {
+    void test1Basics() {
         //
         // Make sure there's an application name
         //
@@ -137,17 +137,17 @@ public class MonitoringPdpApplicationTest {
         // can support the correct policy types.
         //
         assertThat(service.canSupportPolicyType(
-                new ToscaConceptIdentifier("onap.policies.monitoring.tcagen2", "1.0.0"))).isTrue();
+            new ToscaConceptIdentifier("onap.policies.monitoring.tcagen2", "1.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(
             new ToscaConceptIdentifier("onap.policies.monitoring.tcagen2", "2.0.0"))).isTrue();
         assertThat(service.canSupportPolicyType(
-                new ToscaConceptIdentifier(
+            new ToscaConceptIdentifier(
                 "onap.policies.monitoring.foobar", "1.0.1"))).isTrue();
         assertThat(service.canSupportPolicyType(
             new ToscaConceptIdentifier(
                 "onap.policies.monitoring.foobar", "2.0.1"))).isTrue();
         assertThat(service.canSupportPolicyType(
-                new ToscaConceptIdentifier("onap.foobar", "1.0.0"))).isFalse();
+            new ToscaConceptIdentifier("onap.foobar", "1.0.0"))).isFalse();
         //
         // Ensure it supports decisions
         //
@@ -155,7 +155,7 @@ public class MonitoringPdpApplicationTest {
     }
 
     @Test
-    public void test2NoPolicies() {
+    void test2NoPolicies() {
         //
         // Ask for a decision
         //
@@ -189,28 +189,28 @@ public class MonitoringPdpApplicationTest {
     }
 
     @Test
-    public void tes3AddvDnsPolicy() throws CoderException, XacmlApplicationException {
+    void tes3AddvDnsPolicy() throws CoderException, XacmlApplicationException {
         testAddPolicy("src/test/resources/vDNS.policy.input.yaml",
             "onap.policies.monitoring.cdap.tca.hi.lo.app",
             "onap.scaleout.tca");
     }
 
     @Test
-    public void tes4AddvFirewall1Policy() throws CoderException, XacmlApplicationException {
+    void tes4AddvFirewall1Policy() throws CoderException, XacmlApplicationException {
         testAddPolicy("policies/vFirewall.policy.monitoring.input.tosca.yaml",
             "onap.policies.monitoring.tcagen2",
             "onap.vfirewall.tca");
     }
 
     @Test
-    public void tes5AddvFirewall2Policy() throws CoderException, XacmlApplicationException {
+    void tes5AddvFirewall2Policy() throws CoderException, XacmlApplicationException {
         testAddPolicy("policies/vFirewall.policy.monitoring.input.tosca.v2.yaml",
             "onap.policies.monitoring.tcagen2",
             "onap.vfirewall.tca");
     }
 
     @SuppressWarnings("unchecked")
-    public void testAddPolicy(String policyResource, String policyType, String policyId)
+    void testAddPolicy(String policyResource, String policyType, String policyId)
         throws CoderException, XacmlApplicationException {
         //
         // Now load the vDNS Policy - make sure

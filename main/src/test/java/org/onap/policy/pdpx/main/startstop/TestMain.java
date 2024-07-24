@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019 Nordix Foundation.
+ * Modifications Copyright (C) 2019, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,27 +24,27 @@ package org.onap.policy.pdpx.main.startstop;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.pdpx.main.CommonRest;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 
 /**
  * Class to perform unit test of Main.
- *
  */
-public class TestMain extends CommonRest {
+class TestMain extends CommonRest {
 
     private Main main;
 
     /**
      * Sets up properties and configuration.
+     *
      * @throws Exception if an error occurs
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
         CommonRest.setUpBeforeClass();
 
@@ -53,7 +53,7 @@ public class TestMain extends CommonRest {
     }
 
     @Override
-    @Before
+    @BeforeEach
     public void setUp() {
         main = null;
     }
@@ -62,7 +62,7 @@ public class TestMain extends CommonRest {
      * Shuts "main" down.
      */
     @Override
-    @After
+    @AfterEach
     public void tearDown() {
         if (main != null) {
             main.shutdown();
@@ -70,7 +70,7 @@ public class TestMain extends CommonRest {
     }
 
     @Test
-    public void testMain() throws PolicyXacmlPdpException {
+    void testMain() {
         final String[] xacmlPdpConfigParameters = {"-c", CONFIG_FILE};
         assertThatCode(() -> {
             main = new Main(xacmlPdpConfigParameters);
@@ -80,30 +80,30 @@ public class TestMain extends CommonRest {
     }
 
     @Test
-    public void testMain_NoArguments() {
+    void testMain_NoArguments() {
         final String[] xacmlPdpConfigParameters = {};
         assertThatThrownBy(() -> new Main(xacmlPdpConfigParameters)).isInstanceOf(PolicyXacmlPdpException.class)
-                        .hasMessage("policy xacml pdp configuration file was not specified as an argument");
+            .hasMessage("policy xacml pdp configuration file was not specified as an argument");
     }
 
     @Test
-    public void testMain_InvalidArguments() {
+    void testMain_InvalidArguments() {
         final String[] xacmlPdpConfigParameters = {"parameters/XacmlPdpConfigParameters.json"};
         assertThatThrownBy(() -> new Main(xacmlPdpConfigParameters)).isInstanceOf(PolicyXacmlPdpException.class)
             .hasMessage("too many command line arguments specified : [parameters/XacmlPdpConfigParameters.json]");
     }
 
     @Test
-    public void testMain_Help() throws PolicyXacmlPdpException {
+    void testMain_Help() throws PolicyXacmlPdpException {
         final String[] xacmlPdpConfigParameters = {"-h"};
-        Assert.assertTrue(new Main(xacmlPdpConfigParameters).getArgumentMessage().contains("-h,--help"));
+        Assertions.assertTrue(new Main(xacmlPdpConfigParameters).getArgumentMessage().contains("-h,--help"));
 
     }
 
     @Test
-    public void testMain_InvalidParameters()  {
+    void testMain_InvalidParameters() {
         final String[] xacmlPdpConfigParameters = {"-c", "parameters/XacmlPdpConfigParameters_InvalidName.json"};
         assertThatThrownBy(() -> new Main(xacmlPdpConfigParameters)).isInstanceOf(PolicyXacmlPdpException.class)
-                        .hasMessageContaining("validation error");
+            .hasMessageContaining("validation error");
     }
 }

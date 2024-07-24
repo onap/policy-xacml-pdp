@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2020-2022 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,10 +32,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Map;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
@@ -50,28 +50,28 @@ import org.onap.policy.xacml.pdp.application.optimization.OptimizationPdpApplica
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class XacmlPdpApplicationManagerTest {
+class XacmlPdpApplicationManagerTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(XacmlPdpApplicationManagerTest.class);
     private static final StandardYamlCoder yamlCoder = new StandardYamlCoder();
     private static Path appsDirectory;
     private static ToscaServiceTemplate completedJtst;
     private static final CommonTestData testData = new CommonTestData();
 
-    @ClassRule
-    public static final TemporaryFolder appsFolder = new TemporaryFolder();
+    @TempDir
+    static Path appsFolder;
 
     /**
      * setupTestEnvironment.
      *
      * @throws Exception Exception if anything is missing
      */
-    @BeforeClass
-    public static void setupTestEnvironment() throws Exception {
+    @BeforeAll
+    static void setupTestEnvironment() throws Exception {
         //
         // Load an example policy
         //
         String policyYaml = ResourceUtils
-                .getResourceAsString("../applications/monitoring/src/test/resources/vDNS.policy.input.yaml");
+            .getResourceAsString("../applications/monitoring/src/test/resources/vDNS.policy.input.yaml");
         //
         // Serialize it into a class
         //
@@ -82,13 +82,13 @@ public class XacmlPdpApplicationManagerTest {
             throw new XacmlApplicationException("Failed to decode policy from resource file", e);
         }
         //
-        // Make sure all the fields are setup properly
+        // Make sure all the fields are set up properly
         //
         JpaToscaServiceTemplate jtst = new JpaToscaServiceTemplate();
         jtst.fromAuthorative(serviceTemplate);
         completedJtst = jtst.toAuthorative();
         //
-        // We need at least 1 policies
+        // We need at least 1 policy
         //
         assertThat(completedJtst).isNotNull();
         assertThat(completedJtst.getToscaTopologyTemplate().getPolicies()).isNotEmpty();
@@ -96,20 +96,20 @@ public class XacmlPdpApplicationManagerTest {
         // Copy test directory over of the application directories
         //
         Path src = Paths.get("src/test/resources/apps");
-        File apps = appsFolder.newFolder("apps");
+        File apps = appsFolder.resolve("apps").toFile();
         Files.walk(src).forEach(source -> copy(source, apps.toPath().resolve(src.relativize(source))));
         appsDirectory = apps.toPath();
     }
 
     @Test
-    public void testXacmlPdpApplicationManagerBadPath() throws Exception {
+    void testXacmlPdpApplicationManagerBadPath() throws Exception {
         //
-        // Make up a non existent directory to initialize from
+        // Make up a non-existent directory to initialize from
         //
-        Path nonExistentPath = Paths.get(appsFolder.getRoot().getAbsolutePath(), "nonexistent");
+        Path nonExistentPath = Paths.get(appsFolder.toFile().getAbsolutePath(), "nonexistent");
         final XacmlApplicationParameters xacmlApplicationParameters =
-                testData.toObject(testData.getXacmlapplicationParametersMap(false,
-                        nonExistentPath.toString()), XacmlApplicationParameters.class);
+            testData.toObject(testData.getXacmlapplicationParametersMap(false,
+                nonExistentPath.toString()), XacmlApplicationParameters.class);
         //
         // Create our app manager
         //
@@ -132,12 +132,12 @@ public class XacmlPdpApplicationManagerTest {
     }
 
     @Test
-    public void testXacmlPdpApplicationManagerSimple() {
+    void testXacmlPdpApplicationManagerSimple() {
         final String[] exclusions = {"org.onap.policy.xacml.pdp.application.guard.GuardPdpApplication",
-            "org.onap.policy.xacml.pdp.application.match.MatchPdpApplication" };
+            "org.onap.policy.xacml.pdp.application.match.MatchPdpApplication"};
         final XacmlApplicationParameters xacmlApplicationParameters =
-                testData.toObject(testData.getXacmlapplicationParametersMap(false,
-                        appsDirectory.toString(), exclusions), XacmlApplicationParameters.class);
+            testData.toObject(testData.getXacmlapplicationParametersMap(false,
+                appsDirectory.toString(), exclusions), XacmlApplicationParameters.class);
         XacmlPdpApplicationManager manager = new XacmlPdpApplicationManager(xacmlApplicationParameters, null);
         //
         // Test the basics from the startup

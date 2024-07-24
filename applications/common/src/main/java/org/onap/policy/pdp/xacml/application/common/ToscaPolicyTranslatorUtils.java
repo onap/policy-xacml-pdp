@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -172,8 +173,8 @@ public final class ToscaPolicyTranslatorUtils {
             theInt = Integer.parseInt(strInteger);
         } catch (NumberFormatException e) {
             try {
-                Double dblLimit = Double.parseDouble(strInteger);
-                theInt = dblLimit.intValue();
+                double dblLimit = Double.parseDouble(strInteger);
+                theInt = (int) dblLimit;
             } catch (NumberFormatException e1) {
                 return null;
             }
@@ -190,18 +191,18 @@ public final class ToscaPolicyTranslatorUtils {
      * @return returns the given anyOf or new AnyTypeOf if null
      */
     public static AnyOfType buildAndAppendAllof(AnyOfType anyOf, Object type) {
-        if (type instanceof MatchType) {
+        if (type instanceof MatchType matchType) {
             var allOf = new AllOfType();
-            allOf.getMatch().add((MatchType) type);
+            allOf.getMatch().add(matchType);
             if (anyOf == null) {
                 anyOf = new AnyOfType();
             }
             anyOf.getAllOf().add(allOf);
-        } else if (type instanceof AllOfType) {
+        } else if (type instanceof AllOfType allOfType) {
             if (anyOf == null) {
                 anyOf = new AnyOfType();
             }
-            anyOf.getAllOf().add((AllOfType) type);
+            anyOf.getAllOf().add(allOfType);
         }
 
         return anyOf;
@@ -215,11 +216,11 @@ public final class ToscaPolicyTranslatorUtils {
      * @return TargetType
      */
     public static TargetType buildAndAppendTarget(TargetType target, Object object) {
-        if (object instanceof AnyOfType) {
-            target.getAnyOf().add((AnyOfType) object);
-        } else if (object instanceof MatchType) {
+        if (object instanceof AnyOfType anyOfType) {
+            target.getAnyOf().add(anyOfType);
+        } else if (object instanceof MatchType matchType) {
             var allOf = new AllOfType();
-            allOf.getMatch().add((MatchType) object);
+            allOf.getMatch().add(matchType);
             var anyOf = new AnyOfType();
             anyOf.getAllOf().add(allOf);
             target.getAnyOf().add(anyOf);

@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020 Nordix Foundation
+ * Modifications Copyright (C) 2020, 2024 Nordix Foundation
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ package org.onap.policy.pdp.xacml.application.common.matchable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.att.research.xacml.api.Identifier;
 import com.att.research.xacml.api.XACML3;
@@ -42,8 +42,8 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
@@ -59,7 +59,7 @@ import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionExcepti
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MatchablePolicyTypeTest implements MatchableCallback {
+class MatchablePolicyTypeTest implements MatchableCallback {
     private static final Logger LOGGER = LoggerFactory.getLogger(MatchablePolicyTypeTest.class);
     private static final StandardYamlCoder yamlCoder = new StandardYamlCoder();
     private static final String TEST_POLICYTYPE_FILE = "src/test/resources/matchable/onap.policies.Test-1.0.0.yaml";
@@ -73,8 +73,8 @@ public class MatchablePolicyTypeTest implements MatchableCallback {
      *
      * @throws CoderException object
      */
-    @BeforeClass
-    public static void setupLoadPolicy() throws CoderException {
+    @BeforeAll
+    static void setupLoadPolicy() throws CoderException {
         //
         // Load our test policy type
         //
@@ -116,7 +116,7 @@ public class MatchablePolicyTypeTest implements MatchableCallback {
     }
 
     @Test
-    public void testAllCodeCoverage() {
+    void testAllCodeCoverage() {
         assertThatExceptionOfType(NullPointerException.class).isThrownBy(() ->
             new MatchablePolicyType(null, null));
 
@@ -162,7 +162,7 @@ public class MatchablePolicyTypeTest implements MatchableCallback {
     }
 
     @Test
-    public void testPrimitiveValidation() throws Exception {
+    void testPrimitiveValidation() throws Exception {
         ToscaProperty property = new ToscaProperty();
         MatchablePropertyTypeBoolean booleanValue = new MatchablePropertyTypeBoolean(property);
         assertThat(booleanValue.validate(Boolean.TRUE)).isEqualTo(Boolean.TRUE);
@@ -194,12 +194,12 @@ public class MatchablePolicyTypeTest implements MatchableCallback {
     }
 
     @Test
-    public void testMatchables() throws ToscaPolicyConversionException {
+    void testMatchables() throws ToscaPolicyConversionException {
         //
         // Step 1: Create matchables from the PolicyType
         //
         MatchablePolicyType matchablePolicyType = new MatchablePolicyType(testTemplate.getPolicyTypes()
-                .get(TEST_POLICYTYPE), this);
+            .get(TEST_POLICYTYPE), this);
         assertThat(matchablePolicyType).isNotNull();
         assertThat(matchablePolicyType.getPolicyId()).isNotNull();
         assertThat(matchablePolicyType.getPolicyId().getName()).isEqualTo(TEST_POLICYTYPE);
@@ -257,7 +257,7 @@ public class MatchablePolicyTypeTest implements MatchableCallback {
 
     @SuppressWarnings("unchecked")
     private void generateTargetType(TargetType target, MatchablePolicyType matchablePolicyType,
-            Map<String, Object> properties) throws ToscaPolicyConversionException {
+                                    Map<String, Object> properties) throws ToscaPolicyConversionException {
         for (Entry<String, Object> entrySet : properties.entrySet()) {
             String propertyName = entrySet.getKey();
             Object propertyValue = entrySet.getValue();
