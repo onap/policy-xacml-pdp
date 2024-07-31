@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1241ee04_36b74d12",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2024-07-31T10:11:53Z",
+      "side": 1,
+      "message": "Good review. I did notice a recurring sonar warning about a \"TempDir\" being unused (but I can see it is used). I have +1\u0027d anyway. If you are happy to go ahead @Adheli fire away",
+      "revId": "257358ffc369e0813bca5fa92b83710e3d97cfee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2e5b42a_f943d1be",
+        "filename": "applications/guard/src/test/java/org/onap/policy/xacml/pdp/application/guard/SonCoordinationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2024-07-31T10:11:53Z",
+      "side": 1,
+      "message": "Sonar complains here about this being unused but I can see that it IS used. Not sure what the issue is.",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 29
+      },
+      "revId": "257358ffc369e0813bca5fa92b83710e3d97cfee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd2798b3_d5174ed0",
+        "filename": "applications/monitoring/src/test/java/org/onap/policy/xacml/pdp/application/monitoring/MonitoringPdpApplicationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2024-07-31T10:11:53Z",
+      "side": 1,
+      "message": "same complaint from sonar - saying this is unused",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 29
+      },
+      "revId": "257358ffc369e0813bca5fa92b83710e3d97cfee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e03c04c_6de5806b",
+        "filename": "applications/native/src/test/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2024-07-31T10:11:53Z",
+      "side": 1,
+      "message": "sonar saying unused",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 29
+      },
+      "revId": "257358ffc369e0813bca5fa92b83710e3d97cfee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66ad355b_64bb7b6d",
+        "filename": "tutorials/tutorial-xacml-application/src/test/java/org/onap/policy/tutorial/tutorial/TutorialApplicationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2024-07-31T10:11:53Z",
+      "side": 1,
+      "message": "sonar complains about this being unused",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 29
+      },
+      "revId": "257358ffc369e0813bca5fa92b83710e3d97cfee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
