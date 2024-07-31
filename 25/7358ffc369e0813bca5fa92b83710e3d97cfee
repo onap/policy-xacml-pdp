@@ -1,0 +1,10 @@
+Code-Review+1: Saul Gill <saul.gill@est.tech>
+Code-Review+2: Liam Fallon <liam.fallon@est.tech>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Ramesh Murugan Iyer <ramesh.murugan.iyer@est.tech>
+Verified+1: ONAP Required GHA <releng+onap.required.gha@linuxfoundation.org>
+Submitted-by: Ramesh Murugan Iyer <ramesh.murugan.iyer@est.tech>
+Submitted-at: Wed, 31 Jul 2024 10:31:17 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/xacml-pdp/+/138568
+Project: policy/xacml-pdp
+Branch: refs/heads/master
