@@ -3,7 +3,7 @@
 # ============LICENSE_START=======================================================
 #  Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
 #  Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
-#  Modifications Copyright (C) 2022-2023 Nordix Foundation. All rights reserved.
+#  Modifications Copyright (C) 2022-2024 Nordix Foundation. All rights reserved.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ fi
 # Extract Maria DB Credential properties from xacml.properties file
 DB_HOSTNAME=$(awk -F[/:] '$1 == "jakarta.persistence.jdbc.url=jdbc" { print $3 $5 }' /tmp/temp.xacml.properties)
 DB_USERNAME=$(awk -F= '$1 == "jakarta.persistence.jdbc.user" { print $2 }' /tmp/temp.xacml.properties)
-DB_PASSWORD=$(awk -F= '$1 == "jakarta.persistence.jdbc.password" { st = index($0,"="); print substr($0,st+1) }' /tmp/temp.properties)
+DB_PASSWORD=$(awk -F= '$1 == "jakarta.persistence.jdbc.password" { st = index($0,"="); print substr($0,st+1) }' /tmp/temp.xacml.properties)
 
 # Remove temp file
 rm /tmp/temp.xacml.properties
