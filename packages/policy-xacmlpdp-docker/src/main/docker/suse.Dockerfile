@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------------------
 # Dockerfile
 # ============LICENSE_START=======================================================
-#  Copyright (C) 2022 Nordix Foundation.
+#  Copyright (C) 2022, 2024 Nordix Foundation.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ ENV POLICY_HOME=/opt/app/policy/pdpx
 ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 ENV JAVA_HOME=/usr/lib64/jvm/java-11-openjdk-11
 
-RUN zypper -n -q install --no-recommends java-11-openjdk-headless mariadb-client netcat-openbsd postgresql && \
+RUN zypper -n -q install --no-recommends java-11-openjdk-headless netcat-openbsd && \
     zypper -n -q update && zypper -n -q clean --all && \
     groupadd --system policy && \
     useradd --system --shell /bin/sh -G policy policy && \
@@ -54,7 +54,6 @@ COPY --chown=policy:policy --from=tarball /extracted $POLICY_HOME
 
 WORKDIR $POLICY_HOME
 COPY --chown=policy:policy policy-pdpx.sh bin/
-COPY --chown=policy:policy policy-pdpx-pg.sh bin/
 RUN chmod 755 bin/*.sh
 
 USER policy

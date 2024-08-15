@@ -1,7 +1,7 @@
 <!--
   ============LICENSE_START=======================================================
    Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
-   Modifications Copyright (C) 2022 Nordix Foundation.
+   Modifications Copyright (C) 2022, 2024 Nordix Foundation.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -59,44 +59,6 @@
             </includes>
             <outputDirectory>${file.separator}etc${file.separator}ssl</outputDirectory>
             <lineEnding>keep</lineEnding>
-        </fileSet>
-        <fileSet>
-            <directory>${project.basedir}/src/main/resources/mysql/bin
-            </directory>
-            <includes>
-                <include>*.sh</include>
-            </includes>
-            <outputDirectory>${file.separator}mysql${file.separator}bin</outputDirectory>
-            <lineEnding>unix</lineEnding>
-            <fileMode>0755</fileMode>
-        </fileSet>
-        <fileSet>
-            <directory>${project.basedir}/src/main/resources/mysql/sql
-            </directory>
-            <includes>
-                <include>*.sql</include>
-            </includes>
-            <outputDirectory>${file.separator}mysql${file.separator}sql</outputDirectory>
-            <lineEnding>unix</lineEnding>
-        </fileSet>
-        <fileSet>
-            <directory>${project.basedir}/src/main/resources/postgres/bin
-            </directory>
-            <includes>
-                <include>*.sh</include>
-            </includes>
-            <outputDirectory>${file.separator}postgres${file.separator}bin</outputDirectory>
-            <lineEnding>unix</lineEnding>
-            <fileMode>0755</fileMode>
-        </fileSet>
-        <fileSet>
-            <directory>${project.basedir}/src/main/resources/postgres/sql
-            </directory>
-            <includes>
-                <include>*.sql</include>
-            </includes>
-            <outputDirectory>${file.separator}postgres${file.separator}sql</outputDirectory>
-            <lineEnding>unix</lineEnding>
         </fileSet>
         <fileSet>
             <directory>${project.basedir}/src/main/resources/apps/guard
