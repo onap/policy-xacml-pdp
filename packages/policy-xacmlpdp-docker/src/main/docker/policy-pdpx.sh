@@ -57,19 +57,6 @@ if [ -f "${POLICY_HOME}/etc/mounted/logback.xml" ]; then
     cp -f "${POLICY_HOME}"/etc/mounted/logback.xml "${POLICY_HOME}"/etc/
 fi
 
-if [ -f "${POLICY_HOME}/etc/mounted/createguardtable.sql" ]; then
-    echo "overriding createguardtable.sql"
-    cp -f "${POLICY_HOME}"/etc/mounted/createguardtable.sql "${POLICY_HOME}"/mysql/sql/
-fi
-
-if [ -f "${POLICY_HOME}/etc/mounted/db.sql" ]; then
-    echo "adding additional db.sql"
-    cp -f "${POLICY_HOME}"/etc/mounted/db.sql "${POLICY_HOME}"/mysql/sql/
-fi
-
-# Create operationshistory table
-"${POLICY_HOME}"/mysql/bin/create-guard-table.sh
-
 echo "Policy Xacml PDP config file: $CONFIG_FILE"
 
 $JAVA_HOME/bin/java -cp "${POLICY_HOME}/etc:${POLICY_HOME}/lib/*" -Dlogback.configurationFile="${POLICY_HOME}/etc/logback.xml" -Djavax.net.ssl.keyStore="${KEYSTORE}" -Djavax.net.ssl.keyStorePassword="${KEYSTORE_PASSWD}" -Djavax.net.ssl.trustStore="${TRUSTSTORE}" -Djavax.net.ssl.trustStorePassword="${TRUSTSTORE_PASSWD}" org.onap.policy.pdpx.main.startstop.Main -c "${CONFIG_FILE}"

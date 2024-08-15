@@ -61,44 +61,6 @@
             <lineEnding>keep</lineEnding>
         </fileSet>
         <fileSet>
-            <directory>${project.basedir}/src/main/resources/mysql/bin
-            </directory>
-            <includes>
-                <include>*.sh</include>
-            </includes>
-            <outputDirectory>${file.separator}mysql${file.separator}bin</outputDirectory>
-            <lineEnding>unix</lineEnding>
-            <fileMode>0755</fileMode>
-        </fileSet>
-        <fileSet>
-            <directory>${project.basedir}/src/main/resources/mysql/sql
-            </directory>
-            <includes>
-                <include>*.sql</include>
-            </includes>
-            <outputDirectory>${file.separator}mysql${file.separator}sql</outputDirectory>
-            <lineEnding>unix</lineEnding>
-        </fileSet>
-        <fileSet>
-            <directory>${project.basedir}/src/main/resources/postgres/bin
-            </directory>
-            <includes>
-                <include>*.sh</include>
-            </includes>
-            <outputDirectory>${file.separator}postgres${file.separator}bin</outputDirectory>
-            <lineEnding>unix</lineEnding>
-            <fileMode>0755</fileMode>
-        </fileSet>
-        <fileSet>
-            <directory>${project.basedir}/src/main/resources/postgres/sql
-            </directory>
-            <includes>
-                <include>*.sql</include>
-            </includes>
-            <outputDirectory>${file.separator}postgres${file.separator}sql</outputDirectory>
-            <lineEnding>unix</lineEnding>
-        </fileSet>
-        <fileSet>
             <directory>${project.basedir}/src/main/resources/apps/guard
             </directory>
             <includes>
