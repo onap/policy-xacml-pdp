@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51211ca1_971f33b0",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/policy-pdpx.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2024-08-16T11:28:16Z",
+      "side": 0,
+      "message": "This has been moved into db migrator?",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 48
+      },
+      "revId": "a481cea2601e8aacf202b785eb743c243ea22fc3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}

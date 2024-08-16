@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40993554_345891f4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2024-08-16T11:28:16Z",
+      "side": 1,
+      "message": "I would say it is very important to make sure that both oom and policy helm charts deploy xacml correctly with these changes.",
+      "revId": "ba8869b4570eb4d569d3c54d87098df1988babfa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b0d704d_d2f003fb",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2024-08-16T11:28:16Z",
+      "side": 1,
+      "message": "update year",
+      "range": {
+        "startLine": 5,
+        "startChar": 36,
+        "endLine": 5,
+        "endChar": 40
+      },
+      "revId": "ba8869b4570eb4d569d3c54d87098df1988babfa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9a3f9de_5dc2214d",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/policy-pdpx.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2024-08-16T11:28:16Z",
+      "side": 1,
+      "message": "update year",
+      "range": {
+        "startLine": 5,
+        "startChar": 31,
+        "endLine": 5,
+        "endChar": 40
+      },
+      "revId": "ba8869b4570eb4d569d3c54d87098df1988babfa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61ff1478_43c988bc",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/suse.Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2024-08-16T11:28:16Z",
+      "side": 1,
+      "message": "update year",
+      "range": {
+        "startLine": 4,
+        "startChar": 17,
+        "endLine": 4,
+        "endChar": 21
+      },
+      "revId": "ba8869b4570eb4d569d3c54d87098df1988babfa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2061347a_471d65ac",
+        "filename": "packages/policy-xacmlpdp-tarball/src/main/package/tarball/assembly.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2024-08-16T11:28:16Z",
+      "side": 1,
+      "message": "update year",
+      "range": {
+        "startLine": 4,
+        "startChar": 31,
+        "endLine": 4,
+        "endChar": 35
+      },
+      "revId": "ba8869b4570eb4d569d3c54d87098df1988babfa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
