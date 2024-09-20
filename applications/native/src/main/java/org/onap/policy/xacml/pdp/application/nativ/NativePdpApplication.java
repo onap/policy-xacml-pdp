@@ -40,6 +40,8 @@ public class NativePdpApplication extends StdXacmlApplicationServiceProvider {
 
     private static final ToscaConceptIdentifier nativePolicyType = new ToscaConceptIdentifier(
             "onap.policies.native.Xacml", "1.0.0");
+    private static final ToscaConceptIdentifier nativeToscaXacmlPolicyType = new ToscaConceptIdentifier(
+            "onap.policies.native.ToscaXacml", "1.0.0");
     private NativePdpApplicationTranslator translator = new NativePdpApplicationTranslator();
 
     /**
@@ -51,11 +53,12 @@ public class NativePdpApplication extends StdXacmlApplicationServiceProvider {
         applicationName = "native";
         actions = Arrays.asList("native");
         supportedPolicyTypes.add(nativePolicyType);
+        supportedPolicyTypes.add(nativeToscaXacmlPolicyType);
     }
 
     @Override
     public boolean canSupportPolicyType(ToscaConceptIdentifier policyTypeId) {
-        return nativePolicyType.equals(policyTypeId);
+        return (nativePolicyType.equals(policyTypeId) || nativeToscaXacmlPolicyType.equals(policyTypeId));
     }
 
     @Override

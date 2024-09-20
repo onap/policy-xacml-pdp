@@ -1,0 +1,78 @@
+tosca_definitions_version: tosca_simple_yaml_1_1_0
+topology_template:
+  inputs: {}
+  policies:
+    - bad.tosca.policy.test:
+        type: onap.policies.native.ToscaXacml
+        type_version: 1.0.0
+        properties:
+          policies:
+            - properties:
+                description: Policy that allows minimum number of available cells for
+                  a slice to be feasible, prio=1
+                target:
+                  anyOne:
+                    - allOf:
+                        - key: action-id
+                          operator:
+                          value: "1"
+                rules:
+                  - condition:
+                      apply:
+                        keys:
+                          - feasibleCellsForSlice
+                        operator: integer-equal
+                        compareWith:
+                          value: 2
+                    decision: Permit
+                    advice:
+                      value: Slice is feasible since minumum number of cells are available
+              metadata:
+                policy-id: bad.tosca.policy.test.1
+                policy-version: 1.0.0
+        name: bad.tosca.policy.test
+        version: 3.0.0
+        metadata:
+          action: sfc-policy
+          description: This policy set specifies the conditions for slice feasibility
+            based on availability of cells
+          policy-id: bad.tosca.policy.test
+          policy-version: 3.0.0
+    - bad.tosca.policy.target.test:
+        type: onap.policies.native.ToscaXacml
+        type_version: 1.0.0
+        properties:
+          policies:
+            - properties:
+                description: Policy that allows minimum number of available cells for
+                  a slice to be feasible, prio=1
+                target:
+                  anyOne:
+                    - allOf:
+                        - key: action-id
+                          operator: integer-equal
+                          value:
+                rules:
+                  - condition:
+                      apply:
+                        keys:
+                          - feasibleCellsForSlice
+                        operator: integer-equal
+                        compareWith:
+                          value: 2
+                    decision: Permit
+                    advice:
+                      value: Slice is feasible since minumum number of cells are available
+              metadata:
+                policy-id: bad.tosca.policy.test.1
+                policy-version: 1.0.0
+        name: bad.tosca.policy.target.test
+        version: 3.0.0
+        metadata:
+          action: sfc-policy
+          description: This policy set specifies the conditions for slice feasibility
+            based on availability of cells
+          policy-id: bad.tosca.policy.target.test
+          policy-version: 3.0.0
+name: ToscaServiceTemplateSimple
+version: 1.0.0
