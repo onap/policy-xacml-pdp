@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "be9bfe1f_cb262e3a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2024-09-20T08:30:34Z",
+      "side": 1,
+      "message": "Hi, nice to see work being done already.\n1 - missing copyright headers in all java files.\n2 - you are introducing 15 issues according to sonar. Please have them fixed. https://sonarcloud.io/project/issues?issueStatuses\u003dOPEN%2CCONFIRMED\u0026sinceLeakPeriod\u003dtrue\u0026branch\u003d138946-1\u0026id\u003donap_policy-xacml-pdp\n3 - have you tested this code changes against CSIT?",
+      "revId": "6c04c79d2cdd15ebdd0f4391e48ad81ae3ca0161",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a76ea01_4bd7a63e",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplication.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2024-09-20T08:30:34Z",
+      "side": 1,
+      "message": "Modifications copyrights need to be added.\nUnder this line, should be something like\nModifications Copyright (C) 2024 your-company-name.\nAdd this to every java class.",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 54
+      },
+      "revId": "6c04c79d2cdd15ebdd0f4391e48ad81ae3ca0161",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
