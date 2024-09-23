@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "87d793f9_f110d8a9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2024-09-23T10:35:36Z",
+      "side": 1,
+      "message": "did you use the \"git commit --amend\" when fixing the issues? Because then we would have to merge first the review that is incorrect to be able to merge the other one. Or maybe create a new one with all the changes in one place from zero.",
+      "parentUuid": "d54b5a03_ab4d0680",
+      "revId": "6c04c79d2cdd15ebdd0f4391e48ad81ae3ca0161",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1a76ea01_4bd7a63e",
         "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplication.java",
         "patchSetId": 1
