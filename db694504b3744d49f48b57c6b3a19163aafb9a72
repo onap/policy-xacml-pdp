@@ -16,6 +16,24 @@
       "message": "hi, there are still issues, including one Major for a method being too complex.\nRight now, Policy Framework is working on getting gold badge, and these issues will directly affect it. the other ones are quite ok to fix, as it\u0027s to remove public modifiers on unit tests and some clean code fixes.",
       "revId": "db694504b3744d49f48b57c6b3a19163aafb9a72",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4de6e574_db5d1740",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8185
+      },
+      "writtenOn": "2024-09-23T12:00:26Z",
+      "side": 1,
+      "message": "Hi, I have resolved all sonar cloud issues",
+      "parentUuid": "2f3f5dc7_628f8465",
+      "revId": "db694504b3744d49f48b57c6b3a19163aafb9a72",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
