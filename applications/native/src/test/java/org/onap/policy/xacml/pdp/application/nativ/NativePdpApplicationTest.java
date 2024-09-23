@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021, 2024 Nordix Foundation.
+ * Modifications Copyright (C) 2024 Deutsche Telekom AG.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -193,14 +194,14 @@ class NativePdpApplicationTest {
     }
 
     @Test
-    public void testNativeToscaXacmlPolicy() throws Exception {
+    void testNativeToscaXacmlPolicy() throws Exception {
         String policySetTypeYaml = ResourceUtils
                 .getResourceAsString("src/test/resources/policies/native.toscapolicy.yaml");
         checkPolicySetType(policySetTypeYaml);
     }
 
     @Test
-    public void testBadToscaXacmlPolicyRule() throws Exception {
+    void testBadToscaXacmlPolicyRule() throws Exception {
         NativePdpApplicationTranslator translator = new NativePdpApplicationTranslator();
         String policyYaml = ResourceUtils
                 .getResourceAsString("src/test/resources/policies/bad.native.toscapolicy.yaml");
@@ -221,7 +222,7 @@ class NativePdpApplicationTest {
     }
 
     @Test
-    public void testBadToscaXacmlPolicyTarget() throws Exception {
+    void testBadToscaXacmlPolicyTarget() throws Exception {
         NativePdpApplicationTranslator translator = new NativePdpApplicationTranslator();
         String policyYaml = ResourceUtils
                 .getResourceAsString("src/test/resources/policies/bad.native.tosca.policy.target.yaml");

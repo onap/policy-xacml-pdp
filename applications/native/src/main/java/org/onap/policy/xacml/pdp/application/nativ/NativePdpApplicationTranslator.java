@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2020 Nordix Foundation.
+ * Modifications Copyright (C) 2024 Deutsche Telekom AG.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +35,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -80,24 +82,25 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
 
     private static final String TOSCA_XACML_POLICY_TYPE = "onap.policies.native.ToscaXacml";
 
+    private static final String DESCRIPTION = "description";
+
+    private static final String TARGET = "target";
+
+    private static final String VALUE = "value";
+
+    private static final String APPLY = "apply";
+
+    private static final String ONE_AND_ONLY = "-one-and-only";
+
+    private static final String DOUBLE = "double";
+
+    private Map<String, Identifier> identifierMap;
+
     @Override
     public Object convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
         if (TOSCA_XACML_POLICY_TYPE.equals(toscaPolicy.getType())) {
-            PolicySetType policySetType = new PolicySetType();
-            policySetType.setPolicySetId(String.valueOf(toscaPolicy.getMetadata().get("policy-id")));
-            policySetType.setPolicyCombiningAlgId(XACML3.ID_POLICY_FIRST_APPLICABLE.stringValue());
-            policySetType.setVersion(String.valueOf(toscaPolicy.getMetadata().get("policy-version")));
-            policySetType.setDescription(String.valueOf(toscaPolicy.getMetadata().get("description")));
-            policySetType.setTarget(setPolicySetTarget(toscaPolicy.getMetadata().get("action")));
-            for (Map<String, Object> type: (List<Map<String, Object>>) toscaPolicy.getProperties().get("policies")) {
-                ToscaPolicy policy = new ToscaPolicy();
-                policy.setMetadata((Map<String, Object>) type.get("metadata"));
-                policy.setProperties((Map<String, Object>) type.get("properties"));
-                ObjectFactory objectFactory = new ObjectFactory();
-                policySetType.getPolicySetOrPolicyOrPolicySetIdReference()
-                        .add(objectFactory.createPolicy(convertPolicyXacml(policy)));
-            }
-            return policySetType;
+            setIdentifierMap();
+            return setPolicySetType(toscaPolicy);
         } else {
             //
             // Extract the Base64 encoded policy xml string and decode it
@@ -161,6 +164,24 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         }
     }
 
+    private PolicySetType setPolicySetType(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
+        PolicySetType policySetType = new PolicySetType();
+        policySetType.setPolicySetId(String.valueOf(toscaPolicy.getMetadata().get("policy-id")));
+        policySetType.setPolicyCombiningAlgId(XACML3.ID_POLICY_FIRST_APPLICABLE.stringValue());
+        policySetType.setVersion(String.valueOf(toscaPolicy.getMetadata().get("policy-version")));
+        policySetType.setDescription(String.valueOf(toscaPolicy.getMetadata().get(DESCRIPTION)));
+        policySetType.setTarget(setPolicySetTarget(toscaPolicy.getMetadata().get("action")));
+        for (Map<String, Object> type: (List<Map<String, Object>>) toscaPolicy.getProperties().get("policies")) {
+            ToscaPolicy policy = new ToscaPolicy();
+            policy.setMetadata((Map<String, Object>) type.get("metadata"));
+            policy.setProperties((Map<String, Object>) type.get("properties"));
+            ObjectFactory objectFactory = new ObjectFactory();
+            policySetType.getPolicySetOrPolicyOrPolicySetIdReference()
+                    .add(objectFactory.createPolicy(convertPolicyXacml(policy)));
+        }
+        return policySetType;
+    }
+
     /**
      * Generate Xacml rule implementing specified CoordinationDirective.
      *
@@ -170,38 +191,18 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
      */
     private PolicyType convertPolicyXacml(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
         var policyType = new PolicyType();
-        policyType.setPolicyId(String.valueOf(toscaPolicy.getMetadata().get("policy-id")));
-        policyType.setVersion(String.valueOf(toscaPolicy.getMetadata().get("policy-version")));
-        policyType.setDescription(String.valueOf(toscaPolicy.getMetadata().get("description")));
-        DefaultsType defaultsType = new DefaultsType();
-        defaultsType.setXPathVersion("http://www.w3.org/TR/2007/REC-xpath20-20070123");
-        policyType.setPolicyDefaults(defaultsType);
-
         Map<String, Object> properties = toscaPolicy.getProperties();
-
-        if (properties.get("combiningAlgo") != null) {
-            policyType.setRuleCombiningAlgId(validateFilterPropertyFunction((String)
-                    properties.get("combiningAlgo")).stringValue());
-        } else {
-            policyType.setRuleCombiningAlgId(XACML3.ID_RULE_FIRST_APPLICABLE.stringValue());
-        }
-
-        if (properties.get("target") != null) {
-            policyType.setTarget(setTargetType((Map<String, Object>) properties.get("target")));
-        } else {
-            policyType.setTarget(new TargetType());
-        }
-
+        setPolicyType(toscaPolicy, policyType);
         try {
             List<Map<String, Object>> rules = (List<Map<String, Object>>) properties.get("rules");
             for (Map<String, Object> rule : rules) {
                 var ruleType = new RuleType();
-                if (rule.get("description") != null) {
-                    ruleType.setDescription((String) rule.get("description"));
+                if (rule.get(DESCRIPTION) != null) {
+                    ruleType.setDescription((String) rule.get(DESCRIPTION));
                 }
                 ruleType.setRuleId(UUID.randomUUID().toString());
-                if (rule.get("target") != null) {
-                    ruleType.setTarget(setTargetType((Map<String, Object>) rule.get("target")));
+                if (rule.get(TARGET) != null) {
+                    ruleType.setTarget(setTargetType((Map<String, Object>) rule.get(TARGET)));
                 }
                 if (rule.get("condition") != null) {
                     ruleType.setCondition(setConditionType((Map<String, Object>) rule.get("condition")));
@@ -209,35 +210,64 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
                 if (rule.get("decision") == null) {
                     throw new ToscaPolicyConversionException("decision is mandatory in a rule");
                 }
-                String decision = (String) rule.get("decision");
-                if ("Deny".equalsIgnoreCase(decision)) {
-                    ruleType.setEffect(EffectType.DENY);
-
-                } else {
-                    ruleType.setEffect(EffectType.PERMIT);
-                }
-                if (rule.get("advice") != null) {
-                    ruleType.setAdviceExpressions(setAdvice((Map<String, Object>) rule.get("advice"), decision));
-                }
+                setAdviceExpression(ruleType, rule);
                 policyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(ruleType);
             }
         } catch (ToscaPolicyConversionException ex) {
             throw new ToscaPolicyConversionException("Invalid rule format");
         }
-
         if (properties.get("default") != null) {
-            var defaultRule = new RuleType();
-            defaultRule.setDescription("Default Rule if none of the rules evaluate to True");
-            defaultRule.setRuleId(UUID.randomUUID().toString());
-            String defaultDecision = (String) properties.get("default");
-            if ("Deny".equalsIgnoreCase(defaultDecision)) {
-                defaultRule.setEffect(EffectType.DENY);
-            } else {
-                defaultRule.setEffect(EffectType.PERMIT);
-            }
-            policyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(defaultRule);
+            setDefaultTule((String) properties.get("default"), policyType);
         }
         return policyType;
+    }
+
+    private void setPolicyType(ToscaPolicy toscaPolicy, PolicyType policyType) throws ToscaPolicyConversionException {
+        policyType.setPolicyId(String.valueOf(toscaPolicy.getMetadata().get("policy-id")));
+        policyType.setVersion(String.valueOf(toscaPolicy.getMetadata().get("policy-version")));
+        policyType.setDescription(String.valueOf(toscaPolicy.getMetadata().get(DESCRIPTION)));
+        DefaultsType defaultsType = new DefaultsType();
+        defaultsType.setXPathVersion("http://www.w3.org/TR/2007/REC-xpath20-20070123");
+        policyType.setPolicyDefaults(defaultsType);
+        Map<String, Object> properties = toscaPolicy.getProperties();
+        if (properties.get("combiningAlgo") != null) {
+            policyType.setRuleCombiningAlgId(validateFilterPropertyFunction((String)
+                    properties.get("combiningAlgo")).stringValue());
+        } else {
+            policyType.setRuleCombiningAlgId(XACML3.ID_RULE_FIRST_APPLICABLE.stringValue());
+        }
+        if (properties.get(TARGET) != null) {
+            policyType.setTarget(setTargetType((Map<String, Object>) properties.get(TARGET)));
+        } else {
+            policyType.setTarget(new TargetType());
+        }
+
+    }
+
+    private void setAdviceExpression(RuleType ruleType, Map<String, Object> rule)
+            throws ToscaPolicyConversionException {
+        String decision = (String) rule.get("decision");
+        if ("Deny".equalsIgnoreCase(decision)) {
+            ruleType.setEffect(EffectType.DENY);
+
+        } else {
+            ruleType.setEffect(EffectType.PERMIT);
+        }
+        if (rule.get("advice") != null) {
+            ruleType.setAdviceExpressions(setAdvice((Map<String, Object>) rule.get("advice"), decision));
+        }
+    }
+
+    private void setDefaultTule(String defaultDecision, PolicyType policyType) {
+        var defaultRule = new RuleType();
+        defaultRule.setDescription("Default Rule if none of the rules evaluate to True");
+        defaultRule.setRuleId(UUID.randomUUID().toString());
+        if ("Deny".equalsIgnoreCase(defaultDecision)) {
+            defaultRule.setEffect(EffectType.DENY);
+        } else {
+            defaultRule.setEffect(EffectType.PERMIT);
+        }
+        policyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(defaultRule);
     }
 
     private TargetType setTargetType(Map<String, Object> appliesTo) throws ToscaPolicyConversionException {
@@ -250,7 +280,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
                     String operator = (String) match.get("operator");
                     String datatype = getDatatype(operator);
                     matchType.setMatchId(validateFilterPropertyFunction(operator).stringValue());
-                    var valueType = setAttributeValueType(match.get("value"),
+                    var valueType = setAttributeValueType(match.get(VALUE),
                             validateFilterPropertyFunction(datatype).stringValue());
                     matchType.setAttributeValue(valueType);
                     String attribute = "";
@@ -290,7 +320,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
                 XACML3.ID_DATATYPE_STRING.stringValue(), false);
         matchType.setAttributeDesignator(designator);
         var anyOfType = new AnyOfType();
-        anyOfType.getAllOf().add(ToscaPolicyTranslatorUtils.buildAllOf(new MatchType[] {matchType}));
+        anyOfType.getAllOf().add(ToscaPolicyTranslatorUtils.buildAllOf(matchType));
         var target = new TargetType();
         target.getAnyOf().add(anyOfType);
         return target;
@@ -299,7 +329,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
     private ConditionType setConditionType(Map<String, Object> conditionMap) throws ToscaPolicyConversionException {
         var condition = new ConditionType();
         try {
-            Map<String, Object> applyMap = (Map<String, Object>) conditionMap.get("apply");
+            Map<String, Object> applyMap = (Map<String, Object>) conditionMap.get(APPLY);
             ApplyType parentApply = setApply(applyMap);
             condition.setExpression(new ObjectFactory().createApply(parentApply));
         } catch (NullPointerException ex) {
@@ -317,44 +347,60 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
             apply.setFunctionId(validateFilterPropertyFunction(operator).stringValue());
             var factory = new ObjectFactory();
             List<Object> keyList = new ArrayList<>();
-            for (Object keyObject : keys) {
-                if (keyObject instanceof Map<?, ?>) {
-                    if (((Map<?, ?>) keyObject).get("list") != null) {
-                        setBagApply(apply, (List<Object>) ((Map<?, ?>) keyObject).get("list"), datatype, factory);
-                    } else if (((Map<?, ?>) keyObject).get("function") != null) {
-                        setFunctionType(apply, ((Map<String, String>) keyObject).get("function"), factory);
-                    } else if (((Map<?, ?>) keyObject).get("apply") != null) {
-                        keyList.add(setApply((Map<String, Object>) ((Map<?, ?>) keyObject).get("apply")));
-                    } else {
-                        throw new ToscaPolicyConversionException(
-                                "Invalid key entry, object does not contain list, function or apply");
-                    }
-                } else {
-                    setAttributes(keyObject, keyList, datatype, factory);
-                }
-            }
-            for (Object attributeTypeObject : keyList) {
-                if (attributeTypeObject instanceof AttributeValueType) {
-                    apply.getExpression().add(factory.createAttributeValue((AttributeValueType) attributeTypeObject));
-                }
-            }
-            for (Object applyTypeObject : keyList) {
-                if (applyTypeObject instanceof ApplyType) {
-                    apply.getExpression().add(factory.createApply((ApplyType) applyTypeObject));
-                }
-            }
-            Boolean data = switch (operator) {
+            setApplyKeys(keyList, keys, datatype, factory, apply);
+            setAttributeAndDesignator(keyList, apply, factory);
+            boolean data = switch (operator) {
                 case "or", "and", "n-of", "not", "all-of", "any-of", "any-of-any", "all-of-any", "all-of-all",
-                     "any-of-all" -> true;
-                default -> false;
+                     "any-of-all" -> false;
+                default -> true;
             };
-            if (!data && applies.get("compareWith") != null) {
+            if (data && applies.get("compareWith") != null) {
                 setCompareWith(applies, apply, factory, getDatatype(operator));
             }
         } catch (NullPointerException ex) {
             throw new ToscaPolicyConversionException("Invalid apply format");
         }
         return apply;
+    }
+
+    private void setApplyKeys(List<Object> keyList, List<Object> keys, String datatype,
+                              ObjectFactory factory, ApplyType apply) throws ToscaPolicyConversionException {
+        for (Object keyObject : keys) {
+            if (keyObject instanceof Map<?, ?>) {
+                if (((Map<?, ?>) keyObject).get("list") != null) {
+                    setBagApply(apply, (List<Object>) ((Map<?, ?>) keyObject).get("list"), datatype, factory);
+                } else if (((Map<?, ?>) keyObject).get("function") != null) {
+                    setFunctionType(apply, ((Map<String, String>) keyObject).get("function"), factory);
+                } else if (((Map<?, ?>) keyObject).get(APPLY) != null) {
+                    keyList.add(setApply((Map<String, Object>) ((Map<?, ?>) keyObject).get(APPLY)));
+                } else {
+                    throw new ToscaPolicyConversionException(
+                            "Invalid key entry, object does not contain list, function or apply");
+                }
+            } else {
+                setAttributes(keyObject, keyList, datatype, factory);
+            }
+        }
+    }
+
+    private void setAttributeAndDesignator(List<Object> keyList, ApplyType apply, ObjectFactory factory) {
+        keyList.stream()
+                .sorted((firstKey, secondKey) -> {
+                    if (firstKey instanceof AttributeValueType) {
+                        return -1;
+                    } else if (firstKey instanceof ApplyType) {
+                        return 1;
+                    }
+                    return 0;
+                })
+                .forEach(key -> {
+                    if (key instanceof AttributeValueType) {
+                        apply.getExpression().add(factory.createAttributeValue((AttributeValueType) key));
+                    }
+                    if (key instanceof ApplyType) {
+                        apply.getExpression().add(factory.createApply((ApplyType) key));
+                    }
+                });
     }
 
     private void setAttributes(Object key, List<Object> keyList, String datatype, ObjectFactory factory)
@@ -371,7 +417,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
                             XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue(),
                             validateFilterPropertyFunction(datatype).stringValue(), false);
                     ApplyType keyApply = new ApplyType();
-                    keyApply.setFunctionId(validateFilterPropertyFunction(datatype + "-one-and-only").stringValue());
+                    keyApply.setFunctionId(validateFilterPropertyFunction(datatype + ONE_AND_ONLY).stringValue());
                     keyApply.getExpression().add(factory.createAttributeDesignator(keyDesignator));
                     keyList.add(keyApply);
                 }
@@ -395,7 +441,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
                         && ((String) attribute).endsWith("'"))) {
                     var applyDesignator = new ApplyType();
                     applyDesignator.setFunctionId(
-                            validateFilterPropertyFunction(datatype + "-one-and-only").stringValue());
+                            validateFilterPropertyFunction(datatype + ONE_AND_ONLY).stringValue());
                     var designator = setAttributeDesignatorType((String) attribute,
                             XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue(),
                             validateFilterPropertyFunction(datatype).stringValue(), false);
@@ -438,11 +484,11 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
                                 String datatype) throws ToscaPolicyConversionException {
         try {
             Map<String, Object> compareWith = (Map<String, Object>) compareWithMap.get("compareWith");
-            if (compareWith.get("apply") != null) {
-                ApplyType compareApply = setApply((Map<String, Object>) compareWith.get("apply"));
+            if (compareWith.get(APPLY) != null) {
+                ApplyType compareApply = setApply((Map<String, Object>) compareWith.get(APPLY));
                 apply.getExpression().add(factory.createApply(compareApply));
-            } else if (compareWith.get("value") != null) {
-                var attributeValue = setAttributeValueType(compareWith.get("value"),
+            } else if (compareWith.get(VALUE) != null) {
+                var attributeValue = setAttributeValueType(compareWith.get(VALUE),
                         validateFilterPropertyFunction(datatype).stringValue());
                 apply.getExpression().add(factory.createAttributeValue(attributeValue));
             } else if (compareWith.get("key") != null) {
@@ -450,7 +496,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
                         XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue(),
                         validateFilterPropertyFunction(datatype).stringValue(), false);
                 var keyApply = new ApplyType();
-                keyApply.setFunctionId(validateFilterPropertyFunction(datatype + "-one-and-only").stringValue());
+                keyApply.setFunctionId(validateFilterPropertyFunction(datatype + ONE_AND_ONLY).stringValue());
                 keyApply.getExpression().add(factory.createAttributeDesignator(keyDesignator));
                 apply.getExpression().add(factory.createApply(keyApply));
             } else {
@@ -467,7 +513,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         try {
             var adviceExpression = new AdviceExpressionType();
             adviceExpression.setAdviceId(UUID.randomUUID().toString());
-            var value = setAttributeValueType(advice.get("value"), XACML3.ID_DATATYPE_STRING.stringValue());
+            var value = setAttributeValueType(advice.get(VALUE), XACML3.ID_DATATYPE_STRING.stringValue());
             var assignment = new AttributeAssignmentExpressionType();
             assignment.setAttributeId("urn:oasis:names:tc:xacml:2.0:example:attribute:text");
             assignment.setCategory(XACML3.ID_SUBJECT_CATEGORY_ACCESS_SUBJECT.stringValue());
@@ -511,12 +557,12 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
                 return operator.split("-")[2];
             }
             if (operator.equals("round") || operator.equals("floor")) {
-                return "double";
+                return DOUBLE;
             }
-            List<String> datatypes = Arrays.asList("string", "boolean", "integer", "double", "time", "date", "dateTime",
+            List<String> datatypes = Arrays.asList("string", "boolean", "integer", DOUBLE, "time", "date", "dateTime",
                     "dayTimeDuration", "yearMonthDuration", "anyURI", "hexBinary", "rfc822Name", "base64Binary",
                     "x500Name", "ipAddress", "dnsName");
-            if (datatypes.stream().anyMatch(datatype -> operator.contains(datatype))) {
+            if (datatypes.stream().anyMatch(operator::contains)) {
                 return operator.split("-")[0];
             }
         } catch (NullPointerException ex) {
@@ -525,311 +571,319 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         return operator;
     }
 
+    private void setIdentifierMap() {
+        identifierMap = new HashMap<>();
+        identifierMap.put("string-equal", XACML3.ID_FUNCTION_STRING_EQUAL);
+        identifierMap.put("integer-equal", XACML3.ID_FUNCTION_INTEGER_EQUAL);
+        identifierMap.put("string-equal-ignore-case", XACML3.ID_FUNCTION_STRING_EQUAL_IGNORE_CASE);
+        identifierMap.put("string-regexp-match", XACML3.ID_FUNCTION_STRING_REGEXP_MATCH);
+        identifierMap.put("string-contains", XACML3.ID_FUNCTION_STRING_CONTAINS);
+        identifierMap.put("string-greater-than", XACML3.ID_FUNCTION_STRING_GREATER_THAN);
+        identifierMap.put("string-greater-than-or-equal", XACML3.ID_FUNCTION_STRING_GREATER_THAN_OR_EQUAL);
+        identifierMap.put("string-less-than", XACML3.ID_FUNCTION_STRING_LESS_THAN);
+        identifierMap.put("string-less-than-or-equal", XACML3.ID_FUNCTION_STRING_LESS_THAN_OR_EQUAL);
+        identifierMap.put("string-starts-with", XACML3.ID_FUNCTION_STRING_STARTS_WITH);
+        identifierMap.put("string-ends-with", XACML3.ID_FUNCTION_STRING_ENDS_WITH);
+        identifierMap.put("integer-greater-than", XACML3.ID_FUNCTION_INTEGER_GREATER_THAN);
+        identifierMap.put("integer-greater-than-or-equal", XACML3.ID_FUNCTION_INTEGER_GREATER_THAN_OR_EQUAL);
+        identifierMap.put("integer-less-than", XACML3.ID_FUNCTION_INTEGER_LESS_THAN);
+        identifierMap.put("integer-less-than-or-equal", XACML3.ID_FUNCTION_INTEGER_LESS_THAN_OR_EQUAL);
+        identifierMap.put("double-greater-than", XACML3.ID_FUNCTION_DOUBLE_GREATER_THAN);
+        identifierMap.put("double-greater-than-or-equal", XACML3.ID_FUNCTION_DOUBLE_GREATER_THAN_OR_EQUAL);
+        identifierMap.put("double-less-than", XACML3.ID_FUNCTION_DOUBLE_LESS_THAN);
+        identifierMap.put("double-less-than-or-equal", XACML3.ID_FUNCTION_DOUBLE_LESS_THAN_OR_EQUAL);
+        identifierMap.put("datetime-add-daytimeduration", XACML3.ID_FUNCTION_DATETIME_ADD_DAYTIMEDURATION);
+        identifierMap.put("datetime-add-yearmonthduration", XACML3.ID_FUNCTION_DATETIME_ADD_YEARMONTHDURATION);
+        identifierMap.put("datetime-subtract-daytimeturation", XACML3.ID_FUNCTION_DATETIME_SUBTRACT_DAYTIMEDURATION);
+        identifierMap.put("datetime-subtract-yearmonthduration",
+                XACML3.ID_FUNCTION_DATETIME_SUBTRACT_YEARMONTHDURATION);
+        identifierMap.put("date-add-yearmonthduration", XACML3.ID_FUNCTION_DATE_ADD_YEARMONTHDURATION);
+        identifierMap.put("date-subtract-yearmonthduration", XACML3.ID_FUNCTION_DATE_SUBTRACT_YEARMONTHDURATION);
+        identifierMap.put("time-greater-than", XACML3.ID_FUNCTION_TIME_GREATER_THAN);
+        identifierMap.put("time-greater-than-or-equal", XACML3.ID_FUNCTION_TIME_GREATER_THAN_OR_EQUAL);
+        identifierMap.put("time-less-than", XACML3.ID_FUNCTION_TIME_LESS_THAN);
+        identifierMap.put("time-less-than-or-equal", XACML3.ID_FUNCTION_TIME_LESS_THAN_OR_EQUAL);
+        identifierMap.put("datetime-greater-than", XACML3.ID_FUNCTION_DATETIME_GREATER_THAN);
+        identifierMap.put("datetime-greater-than-or-equal", XACML3.ID_FUNCTION_DATETIME_GREATER_THAN_OR_EQUAL);
+        identifierMap.put("datetime-less-than", XACML3.ID_FUNCTION_DATETIME_LESS_THAN);
+        identifierMap.put("datetime-less-than-or-equal", XACML3.ID_FUNCTION_DATETIME_LESS_THAN_OR_EQUAL);
+        identifierMap.put("date-greater-than", XACML3.ID_FUNCTION_DATE_GREATER_THAN);
+        identifierMap.put("date-greater-than-or-equal", XACML3.ID_FUNCTION_DATE_GREATER_THAN_OR_EQUAL);
+        identifierMap.put("date-less-than", XACML3.ID_FUNCTION_DATE_LESS_THAN);
+        identifierMap.put("date-less-than-or-equal", XACML3.ID_FUNCTION_DATE_LESS_THAN_OR_EQUAL);
+        identifierMap.put("boolean-one-and-only", XACML3.ID_FUNCTION_BOOLEAN_ONE_AND_ONLY);
+        identifierMap.put("string-is-in", XACML3.ID_FUNCTION_STRING_IS_IN);
+        identifierMap.put("integer-is-in", XACML3.ID_FUNCTION_INTEGER_IS_IN);
+        identifierMap.put("boolean-is-in", XACML3.ID_FUNCTION_BOOLEAN_IS_IN);
+        identifierMap.put("double-is-in", XACML3.ID_FUNCTION_DOUBLE_IS_IN);
+        identifierMap.put("integer-add", XACML3.ID_FUNCTION_INTEGER_ADD);
+        identifierMap.put("double-add", XACML3.ID_FUNCTION_DOUBLE_ADD);
+        identifierMap.put("integer-subtract", XACML3.ID_FUNCTION_INTEGER_SUBTRACT);
+        identifierMap.put("double-subtract", XACML3.ID_FUNCTION_DOUBLE_SUBTRACT);
+        identifierMap.put("integer-multiply", XACML3.ID_FUNCTION_INTEGER_MULTIPLY);
+        identifierMap.put("double-multiply", XACML3.ID_FUNCTION_DOUBLE_MULTIPLY);
+        identifierMap.put("integer-divide", XACML3.ID_FUNCTION_INTEGER_DIVIDE);
+        identifierMap.put("double-divide", XACML3.ID_FUNCTION_DOUBLE_DIVIDE);
+        identifierMap.put("integer-mod", XACML3.ID_FUNCTION_INTEGER_MOD);
+        identifierMap.put("integer-abs", XACML3.ID_FUNCTION_INTEGER_ABS);
+        identifierMap.put("double-abs", XACML3.ID_FUNCTION_DOUBLE_ABS);
+        identifierMap.put("integer-to-double", XACML3.ID_FUNCTION_INTEGER_TO_DOUBLE);
+        identifierMap.put("yearmonthduration-equal", XACML3.ID_FUNCTION_YEARMONTHDURATION_EQUAL);
+        identifierMap.put("anyuri-equal", XACML3.ID_FUNCTION_ANYURI_EQUAL);
+        identifierMap.put("hexbinary-equal", XACML3.ID_FUNCTION_HEXBINARY_EQUAL);
+        identifierMap.put("rfc822name-equal", XACML3.ID_FUNCTION_RFC822NAME_EQUAL);
+        identifierMap.put("x500name-equal", XACML3.ID_FUNCTION_X500NAME_EQUAL);
+        identifierMap.put("string-from-ipaddress", XACML3.ID_FUNCTION_STRING_FROM_IPADDRESS);
+        identifierMap.put("string-from-dnsname", XACML3.ID_FUNCTION_STRING_FROM_DNSNAME);
+
+        identifierMap.put("boolean-equal", XACML3.ID_FUNCTION_BOOLEAN_EQUAL);
+        identifierMap.put("double-equal", XACML3.ID_FUNCTION_DOUBLE_EQUAL);
+        identifierMap.put("date-equal", XACML3.ID_FUNCTION_DATE_EQUAL);
+        identifierMap.put("time-equal", XACML3.ID_FUNCTION_TIME_EQUAL);
+        identifierMap.put("datetime-equal", XACML3.ID_FUNCTION_DATETIME_EQUAL);
+        identifierMap.put("daytimeduration-equal", XACML3.ID_FUNCTION_DAYTIMEDURATION_EQUAL);
+        identifierMap.put("base64binary-equal", XACML3.ID_FUNCTION_BASE64BINARY_EQUAL);
+        identifierMap.put("round", XACML3.ID_FUNCTION_ROUND);
+        identifierMap.put("floor", XACML3.ID_FUNCTION_FLOOR);
+        identifierMap.put("string-normalize-space", XACML3.ID_FUNCTION_STRING_NORMALIZE_SPACE);
+        identifierMap.put("string-normalize-to-lower-case", XACML3.ID_FUNCTION_STRING_NORMALIZE_TO_LOWER_CASE);
+        identifierMap.put("double-to-integer", XACML3.ID_FUNCTION_DOUBLE_TO_INTEGER);
+        identifierMap.put("present", XACML3.ID_FUNCTION_PRESENT);
+        identifierMap.put("time-in-range", XACML3.ID_FUNCTION_TIME_IN_RANGE);
+        identifierMap.put("string-bag-size", XACML3.ID_FUNCTION_STRING_BAG_SIZE);
+        identifierMap.put("boolean-bag-size", XACML3.ID_FUNCTION_BOOLEAN_BAG_SIZE);
+        identifierMap.put("integer-bag-size", XACML3.ID_FUNCTION_INTEGER_BAG_SIZE);
+        identifierMap.put("double-bag-size", XACML3.ID_FUNCTION_DOUBLE_BAG_SIZE);
+        identifierMap.put("time-bag-size", XACML3.ID_FUNCTION_TIME_BAG_SIZE);
+        identifierMap.put("time-is-in", XACML3.ID_FUNCTION_TIME_IS_IN);
+        identifierMap.put("time-bag", XACML3.ID_FUNCTION_TIME_BAG);
+        identifierMap.put("date-bag-size", XACML3.ID_FUNCTION_DATE_BAG_SIZE);
+        identifierMap.put("date-is-in", XACML3.ID_FUNCTION_DATE_IS_IN);
+        identifierMap.put("date-bag", XACML3.ID_FUNCTION_DATE_BAG);
+        identifierMap.put("datetime-bag-size", XACML3.ID_FUNCTION_DATETIME_BAG_SIZE);
+        identifierMap.put("datetime-is-in", XACML3.ID_FUNCTION_DATETIME_IS_IN);
+        identifierMap.put("datetime-bag", XACML3.ID_FUNCTION_DATETIME_BAG);
+        identifierMap.put("anyuri-bag-size", XACML3.ID_FUNCTION_ANYURI_BAG_SIZE);
+        identifierMap.put("anyuri-is-in", XACML3.ID_FUNCTION_ANYURI_IS_IN);
+        identifierMap.put("anyuri-bag", XACML3.ID_FUNCTION_ANYURI_BAG);
+        identifierMap.put("hexbinary-bag-size", XACML3.ID_FUNCTION_HEXBINARY_BAG_SIZE);
+        identifierMap.put("hexbinary-is-in", XACML3.ID_FUNCTION_HEXBINARY_IS_IN);
+        identifierMap.put("hexbinary-bag", XACML3.ID_FUNCTION_HEXBINARY_BAG);
+        identifierMap.put("base64binary-bag-size", XACML3.ID_FUNCTION_BASE64BINARY_BAG_SIZE);
+        identifierMap.put("base64binary-is-in", XACML3.ID_FUNCTION_BASE64BINARY_IS_IN);
+        identifierMap.put("base64binary-bag", XACML3.ID_FUNCTION_BASE64BINARY_BAG);
+        identifierMap.put("daytimeduration-bag-size", XACML3.ID_FUNCTION_DAYTIMEDURATION_BAG_SIZE);
+        identifierMap.put("daytimeduration-is-in", XACML3.ID_FUNCTION_DAYTIMEDURATION_IS_IN);
+        identifierMap.put("daytimeduration-bag", XACML3.ID_FUNCTION_DAYTIMEDURATION_BAG);
+        identifierMap.put("yearmonthduration-bag-size", XACML3.ID_FUNCTION_YEARMONTHDURATION_BAG_SIZE);
+        identifierMap.put("yearmonthduration-is-in", XACML3.ID_FUNCTION_YEARMONTHDURATION_IS_IN);
+        identifierMap.put("yearmonthduration-bag", XACML3.ID_FUNCTION_YEARMONTHDURATION_BAG);
+        identifierMap.put("x500name-one-and-only", XACML3.ID_FUNCTION_X500NAME_ONE_AND_ONLY);
+        identifierMap.put("x500name-bag-size", XACML3.ID_FUNCTION_X500NAME_BAG_SIZE);
+        identifierMap.put("x500name-is-in", XACML3.ID_FUNCTION_X500NAME_IS_IN);
+        identifierMap.put("x500name-bag", XACML3.ID_FUNCTION_X500NAME_BAG);
+        identifierMap.put("rfc822name-one-and-only", XACML3.ID_FUNCTION_RFC822NAME_ONE_AND_ONLY);
+        identifierMap.put("rfc822name-bag-size", XACML3.ID_FUNCTION_RFC822NAME_BAG_SIZE);
+        identifierMap.put("rfc822name-is-in", XACML3.ID_FUNCTION_RFC822NAME_IS_IN);
+        identifierMap.put("rfc822name-bag", XACML3.ID_FUNCTION_RFC822NAME_BAG);
+        identifierMap.put("ipaddress-one-and-only", XACML3.ID_FUNCTION_IPADDRESS_ONE_AND_ONLY);
+        identifierMap.put("ipaddress-bag-size", XACML3.ID_FUNCTION_IPADDRESS_BAG_SIZE);
+        identifierMap.put("ipaddress-is-in", XACML3.ID_FUNCTION_IPADDRESS_IS_IN);
+        identifierMap.put("ipaddress-bag", XACML3.ID_FUNCTION_IPADDRESS_BAG);
+        identifierMap.put("dnsname-one-and-only", XACML3.ID_FUNCTION_DNSNAME_ONE_AND_ONLY);
+        identifierMap.put("dnsname-bag-size", XACML3.ID_FUNCTION_DNSNAME_BAG_SIZE);
+        identifierMap.put("dnsname-is-in", XACML3.ID_FUNCTION_DNSNAME_IS_IN);
+        identifierMap.put("dnsname-bag", XACML3.ID_FUNCTION_DNSNAME_BAG);
+        identifierMap.put("string-concatenate", XACML3.ID_FUNCTION_STRING_CONCATENATE);
+        identifierMap.put("boolean-from-string", XACML3.ID_FUNCTION_BOOLEAN_FROM_STRING);
+        identifierMap.put("string-from-boolean", XACML3.ID_FUNCTION_STRING_FROM_BOOLEAN);
+        identifierMap.put("integer-from-string", XACML3.ID_FUNCTION_INTEGER_FROM_STRING);
+        identifierMap.put("string-from-integer", XACML3.ID_FUNCTION_STRING_FROM_INTEGER);
+        identifierMap.put("double-from-string", XACML3.ID_FUNCTION_DOUBLE_FROM_STRING);
+        identifierMap.put("string-from-double", XACML3.ID_FUNCTION_STRING_FROM_DOUBLE);
+        identifierMap.put("time-from-string", XACML3.ID_FUNCTION_TIME_FROM_STRING);
+        identifierMap.put("string-from-time", XACML3.ID_FUNCTION_STRING_FROM_TIME);
+        identifierMap.put("date-from-string", XACML3.ID_FUNCTION_DATE_FROM_STRING);
+        identifierMap.put("string-from-date", XACML3.ID_FUNCTION_STRING_FROM_DATE);
+        identifierMap.put("datetime-from-string", XACML3.ID_FUNCTION_DATETIME_FROM_STRING);
+        identifierMap.put("string-from-datetime", XACML3.ID_FUNCTION_STRING_FROM_DATETIME);
+        identifierMap.put("anyuri-from-string", XACML3.ID_FUNCTION_ANYURI_FROM_STRING);
+        identifierMap.put("string-from-anyuri", XACML3.ID_FUNCTION_STRING_FROM_ANYURI);
+        identifierMap.put("daytimeduration-from-string", XACML3.ID_FUNCTION_DAYTIMEDURATION_FROM_STRING);
+        identifierMap.put("string-from-daytimeturation", XACML3.ID_FUNCTION_STRING_FROM_DAYTIMEDURATION);
+        identifierMap.put("yearmonthduration-from-string", XACML3.ID_FUNCTION_YEARMONTHDURATION_FROM_STRING);
+        identifierMap.put("string-from-yearmonthduration", XACML3.ID_FUNCTION_STRING_FROM_YEARMONTHDURATION);
+        identifierMap.put("x500name-from-string", XACML3.ID_FUNCTION_X500NAME_FROM_STRING);
+        identifierMap.put("string-from-x500name", XACML3.ID_FUNCTION_STRING_FROM_X500NAME);
+        identifierMap.put("rfc822name-from-string", XACML3.ID_FUNCTION_RFC822NAME_FROM_STRING);
+        identifierMap.put("string-from-rfc822name", XACML3.ID_FUNCTION_STRING_FROM_RFC822NAME);
+        identifierMap.put("ipaddress-from-string", XACML3.ID_FUNCTION_IPADDRESS_FROM_STRING);
+        identifierMap.put("dnsname-from-string", XACML3.ID_FUNCTION_DNSNAME_FROM_STRING);
+        identifierMap.put("anyuri-starts-with", XACML3.ID_FUNCTION_ANYURI_STARTS_WITH);
+        identifierMap.put("anyuri-ends-with", XACML3.ID_FUNCTION_ANYURI_ENDS_WITH);
+        identifierMap.put("anyuri-contains", XACML3.ID_FUNCTION_ANYURI_CONTAINS);
+        identifierMap.put("string-substring", XACML3.ID_FUNCTION_STRING_SUBSTRING);
+        identifierMap.put("anyuri-substring", XACML3.ID_FUNCTION_ANYURI_SUBSTRING);
+        identifierMap.put("map", XACML3.ID_FUNCTION_MAP);
+        identifierMap.put("x500name-match", XACML3.ID_FUNCTION_X500NAME_MATCH);
+        identifierMap.put("rfc822name-match", XACML3.ID_FUNCTION_RFC822NAME_MATCH);
+        identifierMap.put("anyuri-regexp-match", XACML3.ID_FUNCTION_ANYURI_REGEXP_MATCH);
+        identifierMap.put("ipaddress-regexp-match", XACML3.ID_FUNCTION_IPADDRESS_REGEXP_MATCH);
+        identifierMap.put("dnsname-regexp-match", XACML3.ID_FUNCTION_DNSNAME_REGEXP_MATCH);
+        identifierMap.put("rfc822name-regexp-match", XACML3.ID_FUNCTION_RFC822NAME_REGEXP_MATCH);
+        identifierMap.put("x500name-regexp-match", XACML3.ID_FUNCTION_X500NAME_REGEXP_MATCH);
+        identifierMap.put("xpath-node-count", XACML3.ID_FUNCTION_XPATH_NODE_COUNT);
+        identifierMap.put("xpath-node-equal", XACML3.ID_FUNCTION_XPATH_NODE_EQUAL);
+        identifierMap.put("xpath-node-match", XACML3.ID_FUNCTION_XPATH_NODE_MATCH);
+        identifierMap.put("string-intersection", XACML3.ID_FUNCTION_STRING_INTERSECTION);
+        identifierMap.put("string-at-least-one-member-of", XACML3.ID_FUNCTION_STRING_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("string-union", XACML3.ID_FUNCTION_STRING_UNION);
+        identifierMap.put("string-subset", XACML3.ID_FUNCTION_STRING_SUBSET);
+        identifierMap.put("string-set-equals", XACML3.ID_FUNCTION_STRING_SET_EQUALS);
+        identifierMap.put("boolean-intersection", XACML3.ID_FUNCTION_BOOLEAN_INTERSECTION);
+        identifierMap.put("boolean-at-least-one-member-of", XACML3.ID_FUNCTION_BOOLEAN_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("boolean-union", XACML3.ID_FUNCTION_BOOLEAN_UNION);
+        identifierMap.put("boolean-subset", XACML3.ID_FUNCTION_BOOLEAN_SUBSET);
+        identifierMap.put("boolean-set-equals", XACML3.ID_FUNCTION_BOOLEAN_SET_EQUALS);
+        identifierMap.put("integer-intersection", XACML3.ID_FUNCTION_INTEGER_INTERSECTION);
+        identifierMap.put("integer-at-least-one-member-of", XACML3.ID_FUNCTION_INTEGER_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("integer-union", XACML3.ID_FUNCTION_INTEGER_UNION);
+        identifierMap.put("integer-subset", XACML3.ID_FUNCTION_INTEGER_SUBSET);
+        identifierMap.put("integer-set-equals", XACML3.ID_FUNCTION_INTEGER_SET_EQUALS);
+        identifierMap.put("double-intersection", XACML3.ID_FUNCTION_DOUBLE_INTERSECTION);
+        identifierMap.put("double-at-least-one-member-of", XACML3.ID_FUNCTION_DOUBLE_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("double-union", XACML3.ID_FUNCTION_DOUBLE_UNION);
+        identifierMap.put("double-subset", XACML3.ID_FUNCTION_DOUBLE_SUBSET);
+        identifierMap.put("double-set-equals", XACML3.ID_FUNCTION_DOUBLE_SET_EQUALS);
+        identifierMap.put("time-intersection", XACML3.ID_FUNCTION_TIME_INTERSECTION);
+        identifierMap.put("time-at-least-one-member-of", XACML3.ID_FUNCTION_TIME_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("time-union", XACML3.ID_FUNCTION_TIME_UNION);
+        identifierMap.put("time-subset", XACML3.ID_FUNCTION_TIME_SUBSET);
+        identifierMap.put("time-set-equals", XACML3.ID_FUNCTION_TIME_SET_EQUALS);
+        identifierMap.put("date-intersection", XACML3.ID_FUNCTION_DATE_INTERSECTION);
+        identifierMap.put("date-at-least-one-member-of", XACML3.ID_FUNCTION_DATE_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("date-union", XACML3.ID_FUNCTION_DATE_UNION);
+        identifierMap.put("date-subset", XACML3.ID_FUNCTION_DATE_SUBSET);
+        identifierMap.put("date-set-equals", XACML3.ID_FUNCTION_DATE_SET_EQUALS);
+        identifierMap.put("datetime-intersection", XACML3.ID_FUNCTION_DATETIME_INTERSECTION);
+        identifierMap.put("datetime-at-least-one-member-of", XACML3.ID_FUNCTION_DATETIME_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("datetime-union", XACML3.ID_FUNCTION_DATETIME_UNION);
+        identifierMap.put("datetime-subset", XACML3.ID_FUNCTION_DATETIME_SUBSET);
+        identifierMap.put("datetime-set-equals", XACML3.ID_FUNCTION_DATETIME_SET_EQUALS);
+
+        identifierMap.put("anyuri-intersection", XACML3.ID_FUNCTION_ANYURI_INTERSECTION);
+        identifierMap.put("anyuri-at-least-one-member-of", XACML3.ID_FUNCTION_ANYURI_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("anyuri-union", XACML3.ID_FUNCTION_ANYURI_UNION);
+        identifierMap.put("anyuri-subset", XACML3.ID_FUNCTION_ANYURI_SUBSET);
+        identifierMap.put("anyuri-set-equals", XACML3.ID_FUNCTION_ANYURI_SET_EQUALS);
+        identifierMap.put("hexbinary-intersection", XACML3.ID_FUNCTION_HEXBINARY_INTERSECTION);
+        identifierMap.put("hexbinary-at-least-one-member-of", XACML3.ID_FUNCTION_HEXBINARY_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("hexbinary-union", XACML3.ID_FUNCTION_HEXBINARY_UNION);
+        identifierMap.put("hexbinary-subset", XACML3.ID_FUNCTION_HEXBINARY_SUBSET);
+        identifierMap.put("hexbinary-set-equals", XACML3.ID_FUNCTION_HEXBINARY_SET_EQUALS);
+        identifierMap.put("base64binary-intersection", XACML3.ID_FUNCTION_BASE64BINARY_INTERSECTION);
+        identifierMap.put("base64binary-at-least-one-member-of",
+                XACML3.ID_FUNCTION_BASE64BINARY_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("base64binary-union", XACML3.ID_FUNCTION_BASE64BINARY_UNION);
+        identifierMap.put("base64binary-subset", XACML3.ID_FUNCTION_BASE64BINARY_SUBSET);
+        identifierMap.put("base64binary-set-equals", XACML3.ID_FUNCTION_BASE64BINARY_SET_EQUALS);
+        identifierMap.put("daytimeduration-intersection", XACML3.ID_FUNCTION_DAYTIMEDURATION_INTERSECTION);
+        identifierMap.put("daytimeduration-at-least-one-member-of",
+                XACML3.ID_FUNCTION_DAYTIMEDURATION_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("daytimeduration-union", XACML3.ID_FUNCTION_DAYTIMEDURATION_UNION);
+        identifierMap.put("daytimeduration-subset", XACML3.ID_FUNCTION_DAYTIMEDURATION_SUBSET);
+        identifierMap.put("daytimeduration-set-equals", XACML3.ID_FUNCTION_DAYTIMEDURATION_SET_EQUALS);
+        identifierMap.put("yearmonthduration-intersection", XACML3.ID_FUNCTION_YEARMONTHDURATION_INTERSECTION);
+        identifierMap.put("yearmonthduration-at-least-one-member-of",
+                XACML3.ID_FUNCTION_YEARMONTHDURATION_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("yearmonthduration-union", XACML3.ID_FUNCTION_YEARMONTHDURATION_UNION);
+        identifierMap.put("yearmonthduration-subset", XACML3.ID_FUNCTION_YEARMONTHDURATION_SUBSET);
+        identifierMap.put("yearmonthduration-set-equals", XACML3.ID_FUNCTION_YEARMONTHDURATION_SET_EQUALS);
+        identifierMap.put("x500name-intersection", XACML3.ID_FUNCTION_X500NAME_INTERSECTION);
+        identifierMap.put("x500name-at-least-one-member-of", XACML3.ID_FUNCTION_X500NAME_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("x500name-union", XACML3.ID_FUNCTION_X500NAME_UNION);
+        identifierMap.put("x500name-subset", XACML3.ID_FUNCTION_X500NAME_SUBSET);
+        identifierMap.put("x500name-set-equals", XACML3.ID_FUNCTION_X500NAME_SET_EQUALS);
+        identifierMap.put("rfc822name-intersection", XACML3.ID_FUNCTION_RFC822NAME_INTERSECTION);
+        identifierMap.put("rfc822name-at-least-one-member-of", XACML3.ID_FUNCTION_RFC822NAME_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("rfc822name-union", XACML3.ID_FUNCTION_RFC822NAME_UNION);
+        identifierMap.put("rfc822name-subset", XACML3.ID_FUNCTION_RFC822NAME_SUBSET);
+        identifierMap.put("rfc822name-set-equals", XACML3.ID_FUNCTION_RFC822NAME_SET_EQUALS);
+        identifierMap.put("ipaddress-intersection", XACML3.ID_FUNCTION_IPADDRESS_INTERSECTION);
+        identifierMap.put("ipaddress-at-least-one-member-of", XACML3.ID_FUNCTION_IPADDRESS_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("ipaddress-union", XACML3.ID_FUNCTION_IPADDRESS_UNION);
+        identifierMap.put("ipaddress-subset", XACML3.ID_FUNCTION_IPADDRESS_SUBSET);
+        identifierMap.put("ipaddress-set-equals", XACML3.ID_FUNCTION_IPADDRESS_SET_EQUALS);
+        identifierMap.put("dnsname-intersection", XACML3.ID_FUNCTION_DNSNAME_INTERSECTION);
+        identifierMap.put("dnsname-at-least-one-member-of", XACML3.ID_FUNCTION_DNSNAME_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("dnsname-union", XACML3.ID_FUNCTION_DNSNAME_UNION);
+        identifierMap.put("dnsname-subset", XACML3.ID_FUNCTION_DNSNAME_SUBSET);
+        identifierMap.put("dnsname-set-equals", XACML3.ID_FUNCTION_DNSNAME_SET_EQUALS);
+        identifierMap.put("access-permitted", XACML3.ID_FUNCTION_ACCESS_PERMITTED);
+
+        // function condition
+        identifierMap.put("or", XACML3.ID_FUNCTION_OR);
+        identifierMap.put("and", XACML3.ID_FUNCTION_AND);
+        identifierMap.put("n-of", XACML3.ID_FUNCTION_N_OF);
+        identifierMap.put("not", XACML3.ID_FUNCTION_NOT);
+        identifierMap.put("any-of", XACML3.ID_FUNCTION_ANY_OF);
+        identifierMap.put("all-of", XACML3.ID_FUNCTION_ALL_OF);
+        identifierMap.put("any-of-any", XACML3.ID_FUNCTION_ANY_OF_ANY);
+        identifierMap.put("all-of-any", XACML3.ID_FUNCTION_ALL_OF_ANY);
+        identifierMap.put("any-of-all", XACML3.ID_FUNCTION_ANY_OF_ALL);
+        identifierMap.put("all-of-all", XACML3.ID_FUNCTION_ALL_OF_ALL);
+
+        // function ids
+        identifierMap.put("string-one-and-only", XACML3.ID_FUNCTION_STRING_ONE_AND_ONLY);
+        identifierMap.put("integer-one-and-only", XACML3.ID_FUNCTION_INTEGER_ONE_AND_ONLY);
+        identifierMap.put("double-one-and-only", XACML3.ID_FUNCTION_DOUBLE_ONE_AND_ONLY);
+        identifierMap.put("time-one-and-only", XACML3.ID_FUNCTION_TIME_ONE_AND_ONLY);
+        identifierMap.put("date-one-and-only", XACML3.ID_FUNCTION_DATE_ONE_AND_ONLY);
+        identifierMap.put("datetime-one-and-only", XACML3.ID_FUNCTION_DATETIME_ONE_AND_ONLY);
+        identifierMap.put("anyuri-one-and-only", XACML3.ID_FUNCTION_ANYURI_ONE_AND_ONLY);
+        identifierMap.put("hexbinary-one-and-only", XACML3.ID_FUNCTION_HEXBINARY_ONE_AND_ONLY);
+        identifierMap.put("base64binary-one-and-only", XACML3.ID_FUNCTION_BASE64BINARY_ONE_AND_ONLY);
+        identifierMap.put("daytimeduration-one-and-only", XACML3.ID_FUNCTION_DAYTIMEDURATION_ONE_AND_ONLY);
+        identifierMap.put("yearmonthduration-one-and-only", XACML3.ID_FUNCTION_YEARMONTHDURATION_ONE_AND_ONLY);
+
+        //attribute ids
+        identifierMap.put("action-id", XACML3.ID_ACTION_ACTION_ID);
+
+        // algorithm
+        identifierMap.put("first-applicable", XACML3.ID_RULE_FIRST_APPLICABLE);
+        identifierMap.put("deny-overrides", XACML3.ID_RULE_DENY_UNLESS_PERMIT);
+        identifierMap.put("permit-overrides", XACML3.ID_RULE_PERMIT_UNLESS_DENY);
+        identifierMap.put("only-one-applicable", XACML3.ID_RULE_ONLY_ONE_APPLICABLE);
+
+        // data types
+        identifierMap.put("string", XACML3.ID_DATATYPE_STRING);
+        identifierMap.put("boolean", XACML3.ID_DATATYPE_BOOLEAN);
+        identifierMap.put("integer", XACML3.ID_DATATYPE_INTEGER);
+        identifierMap.put(DOUBLE, XACML3.ID_DATATYPE_DOUBLE);
+        identifierMap.put("time", XACML3.ID_DATATYPE_TIME);
+        identifierMap.put("date", XACML3.ID_DATATYPE_DATE);
+        identifierMap.put("datetime", XACML3.ID_DATATYPE_DATETIME);
+        identifierMap.put("daytimeduration", XACML3.ID_DATATYPE_DAYTIMEDURATION);
+        identifierMap.put("yearmonthduration", XACML3.ID_DATATYPE_YEARMONTHDURATION);
+        identifierMap.put("anyuri", XACML3.ID_DATATYPE_ANYURI);
+        identifierMap.put("hexbinary", XACML3.ID_DATATYPE_HEXBINARY);
+        identifierMap.put("base64binary", XACML3.ID_DATATYPE_BASE64BINARY);
+        identifierMap.put("rfc822name", XACML3.ID_DATATYPE_RFC822NAME);
+        identifierMap.put("x500name", XACML3.ID_DATATYPE_X500NAME);
+        identifierMap.put("ipaddress", XACML3.ID_DATATYPE_IPADDRESS);
+        identifierMap.put("dnsname", XACML3.ID_DATATYPE_DNSNAME);
+
+        identifierMap.put("string-bag", XACML3.ID_FUNCTION_STRING_BAG);
+        identifierMap.put("boolean-bag", XACML3.ID_FUNCTION_BOOLEAN_BAG);
+        identifierMap.put("integer-bag", XACML3.ID_FUNCTION_INTEGER_BAG);
+        identifierMap.put("double-bag", XACML3.ID_FUNCTION_DOUBLE_BAG);
+    }
+
     private Identifier validateFilterPropertyFunction(String operator) throws ToscaPolicyConversionException {
-        return switch (operator.toLowerCase()) {
-            //match ids
-            case "string-equal" -> XACML3.ID_FUNCTION_STRING_EQUAL;
-            case "integer-equal" -> XACML3.ID_FUNCTION_INTEGER_EQUAL;
-            case "string-equal-ignore-case" -> XACML3.ID_FUNCTION_STRING_EQUAL_IGNORE_CASE;
-            case "string-regexp-match" -> XACML3.ID_FUNCTION_STRING_REGEXP_MATCH;
-            case "string-contains" -> XACML3.ID_FUNCTION_STRING_CONTAINS;
-            case "string-greater-than" -> XACML3.ID_FUNCTION_STRING_GREATER_THAN;
-            case "string-greater-than-or-equal" -> XACML3.ID_FUNCTION_STRING_GREATER_THAN_OR_EQUAL;
-            case "string-less-than" -> XACML3.ID_FUNCTION_STRING_LESS_THAN;
-            case "string-less-than-or-equal" -> XACML3.ID_FUNCTION_STRING_LESS_THAN_OR_EQUAL;
-            case "string-starts-with" -> XACML3.ID_FUNCTION_STRING_STARTS_WITH;
-            case "string-ends-with" -> XACML3.ID_FUNCTION_STRING_ENDS_WITH;
-            case "integer-greater-than" -> XACML3.ID_FUNCTION_INTEGER_GREATER_THAN;
-            case "integer-greater-than-or-equal" -> XACML3.ID_FUNCTION_INTEGER_GREATER_THAN_OR_EQUAL;
-            case "integer-less-than" -> XACML3.ID_FUNCTION_INTEGER_LESS_THAN;
-            case "integer-less-than-or-equal" -> XACML3.ID_FUNCTION_INTEGER_LESS_THAN_OR_EQUAL;
-            case "double-greater-than" -> XACML3.ID_FUNCTION_DOUBLE_GREATER_THAN;
-            case "double-greater-than-or-equal" -> XACML3.ID_FUNCTION_DOUBLE_GREATER_THAN_OR_EQUAL;
-            case "double-less-than" -> XACML3.ID_FUNCTION_DOUBLE_LESS_THAN;
-            case "double-less-than-or-equal" -> XACML3.ID_FUNCTION_DOUBLE_LESS_THAN_OR_EQUAL;
-            case "datetime-add-daytimeduration" -> XACML3.ID_FUNCTION_DATETIME_ADD_DAYTIMEDURATION;
-            case "datetime-add-yearmonthduration" -> XACML3.ID_FUNCTION_DATETIME_ADD_YEARMONTHDURATION;
-            case "datetime-subtract-daytimeturation" -> XACML3.ID_FUNCTION_DATETIME_SUBTRACT_DAYTIMEDURATION;
-            case "datetime-subtract-yearmonthduration" -> XACML3.ID_FUNCTION_DATETIME_SUBTRACT_YEARMONTHDURATION;
-            case "date-add-yearmonthduration" -> XACML3.ID_FUNCTION_DATE_ADD_YEARMONTHDURATION;
-            case "date-subtract-yearmonthduration" -> XACML3.ID_FUNCTION_DATE_SUBTRACT_YEARMONTHDURATION;
-            case "time-greater-than" -> XACML3.ID_FUNCTION_TIME_GREATER_THAN;
-            case "time-greater-than-or-equal" -> XACML3.ID_FUNCTION_TIME_GREATER_THAN_OR_EQUAL;
-            case "time-less-than" -> XACML3.ID_FUNCTION_TIME_LESS_THAN;
-            case "time-less-than-or-equal" -> XACML3.ID_FUNCTION_TIME_LESS_THAN_OR_EQUAL;
-            case "datetime-greater-than" -> XACML3.ID_FUNCTION_DATETIME_GREATER_THAN;
-            case "datetime-greater-than-or-equal" -> XACML3.ID_FUNCTION_DATETIME_GREATER_THAN_OR_EQUAL;
-            case "datetime-less-than" -> XACML3.ID_FUNCTION_DATETIME_LESS_THAN;
-            case "datetime-less-than-or-equal" -> XACML3.ID_FUNCTION_DATETIME_LESS_THAN_OR_EQUAL;
-            case "date-greater-than" -> XACML3.ID_FUNCTION_DATE_GREATER_THAN;
-            case "date-greater-than-or-equal" -> XACML3.ID_FUNCTION_DATE_GREATER_THAN_OR_EQUAL;
-            case "date-less-than" -> XACML3.ID_FUNCTION_DATE_LESS_THAN;
-            case "date-less-than-or-equal" -> XACML3.ID_FUNCTION_DATE_LESS_THAN_OR_EQUAL;
-            case "boolean-one-and-only" -> XACML3.ID_FUNCTION_BOOLEAN_ONE_AND_ONLY;
-            case "string-is-in" -> XACML3.ID_FUNCTION_STRING_IS_IN;
-            case "integer-is-in" -> XACML3.ID_FUNCTION_INTEGER_IS_IN;
-            case "boolean-is-in" -> XACML3.ID_FUNCTION_BOOLEAN_IS_IN;
-            case "double-is-in" -> XACML3.ID_FUNCTION_DOUBLE_IS_IN;
-            case "integer-add" -> XACML3.ID_FUNCTION_INTEGER_ADD;
-            case "double-add" -> XACML3.ID_FUNCTION_DOUBLE_ADD;
-            case "integer-subtract" -> XACML3.ID_FUNCTION_INTEGER_SUBTRACT;
-            case "double-subtract" -> XACML3.ID_FUNCTION_DOUBLE_SUBTRACT;
-            case "integer-multiply" -> XACML3.ID_FUNCTION_INTEGER_MULTIPLY;
-            case "double-multiply" -> XACML3.ID_FUNCTION_DOUBLE_MULTIPLY;
-            case "integer-divide" -> XACML3.ID_FUNCTION_INTEGER_DIVIDE;
-            case "double-divide" -> XACML3.ID_FUNCTION_DOUBLE_DIVIDE;
-            case "integer-mod" -> XACML3.ID_FUNCTION_INTEGER_MOD;
-            case "integer-abs" -> XACML3.ID_FUNCTION_INTEGER_ABS;
-            case "double-abs" -> XACML3.ID_FUNCTION_DOUBLE_ABS;
-            case "integer-to-double" -> XACML3.ID_FUNCTION_INTEGER_TO_DOUBLE;
-            case "yearmonthduration-equal" -> XACML3.ID_FUNCTION_YEARMONTHDURATION_EQUAL;
-            case "anyuri-equal" -> XACML3.ID_FUNCTION_ANYURI_EQUAL;
-            case "hexbinary-equal" -> XACML3.ID_FUNCTION_HEXBINARY_EQUAL;
-            case "rfc822name-equal" -> XACML3.ID_FUNCTION_RFC822NAME_EQUAL;
-            case "x500name-equal" -> XACML3.ID_FUNCTION_X500NAME_EQUAL;
-            case "string-from-ipaddress" -> XACML3.ID_FUNCTION_STRING_FROM_IPADDRESS;
-            case "string-from-dnsname" -> XACML3.ID_FUNCTION_STRING_FROM_DNSNAME;
-
-            case "boolean-equal" -> XACML3.ID_FUNCTION_BOOLEAN_EQUAL;
-            case "double-equal" -> XACML3.ID_FUNCTION_DOUBLE_EQUAL;
-            case "date-equal" -> XACML3.ID_FUNCTION_DATE_EQUAL;
-            case "time-equal" -> XACML3.ID_FUNCTION_TIME_EQUAL;
-            case "datetime-equal" -> XACML3.ID_FUNCTION_DATETIME_EQUAL;
-            case "daytimeduration-equal" -> XACML3.ID_FUNCTION_DAYTIMEDURATION_EQUAL;
-            case "base64binary-equal" -> XACML3.ID_FUNCTION_BASE64BINARY_EQUAL;
-            case "round" -> XACML3.ID_FUNCTION_ROUND;
-            case "floor" -> XACML3.ID_FUNCTION_FLOOR;
-            case "string-normalize-space" -> XACML3.ID_FUNCTION_STRING_NORMALIZE_SPACE;
-            case "string-normalize-to-lower-case" -> XACML3.ID_FUNCTION_STRING_NORMALIZE_TO_LOWER_CASE;
-            case "double-to-integer" -> XACML3.ID_FUNCTION_DOUBLE_TO_INTEGER;
-            case "present" -> XACML3.ID_FUNCTION_PRESENT;
-            case "time-in-range" -> XACML3.ID_FUNCTION_TIME_IN_RANGE;
-            case "string-bag-size" -> XACML3.ID_FUNCTION_STRING_BAG_SIZE;
-            case "boolean-bag-size" -> XACML3.ID_FUNCTION_BOOLEAN_BAG_SIZE;
-            case "integer-bag-size" -> XACML3.ID_FUNCTION_INTEGER_BAG_SIZE;
-            case "double-bag-size" -> XACML3.ID_FUNCTION_DOUBLE_BAG_SIZE;
-            case "time-bag-size" -> XACML3.ID_FUNCTION_TIME_BAG_SIZE;
-            case "time-is-in" -> XACML3.ID_FUNCTION_TIME_IS_IN;
-            case "time-bag" -> XACML3.ID_FUNCTION_TIME_BAG;
-            case "date-bag-size" -> XACML3.ID_FUNCTION_DATE_BAG_SIZE;
-            case "date-is-in" -> XACML3.ID_FUNCTION_DATE_IS_IN;
-            case "date-bag" -> XACML3.ID_FUNCTION_DATE_BAG;
-            case "datetime-bag-size" -> XACML3.ID_FUNCTION_DATETIME_BAG_SIZE;
-            case "datetime-is-in" -> XACML3.ID_FUNCTION_DATETIME_IS_IN;
-            case "datetime-bag" -> XACML3.ID_FUNCTION_DATETIME_BAG;
-            case "anyuri-bag-size" -> XACML3.ID_FUNCTION_ANYURI_BAG_SIZE;
-            case "anyuri-is-in" -> XACML3.ID_FUNCTION_ANYURI_IS_IN;
-            case "anyuri-bag" -> XACML3.ID_FUNCTION_ANYURI_BAG;
-            case "hexbinary-bag-size" -> XACML3.ID_FUNCTION_HEXBINARY_BAG_SIZE;
-            case "hexbinary-is-in" -> XACML3.ID_FUNCTION_HEXBINARY_IS_IN;
-            case "hexbinary-bag" -> XACML3.ID_FUNCTION_HEXBINARY_BAG;
-            case "base64binary-bag-size" -> XACML3.ID_FUNCTION_BASE64BINARY_BAG_SIZE;
-            case "base64binary-is-in" -> XACML3.ID_FUNCTION_BASE64BINARY_IS_IN;
-            case "base64binary-bag" -> XACML3.ID_FUNCTION_BASE64BINARY_BAG;
-            case "daytimeduration-bag-size" -> XACML3.ID_FUNCTION_DAYTIMEDURATION_BAG_SIZE;
-            case "daytimeduration-is-in" -> XACML3.ID_FUNCTION_DAYTIMEDURATION_IS_IN;
-            case "daytimeduration-bag" -> XACML3.ID_FUNCTION_DAYTIMEDURATION_BAG;
-            case "yearmonthduration-bag-size" -> XACML3.ID_FUNCTION_YEARMONTHDURATION_BAG_SIZE;
-            case "yearmonthduration-is-in" -> XACML3.ID_FUNCTION_YEARMONTHDURATION_IS_IN;
-            case "yearmonthduration-bag" -> XACML3.ID_FUNCTION_YEARMONTHDURATION_BAG;
-            case "x500name-one-and-only" -> XACML3.ID_FUNCTION_X500NAME_ONE_AND_ONLY;
-            case "x500name-bag-size" -> XACML3.ID_FUNCTION_X500NAME_BAG_SIZE;
-            case "x500name-is-in" -> XACML3.ID_FUNCTION_X500NAME_IS_IN;
-            case "x500name-bag" -> XACML3.ID_FUNCTION_X500NAME_BAG;
-            case "rfc822name-one-and-only" -> XACML3.ID_FUNCTION_RFC822NAME_ONE_AND_ONLY;
-            case "rfc822name-bag-size" -> XACML3.ID_FUNCTION_RFC822NAME_BAG_SIZE;
-            case "rfc822name-is-in" -> XACML3.ID_FUNCTION_RFC822NAME_IS_IN;
-            case "rfc822name-bag" -> XACML3.ID_FUNCTION_RFC822NAME_BAG;
-            case "ipaddress-one-and-only" -> XACML3.ID_FUNCTION_IPADDRESS_ONE_AND_ONLY;
-            case "ipaddress-bag-size" -> XACML3.ID_FUNCTION_IPADDRESS_BAG_SIZE;
-            case "ipaddress-is-in" -> XACML3.ID_FUNCTION_IPADDRESS_IS_IN;
-            case "ipaddress-bag" -> XACML3.ID_FUNCTION_IPADDRESS_BAG;
-            case "dnsname-one-and-only" -> XACML3.ID_FUNCTION_DNSNAME_ONE_AND_ONLY;
-            case "dnsname-bag-size" -> XACML3.ID_FUNCTION_DNSNAME_BAG_SIZE;
-            case "dnsname-is-in" -> XACML3.ID_FUNCTION_DNSNAME_IS_IN;
-            case "dnsname-bag" -> XACML3.ID_FUNCTION_DNSNAME_BAG;
-            case "string-concatenate" -> XACML3.ID_FUNCTION_STRING_CONCATENATE;
-            case "boolean-from-string" -> XACML3.ID_FUNCTION_BOOLEAN_FROM_STRING;
-            case "string-from-boolean" -> XACML3.ID_FUNCTION_STRING_FROM_BOOLEAN;
-            case "integer-from-string" -> XACML3.ID_FUNCTION_INTEGER_FROM_STRING;
-            case "string-from-integer" -> XACML3.ID_FUNCTION_STRING_FROM_INTEGER;
-            case "double-from-string" -> XACML3.ID_FUNCTION_DOUBLE_FROM_STRING;
-            case "string-from-double" -> XACML3.ID_FUNCTION_STRING_FROM_DOUBLE;
-            case "time-from-string" -> XACML3.ID_FUNCTION_TIME_FROM_STRING;
-            case "string-from-time" -> XACML3.ID_FUNCTION_STRING_FROM_TIME;
-            case "date-from-string" -> XACML3.ID_FUNCTION_DATE_FROM_STRING;
-            case "string-from-date" -> XACML3.ID_FUNCTION_STRING_FROM_DATE;
-            case "datetime-from-string" -> XACML3.ID_FUNCTION_DATETIME_FROM_STRING;
-            case "string-from-datetime" -> XACML3.ID_FUNCTION_STRING_FROM_DATETIME;
-            case "anyuri-from-string" -> XACML3.ID_FUNCTION_ANYURI_FROM_STRING;
-            case "string-from-anyuri" -> XACML3.ID_FUNCTION_STRING_FROM_ANYURI;
-            case "daytimeduration-from-string" -> XACML3.ID_FUNCTION_DAYTIMEDURATION_FROM_STRING;
-            case "string-from-daytimeturation" -> XACML3.ID_FUNCTION_STRING_FROM_DAYTIMEDURATION;
-            case "yearmonthduration-from-string" -> XACML3.ID_FUNCTION_YEARMONTHDURATION_FROM_STRING;
-            case "string-from-yearmonthduration" -> XACML3.ID_FUNCTION_STRING_FROM_YEARMONTHDURATION;
-            case "x500name-from-string" -> XACML3.ID_FUNCTION_X500NAME_FROM_STRING;
-            case "string-from-x500name" -> XACML3.ID_FUNCTION_STRING_FROM_X500NAME;
-            case "rfc822name-from-string" -> XACML3.ID_FUNCTION_RFC822NAME_FROM_STRING;
-            case "string-from-rfc822name" -> XACML3.ID_FUNCTION_STRING_FROM_RFC822NAME;
-            case "ipaddress-from-string" -> XACML3.ID_FUNCTION_IPADDRESS_FROM_STRING;
-            case "dnsname-from-string" -> XACML3.ID_FUNCTION_DNSNAME_FROM_STRING;
-            case "anyuri-starts-with" -> XACML3.ID_FUNCTION_ANYURI_STARTS_WITH;
-            case "anyuri-ends-with" -> XACML3.ID_FUNCTION_ANYURI_ENDS_WITH;
-            case "anyuri-contains" -> XACML3.ID_FUNCTION_ANYURI_CONTAINS;
-            case "string-substring" -> XACML3.ID_FUNCTION_STRING_SUBSTRING;
-            case "anyuri-substring" -> XACML3.ID_FUNCTION_ANYURI_SUBSTRING;
-            case "map" -> XACML3.ID_FUNCTION_MAP;
-            case "x500name-match" -> XACML3.ID_FUNCTION_X500NAME_MATCH;
-            case "rfc822name-match" -> XACML3.ID_FUNCTION_RFC822NAME_MATCH;
-            case "anyuri-regexp-match" -> XACML3.ID_FUNCTION_ANYURI_REGEXP_MATCH;
-            case "ipaddress-regexp-match" -> XACML3.ID_FUNCTION_IPADDRESS_REGEXP_MATCH;
-            case "dnsname-regexp-match" -> XACML3.ID_FUNCTION_DNSNAME_REGEXP_MATCH;
-            case "rfc822name-regexp-match" -> XACML3.ID_FUNCTION_RFC822NAME_REGEXP_MATCH;
-            case "x500name-regexp-match" -> XACML3.ID_FUNCTION_X500NAME_REGEXP_MATCH;
-            case "xpath-node-count" -> XACML3.ID_FUNCTION_XPATH_NODE_COUNT;
-            case "xpath-node-equal" -> XACML3.ID_FUNCTION_XPATH_NODE_EQUAL;
-            case "xpath-node-match" -> XACML3.ID_FUNCTION_XPATH_NODE_MATCH;
-            case "string-intersection" -> XACML3.ID_FUNCTION_STRING_INTERSECTION;
-            case "string-at-least-one-member-of" -> XACML3.ID_FUNCTION_STRING_AT_LEAST_ONE_MEMBER_OF;
-            case "string-union" -> XACML3.ID_FUNCTION_STRING_UNION;
-            case "string-subset" -> XACML3.ID_FUNCTION_STRING_SUBSET;
-            case "string-set-equals" -> XACML3.ID_FUNCTION_STRING_SET_EQUALS;
-            case "boolean-intersection" -> XACML3.ID_FUNCTION_BOOLEAN_INTERSECTION;
-            case "boolean-at-least-one-member-of" -> XACML3.ID_FUNCTION_BOOLEAN_AT_LEAST_ONE_MEMBER_OF;
-            case "boolean-union" -> XACML3.ID_FUNCTION_BOOLEAN_UNION;
-            case "boolean-subset" -> XACML3.ID_FUNCTION_BOOLEAN_SUBSET;
-            case "boolean-set-equals" -> XACML3.ID_FUNCTION_BOOLEAN_SET_EQUALS;
-            case "integer-intersection" -> XACML3.ID_FUNCTION_INTEGER_INTERSECTION;
-            case "integer-at-least-one-member-of" -> XACML3.ID_FUNCTION_INTEGER_AT_LEAST_ONE_MEMBER_OF;
-            case "integer-union" -> XACML3.ID_FUNCTION_INTEGER_UNION;
-            case "integer-subset" -> XACML3.ID_FUNCTION_INTEGER_SUBSET;
-            case "integer-set-equals" -> XACML3.ID_FUNCTION_INTEGER_SET_EQUALS;
-            case "double-intersection" -> XACML3.ID_FUNCTION_DOUBLE_INTERSECTION;
-            case "double-at-least-one-member-of" -> XACML3.ID_FUNCTION_DOUBLE_AT_LEAST_ONE_MEMBER_OF;
-            case "double-union" -> XACML3.ID_FUNCTION_DOUBLE_UNION;
-            case "double-subset" -> XACML3.ID_FUNCTION_DOUBLE_SUBSET;
-            case "double-set-equals" -> XACML3.ID_FUNCTION_DOUBLE_SET_EQUALS;
-            case "time-intersection" -> XACML3.ID_FUNCTION_TIME_INTERSECTION;
-            case "time-at-least-one-member-of" -> XACML3.ID_FUNCTION_TIME_AT_LEAST_ONE_MEMBER_OF;
-            case "time-union" -> XACML3.ID_FUNCTION_TIME_UNION;
-            case "time-subset" -> XACML3.ID_FUNCTION_TIME_SUBSET;
-            case "time-set-equals" -> XACML3.ID_FUNCTION_TIME_SET_EQUALS;
-            case "date-intersection" -> XACML3.ID_FUNCTION_DATE_INTERSECTION;
-            case "date-at-least-one-member-of" -> XACML3.ID_FUNCTION_DATE_AT_LEAST_ONE_MEMBER_OF;
-            case "date-union" -> XACML3.ID_FUNCTION_DATE_UNION;
-            case "date-subset" -> XACML3.ID_FUNCTION_DATE_SUBSET;
-            case "date-set-equals" -> XACML3.ID_FUNCTION_DATE_SET_EQUALS;
-            case "datetime-intersection" -> XACML3.ID_FUNCTION_DATETIME_INTERSECTION;
-            case "datetime-at-least-one-member-of" -> XACML3.ID_FUNCTION_DATETIME_AT_LEAST_ONE_MEMBER_OF;
-            case "datetime-union" -> XACML3.ID_FUNCTION_DATETIME_UNION;
-            case "datetime-subset" -> XACML3.ID_FUNCTION_DATETIME_SUBSET;
-            case "datetime-set-equals" -> XACML3.ID_FUNCTION_DATETIME_SET_EQUALS;
-            case "anyuri-intersection" -> XACML3.ID_FUNCTION_ANYURI_INTERSECTION;
-            case "anyuri-at-least-one-member-of" -> XACML3.ID_FUNCTION_ANYURI_AT_LEAST_ONE_MEMBER_OF;
-            case "anyuri-union" -> XACML3.ID_FUNCTION_ANYURI_UNION;
-            case "anyuri-subset" -> XACML3.ID_FUNCTION_ANYURI_SUBSET;
-            case "anyuri-set-equals" -> XACML3.ID_FUNCTION_ANYURI_SET_EQUALS;
-            case "hexbinary-intersection" -> XACML3.ID_FUNCTION_HEXBINARY_INTERSECTION;
-            case "hexbinary-at-least-one-member-of" -> XACML3.ID_FUNCTION_HEXBINARY_AT_LEAST_ONE_MEMBER_OF;
-            case "hexbinary-union" -> XACML3.ID_FUNCTION_HEXBINARY_UNION;
-            case "hexbinary-subset" -> XACML3.ID_FUNCTION_HEXBINARY_SUBSET;
-            case "hexbinary-set-equals" -> XACML3.ID_FUNCTION_HEXBINARY_SET_EQUALS;
-            case "base64binary-intersection" -> XACML3.ID_FUNCTION_BASE64BINARY_INTERSECTION;
-            case "base64binary-at-least-one-member-of" -> XACML3.ID_FUNCTION_BASE64BINARY_AT_LEAST_ONE_MEMBER_OF;
-            case "base64binary-union" -> XACML3.ID_FUNCTION_BASE64BINARY_UNION;
-            case "base64binary-subset" -> XACML3.ID_FUNCTION_BASE64BINARY_SUBSET;
-            case "base64binary-set-equals" -> XACML3.ID_FUNCTION_BASE64BINARY_SET_EQUALS;
-            case "daytimeduration-intersection" -> XACML3.ID_FUNCTION_DAYTIMEDURATION_INTERSECTION;
-            case "daytimeduration-at-least-one-member-of" -> XACML3.ID_FUNCTION_DAYTIMEDURATION_AT_LEAST_ONE_MEMBER_OF;
-            case "daytimeduration-union" -> XACML3.ID_FUNCTION_DAYTIMEDURATION_UNION;
-            case "daytimeduration-subset" -> XACML3.ID_FUNCTION_DAYTIMEDURATION_SUBSET;
-            case "daytimeduration-set-equals" -> XACML3.ID_FUNCTION_DAYTIMEDURATION_SET_EQUALS;
-            case "yearmonthduration-intersection" -> XACML3.ID_FUNCTION_YEARMONTHDURATION_INTERSECTION;
-            case "yearmonthduration-at-least-one-member-of" ->
-                    XACML3.ID_FUNCTION_YEARMONTHDURATION_AT_LEAST_ONE_MEMBER_OF;
-            case "yearmonthduration-union" -> XACML3.ID_FUNCTION_YEARMONTHDURATION_UNION;
-            case "yearmonthduration-subset" -> XACML3.ID_FUNCTION_YEARMONTHDURATION_SUBSET;
-            case "yearmonthduration-set-equals" -> XACML3.ID_FUNCTION_YEARMONTHDURATION_SET_EQUALS;
-            case "x500name-intersection" -> XACML3.ID_FUNCTION_X500NAME_INTERSECTION;
-            case "x500name-at-least-one-member-of" -> XACML3.ID_FUNCTION_X500NAME_AT_LEAST_ONE_MEMBER_OF;
-            case "x500name-union" -> XACML3.ID_FUNCTION_X500NAME_UNION;
-            case "x500name-subset" -> XACML3.ID_FUNCTION_X500NAME_SUBSET;
-            case "x500name-set-equals" -> XACML3.ID_FUNCTION_X500NAME_SET_EQUALS;
-            case "rfc822name-intersection" -> XACML3.ID_FUNCTION_RFC822NAME_INTERSECTION;
-            case "rfc822name-at-least-one-member-of" -> XACML3.ID_FUNCTION_RFC822NAME_AT_LEAST_ONE_MEMBER_OF;
-            case "rfc822name-union" -> XACML3.ID_FUNCTION_RFC822NAME_UNION;
-            case "rfc822name-subset" -> XACML3.ID_FUNCTION_RFC822NAME_SUBSET;
-            case "rfc822name-set-equals" -> XACML3.ID_FUNCTION_RFC822NAME_SET_EQUALS;
-            case "ipaddress-intersection" -> XACML3.ID_FUNCTION_IPADDRESS_INTERSECTION;
-            case "ipaddress-at-least-one-member-of" -> XACML3.ID_FUNCTION_IPADDRESS_AT_LEAST_ONE_MEMBER_OF;
-            case "ipaddress-union" -> XACML3.ID_FUNCTION_IPADDRESS_UNION;
-            case "ipaddress-subset" -> XACML3.ID_FUNCTION_IPADDRESS_SUBSET;
-            case "ipaddress-set-equals" -> XACML3.ID_FUNCTION_IPADDRESS_SET_EQUALS;
-            case "dnsname-intersection" -> XACML3.ID_FUNCTION_DNSNAME_INTERSECTION;
-            case "dnsname-at-least-one-member-of" -> XACML3.ID_FUNCTION_DNSNAME_AT_LEAST_ONE_MEMBER_OF;
-            case "dnsname-union" -> XACML3.ID_FUNCTION_DNSNAME_UNION;
-            case "dnsname-subset" -> XACML3.ID_FUNCTION_DNSNAME_SUBSET;
-            case "dnsname-set-equals" -> XACML3.ID_FUNCTION_DNSNAME_SET_EQUALS;
-            case "access-permitted" -> XACML3.ID_FUNCTION_ACCESS_PERMITTED;
-
-            // function condition
-            case "or" -> XACML3.ID_FUNCTION_OR;
-            case "and" -> XACML3.ID_FUNCTION_AND;
-            case "n-of" -> XACML3.ID_FUNCTION_N_OF;
-            case "not" -> XACML3.ID_FUNCTION_NOT;
-            case "any-of" -> XACML3.ID_FUNCTION_ANY_OF;
-            case "all-of" -> XACML3.ID_FUNCTION_ALL_OF;
-            case "any-of-any" -> XACML3.ID_FUNCTION_ANY_OF_ANY;
-            case "all-of-any" -> XACML3.ID_FUNCTION_ALL_OF_ANY;
-            case "any-of-all" -> XACML3.ID_FUNCTION_ANY_OF_ALL;
-            case "all-of-all" -> XACML3.ID_FUNCTION_ALL_OF_ALL;
-
-            // function ids
-            case "string-one-and-only" -> XACML3.ID_FUNCTION_STRING_ONE_AND_ONLY;
-            case "integer-one-and-only" -> XACML3.ID_FUNCTION_INTEGER_ONE_AND_ONLY;
-            case "double-one-and-only" -> XACML3.ID_FUNCTION_DOUBLE_ONE_AND_ONLY;
-            case "time-one-and-only" -> XACML3.ID_FUNCTION_TIME_ONE_AND_ONLY;
-            case "date-one-and-only" -> XACML3.ID_FUNCTION_DATE_ONE_AND_ONLY;
-            case "datetime-one-and-only" -> XACML3.ID_FUNCTION_DATETIME_ONE_AND_ONLY;
-            case "anyuri-one-and-only" -> XACML3.ID_FUNCTION_ANYURI_ONE_AND_ONLY;
-            case "hexbinary-one-and-only" -> XACML3.ID_FUNCTION_HEXBINARY_ONE_AND_ONLY;
-            case "base64binary-one-and-only" -> XACML3.ID_FUNCTION_BASE64BINARY_ONE_AND_ONLY;
-            case "daytimeduration-one-and-only" -> XACML3.ID_FUNCTION_DAYTIMEDURATION_ONE_AND_ONLY;
-            case "yearmonthduration-one-and-only" -> XACML3.ID_FUNCTION_YEARMONTHDURATION_ONE_AND_ONLY;
-
-            //attribute ids
-            case "action-id" -> XACML3.ID_ACTION_ACTION_ID;
-
-            // algorithm
-            case "first-applicable" -> XACML3.ID_RULE_FIRST_APPLICABLE;
-            case "deny-overrides" -> XACML3.ID_RULE_DENY_UNLESS_PERMIT;
-            case "permit-overrides" -> XACML3.ID_RULE_PERMIT_UNLESS_DENY;
-            case "only-one-applicable" -> XACML3.ID_RULE_ONLY_ONE_APPLICABLE;
-
-            // data types
-            case "string" -> XACML3.ID_DATATYPE_STRING;
-            case "boolean" -> XACML3.ID_DATATYPE_BOOLEAN;
-            case "integer" -> XACML3.ID_DATATYPE_INTEGER;
-            case "double" -> XACML3.ID_DATATYPE_DOUBLE;
-            case "time" -> XACML3.ID_DATATYPE_TIME;
-            case "date" -> XACML3.ID_DATATYPE_DATE;
-            case "datetime" -> XACML3.ID_DATATYPE_DATETIME;
-            case "daytimeduration" -> XACML3.ID_DATATYPE_DAYTIMEDURATION;
-            case "yearmonthduration" -> XACML3.ID_DATATYPE_YEARMONTHDURATION;
-            case "anyuri" -> XACML3.ID_DATATYPE_ANYURI;
-            case "hexbinary" -> XACML3.ID_DATATYPE_HEXBINARY;
-            case "base64binary" -> XACML3.ID_DATATYPE_BASE64BINARY;
-            case "rfc822name" -> XACML3.ID_DATATYPE_RFC822NAME;
-            case "x500name" -> XACML3.ID_DATATYPE_X500NAME;
-            case "ipaddress" -> XACML3.ID_DATATYPE_IPADDRESS;
-            case "dnsname" -> XACML3.ID_DATATYPE_DNSNAME;
-
-            case "string-bag" -> XACML3.ID_FUNCTION_STRING_BAG;
-            case "boolean-bag" -> XACML3.ID_FUNCTION_BOOLEAN_BAG;
-            case "integer-bag" -> XACML3.ID_FUNCTION_INTEGER_BAG;
-            case "double-bag" -> XACML3.ID_FUNCTION_DOUBLE_BAG;
-
-            default -> throw new ToscaPolicyConversionException("Unexpected value " + operator);
-        };
+        if (identifierMap.containsKey(operator.toLowerCase())) {
+            return identifierMap.get(operator.toLowerCase());
+        } else {
+            throw new ToscaPolicyConversionException("Unexpected value " + operator);
+        }
     }
 }
