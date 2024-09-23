@@ -18,6 +18,24 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d54b5a03_ab4d0680",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8185
+      },
+      "writtenOn": "2024-09-23T10:03:37Z",
+      "side": 1,
+      "message": "Hi, I have made changes as per suggested in sonar qube and also added copyright to all modified java classes.\nI did not tested code against CSIT.\nPlease check latest commit with given link (I have changed change-id while committing because it not able to push changes with same change-id)\nhttps://gerrit.onap.org/r/c/policy/xacml-pdp/+/138949/1",
+      "parentUuid": "be9bfe1f_cb262e3a",
+      "revId": "6c04c79d2cdd15ebdd0f4391e48ad81ae3ca0161",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1a76ea01_4bd7a63e",
@@ -31,6 +49,30 @@
       "writtenOn": "2024-09-20T08:30:34Z",
       "side": 1,
       "message": "Modifications copyrights need to be added.\nUnder this line, should be something like\nModifications Copyright (C) 2024 your-company-name.\nAdd this to every java class.",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 54
+      },
+      "revId": "6c04c79d2cdd15ebdd0f4391e48ad81ae3ca0161",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3da8d42c_f0d33989",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplication.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 8185
+      },
+      "writtenOn": "2024-09-23T10:03:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a76ea01_4bd7a63e",
       "range": {
         "startLine": 6,
         "startChar": 3,
