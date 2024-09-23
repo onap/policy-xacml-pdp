@@ -74,6 +74,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a2529f86_9f824931",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2024-09-23T12:27:15Z",
+      "side": 1,
+      "message": "maybe you can do a squash https://www.git-tower.com/learn/git/faq/git-squash/\nand use the last changeId, as you were able to push patches to it. I\u0027d rather not have relation chains to be pushed.",
+      "parentUuid": "59f3f7fd_a70a71e9",
+      "revId": "6c04c79d2cdd15ebdd0f4391e48ad81ae3ca0161",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1a76ea01_4bd7a63e",
         "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplication.java",
         "patchSetId": 1
