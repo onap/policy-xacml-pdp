@@ -2,6 +2,7 @@
  * ============LICENSE_START=======================================================
  * Copyright (C) 2020-2022 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2024 Nordix Foundation.
+ * Modifications Copyright (C) 2024 Deutsche Telekom AG.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -144,10 +145,10 @@ class XacmlPdpApplicationManagerTest {
         //
         assertThat(manager).isNotNull();
         assertThat(manager.getPolicyCount()).isZero();
-        assertThat(manager.getPolicyTypeCount()).isEqualTo(18);
+        assertThat(manager.getPolicyTypeCount()).isEqualTo(19);
         assertThat(manager.getToscaPolicies()).isEmpty();
         assertThat(manager.getToscaPolicyIdentifiers()).isEmpty();
-        assertThat(manager.getToscaPolicyTypeIdents()).hasSize(18);
+        assertThat(manager.getToscaPolicyTypeIdents()).hasSize(19);
 
         assertThat(manager.findNativeApplication()).isInstanceOf(NativePdpApplication.class);
 
