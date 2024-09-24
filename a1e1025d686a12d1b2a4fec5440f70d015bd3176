@@ -16,6 +16,24 @@
       "message": "Thanks for the work Ajinkya. Could you provide some information on the xacml pdp requirement your team is working on? Any further reviews are we expecting in xacml? This is just for our information.",
       "revId": "a1e1025d686a12d1b2a4fec5440f70d015bd3176",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "31709a18_b1bf3419",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8185
+      },
+      "writtenOn": "2024-09-24T09:11:31Z",
+      "side": 1,
+      "message": "Hi Ramesh, We were working on converting policy in TOSCA/YAML(key\u003dvalue) format to XACML format and after conversion we return PolicySet object with use of same endpoint in native XACML policy. \nFor this we introduce new policy type i.e. onap.policies.native.ToscaXacml in native XACML. \nYou can check epic https://jira.onap.org/browse/POLICY-5122 for more details.",
+      "parentUuid": "26e447b9_22ea14f7",
+      "revId": "a1e1025d686a12d1b2a4fec5440f70d015bd3176",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
