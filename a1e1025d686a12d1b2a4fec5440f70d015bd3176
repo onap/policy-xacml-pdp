@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "26e447b9_22ea14f7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-09-24T08:51:59Z",
+      "side": 1,
+      "message": "Thanks for the work Ajinkya. Could you provide some information on the xacml pdp requirement your team is working on? Any further reviews are we expecting in xacml? This is just for our information.",
+      "revId": "a1e1025d686a12d1b2a4fec5440f70d015bd3176",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
