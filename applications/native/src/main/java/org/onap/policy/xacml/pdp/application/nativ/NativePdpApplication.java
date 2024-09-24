@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
+ * Modifications Copyright (C) 2024 Deutsche Telekom AG.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +41,8 @@ public class NativePdpApplication extends StdXacmlApplicationServiceProvider {
 
     private static final ToscaConceptIdentifier nativePolicyType = new ToscaConceptIdentifier(
             "onap.policies.native.Xacml", "1.0.0");
+    private static final ToscaConceptIdentifier nativeToscaXacmlPolicyType = new ToscaConceptIdentifier(
+            "onap.policies.native.ToscaXacml", "1.0.0");
     private NativePdpApplicationTranslator translator = new NativePdpApplicationTranslator();
 
     /**
@@ -51,11 +54,12 @@ public class NativePdpApplication extends StdXacmlApplicationServiceProvider {
         applicationName = "native";
         actions = Arrays.asList("native");
         supportedPolicyTypes.add(nativePolicyType);
+        supportedPolicyTypes.add(nativeToscaXacmlPolicyType);
     }
 
     @Override
     public boolean canSupportPolicyType(ToscaConceptIdentifier policyTypeId) {
-        return nativePolicyType.equals(policyTypeId);
+        return (nativePolicyType.equals(policyTypeId) || nativeToscaXacmlPolicyType.equals(policyTypeId));
     }
 
     @Override
