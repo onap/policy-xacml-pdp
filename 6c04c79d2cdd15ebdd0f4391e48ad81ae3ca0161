@@ -92,6 +92,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2567b606_34edf646",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8185
+      },
+      "writtenOn": "2024-09-24T06:51:48Z",
+      "side": 1,
+      "message": "Git squash may become messy at end, So instead of this I will consider your first suggestion to create new one with changes in one place from zero, Now I am abandoning current commit.",
+      "parentUuid": "a2529f86_9f824931",
+      "revId": "6c04c79d2cdd15ebdd0f4391e48ad81ae3ca0161",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1a76ea01_4bd7a63e",
         "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplication.java",
         "patchSetId": 1
