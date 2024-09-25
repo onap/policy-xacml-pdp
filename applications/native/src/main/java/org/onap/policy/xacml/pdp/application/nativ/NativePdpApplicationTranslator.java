@@ -213,7 +213,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
             throw new ToscaPolicyConversionException("Invalid rule format");
         }
         if (properties.get("default") != null) {
-            setDefaultTule((String) properties.get("default"), policyType);
+            setDefaultRule((String) properties.get("default"), policyType);
         }
         return policyType;
     }
@@ -252,7 +252,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         }
     }
 
-    private void setDefaultTule(String defaultDecision, PolicyType policyType) {
+    private void setDefaultRule(String defaultDecision, PolicyType policyType) {
         var defaultRule = new RuleType();
         defaultRule.setDescription("Default Rule if none of the rules evaluate to True");
         defaultRule.setRuleId(UUID.randomUUID().toString());
