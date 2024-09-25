@@ -34,6 +34,29 @@
       "parentUuid": "26e447b9_22ea14f7",
       "revId": "a1e1025d686a12d1b2a4fec5440f70d015bd3176",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "557c33c5_209695b8",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2024-09-25T09:09:43Z",
+      "side": 1,
+      "message": "typo - setDefaultRule",
+      "range": {
+        "startLine": 255,
+        "startChar": 17,
+        "endLine": 255,
+        "endChar": 31
+      },
+      "revId": "a1e1025d686a12d1b2a4fec5440f70d015bd3176",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
