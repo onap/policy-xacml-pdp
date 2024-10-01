@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7deb4e10_58ac5744",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-10-01T10:45:54Z",
+      "side": 1,
+      "message": "Hi Ajinkya, I see a Relation chain with this review pointing to the same review again. Could you check why this happens?",
+      "revId": "d5a51b60b1afe7843407e6177ed18599b57cb3d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
