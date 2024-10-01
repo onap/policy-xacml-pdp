@@ -16,6 +16,24 @@
       "message": "Hi Ajinkya, I see a Relation chain with this review pointing to the same review again. Could you check why this happens?",
       "revId": "d5a51b60b1afe7843407e6177ed18599b57cb3d1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d151668_abfa5cc7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8185
+      },
+      "writtenOn": "2024-10-01T12:47:45Z",
+      "side": 1,
+      "message": "I committed last code changes then push code because that another change-id and new relation chain was created.\nbecause of that I abandoned new relation chain.\nclone xacml-pdp service then checkout this change and do required code changes.\ninstead of commit I have pushed with same change-id.",
+      "parentUuid": "7deb4e10_58ac5744",
+      "revId": "d5a51b60b1afe7843407e6177ed18599b57cb3d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
