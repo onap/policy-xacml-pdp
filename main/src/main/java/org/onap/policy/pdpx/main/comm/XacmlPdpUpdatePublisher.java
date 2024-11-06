@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
+import org.onap.policy.common.message.bus.event.client.TopicSinkClient;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.concepts.PdpUpdate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -63,12 +63,12 @@ public class XacmlPdpUpdatePublisher {
         // incoming data
         Map<ToscaConceptIdentifier, ToscaPolicy> toBeDeployedPolicies = policyToMap(message.getPoliciesToBeDeployed());
         List<ToscaConceptIdentifier> toBeUndeployedIds =
-                        Optional.ofNullable(message.getPoliciesToBeUndeployed()).orElse(Collections.emptyList());
+            Optional.ofNullable(message.getPoliciesToBeUndeployed()).orElse(Collections.emptyList());
 
         var stats = XacmlPdpStatisticsManager.getCurrent();
 
         // Undeploy policies
-        for (ToscaConceptIdentifier policyId: toBeUndeployedIds) {
+        for (ToscaConceptIdentifier policyId : toBeUndeployedIds) {
             ToscaPolicy policy = deployedPolicies.get(policyId);
             if (policy == null) {
                 LOGGER.warn("attempt to undeploy policy that has not been previously deployed: {}", policyId);

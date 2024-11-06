@@ -39,6 +39,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -46,9 +47,9 @@ import org.junit.jupiter.api.io.TempDir;
 import org.onap.policy.common.endpoints.http.client.HttpClient;
 import org.onap.policy.common.endpoints.http.client.HttpClientConfigException;
 import org.onap.policy.common.endpoints.http.client.HttpClientFactoryInstance;
-import org.onap.policy.common.endpoints.parameters.RestClientParameters;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
-import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
+import org.onap.policy.common.parameters.rest.RestClientParameters;
+import org.onap.policy.common.parameters.rest.RestServerParameters;
+import org.onap.policy.common.parameters.topic.TopicParameterGroup;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
@@ -95,9 +96,10 @@ class TestDecision {
         //
         Path src = Paths.get("src/test/resources/apps");
         File apps = appsFolder.resolve("apps").toFile();
-        Files.walk(src).forEach(source -> {
-            copy(source, apps.toPath().resolve(src.relativize(source)));
-        });
+
+        try (Stream<Path> sources = Files.walk(src)) {
+            sources.forEach(source -> copy(source, apps.toPath().resolve(src.relativize(source))));
+        }
         //
         // Get the parameters file correct.
         //

@@ -30,10 +30,10 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.SecureRandom;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.net.ssl.SSLContext;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
@@ -90,7 +90,7 @@ public class CommonRest {
     static {
         try {
             File file = new File(ResourceUtils.getFilePath4Resource("parameters/XacmlPdpConfigParameters_Std.json"));
-            STD_CONFIG = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+            STD_CONFIG = Files.readString(file.toPath());
 
             file = new File(file.getParentFile(), "Test_XacmlPdpConfigParameters.json");
             file.deleteOnExit();
@@ -165,16 +165,14 @@ public class CommonRest {
      * Writes a JSON config file, substituting an allocated port number for occurrences of
      * "${port}".
      *
-     * @return the allocated server port
      * @throws IOException if the config file cannot be created
      */
-    public static int writeJsonConfig() throws IOException {
+    public static void writeJsonConfig() throws IOException {
         port = NetworkUtil.allocPort();
 
         String config = STD_CONFIG.replace("${port}", String.valueOf(port));
-        Files.write(CONFIG_PATH, config.getBytes(StandardCharsets.UTF_8));
+        Files.writeString(CONFIG_PATH, config);
 
-        return port;
     }
 
     /**
@@ -191,7 +189,7 @@ public class CommonRest {
 
         // always trust the host name
         final ClientBuilder clientBuilder =
-                        ClientBuilder.newBuilder().sslContext(sc).hostnameVerifier((host, session) -> true);
+            ClientBuilder.newBuilder().sslContext(sc).hostnameVerifier((host, session) -> true);
 
         final Client client = clientBuilder.build();
         final HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("healthcheck", "zb!XztG34");
@@ -216,7 +214,8 @@ public class CommonRest {
      */
     private void markActivator(boolean newAlive) {
         Object manager = ReflectionTestUtils.getField(XacmlPdpActivator.getCurrent(), "serviceManager");
-        AtomicBoolean running = (AtomicBoolean) ReflectionTestUtils.getField(manager, "running");
-        running.set(newAlive);
+        AtomicBoolean running = (AtomicBoolean) ReflectionTestUtils
+            .getField(Objects.requireNonNull(manager), "running");
+        Objects.requireNonNull(running).set(newAlive);
     }
 }

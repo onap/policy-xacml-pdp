@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +26,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
-import org.onap.policy.common.endpoints.event.comm.client.BidirectionalTopicClient;
+import org.onap.policy.common.message.bus.event.client.BidirectionalTopicClient;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -69,7 +70,7 @@ public class XacmlPdpHearbeatPublisher implements Runnable {
      * @param state tracks the state of this PDP
      */
     public XacmlPdpHearbeatPublisher(BidirectionalTopicClient topicChecker, long probeHeartbeatTopicMs,
-                    XacmlState state) {
+                                     XacmlState state) {
         LOGGER.info("heartbeat topic probe {}ms", probeHeartbeatTopicMs);
         this.topicChecker = topicChecker;
         this.probeHeartbeatTopicMs = probeHeartbeatTopicMs;

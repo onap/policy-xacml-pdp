@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020 Nordix Foundation.
+ * Modifications Copyright (C) 2020, 2024 Nordix Foundation.
  * Modifications Copyright (C) 2024 Deutsche Telekom AG.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -73,7 +73,6 @@ import org.slf4j.LoggerFactory;
  * This class implements one translator that interprets TOSCA policy and decision API request/response payload.
  *
  * @author Chenfei Gao (cgao@research.att.com)
- *
  */
 @NoArgsConstructor
 public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
@@ -134,7 +133,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
     protected String getNativeXacmlPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
 
         var nativeDefinition = ToscaPolicyTranslatorUtils.decodeProperties(toscaPolicy.getProperties(),
-                NativeDefinition.class);
+            NativeDefinition.class);
 
         LOGGER.debug("Base64 encoded native xacml policy {}", nativeDefinition.getPolicy());
         return nativeDefinition.getPolicy();
@@ -167,13 +166,13 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         policySetType.setVersion(String.valueOf(toscaPolicy.getMetadata().get("policy-version")));
         policySetType.setDescription(String.valueOf(toscaPolicy.getMetadata().get(DESCRIPTION)));
         policySetType.setTarget(setPolicySetTarget(toscaPolicy.getMetadata().get("action")));
-        for (Map<String, Object> type: (List<Map<String, Object>>) toscaPolicy.getProperties().get("policies")) {
+        for (Map<String, Object> type : (List<Map<String, Object>>) toscaPolicy.getProperties().get("policies")) {
             ToscaPolicy policy = new ToscaPolicy();
             policy.setMetadata((Map<String, Object>) type.get("metadata"));
             policy.setProperties((Map<String, Object>) type.get("properties"));
             ObjectFactory objectFactory = new ObjectFactory();
             policySetType.getPolicySetOrPolicyOrPolicySetIdReference()
-                    .add(objectFactory.createPolicy(convertPolicyXacml(policy)));
+                .add(objectFactory.createPolicy(convertPolicyXacml(policy)));
         }
         return policySetType;
     }
@@ -228,7 +227,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         Map<String, Object> properties = toscaPolicy.getProperties();
         if (properties.get("combiningAlgo") != null) {
             policyType.setRuleCombiningAlgId(validateFilterPropertyFunction((String)
-                    properties.get("combiningAlgo")).stringValue());
+                properties.get("combiningAlgo")).stringValue());
         } else {
             policyType.setRuleCombiningAlgId(XACML3.ID_RULE_FIRST_APPLICABLE.stringValue());
         }
@@ -240,7 +239,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
     }
 
     private void setAdviceExpression(RuleType ruleType, Map<String, Object> rule)
-            throws ToscaPolicyConversionException {
+        throws ToscaPolicyConversionException {
         String decision = (String) rule.get("decision");
         if ("Deny".equalsIgnoreCase(decision)) {
             ruleType.setEffect(EffectType.DENY);
@@ -275,20 +274,20 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
                     String datatype = getDatatype(operator);
                     matchType.setMatchId(validateFilterPropertyFunction(operator).stringValue());
                     var valueType = setAttributeValueType(match.get(VALUE),
-                            validateFilterPropertyFunction(datatype).stringValue());
+                        validateFilterPropertyFunction(datatype).stringValue());
                     matchType.setAttributeValue(valueType);
                     String attribute = "";
                     String category = "";
                     if (((String) match.get("key")).contains("action")) {
                         attribute = validateFilterPropertyFunction((String) match
-                                .get("key")).stringValue();
+                            .get("key")).stringValue();
                         category = XACML3.ID_ATTRIBUTE_CATEGORY_ACTION.stringValue();
                     } else {
                         attribute = (String) match.get("key");
                         category = XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue();
                     }
                     var designator = setAttributeDesignatorType(attribute, category,
-                            validateFilterPropertyFunction(datatype).stringValue(), false);
+                        validateFilterPropertyFunction(datatype).stringValue(), false);
                     matchType.setAttributeDesignator(designator);
                     listMatch.add(matchType);
                 }
@@ -310,8 +309,8 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         var valueType = setAttributeValueType(value, XACML3.ID_DATATYPE_STRING.stringValue());
         matchType.setAttributeValue(valueType);
         var designator = setAttributeDesignatorType(XACML3.ID_ACTION_ACTION_ID.stringValue(),
-                XACML3.ID_ATTRIBUTE_CATEGORY_ACTION.stringValue(),
-                XACML3.ID_DATATYPE_STRING.stringValue(), false);
+            XACML3.ID_ATTRIBUTE_CATEGORY_ACTION.stringValue(),
+            XACML3.ID_DATATYPE_STRING.stringValue(), false);
         matchType.setAttributeDesignator(designator);
         var anyOfType = new AnyOfType();
         anyOfType.getAllOf().add(ToscaPolicyTranslatorUtils.buildAllOf(matchType));
@@ -369,7 +368,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
                     keyList.add(setApply((Map<String, Object>) ((Map<?, ?>) keyObject).get(APPLY)));
                 } else {
                     throw new ToscaPolicyConversionException(
-                            "Invalid key entry, object does not contain list, function or apply");
+                        "Invalid key entry, object does not contain list, function or apply");
                 }
             } else {
                 setAttributes(keyObject, keyList, datatype, factory);
@@ -379,37 +378,36 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
 
     private void setAttributeAndDesignator(List<Object> keyList, ApplyType apply, ObjectFactory factory) {
         keyList.stream()
-                .sorted((firstKey, secondKey) -> {
-                    if (firstKey instanceof AttributeValueType) {
-                        return -1;
-                    } else if (firstKey instanceof ApplyType) {
-                        return 1;
-                    }
-                    return 0;
-                })
-                .forEach(key -> {
-                    if (key instanceof AttributeValueType) {
-                        apply.getExpression().add(factory.createAttributeValue((AttributeValueType) key));
-                    }
-                    if (key instanceof ApplyType) {
-                        apply.getExpression().add(factory.createApply((ApplyType) key));
-                    }
-                });
+            .sorted((firstKey, secondKey) -> {
+                if (firstKey instanceof AttributeValueType) {
+                    return -1;
+                } else if (firstKey instanceof ApplyType) {
+                    return 1;
+                }
+                return 0;
+            })
+            .forEach(key -> {
+                if (key instanceof AttributeValueType) {
+                    apply.getExpression().add(factory.createAttributeValue((AttributeValueType) key));
+                }
+                if (key instanceof ApplyType) {
+                    apply.getExpression().add(factory.createApply((ApplyType) key));
+                }
+            });
     }
 
     private void setAttributes(Object key, List<Object> keyList, String datatype, ObjectFactory factory)
-            throws ToscaPolicyConversionException {
+        throws ToscaPolicyConversionException {
         try {
-            if (key instanceof String) {
-                String value = (String) key;
+            if (key instanceof String value) {
                 if (value.startsWith("'") && value.endsWith("'")) {
                     AttributeValueType attributeValue = setAttributeValueType(value.substring(1, value.length() - 1),
-                            validateFilterPropertyFunction(datatype).stringValue());
+                        validateFilterPropertyFunction(datatype).stringValue());
                     keyList.add(attributeValue);
                 } else {
                     var keyDesignator = setAttributeDesignatorType(value,
-                            XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue(),
-                            validateFilterPropertyFunction(datatype).stringValue(), false);
+                        XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue(),
+                        validateFilterPropertyFunction(datatype).stringValue(), false);
                     ApplyType keyApply = new ApplyType();
                     keyApply.setFunctionId(validateFilterPropertyFunction(datatype + ONE_AND_ONLY).stringValue());
                     keyApply.getExpression().add(factory.createAttributeDesignator(keyDesignator));
@@ -417,7 +415,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
                 }
             } else {
                 AttributeValueType attributeValue = setAttributeValueType(key,
-                        validateFilterPropertyFunction(datatype).stringValue());
+                    validateFilterPropertyFunction(datatype).stringValue());
                 keyList.add(attributeValue);
             }
         } catch (NullPointerException ex) {
@@ -426,34 +424,33 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
     }
 
     private void setBagApply(ApplyType apply, List<Object> list, String datatype, ObjectFactory factory)
-            throws ToscaPolicyConversionException {
+        throws ToscaPolicyConversionException {
         try {
             var bagApply = new ApplyType();
             bagApply.setFunctionId(validateFilterPropertyFunction(datatype + "-bag").stringValue());
             for (Object attribute : list) {
                 if (attribute instanceof String && !(((String) attribute).startsWith("'")
-                        && ((String) attribute).endsWith("'"))) {
+                    && ((String) attribute).endsWith("'"))) {
                     var applyDesignator = new ApplyType();
                     applyDesignator.setFunctionId(
-                            validateFilterPropertyFunction(datatype + ONE_AND_ONLY).stringValue());
+                        validateFilterPropertyFunction(datatype + ONE_AND_ONLY).stringValue());
                     var designator = setAttributeDesignatorType((String) attribute,
-                            XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue(),
-                            validateFilterPropertyFunction(datatype).stringValue(), false);
+                        XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue(),
+                        validateFilterPropertyFunction(datatype).stringValue(), false);
                     applyDesignator.getExpression().add(factory.createAttributeDesignator(designator));
                     bagApply.getExpression().add(factory.createApply(applyDesignator));
                 }
             }
             for (Object attribute : list) {
-                if (attribute instanceof String) {
-                    String value = (String) attribute;
+                if (attribute instanceof String value) {
                     if (value.startsWith("'") && value.endsWith("'")) {
                         var attributeValue = setAttributeValueType(value.substring(1, value.length() - 1),
-                                validateFilterPropertyFunction(datatype).stringValue());
+                            validateFilterPropertyFunction(datatype).stringValue());
                         bagApply.getExpression().add(factory.createAttributeValue(attributeValue));
                     }
                 } else {
                     var attributeValue = setAttributeValueType(attribute,
-                            validateFilterPropertyFunction(datatype).stringValue());
+                        validateFilterPropertyFunction(datatype).stringValue());
                     bagApply.getExpression().add(factory.createAttributeValue(attributeValue));
                 }
             }
@@ -464,7 +461,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
     }
 
     private void setFunctionType(ApplyType apply, String function, ObjectFactory factory)
-            throws ToscaPolicyConversionException {
+        throws ToscaPolicyConversionException {
         try {
             var functionType = new FunctionType();
             functionType.setFunctionId(validateFilterPropertyFunction(function).stringValue());
@@ -483,12 +480,12 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
                 apply.getExpression().add(factory.createApply(compareApply));
             } else if (compareWith.get(VALUE) != null) {
                 var attributeValue = setAttributeValueType(compareWith.get(VALUE),
-                        validateFilterPropertyFunction(datatype).stringValue());
+                    validateFilterPropertyFunction(datatype).stringValue());
                 apply.getExpression().add(factory.createAttributeValue(attributeValue));
             } else if (compareWith.get("key") != null) {
                 var keyDesignator = setAttributeDesignatorType((String) compareWith.get("key"),
-                        XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue(),
-                        validateFilterPropertyFunction(datatype).stringValue(), false);
+                    XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue(),
+                    validateFilterPropertyFunction(datatype).stringValue(), false);
                 var keyApply = new ApplyType();
                 keyApply.setFunctionId(validateFilterPropertyFunction(datatype + ONE_AND_ONLY).stringValue());
                 keyApply.getExpression().add(factory.createAttributeDesignator(keyDesignator));
@@ -502,7 +499,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
     }
 
     private AdviceExpressionsType setAdvice(Map<String, Object> advice, String decision)
-            throws ToscaPolicyConversionException {
+        throws ToscaPolicyConversionException {
         var adviceExpressions = new AdviceExpressionsType();
         try {
             var adviceExpression = new AdviceExpressionType();
@@ -554,8 +551,8 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
                 return DOUBLE;
             }
             List<String> datatypes = Arrays.asList("string", "boolean", "integer", DOUBLE, "time", "date", "dateTime",
-                    "dayTimeDuration", "yearMonthDuration", "anyURI", "hexBinary", "rfc822Name", "base64Binary",
-                    "x500Name", "ipAddress", "dnsName");
+                "dayTimeDuration", "yearMonthDuration", "anyURI", "hexBinary", "rfc822Name", "base64Binary",
+                "x500Name", "ipAddress", "dnsName");
             if (datatypes.stream().anyMatch(operator::contains)) {
                 return operator.split("-")[0];
             }
@@ -590,7 +587,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         identifierMap.put("datetime-add-yearmonthduration", XACML3.ID_FUNCTION_DATETIME_ADD_YEARMONTHDURATION);
         identifierMap.put("datetime-subtract-daytimeturation", XACML3.ID_FUNCTION_DATETIME_SUBTRACT_DAYTIMEDURATION);
         identifierMap.put("datetime-subtract-yearmonthduration",
-                XACML3.ID_FUNCTION_DATETIME_SUBTRACT_YEARMONTHDURATION);
+            XACML3.ID_FUNCTION_DATETIME_SUBTRACT_YEARMONTHDURATION);
         identifierMap.put("date-add-yearmonthduration", XACML3.ID_FUNCTION_DATE_ADD_YEARMONTHDURATION);
         identifierMap.put("date-subtract-yearmonthduration", XACML3.ID_FUNCTION_DATE_SUBTRACT_YEARMONTHDURATION);
         identifierMap.put("time-greater-than", XACML3.ID_FUNCTION_TIME_GREATER_THAN);
@@ -777,19 +774,19 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         identifierMap.put("hexbinary-set-equals", XACML3.ID_FUNCTION_HEXBINARY_SET_EQUALS);
         identifierMap.put("base64binary-intersection", XACML3.ID_FUNCTION_BASE64BINARY_INTERSECTION);
         identifierMap.put("base64binary-at-least-one-member-of",
-                XACML3.ID_FUNCTION_BASE64BINARY_AT_LEAST_ONE_MEMBER_OF);
+            XACML3.ID_FUNCTION_BASE64BINARY_AT_LEAST_ONE_MEMBER_OF);
         identifierMap.put("base64binary-union", XACML3.ID_FUNCTION_BASE64BINARY_UNION);
         identifierMap.put("base64binary-subset", XACML3.ID_FUNCTION_BASE64BINARY_SUBSET);
         identifierMap.put("base64binary-set-equals", XACML3.ID_FUNCTION_BASE64BINARY_SET_EQUALS);
         identifierMap.put("daytimeduration-intersection", XACML3.ID_FUNCTION_DAYTIMEDURATION_INTERSECTION);
         identifierMap.put("daytimeduration-at-least-one-member-of",
-                XACML3.ID_FUNCTION_DAYTIMEDURATION_AT_LEAST_ONE_MEMBER_OF);
+            XACML3.ID_FUNCTION_DAYTIMEDURATION_AT_LEAST_ONE_MEMBER_OF);
         identifierMap.put("daytimeduration-union", XACML3.ID_FUNCTION_DAYTIMEDURATION_UNION);
         identifierMap.put("daytimeduration-subset", XACML3.ID_FUNCTION_DAYTIMEDURATION_SUBSET);
         identifierMap.put("daytimeduration-set-equals", XACML3.ID_FUNCTION_DAYTIMEDURATION_SET_EQUALS);
         identifierMap.put("yearmonthduration-intersection", XACML3.ID_FUNCTION_YEARMONTHDURATION_INTERSECTION);
         identifierMap.put("yearmonthduration-at-least-one-member-of",
-                XACML3.ID_FUNCTION_YEARMONTHDURATION_AT_LEAST_ONE_MEMBER_OF);
+            XACML3.ID_FUNCTION_YEARMONTHDURATION_AT_LEAST_ONE_MEMBER_OF);
         identifierMap.put("yearmonthduration-union", XACML3.ID_FUNCTION_YEARMONTHDURATION_UNION);
         identifierMap.put("yearmonthduration-subset", XACML3.ID_FUNCTION_YEARMONTHDURATION_SUBSET);
         identifierMap.put("yearmonthduration-set-equals", XACML3.ID_FUNCTION_YEARMONTHDURATION_SET_EQUALS);

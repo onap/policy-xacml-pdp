@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019, 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2019, 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,14 +24,13 @@ package org.onap.policy.pdpx.main.parameters;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import org.onap.policy.common.endpoints.parameters.TopicParameters;
+import org.onap.policy.common.parameters.topic.TopicParameters;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 
 /**
  * Class to hold/create all parameters for test cases.
- *
  */
 public class CommonTestData {
 
@@ -114,7 +113,7 @@ public class CommonTestData {
      * Converts the contents of a map to a parameter class.
      *
      * @param source property map
-     * @param clazz class of object to be created from the map
+     * @param clazz  class of object to be created from the map
      * @return a new object represented by the map
      */
     public <T> T toObject(final Map<String, Object> source, final Class<T> clazz) {
@@ -165,13 +164,13 @@ public class CommonTestData {
     /**
      * Returns a property map for a XacmlApplicationParameters map for test cases.
      *
-     * @param isEmpty boolean value to represent that object created should be empty or not
-     * @param tempPath Application Path string
+     * @param isEmpty    boolean value to represent that object created should be empty or not
+     * @param tempPath   Application Path string
      * @param exclusions An optional list of application classnames for exclusion
      * @return a property map suitable for constructing an object
      */
     public Map<String, Object> getXacmlapplicationParametersMap(boolean isEmpty, String tempPath,
-            String... exclusions) {
+                                                                String... exclusions) {
         final Map<String, Object> map = new TreeMap<>();
         if (!isEmpty) {
             map.put("applicationPath", tempPath);

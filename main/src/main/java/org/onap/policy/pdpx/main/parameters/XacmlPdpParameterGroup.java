@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019 Nordix Foundation.
+ * Modifications Copyright (C) 2019, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,6 @@ package org.onap.policy.pdpx.main.parameters;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.onap.policy.common.endpoints.parameters.RestClientParameters;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
-import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ParameterGroupImpl;
 import org.onap.policy.common.parameters.ValidationStatus;
@@ -34,11 +31,13 @@ import org.onap.policy.common.parameters.annotations.Min;
 import org.onap.policy.common.parameters.annotations.NotBlank;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
+import org.onap.policy.common.parameters.rest.RestClientParameters;
+import org.onap.policy.common.parameters.rest.RestServerParameters;
+import org.onap.policy.common.parameters.topic.TopicParameterGroup;
 import org.onap.policy.models.base.Validated;
 
 /**
  * Class to hold all parameters needed for xacml pdp component.
- *
  */
 @Getter
 @NotNull
@@ -68,12 +67,14 @@ public class XacmlPdpParameterGroup extends ParameterGroupImpl {
     /**
      * Create the xacml pdp parameter group.
      *
-     * @param name the parameter group name
+     * @param name     the parameter group name
      * @param pdpGroup the pdp group name
      */
     public XacmlPdpParameterGroup(final String name, final String pdpGroup, final String pdpType,
-            final RestServerParameters restServerParameters, final RestClientParameters policyApiParameters,
-            final TopicParameterGroup topicParameterGroup, final XacmlApplicationParameters applicationParameters) {
+                                  final RestServerParameters restServerParameters,
+                                  final RestClientParameters policyApiParameters,
+                                  final TopicParameterGroup topicParameterGroup,
+                                  final XacmlApplicationParameters applicationParameters) {
         super(name);
         this.pdpGroup = pdpGroup;
         this.pdpType = pdpType;

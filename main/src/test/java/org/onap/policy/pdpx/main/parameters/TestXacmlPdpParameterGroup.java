@@ -33,10 +33,10 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.onap.policy.common.endpoints.parameters.RestClientParameters;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
-import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.onap.policy.common.parameters.ValidationResult;
+import org.onap.policy.common.parameters.rest.RestClientParameters;
+import org.onap.policy.common.parameters.rest.RestServerParameters;
+import org.onap.policy.common.parameters.topic.TopicParameterGroup;
 
 /**
  * Class to perform unit test of XacmlPdpParameterGroup.
