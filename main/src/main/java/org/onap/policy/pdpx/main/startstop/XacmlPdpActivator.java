@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,16 +24,16 @@ package org.onap.policy.pdpx.main.startstop;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
-import org.onap.policy.common.endpoints.event.comm.client.BidirectionalTopicClient;
-import org.onap.policy.common.endpoints.event.comm.client.BidirectionalTopicClientException;
-import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.onap.policy.common.endpoints.http.client.HttpClient;
 import org.onap.policy.common.endpoints.http.client.HttpClientConfigException;
 import org.onap.policy.common.endpoints.http.client.HttpClientFactoryInstance;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
-import org.onap.policy.common.endpoints.parameters.RestClientParameters;
+import org.onap.policy.common.message.bus.event.TopicEndpointManager;
+import org.onap.policy.common.message.bus.event.client.BidirectionalTopicClient;
+import org.onap.policy.common.message.bus.event.client.BidirectionalTopicClientException;
+import org.onap.policy.common.message.bus.event.client.TopicSinkClient;
 import org.onap.policy.common.parameters.ParameterService;
+import org.onap.policy.common.parameters.rest.RestClientParameters;
 import org.onap.policy.common.utils.services.ServiceManagerContainer;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.models.pdp.enums.PdpMessageType;
@@ -101,7 +101,7 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
             HttpClient apiClient = HttpClientFactoryInstance.getClientFactory().build(apiClientParams);
 
             var appmgr = new XacmlPdpApplicationManager(xacmlPdpParameterGroup.getApplicationParameters(),
-                                            apiClient);
+                apiClient);
             XacmlPdpApplicationManager.setCurrent(appmgr);
 
             var stats = new XacmlPdpStatisticsManager();
@@ -118,21 +118,21 @@ public class XacmlPdpActivator extends ServiceManagerContainer {
             sinkClient = new TopicSinkClient(topicClient.getSink());
 
             heartbeat = new XacmlPdpHearbeatPublisher(topicClient,
-                            xacmlPdpParameterGroup.getProbeHeartbeatTopicSec() * 1000, state);
+                xacmlPdpParameterGroup.getProbeHeartbeatTopicSec() * 1000, state);
 
             /*
              * since the dispatcher isn't registered with the topic yet, we can go ahead
              * and register the listeners with it.
              */
             msgDispatcher.register(PdpMessageType.PDP_STATE_CHANGE.name(),
-                            new XacmlPdpStateChangeListener(sinkClient, state));
+                new XacmlPdpStateChangeListener(sinkClient, state));
             msgDispatcher.register(PdpMessageType.PDP_UPDATE.name(),
-                            new XacmlPdpUpdateListener(sinkClient, state, heartbeat, appmgr));
+                new XacmlPdpUpdateListener(sinkClient, state, heartbeat, appmgr));
 
             XacmlPdpServiceFilter.disableApi();
 
             restServer = new XacmlPdpRestServer(xacmlPdpParameterGroup.getRestServerParameters(),
-                                List.of(XacmlPdpServiceFilter.class), List.of(XacmlPdpRestController.class));
+                List.of(XacmlPdpServiceFilter.class), List.of(XacmlPdpRestController.class));
 
         } catch (RuntimeException | HttpClientConfigException | BidirectionalTopicClientException e) {
             throw new PolicyXacmlPdpRuntimeException(e.getMessage(), e);

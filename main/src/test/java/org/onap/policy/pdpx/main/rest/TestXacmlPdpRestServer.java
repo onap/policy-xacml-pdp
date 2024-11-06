@@ -27,7 +27,7 @@ import jakarta.ws.rs.client.Invocation;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.common.endpoints.report.HealthCheckReport;
+import org.onap.policy.common.utils.report.HealthCheckReport;
 import org.onap.policy.pdpx.main.CommonRest;
 import org.onap.policy.pdpx.main.XacmlState;
 import org.onap.policy.pdpx.main.rest.model.StatisticsReport;

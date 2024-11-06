@@ -43,14 +43,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.onap.policy.common.endpoints.event.comm.TopicSink;
-import org.onap.policy.common.endpoints.event.comm.client.BidirectionalTopicClient;
+import org.onap.policy.common.message.bus.event.TopicSink;
+import org.onap.policy.common.message.bus.event.client.BidirectionalTopicClient;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.pdp.concepts.PdpStatus;
 import org.onap.policy.pdpx.main.XacmlState;
 
 @ExtendWith(MockitoExtension.class)
-class XacmlPdpHearbeatPublisherTest {
+class XacmlPdpHeartbeatPublisherTest {
 
     private static final long INTERVAL1 = 1000L;
     private static final long INTERVAL2 = 2000L;

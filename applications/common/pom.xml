@@ -34,28 +34,19 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
+            <groupId>org.onap.policy.common</groupId>
+            <artifactId>capabilities</artifactId>
+            <version>${policy.common.version}</version>
         </dependency>
         <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <scope>provided</scope>
+            <groupId>org.onap.policy.common</groupId>
+            <artifactId>common-parameters</artifactId>
+            <version>${policy.common.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jaxb</groupId>
-            <artifactId>jaxb-runtime</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.models.policy-models-interactions.model-impl</groupId>
-            <artifactId>guard</artifactId>
-            <version>${policy.models.version}</version>
+            <groupId>org.onap.policy.common</groupId>
+            <artifactId>gson</artifactId>
+            <version>${policy.common.version}</version>
         </dependency>
         <dependency>
             <groupId>org.onap.policy.common</groupId>
@@ -74,22 +65,104 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.att.research.xacml</groupId>
-            <artifactId>xacml-pdp</artifactId>
-            <version>4.0.0</version>
+            <groupId>org.onap.policy.models</groupId>
+            <artifactId>policy-models-tosca</artifactId>
+            <version>${policy.models.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-core</artifactId>
+            <groupId>org.onap.policy.models</groupId>
+            <artifactId>policy-models-decisions</artifactId>
+            <version>${policy.models.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jersey.inject</groupId>
-            <artifactId>jersey-hk2</artifactId>
+            <groupId>org.onap.policy.models.policy-models-interactions.model-impl</groupId>
+            <artifactId>guard</artifactId>
+            <version>${policy.models.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.onap.policy.models</groupId>
             <artifactId>policy-models-examples</artifactId>
             <version>${policy.models.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.att.research.xacml</groupId>
+            <artifactId>xacml-pdp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.att.research.xacml</groupId>
+            <artifactId>xacml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

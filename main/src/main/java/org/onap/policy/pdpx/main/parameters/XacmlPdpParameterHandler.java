@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +22,14 @@
 package org.onap.policy.pdpx.main.parameters;
 
 import java.io.File;
-import org.onap.policy.common.endpoints.parameters.RestClientParameters;
 import org.onap.policy.common.parameters.ValidationResult;
+import org.onap.policy.common.parameters.rest.RestClientParameters;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpCommandLineArguments;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 
 /**
@@ -48,16 +48,16 @@ public class XacmlPdpParameterHandler {
      * @throws PolicyXacmlPdpException on parameter exceptions
      */
     public XacmlPdpParameterGroup getParameters(final XacmlPdpCommandLineArguments arguments)
-            throws PolicyXacmlPdpException {
+        throws PolicyXacmlPdpException {
         XacmlPdpParameterGroup xacmlPdpParameterGroup = null;
 
         try {
             // Read the parameters from JSON
             xacmlPdpParameterGroup = CODER.decode(new File(arguments.getFullConfigurationFilePath()),
-                    XacmlPdpParameterGroup.class);
+                XacmlPdpParameterGroup.class);
         } catch (final Exception e) {
             final String errorMessage = "error reading parameters from \"" + arguments.getConfigurationFilePath()
-                    + "\"\n" + "(" + e.getClass().getSimpleName() + "):" + e.getMessage();
+                + "\"\n" + "(" + e.getClass().getSimpleName() + "):" + e.getMessage();
             LOGGER.error(errorMessage);
             throw new PolicyXacmlPdpException(errorMessage, e);
         }
@@ -77,7 +77,7 @@ public class XacmlPdpParameterHandler {
         final ValidationResult validationResult = xacmlPdpParameterGroup.validate();
         if (!validationResult.isValid()) {
             String returnMessage =
-                    "validation error(s) on parameters from \"" + arguments.getConfigurationFilePath() + "\"\n";
+                "validation error(s) on parameters from \"" + arguments.getConfigurationFilePath() + "\"\n";
             returnMessage += validationResult.getResult();
 
             LOGGER.error(returnMessage);

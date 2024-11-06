@@ -3,7 +3,7 @@
   ONAP Policy Engine - XACML Application Tutorial
   ================================================================================
   Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
-  Modifications Copyright (C) 2022-2023 Nordix Foundation.
+  Modifications Copyright (C) 2022-2024 Nordix Foundation.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -57,6 +57,50 @@
             <artifactId>xacml-test</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.onap.policy.common</groupId>
+            <artifactId>policy-endpoints</artifactId>
+            <version>${policy.common.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.onap.policy.common</groupId>
+            <artifactId>utils</artifactId>
+            <version>${policy.common.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.onap.policy.models</groupId>
+            <artifactId>policy-models-tosca</artifactId>
+            <version>${policy.models.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.onap.policy.models</groupId>
+            <artifactId>policy-models-decisions</artifactId>
+            <version>${policy.models.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.att.research.xacml</groupId>
+            <artifactId>xacml</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

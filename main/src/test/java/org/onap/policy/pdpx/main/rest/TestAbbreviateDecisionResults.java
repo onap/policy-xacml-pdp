@@ -42,15 +42,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.onap.policy.common.endpoints.http.client.HttpClient;
 import org.onap.policy.common.endpoints.http.client.internal.JerseyClient;
-import org.onap.policy.common.endpoints.parameters.RestClientParameters;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
-import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
+import org.onap.policy.common.parameters.rest.RestClientParameters;
+import org.onap.policy.common.parameters.rest.RestServerParameters;
+import org.onap.policy.common.parameters.topic.TopicParameterGroup;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
@@ -79,7 +80,6 @@ class TestAbbreviateDecisionResults {
     private static final CommonTestData testData = new CommonTestData();
 
     private static final Properties properties = new Properties();
-    private static File propertiesFile;
     private static XacmlApplicationServiceProvider service;
 
     @TempDir
@@ -99,7 +99,10 @@ class TestAbbreviateDecisionResults {
         //
         Path src = Paths.get("src/test/resources/apps");
         File apps = appsFolder.resolve("apps").toFile();
-        Files.walk(src).forEach(source -> copy(source, apps.toPath().resolve(src.relativize(source))));
+
+        try (Stream<Path> sources = Files.walk(src)) {
+            sources.forEach(source -> copy(source, apps.toPath().resolve(src.relativize(source))));
+        }
 
         // Start the Monitoring Application
         startXacmlApplicationService(apps);
@@ -243,13 +246,14 @@ class TestAbbreviateDecisionResults {
         throws XacmlApplicationException, IOException {
         LOGGER.info("****** Starting Xacml Application Service ******");
         //
-        // Setup our temporary folder
+        // Set up our temporary folder
         //
         XacmlPolicyUtils.FileCreator myCreator = (String filename) -> {
-            new File(apps, "monitoring/" + filename).delete();
+            var deleted = new File(apps, "monitoring/" + filename).delete();
+            LOGGER.info("was file deleted? {}", deleted);
             return appsFolder.resolve("apps/monitoring/" + filename).toFile();
         };
-        propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents(
+        File propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents(
             "../applications/monitoring/src/test/resources/xacml.properties", properties, myCreator);
         //
         // Load XacmlApplicationServiceProvider service

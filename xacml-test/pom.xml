@@ -3,7 +3,7 @@
   ONAP
   ================================================================================
   Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
-  Modifications Copyright (C) 2023 Nordix Foundation.
+  Modifications Copyright (C) 2023-2024 Nordix Foundation.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -48,6 +48,18 @@
             <groupId>org.onap.policy.common</groupId>
             <artifactId>utils</artifactId>
             <version>${policy.common.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.onap.policy.models</groupId>
+            <artifactId>policy-models-tosca</artifactId>
+            <version>${policy.models.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +21,12 @@
 
 package org.onap.policy.pdpx.main.rest.provider;
 
-import org.onap.policy.common.endpoints.report.HealthCheckReport;
+import org.onap.policy.common.utils.report.HealthCheckReport;
 import org.onap.policy.pdpx.main.XacmlState;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
 
 /**
  * Class to fetch health check of xacml pdp service.
- *
  */
 public class HealthCheckProvider {
 

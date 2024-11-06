@@ -43,7 +43,6 @@ import org.onap.policy.models.decisions.concepts.DecisionRequest;
 import org.onap.policy.models.decisions.concepts.DecisionResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
-import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
 import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
 import org.onap.policy.pdp.xacml.application.common.std.StdBaseTranslator;
 
