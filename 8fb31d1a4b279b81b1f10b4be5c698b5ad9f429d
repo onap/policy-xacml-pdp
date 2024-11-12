@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e021cea7_46cfcb12",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2024-11-12T09:00:16Z",
+      "side": 1,
+      "message": "One comment on script license. Also, can license header be added to the workflow yamls?",
+      "revId": "8fb31d1a4b279b81b1f10b4be5c698b5ad9f429d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "783c519e_d76d583a",
+        "filename": "testsuites/run-s3p-test.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2024-11-12T09:00:16Z",
+      "side": 1,
+      "message": "license",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 3,
+        "endChar": 21
+      },
+      "revId": "8fb31d1a4b279b81b1f10b4be5c698b5ad9f429d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
