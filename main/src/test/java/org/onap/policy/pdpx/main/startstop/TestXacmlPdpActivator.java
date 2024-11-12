@@ -30,6 +30,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.pdpx.main.CommonRest;
 import org.onap.policy.pdpx.main.parameters.CommonTestData;
 import org.onap.policy.pdpx.main.parameters.XacmlPdpParameterGroup;
@@ -52,6 +53,7 @@ public class TestXacmlPdpActivator extends CommonRest {
      */
     @BeforeAll
     public static void setUpBeforeClass() throws Exception {
+        ParameterService.clear();
         CommonRest.setUpBeforeClass();
 
         final String[] xacmlPdpConfigParameters = {"-c", CommonRest.CONFIG_FILE};

@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.pdpx.main.CommonRest;
 import org.onap.policy.pdpx.main.PolicyXacmlPdpException;
 
@@ -46,6 +47,7 @@ class TestMain extends CommonRest {
      */
     @BeforeAll
     public static void setUpBeforeClass() throws Exception {
+        ParameterService.clear();
         CommonRest.setUpBeforeClass();
 
         // don't want the common "main" running
