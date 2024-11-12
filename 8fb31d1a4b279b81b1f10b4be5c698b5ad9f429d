@@ -36,6 +36,24 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "776f83dd_4e534b5a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2024-11-12T09:33:42Z",
+      "side": 1,
+      "message": "Yes, I can add the license to those files.",
+      "parentUuid": "9292e486_e1f4b19f",
+      "revId": "8fb31d1a4b279b81b1f10b4be5c698b5ad9f429d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "783c519e_d76d583a",
