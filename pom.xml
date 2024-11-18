@@ -33,7 +33,7 @@
 
     <groupId>org.onap.policy.xacml-pdp</groupId>
     <artifactId>policy-xacml-pdp</artifactId>
-    <version>4.0.1-SNAPSHOT</version>
+    <version>4.0.1</version>
 
     <packaging>pom</packaging>
 
