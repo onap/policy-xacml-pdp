@@ -22,7 +22,7 @@
  4. Run ```docker image ls```
 	- Take note of the REPOSITORY ```onap/policy/xacml-tutorial``` and its ```TAG```
 	- This refers to the image from our `mvn clean install` from above
- 5. Edit ```docker-compose-all.sh```
+ 5. Edit ```compose.yaml```
 	- Replace xacml-pdp image with the format "REPOSITORY:TAG" as noted in Step 4
 		- ex. image: ```onap/policy-xacml-tutorial:3.1.1-SNAPSHOT```
 
