@@ -69,6 +69,7 @@ import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * This class implements one translator that interprets TOSCA policy and decision API request/response payload.
  *
