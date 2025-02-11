@@ -29,6 +29,7 @@ import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.util.XACMLPolicyScanner;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -39,6 +40,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import org.onap.policy.common.parameters.annotations.NotBlank;
+import org.onap.policy.common.parameters.annotations.NotNull;
+import org.onap.policy.models.decisions.concepts.DecisionRequest;
+import org.onap.policy.models.decisions.concepts.DecisionResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
+import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
+import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
+import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
@@ -58,16 +71,6 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
-import org.onap.policy.common.parameters.annotations.NotBlank;
-import org.onap.policy.common.parameters.annotations.NotNull;
-import org.onap.policy.models.decisions.concepts.DecisionRequest;
-import org.onap.policy.models.decisions.concepts.DecisionResponse;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
-import org.onap.policy.pdp.xacml.application.common.ToscaPolicyConversionException;
-import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslator;
-import org.onap.policy.pdp.xacml.application.common.ToscaPolicyTranslatorUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class implements one translator that interprets TOSCA policy and decision API request/response payload.
