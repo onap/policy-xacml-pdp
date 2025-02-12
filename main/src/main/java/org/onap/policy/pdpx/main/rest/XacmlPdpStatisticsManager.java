@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021-2022 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2023-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 
 package org.onap.policy.pdpx.main.rest;
 
-import io.prometheus.client.Counter;
+import io.prometheus.metrics.core.metrics.Counter;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
@@ -48,14 +48,16 @@ public class XacmlPdpStatisticsManager {
     public static final String APPLICATION = "application";
 
     protected static final Counter deploymentsCounter =
-        Counter.build().namespace(PROMETHEUS_NAMESPACE).name(PrometheusUtils.POLICY_DEPLOYMENTS_METRIC)
+        Counter.builder()
+            .name(PROMETHEUS_NAMESPACE + "_" + PrometheusUtils.POLICY_DEPLOYMENTS_METRIC)
             .labelNames(PrometheusUtils.OPERATION_METRIC_LABEL,
                 PrometheusUtils.STATUS_METRIC_LABEL)
             .help(PrometheusUtils.POLICY_DEPLOYMENT_HELP)
             .register();
 
     protected static final Counter decisionsCounter =
-        Counter.build().namespace(PROMETHEUS_NAMESPACE).name(POLICY_DECISIONS_METRIC)
+        Counter.builder()
+            .name(PROMETHEUS_NAMESPACE + "_" + POLICY_DECISIONS_METRIC)
             .labelNames(APPLICATION, PrometheusUtils.STATUS_METRIC_LABEL)
             .help(POLICY_DECISIONS_HELP)
             .register();
@@ -134,7 +136,7 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public void updatePermitDecisionsCount(String appName) {
-        decisionsCounter.labels(appName, PERMIT_OPERATION).inc();
+        decisionsCounter.labelValues(appName, PERMIT_OPERATION).inc();
         updateApplicationMetrics(appName, "permit_decisions_count");
         ++permitDecisionsCount;
     }
@@ -144,7 +146,7 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public void updateDenyDecisionsCount(String appName) {
-        decisionsCounter.labels(appName, DENY_OPERATION).inc();
+        decisionsCounter.labelValues(appName, DENY_OPERATION).inc();
         updateApplicationMetrics(appName, "deny_decisions_count");
         ++denyDecisionsCount;
     }
@@ -154,7 +156,7 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public void updateIndeterminantDecisionsCount(String appName) {
-        decisionsCounter.labels(appName, INDETERMINANT_OPERATION).inc();
+        decisionsCounter.labelValues(appName, INDETERMINANT_OPERATION).inc();
         updateApplicationMetrics(appName, "indeterminant_decisions_count");
         ++indeterminantDecisionsCount;
     }
@@ -164,7 +166,7 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public void updateNotApplicableDecisionsCount(String appName) {
-        decisionsCounter.labels(appName, NOT_APPLICABLE_OPERATION).inc();
+        decisionsCounter.labelValues(appName, NOT_APPLICABLE_OPERATION).inc();
         updateApplicationMetrics(appName, "not_applicable_decisions_count");
         ++notApplicableDecisionsCount;
     }
@@ -174,7 +176,7 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public void updateDeploySuccessCount() {
-        deploymentsCounter.labels(PrometheusUtils.DEPLOY_OPERATION,
+        deploymentsCounter.labelValues(PrometheusUtils.DEPLOY_OPERATION,
             PdpResponseStatus.SUCCESS.name()).inc();
         ++deploySuccessCount;
     }
@@ -184,7 +186,7 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public void updateDeployFailureCount() {
-        deploymentsCounter.labels(PrometheusUtils.DEPLOY_OPERATION,
+        deploymentsCounter.labelValues(PrometheusUtils.DEPLOY_OPERATION,
             PdpResponseStatus.FAIL.name()).inc();
         ++deployFailureCount;
     }
@@ -194,7 +196,7 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public void updateUndeploySuccessCount() {
-        deploymentsCounter.labels(PrometheusUtils.UNDEPLOY_OPERATION,
+        deploymentsCounter.labelValues(PrometheusUtils.UNDEPLOY_OPERATION,
             PdpResponseStatus.SUCCESS.name()).inc();
         ++undeploySuccessCount;
     }
@@ -204,7 +206,7 @@ public class XacmlPdpStatisticsManager {
      */
     @Synchronized
     public void updateUndeployFailureCount() {
-        deploymentsCounter.labels(PrometheusUtils.UNDEPLOY_OPERATION,
+        deploymentsCounter.labelValues(PrometheusUtils.UNDEPLOY_OPERATION,
             PdpResponseStatus.FAIL.name()).inc();
         ++undeployFailureCount;
     }
