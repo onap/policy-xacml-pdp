@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0dddc1c_07cca32d",
+        "filename": "packages/policy-xacmlpdp-docker/src/main/docker/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-03-12T14:17:29Z",
+      "side": 1,
+      "message": "remove snapshot?",
+      "range": {
+        "startLine": 28,
+        "startChar": 34,
+        "endLine": 28,
+        "endChar": 42
+      },
+      "revId": "fb4d09853ec994ba820618a9ca46096321ef8212",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8f46a33_60239f01",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-03-12T14:17:29Z",
+      "side": 1,
+      "message": "5.1.1",
+      "range": {
+        "startLine": 32,
+        "startChar": 17,
+        "endLine": 32,
+        "endChar": 31
+      },
+      "revId": "fb4d09853ec994ba820618a9ca46096321ef8212",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
