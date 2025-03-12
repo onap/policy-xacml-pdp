@@ -1,0 +1,8 @@
+distribution_type: 'container'
+container_release_tag: '4.1.1'
+project: 'policy-xacml-pdp'
+log_dir: 'policy-xacml-pdp-maven-docker-stage-master/1413'
+ref: e8c11a552759c9aaa50a65fa8e426e5baac4d3c2
+containers:
+    - name: 'policy-xacml-pdp'
+      version: '4.1.1-20250312T1446'
