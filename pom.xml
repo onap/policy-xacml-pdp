@@ -3,7 +3,7 @@
   ONAP Policy Engine - XACML PDP
   ================================================================================
   Copyright (C) 2018-2021 AT&T Intellectual Property. All rights reserved.
-  Modifications Copyright (C) 2020, 2023-2025 Nordix Foundation.
+  Modifications Copyright (C) 2020, 2023-2025 OpenInfra Foundation Europe. All rights reserved.
   Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +29,7 @@
     <parent>
         <groupId>org.onap.policy.parent</groupId>
         <artifactId>integration</artifactId>
-        <version>5.1.2-SNAPSHOT</version>
+        <version>5.1.2</version>
         <relativePath />
     </parent>
 
@@ -43,8 +43,8 @@
     <description>This code implements the XACML PDP engine</description>
 
     <properties>
-        <policy.common.version>3.1.2-SNAPSHOT</policy.common.version>
-        <policy.models.version>4.1.2-SNAPSHOT</policy.models.version>
+        <policy.common.version>3.1.2</policy.common.version>
+        <policy.models.version>4.1.2</policy.models.version>
         <jacoco.dataFile>${project.basedir}/target/code-coverage/jacoco-ut.exec</jacoco.dataFile>
         <xacml.version>4.0.0</xacml.version>
     </properties>

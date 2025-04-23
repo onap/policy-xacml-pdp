@@ -2,7 +2,7 @@
 # Dockerfile
 # ============LICENSE_START=======================================================
 #  Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
-#  Modifications Copyright (C) 2022-2025 Nordix Foundation.
+#  Modifications Copyright (C) 2022-2025 OpenInfra Foundation Europe. All rights reserved.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ RUN mkdir /packages /extracted
 COPY /maven/lib/policy-xacmlpdp.tar.gz /packages/
 RUN tar xvzf /packages/policy-xacmlpdp.tar.gz --directory /extracted/
 
-FROM onap/policy-jre-alpine:4.1.2-SNAPSHOT
+FROM onap/policy-jre-alpine:4.1.2
 
 LABEL maintainer="Policy Team"
 LABEL org.opencontainers.image.title="Policy XACML PDP"
