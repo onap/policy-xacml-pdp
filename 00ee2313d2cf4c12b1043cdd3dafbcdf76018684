@@ -16,6 +16,23 @@
       "message": "Not all changes are committed. Checking and will upload another patch.",
       "revId": "00ee2313d2cf4c12b1043cdd3dafbcdf76018684",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "67dfb522_ade1000f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-05-02T09:46:21Z",
+      "side": 1,
+      "message": "I dont see any changes in this review, can we abandon this if not needed anymore? Thanks",
+      "revId": "00ee2313d2cf4c12b1043cdd3dafbcdf76018684",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
