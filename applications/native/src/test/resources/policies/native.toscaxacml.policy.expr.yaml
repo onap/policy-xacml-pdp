@@ -1,0 +1,31 @@
+tosca_definitions_version: tosca_simple_yaml_1_1_0
+topology_template:
+  inputs: {}
+  policies:
+    - threshold.check.set:
+        type: onap.policies.native.ToscaXacml
+        type_version: 1.0.0
+        properties:
+          policies:
+            - properties:
+                description: Policy which calculates and compares to threshold
+                rules:
+                  - condition:
+                      expr: (totalDLThptPerSliceSubnet / dLThptPerSliceSubnet) > 30
+                    decision: Deny
+              metadata:
+                policy-id: 1
+                policy-version: 2.0.0
+                description: >-
+                  Policy which calculates and compares to threshold
+        name: threshold.check.set
+        version: 1.0.0
+        metadata:
+          action: threshold-check-policy
+          description: >-
+            Policy which calculates and compares to threshold
+          policy-id: threshold.check.set
+          policy-version: 1.0.0
+name: ToscaServiceTemplateSimple
+version: 1.0.0
+

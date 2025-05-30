@@ -1,0 +1,2104 @@
+---
+tosca_definitions_version: tosca_simple_yaml_1_1_0
+topology_template:
+  inputs: {}
+  policies:
+    - tosca.policy.test:
+        type: onap.policies.native.ToscaXacml
+        type_version: 1.0.0
+        properties:
+          policies:
+            - properties:
+                description: test policy
+                combiningAlgo: first-applicable
+                target:
+                  anyOne:
+                    - allOf:
+                        - key: input1
+                          operator: string-equal
+                          value: "Z"
+                        - key: input2
+                          operator: boolean-equal
+                          value: true
+                        - key: input3
+                          operator: dateTime-equal
+                          value: "2024-12-31T14:00:00.000Z"
+                        - key: input4
+                          operator: integer-equal
+                          value: 5
+                        - key: input5
+                          operator: double-equal
+                          value: 5.5
+                        - key: input6
+                          operator: date-equal
+                          value: "2024-12-31"
+                        - key: input7
+                          operator: time-equal
+                          value: "14:00:00.000Z"
+                        - key: input8
+                          operator: dayTimeDuration-equal
+                          value: "P1DT2H"
+                        - key: input9
+                          operator: yearMonthDuration-equal
+                          value: "P2Y6M"
+                        - key: input10
+                          operator: anyURI-equal
+                          value: "http://datypic.com"
+                        - key: input11
+                          operator: rfc822Name-equal
+                          value: "user@example.com"
+                        - key: input12
+                          operator: x500Name-equal
+                          value: "2.5.4.5=8,O=ABC,CN=ABC Class 3 CA,C=LT"
+                        - key: input13
+                          operator: hexBinary-equal
+                          value: "0FB7"
+                        - key: input14
+                          operator: base64Binary-equal
+                          value: "QWxhZGRpbjpvcGVuIHNlc2FtZQ=="
+                rules:
+                  - condition:
+                      apply:
+                        keys:
+                          - input1
+                        operator: integer-greater-than
+                        compareWith:
+                          value: 1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input1
+                        operator: integer-greater-than-or-equal
+                        compareWith:
+                          value: 1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input1
+                        operator: integer-less-than
+                        compareWith:
+                          value: 1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input1
+                        operator: integer-less-than-or-equal
+                        compareWith:
+                          value: 1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input2
+                        operator: double-greater-than
+                        compareWith:
+                          value: 1.1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input2
+                        operator: double-greater-than-or-equal
+                        compareWith:
+                          value: 1.1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input2
+                        operator: double-less-than
+                        compareWith:
+                          value: 1.1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input2
+                        operator: double-less-than-or-equal
+                        compareWith:
+                          value: 1.1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input3
+                        operator: string-greater-than
+                        compareWith:
+                          value: "A"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input3
+                        operator: string-greater-than-or-equal
+                        compareWith:
+                          value: "A"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input3
+                        operator: string-less-than
+                        compareWith:
+                          value: "B"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input3
+                        operator: string-less-than-or-equal
+                        compareWith:
+                          value: "B"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input4
+                        operator: dateTime-greater-than
+                        compareWith:
+                          value: "2024-12-31T14:00:00.000Z"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input4
+                        operator: dateTime-greater-than-or-equal
+                        compareWith:
+                          value: "2024-12-31T14:00:00.000Z"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input4
+                        operator: dateTime-less-than
+                        compareWith:
+                          value: "2024-12-31T14:00:00.000Z"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input4
+                        operator: dateTime-less-than-or-equal
+                        compareWith:
+                          value: "2024-12-31T14:00:00.000Z"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input5
+                        operator: time-greater-than
+                        compareWith:
+                          value: "14:00:00.000Z"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input5
+                        operator: time-greater-than-or-equal
+                        compareWith:
+                          value: "14:00:00.000Z"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input5
+                        operator: time-less-than
+                        compareWith:
+                          value: "14:00:00.000Z"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input5
+                        operator: time-less-than-or-equal
+                        compareWith:
+                          value: "14:00:00.000Z"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input6
+                        operator: date-greater-than
+                        compareWith:
+                          value: "2024-12-31"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input6
+                        operator: date-greater-than-or-equal
+                        compareWith:
+                          value: "2024-12-31"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input6
+                        operator: date-less-than
+                        compareWith:
+                          value: "2024-12-31"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        keys:
+                          - input6
+                        operator: date-less-than-or-equal
+                        compareWith:
+                          value: "2024-12-31"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: integer-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                                - input7
+                              operator: integer-add
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: integer-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                                - input7
+                              operator: integer-subtract
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: integer-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                                - input7
+                              operator: integer-multiply
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: integer-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                                - input7
+                              operator: integer-divide
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: integer-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                                - input7
+                              operator: integer-mod
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: integer-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                              operator: integer-abs
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: double-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                                - input7
+                              operator: double-add
+                        compareWith:
+                          value: 10.5
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: double-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                                - input7
+                              operator: double-subtract
+                        compareWith:
+                          value: 10.5
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: double-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                                - input7
+                              operator: double-multiply
+                        compareWith:
+                          value: 10.5
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: double-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                                - input7
+                              operator: double-divide
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: double-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                              operator: round
+                        compareWith:
+                          value: 10.0
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: double-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                              operator: floor
+                        compareWith:
+                          value: 10.5
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: integer-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                              operator: double-abs
+                        compareWith:
+                          value: 10.3
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dateTime-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                                - input7
+                              operator: dateTime-subtract-dayTimeDuration
+                        compareWith:
+                          value: "2024-12-31T14:00:00.000Z"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dateTime-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                                - input7
+                              operator: dateTime-add-dayTimeDuration
+                        compareWith:
+                          value: "2024-12-31T14:00:00.000Z"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: date-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                                - input7
+                              operator: date-subtract-yearMonthDuration
+                        compareWith:
+                          value: "2024-12-31"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dateTime-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                                - input7
+                              operator: dateTime-subtract-yearMonthDuration
+                        compareWith:
+                          value: "2024-12-31T14:00:00.000Z"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dateTime-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                                - input7
+                              operator: dateTime-add-yearMonthDuration
+                        compareWith:
+                          value: "2024-12-31T14:00:00.000Z"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: date-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input6
+                                - input7
+                              operator: date-add-yearMonthDuration
+                        compareWith:
+                          value: "2024-12-31"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: integer-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: integer-from-string
+                        compareWith:
+                          value: 1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: integer-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: double-to-integer
+                        compareWith:
+                          value: 1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: double-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: double-from-string
+                        compareWith:
+                          value: 1.0
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: double-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: integer-to-double
+                        compareWith:
+                          value: 1.5
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: string-from-date
+                        compareWith:
+                          value: "2024-12-31"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: string-from-time
+                        compareWith:
+                          value: "14:00:00.000Z"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: string-from-dateTime
+                        compareWith:
+                          value: "2024-12-31T14:00:00.000Z"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: string-from-dayTimeDuration
+                        compareWith:
+                          value: "P1DT2H"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: string-from-yearMonthDuration
+                        compareWith:
+                          value: "P2Y6M"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: string-from-anyURI
+                        compareWith:
+                          value: "http://datypic.com"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: string-from-rfc822Name
+                        compareWith:
+                          value: "user@example.com"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: string-from-x500Name
+                        compareWith:
+                          value: "2.5.4.5=8,O=ABC,CN=ABC Class 3 CA,C=LT"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: string-from-ipAddress
+                        compareWith:
+                          value: "10.4.1.1"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: string-from-boolean
+                        compareWith:
+                          value: "true"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: date-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: date-from-string
+                        compareWith:
+                          value: "2024-12-31"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: time-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: time-from-string
+                        compareWith:
+                          value: "14:00:00.000Z"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dateTime-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: dateTime-from-string
+                        compareWith:
+                          value: "2024-12-31T14:00:00.000Z"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dayTimeDuration-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: dayTimeDuration-from-string
+                        compareWith:
+                          value: "P1DT2H"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: yearMonthDuration-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: yearMonthDuration-from-string
+                        compareWith:
+                          value: "P2Y6M"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: anyURI-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: anyURI-from-string
+                        compareWith:
+                          value: "http://datypic.com"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: rfc822Name-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: rfc822Name-from-string
+                        compareWith:
+                          value: "user@example.com"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: x500Name-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: x500Name-from-string
+                        compareWith:
+                          value: "2.5.4.5=8,O=ABC,CN=ABC Class 3 CA,C=LT"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: boolean-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: boolean-from-string
+                        compareWith:
+                          value: "true"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: string-normalize-space
+                        compareWith:
+                          value: "ABC"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                              operator: string-normalize-to-lower-case
+                        compareWith:
+                          value: "abc"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-equal
+                        keys:
+                          - apply:
+                              keys:
+                                - input1
+                                - input2
+                              operator: string-concatenate
+                        compareWith:
+                          value: "abcxyz"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-ends-with
+                        keys:
+                          - input1
+                        compareWith:
+                          value: "ABC"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-starts-with
+                        keys:
+                          - input1
+                        compareWith:
+                          value: "ABC"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-substring
+                        keys:
+                          - input1
+                        compareWith:
+                          value: "ABC"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-contains
+                        keys:
+                          - input1
+                        compareWith:
+                          value: "ABC"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: anyURI-ends-with
+                        keys:
+                          - input1
+                        compareWith:
+                          value: ".com"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: anyURI-starts-with
+                        keys:
+                          - input1
+                        compareWith:
+                          value: "www"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: anyURI-contains
+                        keys:
+                          - input1
+                        compareWith:
+                          value: "tele"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: anyURI-substring
+                        keys:
+                          - input1
+                        compareWith:
+                          value: "tele"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-regexp-match
+                        keys:
+                          - input1
+                        compareWith:
+                          value: "[a-z]*"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dnsName-regexp-match
+                        keys:
+                          - input1
+                        compareWith:
+                          value: "^(?![0-9]+$)(?!-)[a-zA-Z0-9-]{,63}(?<!-)$"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: ipAddress-regexp-match
+                        keys:
+                          - input1
+                        compareWith:
+                          value: "10.1.*.*"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: x500Name-regexp-match
+                        keys:
+                          - input1
+                        compareWith:
+                          value: "^(?:(?<cn>CN=(?<name>[^,]*)),)?(?:(?<path>(?:(?:CN|OU)=[^,]+,?)+),)?(?<domain>(?:DC=[^,]+,?)+)$"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: rfc822Name-regexp-match
+                        keys:
+                          - input1
+                        compareWith:
+                          value: "[a-z0-9]+(-[a-z0-9]+)*"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: anyURI-bag-size
+                        keys:
+                          - input1
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: hexBinary-bag-size
+                        keys:
+                          - input1
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: base64Binary-bag-size
+                        keys:
+                          - input1
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: x500Name-bag-size
+                        keys:
+                          - input1
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: rfc822Name-bag-size
+                        keys:
+                          - input1
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dnsName-bag-size
+                        keys:
+                          - input1
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: ipAddress-bag-size
+                        keys:
+                          - input1
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-bag-size
+                        keys:
+                          - input1
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: integer-bag-size
+                        keys:
+                          - input1
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: double-bag-size
+                        keys:
+                          - input1
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: boolean-bag-size
+                        keys:
+                          - input1
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: date-bag-size
+                        keys:
+                          - input1
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: time-bag-size
+                        keys:
+                          - input1
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dateTime-bag-size
+                        keys:
+                          - input1
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: yearMonthDuration-bag-size
+                        keys:
+                          - input1
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dayTimeDuration-bag-size
+                        keys:
+                          - input1
+                        compareWith:
+                          value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-is-in
+                        keys:
+                          - input1
+                          - list:
+                              - "'ABC'"
+                              - "'xyz'"
+                              - "'example'"
+                              - input2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: integer-is-in
+                        keys:
+                          - input1
+                          - list:
+                              - 10
+                              - 20
+                              - 30
+                              - input2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: double-is-in
+                        keys:
+                          - input1
+                          - list:
+                              - 10.0
+                              - 20.1
+                              - 30.1
+                              - input2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dnsName-is-in
+                        keys:
+                          - input1
+                          - list:
+                              - "'example1.com'"
+                              - "'example2.com'"
+                              - "'example3.com'"
+                              - input2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: anyURI-is-in
+                        keys:
+                          - input1
+                          - list:
+                              - "'example1.com'"
+                              - "'example2.com'"
+                              - "'example3.com'"
+                              - input2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: rfc822Name-is-in
+                        keys:
+                          - input1
+                          - list:
+                              - "'someone@example1.com'"
+                              - "'someone@example2.com'"
+                              - "'someone@example3.com'"
+                              - input2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: x500Name-is-in
+                        keys:
+                          - input1
+                          - list:
+                              - "'2.5.4.5=8,O=ABC,CN=ABC Class 3 CA,C=LT'"
+                              - "'2.5.3.5=8,O=ABC,CN=ABC Class 3 CA,C=LT'"
+                              - "'2.5.1.5=8,O=ABC,CN=ABC Class 3 CA,C=LT'"
+                              - input2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: ipAddress-is-in
+                        keys:
+                          - input1
+                          - list:
+                              - "'10.2.3.3'"
+                              - "'12.33.2.1'"
+                              - "'89.2.1.2'"
+                              - input2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: time-is-in
+                        keys:
+                          - input1
+                          - list:
+                              - "'14:00:00.000Z'"
+                              - "'15:00:00.000Z'"
+                              - "'16:00:00.000Z'"
+                              - input2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dateTime-is-in
+                        keys:
+                          - input1
+                          - list:
+                              - "'2024-12-31T14:00:00.000Z'"
+                              - "'2024-12-31T15:00:00.000Z'"
+                              - "'2024-12-31T16:00:00.000Z'"
+                              - input2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: date-is-in
+                        keys:
+                          - input1
+                          - list:
+                              - "'2024-12-31'"
+                              - "'2024-12-30'"
+                              - "'2024-12-29'"
+                              - input2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: hexBinary-is-in
+                        keys:
+                          - input1
+                          - list:
+                              - "'06FA'"
+                              - "'07FA'"
+                              - "'05FA'"
+                              - input2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: base64Binary-is-in
+                        keys:
+                          - input1
+                          - list:
+                              - "'QWxhZGRpbjpvcGVuIHNlc2FtZQ=='"
+                              - "'QWxhZGRpbjpvcDusIHNlc2FtZQ=='"
+                              - "'QWxhZGRpbjpvcddVuIHNlc2FtZQ=='"
+                              - input2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dayTimeDuration-is-in
+                        keys:
+                          - input1
+                          - list:
+                              - "'P1DT2H'"
+                              - "'PT20M'"
+                              - "'PT120M'"
+                              - input2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: yearMonthDuration-is-in
+                        keys:
+                          - input1
+                          - list:
+                              - "'P2Y6M'"
+                              - "'P0Y20M'"
+                              - "'P0Y'"
+                              - input2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: and
+                        keys:
+                          - apply:
+                              operator: integer-equal
+                              keys:
+                                - input1
+                              compareWith:
+                                value: 10
+                          - apply:
+                              operator: integer-equal
+                              keys:
+                                - input2
+                              compareWith:
+                                value: 20
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: or
+                        keys:
+                          - apply:
+                              operator: integer-equal
+                              keys:
+                                - input1
+                              compareWith:
+                                value: 10
+                          - apply:
+                              operator: integer-equal
+                              keys:
+                                - input2
+                              compareWith:
+                                value: 20
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: not
+                        keys:
+                          - apply:
+                              operator: integer-equal
+                              keys:
+                                - input1
+                              compareWith:
+                                value: 10
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-at-least-one-member-of
+                        keys:
+                          - input3
+                          - list:
+                              - "'A'"
+                              - "'B'"
+                              - "'C'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: boolean-at-least-one-member-of
+                        keys:
+                          - input3
+                          - list:
+                              - "true"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: integer-at-least-one-member-of
+                        keys:
+                          - input3
+                          - list:
+                              - 10
+                              - 20
+                              - 30
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: double-at-least-one-member-of
+                        keys:
+                          - input3
+                          - list:
+                              - 10.5
+                              - 20.2
+                              - 30.1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dateTime-at-least-one-member-of
+                        keys:
+                          - input3
+                          - list:
+                              - "'2024-12-31T14:00:00.000Z'"
+                              - "'2024-12-30T14:00:00.000Z'"
+                              - "'2024-12-29T14:00:00.000Z'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: time-at-least-one-member-of
+                        keys:
+                          - input3
+                          - list:
+                              - "'14:00:00.000Z'"
+                              - "'15:00:00.000Z'"
+                              - "'16:00:00.000Z'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: date-at-least-one-member-of
+                        keys:
+                          - input3
+                          - list:
+                              - "'2024-12-31'"
+                              - "'2024-12-30'"
+                              - "'2024-12-29'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: anyURI-at-least-one-member-of
+                        keys:
+                          - input3
+                          - list:
+                              - "'example1.com'"
+                              - "'example2.com'"
+                              - "'example3.com'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dnsName-at-least-one-member-of
+                        keys:
+                          - input3
+                          - list:
+                              - "'example1.com'"
+                              - "'example2.com'"
+                              - "'example3.com'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: hexBinary-at-least-one-member-of
+                        keys:
+                          - input3
+                          - list:
+                              - "'06DF'"
+                              - "'23EA'"
+                              - "'6AFB'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: base64Binary-at-least-one-member-of
+                        keys:
+                          - input3
+                          - list:
+                              - "'QWxhZGRpbjpvcGVuIHNlc2FtZQ=='"
+                              - "'QWxhZGRpbjpvcDusIHNlc2FtZQ=='"
+                              - "'QWxhZGRpbjpvcddVuIHNlc2FtZQ=='"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: x500Name-at-least-one-member-of
+                        keys:
+                          - input3
+                          - list:
+                              - "'2.5.4.5=8,O=ABC,CN=ABC Class 3 CA,C=LT'"
+                              - "'2.5.3.5=8,O=ABC,CN=ABC Class 3 CA,C=LT'"
+                              - "'2.5.1.5=8,O=ABC,CN=ABC Class 3 CA,C=LT'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: rfc822Name-at-least-one-member-of
+                        keys:
+                          - input3
+                          - list:
+                              - "'someone@example1.com'"
+                              - "'someone@example2.com'"
+                              - "'someone@example3.com'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: ipAddress-at-least-one-member-of
+                        keys:
+                          - input3
+                          - list:
+                              - "'10.1.2.2'"
+                              - "'10.3.4.4'"
+                              - "'10.4.2.3'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: yearMonthDuration-at-least-one-member-of
+                        keys:
+                          - input3
+                          - list:
+                              - "'P2Y6M'"
+                              - "'P0Y20M'"
+                              - "'P0Y'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dayTimeDuration-at-least-one-member-of
+                        keys:
+                          - input3
+                          - list:
+                              - "'P1DT2H'"
+                              - "'PT20M'"
+                              - "'PT120M'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-set-equals
+                        keys:
+                          - apply:
+                              operator: string-intersection
+                              keys:
+                                - input3
+                                - list:
+                                    - "'A'"
+                                    - "'B'"
+                                    - "'C'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: boolean-set-equals
+                        keys:
+                          - apply:
+                              operator: boolean-intersection
+                              keys:
+                                - input3
+                                - list:
+                                    - "true"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: integer-set-equals
+                        keys:
+                          - apply:
+                              operator: integer-intersection
+                              keys:
+                                - input3
+                                - list:
+                                    - 10
+                                    - 20
+                                    - 30
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: double-set-equals
+                        keys:
+                          - apply:
+                              operator: double-intersection
+                              keys:
+                                - input3
+                                - list:
+                                    - 10.5
+                                    - 20.2
+                                    - 30.1
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dateTime-set-equals
+                        keys:
+                          - apply:
+                              operator: dateTime-intersection
+                              keys:
+                                - input3
+                                - list:
+                                    - "'2024-12-31T14:00:00.000Z'"
+                                    - "'2024-12-30T14:00:00.000Z'"
+                                    - "'2024-12-29T14:00:00.000Z'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: time-set-equals
+                        keys:
+                          - apply:
+                              operator: time-intersection
+                              keys:
+                                - input3
+                                - list:
+                                    - "'14:00:00.000Z'"
+                                    - "'15:00:00.000Z'"
+                                    - "'16:00:00.000Z'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: date-set-equals
+                        keys:
+                          - apply:
+                              operator: date-intersection
+                              keys:
+                                - input3
+                                - list:
+                                    - "'2024-12-31'"
+                                    - "'2024-12-30'"
+                                    - "'2024-12-29'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: anyURI-set-equals
+                        keys:
+                          - apply:
+                              operator: anyURI-intersection
+                              keys:
+                                - input3
+                                - list:
+                                    - "'example1.com'"
+                                    - "'example2.com'"
+                                    - "'example3.com'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dnsName-set-equals
+                        keys:
+                          - apply:
+                              operator: dnsName-intersection
+                              keys:
+                                - input3
+                              list:
+                                - "'example1.com'"
+                                - "'example2.com'"
+                                - "'example3.com'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: hexBinary-set-equals
+                        keys:
+                          - apply:
+                              operator: hexBinary-intersection
+                              keys:
+                                - input3
+                                - list:
+                                    - "'06DF'"
+                                    - "'23EA'"
+                                    - "'6AFB'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: base64Binary-set-equals
+                        keys:
+                          - apply:
+                              operator: base64Binary-intersection
+                              keys:
+                                - input3
+                              list:
+                                - "'QWxhZGRpbjpvcGVuIHNlc2FtZQ=='"
+                                - "'QWxhZGRpbjpvcDusIHNlc2FtZQ=='"
+                                - "'QWxhZGRpbjpvcddVuIHNlc2FtZQ=='"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: x500Name-set-equals
+                        keys:
+                          - apply:
+                              operator: x500Name-intersection
+                              keys:
+                                - input3
+                                - list:
+                                    - "'2.5.4.5=8,O=ABC,CN=ABC Class 3 CA,C=LT'"
+                                    - "'2.5.3.5=8,O=ABC,CN=ABC Class 3 CA,C=LT'"
+                                    - "'2.5.1.5=8,O=ABC,CN=ABC Class 3 CA,C=LT'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: rfc822Name-set-equals
+                        keys:
+                          - apply:
+                              operator: rfc822Name-intersection
+                              keys:
+                                - input3
+                                - list:
+                                    - "'someone@example1.com'"
+                                    - "'someone@example2.com'"
+                                    - "'someone@example3.com'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: ipAddress-set-equals
+                        keys:
+                          - apply:
+                              operator: ipAddress-intersection
+                              keys:
+                                - input1
+                                - list:
+                                    - "'10.1.2.2'"
+                                    - "'10.3.4.4'"
+                                    - "'10.4.2.3'"
+                        compareWith:
+                          value: input3
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: yearMonthDuration-set-equals
+                        keys:
+                          - apply:
+                              operator: yearMonthDuration-intersection
+                              keys:
+                                - input3
+                                - list:
+                                    - "'P2Y6M'"
+                                    - "'P0Y20M'"
+                                    - "'P0Y'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dayTimeDuration-set-equals
+                        keys:
+                          - apply:
+                              operator: dayTimeDuration-intersection
+                              keys:
+                                - input3
+                                - list:
+                                    - "'P1DT2H'"
+                                    - "'PT20M'"
+                                    - "'PT120M'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-set-equals
+                        keys:
+                          - apply:
+                              operator: string-union
+                              keys:
+                                - input3
+                                - list:
+                                    - "'A'"
+                                    - "'B'"
+                                    - "'C'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: boolean-set-equals
+                        keys:
+                          - apply:
+                              operator: boolean-union
+                              keys:
+                                - input3
+                                - list:
+                                    - "true"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: integer-set-equals
+                        keys:
+                          - apply:
+                              operator: integer-union
+                              keys:
+                                - input3
+                                - list:
+                                    - 10
+                                    - 20
+                                    - 30
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: double-set-equals
+                        keys:
+                          - apply:
+                              operator: double-union
+                              keys:
+                                - input3
+                                - list:
+                                    - 10.5
+                                    - 20.2
+                                    - 30.1
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dateTime-set-equals
+                        keys:
+                          - apply:
+                              operator: dateTime-union
+                              keys:
+                                - input3
+                                - list:
+                                    - "'2024-12-31T14:00:00.000Z'"
+                                    - "'2024-12-30T14:00:00.000Z'"
+                                    - "'2024-12-29T14:00:00.000Z'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: time-set-equals
+                        keys:
+                          - apply:
+                              operator: time-union
+                              keys:
+                                - input3
+                                - list:
+                                    - "'14:00:00.000Z'"
+                                    - "'15:00:00.000Z'"
+                                    - "'16:00:00.000Z'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: date-set-equals
+                        keys:
+                          - apply:
+                              operator: date-union
+                              keys:
+                                - input3
+                                - list:
+                                    - "'2024-12-31'"
+                                    - "'2024-12-30'"
+                                    - "'2024-12-29'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: anyURI-set-equals
+                        keys:
+                          - apply:
+                              operator: anyURI-union
+                              keys:
+                                - input3
+                                - list:
+                                    - "'example1.com'"
+                                    - "'example2.com'"
+                                    - "'example3.com'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dnsName-set-equals
+                        keys:
+                          - apply:
+                              operator: dnsName-union
+                              keys:
+                                - input3
+                              list:
+                                - "'example1.com'"
+                                - "'example2.com'"
+                                - "'example3.com'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: hexBinary-set-equals
+                        keys:
+                          - apply:
+                              operator: hexBinary-union
+                              keys:
+                                - input3
+                                - list:
+                                    - "'06DF'"
+                                    - "'23EA'"
+                                    - "'6AFB'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: base64Binary-set-equals
+                        keys:
+                          - apply:
+                              operator: base64Binary-union
+                              keys:
+                                - input3
+                              list:
+                                - "'QWxhZGRpbjpvcGVuIHNlc2FtZQ=='"
+                                - "'QWxhZGRpbjpvcDusIHNlc2FtZQ=='"
+                                - "'QWxhZGRpbjpvcddVuIHNlc2FtZQ=='"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: x500Name-set-equals
+                        keys:
+                          - apply:
+                              operator: x500Name-union
+                              keys:
+                                - input3
+                                - list:
+                                    - "'2.5.4.5=8,O=ABC,CN=ABC Class 3 CA,C=LT'"
+                                    - "'2.5.3.5=8,O=ABC,CN=ABC Class 3 CA,C=LT'"
+                                    - "'2.5.1.5=8,O=ABC,CN=ABC Class 3 CA,C=LT'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: rfc822Name-set-equals
+                        keys:
+                          - apply:
+                              operator: rfc822Name-union
+                              keys:
+                                - input3
+                                - list:
+                                    - "'someone@example1.com'"
+                                    - "'someone@example2.com'"
+                                    - "'someone@example3.com'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: ipAddress-set-equals
+                        keys:
+                          - apply:
+                              operator: ipAddress-union
+                              keys:
+                                - input1
+                                - list:
+                                    - "'10.1.2.2'"
+                                    - "'10.3.4.4'"
+                                    - "'10.4.2.3'"
+                        compareWith:
+                          value: input3
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: yearMonthDuration-set-equals
+                        keys:
+                          - apply:
+                              operator: yearMonthDuration-union
+                              keys:
+                                - input3
+                                - list:
+                                    - "'P2Y6M'"
+                                    - "'P0Y20M'"
+                                    - "'P0Y'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dayTimeDuration-set-equals
+                        keys:
+                          - apply:
+                              operator: dayTimeDuration-union
+                              keys:
+                                - input3
+                                - list:
+                                    - "'P1DT2H'"
+                                    - "'PT20M'"
+                                    - "'PT120M'"
+                        compareWith:
+                          value: input1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-subset
+                        keys:
+                          - input3
+                          - list:
+                              - "'A'"
+                              - "'B'"
+                              - "'C'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: boolean-subset
+                        keys:
+                          - input1
+                          - list:
+                              - "true"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: integer-subset
+                        keys:
+                          - input1
+                          - list:
+                              - 10
+                              - 20
+                              - 30
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: double-subset
+                        keys:
+                          - input1
+                          - list:
+                              - 10.5
+                              - 20.2
+                              - 30.1
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dateTime-subset
+                        keys:
+                          - input1
+                          - list:
+                              - "'2024-12-31T14:00:00.000Z'"
+                              - "'2024-12-30T14:00:00.000Z'"
+                              - "'2024-12-29T14:00:00.000Z'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: time-subset
+                        keys:
+                          - input1
+                          - list:
+                              - "'14:00:00.000Z'"
+                              - "'15:00:00.000Z'"
+                              - "'16:00:00.000Z'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: date-subset
+                        keys:
+                          - input3
+                          - list:
+                              - "'2024-12-31'"
+                              - "'2024-12-30'"
+                              - "'2024-12-29'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: anyURI-subset
+                        keys:
+                          - input3
+                          - list:
+                              - "'example1.com'"
+                              - "'example2.com'"
+                              - "'example3.com'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dnsName-subset
+                        keys:
+                          - input3
+                          - list:
+                              - "'example1.com'"
+                              - "'example2.com'"
+                              - "'example3.com'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: hexBinary-subset
+                        keys:
+                          - input3
+                          - list:
+                              - "'06DF'"
+                              - "'23EA'"
+                              - "'6AFB'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: base64Binary-subset
+                        keys:
+                          - input3
+                          - list:
+                              - "'QWxhZGRpbjpvcGVuIHNlc2FtZQ=='"
+                              - "'QWxhZGRpbjpvcDusIHNlc2FtZQ=='"
+                              - "'QWxhZGRpbjpvcddVuIHNlc2FtZQ=='"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: x500Name-subset
+                        keys:
+                          - input3
+                          - list:
+                              - "'2.5.4.5=8,O=ABC,CN=ABC Class 3 CA,C=LT'"
+                              - "'2.5.3.5=8,O=ABC,CN=ABC Class 3 CA,C=LT'"
+                              - "'2.5.1.5=8,O=ABC,CN=ABC Class 3 CA,C=LT'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: rfc822Name-subset
+                        keys:
+                          - input3
+                          - list:
+                              - "'someone@example1.com'"
+                              - "'someone@example2.com'"
+                              - "'someone@example3.com'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: ipAddress-subset
+                        keys:
+                          - input3
+                          - list:
+                              - "'10.1.2.2'"
+                              - "'10.3.4.4'"
+                              - "'10.4.2.3'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: yearMonthDuration-subset
+                        keys:
+                          - input3
+                          - list:
+                              - "'P2Y6M'"
+                              - "'P0Y20M'"
+                              - "'P0Y'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: dayTimeDuration-subset
+                        keys:
+                          - input3
+                          - list:
+                              - "'P1DT2H'"
+                              - "'PT20M'"
+                              - "'PT120M'"
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: any-of
+                        keys:
+                          - function: string-equal
+                          - "'ABC'"
+                          - list:
+                              - "'ABC'"
+                              - "'xyz'"
+                              - parameterName
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: all-of
+                        keys:
+                          - function: integer-greater-than
+                          - 10
+                          - list:
+                              - 6
+                              - 1
+                              - parameterName
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: any-of-any
+                        keys:
+                          - function: integer-equal
+                          - list:
+                              - 4
+                              - 5
+                              - parameterName1
+                          - list:
+                              - 6
+                              - 1
+                              - parameterName2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: all-of-any
+                        keys:
+                          - function: integer-equal
+                          - list:
+                              - 4
+                              - 5
+                              - parameterName1
+                          - list:
+                              - 6
+                              - 1
+                              - parameterName2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: any-of-all
+                        keys:
+                          - function: integer-equal
+                          - list:
+                              - 4
+                              - 5
+                              - parameterName1
+                          - list:
+                              - 6
+                              - 1
+                              - parameterName2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: all-of-all
+                        keys:
+                          - function: integer-equal
+                          - list:
+                              - 4
+                              - 5
+                              - parameterName1
+                          - list:
+                              - 6
+                              - 1
+                              - parameterName2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: map
+                        keys:
+                          - function: string-normalize-to-lower-case
+                          - list:
+                              - Hello
+                              - World!
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: n-of
+                        keys:
+                          - 2
+                          - parameter1
+                          - true
+                          - false
+                    decision: Permit
+              metadata:
+                policy-id: operators.example.policy
+                policy-version: 1.0.0
+        name: tosca.policy.test
+        version: 1.0.0
+        metadata:
+          action: check-operators
+          description: policy set for operators
+          policy-id: tosca.policy.test
+          policy-version: 1.0.0
+name: ToscaServiceTemplateSimple
+version: 1.0.0
