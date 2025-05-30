@@ -1,0 +1,50 @@
+tosca_definitions_version: tosca_simple_yaml_1_1_0
+topology_template:
+  inputs: {}
+  policies:
+    - expr.check.set:
+        type: onap.policies.native.ToscaXacml
+        type_version: 1.0.0
+        properties:
+          policies:
+            - properties:
+                description:  Policy uses mathematical expressions (alternative to nested apply)
+                rules:
+                  - condition:
+                      expr: (totalDLThptPerSliceSubnet / dLThptPerSliceSubnet) == 30
+                    decision: Deny
+              metadata:
+                policy-id: 1
+                policy-version: 2.0.0
+                description: >-
+                  Policy uses mathematical expressions (alternative to nested apply)
+            - properties:
+                description: Policy uses mathematical expressions (alternative to nested apply)
+                rules:
+                  - condition:
+                      apply:
+                        operator: or
+                        keys:
+                          - expr: >-
+                              ( double(input1) / (input2 - 90) * 100) > 30
+                          - expr: >-
+                              ( integer(input1)
+                              / ( integer(input2) - 0.9 * input1 )
+                               * 100) <= 30
+                    decision: Deny
+              metadata:
+                policy-id: 2
+                policy-version: 1.0.0
+                description: >-
+                  Policy uses mathematical expressions (alternative to nested apply)
+        name: expr.check.set
+        version: 1.0.0
+        metadata:
+          action: expr-check-set
+          description: >-
+            Policy uses mathematical expressions (alternative to nested apply)
+          policy-id: expr.check.set
+          policy-version: 1.0.0
+name: ToscaServiceTemplateSimple
+version: 1.0.0
+
