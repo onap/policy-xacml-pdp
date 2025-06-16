@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "106dd54c_ba6f3270",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-06-16T07:11:42Z",
+      "side": 1,
+      "message": "Please create a new commit with a new Change-Id. You are using one that has been closed already. Also, this change is introducing 102 new issues and coverage is way below 90%. https://sonarcloud.io/summary/new_code?id\u003donap_policy-xacml-pdp\u0026branch\u003d141270-2",
+      "revId": "3f5454cfbd40dc0f061edd5c0c6e6e9b530ad019",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10c7bcab_ea6021f4",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-06-16T07:11:42Z",
+      "side": 1,
+      "message": "use proper javadoc for method description",
+      "range": {
+        "startLine": 529,
+        "startChar": 5,
+        "endLine": 532,
+        "endChar": 12
+      },
+      "revId": "3f5454cfbd40dc0f061edd5c0c6e6e9b530ad019",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ad9e258_73b94aad",
+        "filename": "applications/native/src/main/java/org/onap/policy/xacml/pdp/application/nativ/NativePdpApplicationTranslator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-06-16T07:11:42Z",
+      "side": 1,
+      "message": "use proper javadoc for method description",
+      "range": {
+        "startLine": 681,
+        "startChar": 4,
+        "endLine": 681,
+        "endChar": 60
+      },
+      "revId": "3f5454cfbd40dc0f061edd5c0c6e6e9b530ad019",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
