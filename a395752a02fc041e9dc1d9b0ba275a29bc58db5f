@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c896f0b_c7fb9d6f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8143
+      },
+      "writtenOn": "2025-06-16T21:40:51Z",
+      "side": 1,
+      "message": "Created new change ID, but not sure why author is wrong. Used git commit --amend -as",
+      "revId": "a395752a02fc041e9dc1d9b0ba275a29bc58db5f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
