@@ -1,0 +1,34 @@
+tosca_definitions_version: tosca_simple_yaml_1_1_0
+topology_template:
+  inputs: {}
+  policies:
+    - ref.policy.set:
+        type: onap.policies.native.ToscaXacml
+        type_version: 1.0.0
+        properties:
+          policies:
+            - properties:
+                description: policy set ID reference
+                rules:
+                  - condition:
+                      apply:
+                        operator: double-greater-than-or-equal
+                        keys:
+                          - parameter1
+                        compareWith:
+                          value: 50
+                    decision: Permit
+              metadata:
+                policy-id: ref.example.policy
+                policy-version: 1.0.0
+          policySetIdRefs:
+          - id: example.policy.set
+            version: 1.0.0
+        name: ref.policy.set
+        version: 1.0.0
+        metadata:
+          description: policy set with referenced policy set
+          policy-id: ref.policy.set
+          policy-version: 1.0.0
+name: ToscaServiceTemplateSimple
+version: 1.0.0

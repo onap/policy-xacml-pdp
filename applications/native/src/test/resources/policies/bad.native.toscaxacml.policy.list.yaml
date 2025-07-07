@@ -1,0 +1,50 @@
+tosca_definitions_version: tosca_simple_yaml_1_1_0
+topology_template:
+  inputs: {}
+  policies:
+    - compareWith.example.policy.set:
+        type: onap.policies.native.ToscaXacml
+        type_version: 1.0.0
+        properties:
+          policies:
+            - properties:
+                description: invalid operator
+                rules:
+                  - condition:
+                      apply:
+                        operator: double-greater-than-equal
+                        keys:
+                          - parameter1
+                        compareWith:
+                          value: 50
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: double-greater-than-or-equal
+                        keys:
+                          - parameter1
+                        compareWith:
+                          key: parameter2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: string-is-in
+                        keys:
+                          - input1
+                          - list: "1, 2, 3"
+                    decision: Permit
+                  - decision: Deny
+                    advice:
+                      value: this is a default rule
+              metadata:
+                policy-id: compareWith.example.policy
+                policy-version: 1.0.0
+        name: compareWith.example.policy.set
+        version: 1.0.0
+        metadata:
+          action: check-compareWith-policy
+          description: policy set for nested apply
+          policy-id: compareWith.example.policy.set
+          policy-version: 1.0.0
+name: ToscaServiceTemplateSimple
+version: 1.0.0

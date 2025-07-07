@@ -1,0 +1,27 @@
+tosca_definitions_version: tosca_simple_yaml_1_1_0
+topology_template:
+  inputs: {}
+  policies:
+    - compareWith.policy.set:
+        type: onap.policies.native.ToscaXacml
+        type_version: 1.0.0
+        properties:
+          policies:
+            - properties:
+                description: invalid condition
+                rules:
+                  - condition:
+                      function: map
+                    decision: Permit
+              metadata:
+                policy-id: compareWith.example.policy
+                policy-version: 1.0.0
+        name: compareWith.policy.set
+        version: 1.0.0
+        metadata:
+          action: check-compareWith-policy
+          description: policy set for nested apply
+          policy-id: compareWith.policy.set
+          policy-version: 1.0.0
+name: ToscaServiceTemplateSimple
+version: 1.0.0
