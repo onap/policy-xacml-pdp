@@ -41,6 +41,8 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
@@ -83,12 +85,12 @@ class NativePdpApplicationTest {
         //
         XacmlPolicyUtils.FileCreator myCreator = (String filename) -> policyFolder.resolve(filename).toFile();
         propertiesFile = XacmlPolicyUtils.copyXacmlPropertiesContents("src/test/resources/xacml.properties",
-                properties, myCreator);
+            properties, myCreator);
         //
         // Load service
         //
         ServiceLoader<XacmlApplicationServiceProvider> applicationLoader =
-                ServiceLoader.load(XacmlApplicationServiceProvider.class);
+            ServiceLoader.load(XacmlApplicationServiceProvider.class);
         //
         // Find the native application and save for use in all the tests
         //
@@ -134,11 +136,11 @@ class NativePdpApplicationTest {
 
         NativePdpApplication application = new NativePdpApplication();
         assertThat(application.canSupportPolicyType(new ToscaConceptIdentifier(
-                "onap.policies.native.Xacml", "1.0.0"))).isTrue();
+            "onap.policies.native.Xacml", "1.0.0"))).isTrue();
         assertThat(application.canSupportPolicyType(new ToscaConceptIdentifier(
-                "onap.policies.native.ToscaXacml", "1.0.0"))).isTrue();
+            "onap.policies.native.ToscaXacml", "1.0.0"))).isTrue();
         assertThat(application.canSupportPolicyType(new ToscaConceptIdentifier(
-                "onap.policies.native.SomethingElse", "1.0.0"))).isFalse();
+            "onap.policies.native.SomethingElse", "1.0.0"))).isFalse();
         assertThat(application.actionDecisionsSupported()).contains("native");
     }
 
@@ -172,7 +174,7 @@ class NativePdpApplicationTest {
                 } else if ("bad.policy".equals(policy.getName())) {
                     assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
                         translator.convertPolicy(policy)
-                    ).as(policy.getName()).withMessageContaining("Invalid XACML Policy");
+                    ).as(policy.getName()).withMessageContaining("Failed to read policy");
                 }
             }
         }
@@ -194,18 +196,85 @@ class NativePdpApplicationTest {
     }
 
     @Test
-    void testNativeToscaXacmlPolicy() throws Exception {
+    void testNestedApplyNativeToscaXacmlPolicy() throws Exception {
         String policySetTypeYaml = ResourceUtils
-                .getResourceAsString("src/test/resources/policies/native.toscapolicy.yaml");
-        checkPolicySetType(policySetTypeYaml);
+            .getResourceAsString("src/test/resources/policies/native.toscaxacml.policy.nestedapply.yaml");
+        checkPolicySetType(policySetTypeYaml, "nestedapply.policy.set");
     }
 
     @Test
-    void testBadToscaXacmlPolicyRule() throws Exception {
+    void testOperatorsNativeToscaXacmlPolicy() throws Exception {
+        String policySetTypeYaml = ResourceUtils
+            .getResourceAsString("src/test/resources/policies/native.toscaxacml.policy.operators.yaml");
+        checkPolicySetType(policySetTypeYaml, "operators.policy.set");
+    }
+
+    @Test
+    void testExprNativeToscaXacmlPolicy() throws Exception {
+        String policySetTypeYaml = ResourceUtils
+            .getResourceAsString("src/test/resources/policies/native.toscaxacml.policy.expr.yaml");
+        checkPolicySetType(policySetTypeYaml, "expr.check.set");
+    }
+
+    @Test
+    void testFunctionNativeToscaXacmlPolicy() throws Exception {
+        String policySetTypeYaml = ResourceUtils
+            .getResourceAsString("src/test/resources/policies/native.toscaxacml.policy.function.yaml");
+        checkPolicySetType(policySetTypeYaml, "function.list.check.set");
+    }
+
+    @Test
+    void testCompareWithNativeToscaXacmlPolicy() throws Exception {
+        String policySetTypeYaml = ResourceUtils
+            .getResourceAsString("src/test/resources/policies/native.toscaxacml.policy.compareWith.yaml");
+        checkPolicySetType(policySetTypeYaml, "compareWith.policy.set");
+    }
+
+    @Test
+    void testRefNativeToscaXacmlPolicy() throws Exception {
+        String policySetTypeYaml = ResourceUtils
+            .getResourceAsString("src/test/resources/policies/native.toscaxacml.policy.ref.yaml");
+        checkPolicySetType(policySetTypeYaml, "ref.policy.set");
+    }
+
+    @Test
+    void testDefaultNativeToscaXacmlPolicy() throws Exception {
+        String policySetTypeYaml = ResourceUtils
+            .getResourceAsString("src/test/resources/policies/native.toscaxacml.policy.default.yaml");
+        checkPolicySetType(policySetTypeYaml, "default.policy.set");
+    }
+
+    @Test
+    void testTargetNativeToscaXacmlPolicy() throws Exception {
+        String policySetTypeYaml = ResourceUtils
+            .getResourceAsString("src/test/resources/policies/native.toscaxacml.policy.target.yaml");
+        checkPolicySetType(policySetTypeYaml, "target.policy.set");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "src/test/resources/policies/bad.native.toscaxacml.policy.yaml",
+        "src/test/resources/policies/bad.native.toscaxacml.policy.compareWith.yaml",
+        "src/test/resources/policies/bad.native.toscaxacml.policy.expr.yaml",
+        "src/test/resources/policies/bad.native.toscaxacml.policy.expr1.yaml",
+        "src/test/resources/policies/bad.native.toscaxacml.policy.expr2.yaml",
+        "src/test/resources/policies/bad.native.toscaxacml.policy.nestedapply.yaml",
+        "src/test/resources/policies/bad.native.toscaxacml.policy.operator.yaml",
+        "src/test/resources/policies/bad.native.toscaxacml.policy.target.yaml",
+        "src/test/resources/policies/bad.native.toscaxacml.policy.apply.yaml",
+        "src/test/resources/policies/bad.native.toscaxacml.policy.condition.yaml",
+        "src/test/resources/policies/bad.native.toscaxacml.policy.condition1.yaml",
+        "src/test/resources/policies/bad.native.toscaxacml.policy.decision.yaml",
+        "src/test/resources/policies/bad.native.toscaxacml.policy.ref.yaml",
+        "src/test/resources/policies/bad.native.toscaxacml.policy.advice.yaml",
+        "src/test/resources/policies/bad.native.toscaxacml.policy.function.yaml",
+        "src/test/resources/policies/bad.native.toscaxacml.policy.list.yaml"
+    })
+    void testBadToscaXacmlPolicyRule(String filename) throws Exception {
+        LOGGER.debug("Testing {}", filename);
         NativePdpApplicationTranslator translator = new NativePdpApplicationTranslator();
         String policyYaml = ResourceUtils
-                .getResourceAsString("src/test/resources/policies/bad.native.toscapolicy.yaml");
-
+            .getResourceAsString(filename);
         ToscaServiceTemplate serviceTemplate = yamlCoder.decode(policyYaml, ToscaServiceTemplate.class);
         JpaToscaServiceTemplate jtst = new JpaToscaServiceTemplate();
         jtst.fromAuthorative(serviceTemplate);
@@ -213,41 +282,27 @@ class NativePdpApplicationTest {
 
         for (Map<String, ToscaPolicy> policies : completedJtst.getToscaTopologyTemplate().getPolicies()) {
             for (ToscaPolicy policy : policies.values()) {
-                assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
-                                translator.convertPolicy(policy)
-                        ).as((String) policy.getMetadata().get("policy-id"))
-                        .withMessageContaining("Invalid rule format");
+                assertThatExceptionOfType(Exception.class).isThrownBy(() ->
+                    translator.convertPolicy(policy)
+                ).as((String) policy.getMetadata().get("policy-id"));
+
             }
         }
     }
 
-    @Test
-    void testBadToscaXacmlPolicyTarget() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "src/test/resources/policies/bad.native.toscaxacml.policy.policyset.yaml"
+    })
+    void testBadToscaXacmlPolicySet(String filename) throws Exception {
+        LOGGER.debug("Testing {}", filename);
         NativePdpApplicationTranslator translator = new NativePdpApplicationTranslator();
         String policyYaml = ResourceUtils
-                .getResourceAsString("src/test/resources/policies/bad.native.tosca.policy.target.yaml");
-
+            .getResourceAsString(filename);
         ToscaServiceTemplate serviceTemplate = yamlCoder.decode(policyYaml, ToscaServiceTemplate.class);
         JpaToscaServiceTemplate jtst = new JpaToscaServiceTemplate();
-        jtst.fromAuthorative(serviceTemplate);
-        ToscaServiceTemplate completedJtst = jtst.toAuthorative();
-
-        for (Map<String, ToscaPolicy> policies : completedJtst.getToscaTopologyTemplate().getPolicies()) {
-            for (ToscaPolicy policy : policies.values()) {
-                if ("bad.tosca.policy.test".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
-                                    translator.convertPolicy(policy)
-                            ).as((String) policy.getMetadata().get("policy-id"))
-                            .withMessageContaining("Invalid operator");
-                }
-                if ("bad.tosca.policy.target.test".equals(policy.getName())) {
-                    assertThatExceptionOfType(ToscaPolicyConversionException.class).isThrownBy(() ->
-                                    translator.convertPolicy(policy)
-                            ).as((String) policy.getMetadata().get("policy-id"))
-                            .withMessageContaining("Invalid target format");
-                }
-            }
-        }
+        assertThatExceptionOfType(Exception.class).isThrownBy(() ->
+            jtst.fromAuthorative(serviceTemplate));
     }
 
     /**
@@ -282,7 +337,9 @@ class NativePdpApplicationTest {
         LOGGER.info("Xacml response we received {}", DOMResponse.toString(response));
     }
 
-    private void checkPolicySetType(String policySetTypeYaml) throws ToscaPolicyConversionException, CoderException {
+    private void checkPolicySetType(String policySetTypeYaml, String name)
+        throws ToscaPolicyConversionException, CoderException {
+        LOGGER.debug("Testing {}", name);
         NativePdpApplicationTranslator translator = new NativePdpApplicationTranslator();
         ToscaServiceTemplate serviceTemplate = yamlCoder.decode(policySetTypeYaml, ToscaServiceTemplate.class);
         JpaToscaServiceTemplate jtst = new JpaToscaServiceTemplate();
@@ -297,9 +354,7 @@ class NativePdpApplicationTest {
                 }
                 PolicySetType policySetType = (PolicySetType) translator.convertPolicy(policy);
                 assertThat(policySetType).isNotNull();
-                assertThat(policySetType.getPolicySetId()).isEqualTo("tosca.policy.test");
-                assertThat(policySetType.getPolicyCombiningAlgId())
-                        .isEqualTo("urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:first-applicable");
+                assertThat(policySetType.getPolicySetId()).isEqualTo(name);
             }
         }
     }

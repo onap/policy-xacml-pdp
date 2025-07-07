@@ -1,0 +1,124 @@
+tosca_definitions_version: tosca_simple_yaml_1_1_0
+topology_template:
+  inputs: {}
+  policies:
+    - function.list.check.set:
+        type: onap.policies.native.ToscaXacml
+        type_version: 1.0.0
+        properties:
+          policies:
+            - properties:
+                description: Policy which checks a function over a list and applies a higher-order set function
+                rules:
+                  - condition:
+                      apply:
+                        operator: any-of
+                        keys:
+                          - function: string-is-in
+                          - "'ABC'"
+                          - list:
+                              - "'ABC'"
+                              - "'xyz'"
+                              - parameterName
+                    decision: Deny
+                  - condition:
+                      apply:
+                        operator: any-of
+                        keys:
+                          - function: string-equal
+                          - "'ABC'"
+                          - list:
+                              - "'ABC'"
+                              - "'xyz'"
+                              - parameterName
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: all-of
+                        keys:
+                          - function: integer-greater-than
+                          - 10
+                          - list:
+                              - 6
+                              - 1
+                              - parameterName
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: any-of-any
+                        keys:
+                          - function: integer-equal
+                          - list:
+                              - 4
+                              - 5
+                              - parameterName1
+                          - list:
+                              - 6
+                              - 1
+                              - parameterName2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: all-of-any
+                        keys:
+                          - function: integer-equal
+                          - list:
+                              - 4
+                              - 5
+                              - parameterName1
+                          - list:
+                              - 6
+                              - 1
+                              - parameterName2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: any-of-all
+                        keys:
+                          - function: integer-equal
+                          - list:
+                              - 4
+                              - 5
+                              - parameterName1
+                          - list:
+                              - 6
+                              - 1
+                              - parameterName2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: all-of-all
+                        keys:
+                          - function: integer-equal
+                          - list:
+                              - 4
+                              - 5
+                              - parameterName1
+                          - list:
+                              - 6
+                              - 1
+                              - parameterName2
+                    decision: Permit
+                  - condition:
+                      apply:
+                        operator: map
+                        keys:
+                          - function: string-normalize-to-lower-case
+                          - list:
+                              - Hello
+                              - World!
+                    decision: Permit
+              metadata:
+                policy-id: 1
+                policy-version: 2.0.0
+                description: >-
+                  Policy which checks a function over a list
+        name: function.list.check.set
+        version: 1.0.0
+        metadata:
+          action: function.list-check-policy
+          description: >-
+            Policy which checks a function over a list
+          policy-id: function.list.check.set
+          policy-version: 1.0.0
+name: ToscaServiceTemplateSimple
