@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed657f92_cee61be1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 8143
+      },
+      "writtenOn": "2025-07-07T19:17:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ac382a4_b70cfa74",
+      "range": {
+        "startLine": 2,
+        "startChar": 1,
+        "endLine": 2,
+        "endChar": 49
+      },
+      "revId": "e85e61d54598ccda91bf1bdbbba3e5733069c72a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b6309174_4049ebaf",
@@ -49,6 +73,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "17cfb9ed_4fd7492f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 8143
+      },
+      "writtenOn": "2025-07-07T19:17:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6309174_4049ebaf",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 55
+      },
+      "revId": "e85e61d54598ccda91bf1bdbbba3e5733069c72a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "ae2405f2_8c9f959b",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 3
@@ -60,6 +108,24 @@
       "writtenOn": "2025-06-17T07:26:41Z",
       "side": 1,
       "message": "fix all the sonar issues. no new issue is acceptable. code coverage must be over 90%. https://sonarcloud.io/summary/new_code?id\u003donap_policy-xacml-pdp\u0026branch\u003d141304-3",
+      "revId": "e85e61d54598ccda91bf1bdbbba3e5733069c72a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79337546_16c9b801",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8143
+      },
+      "writtenOn": "2025-07-07T19:17:30Z",
+      "side": 1,
+      "message": "I will be fixing all issues, committed now to check test coverage",
+      "parentUuid": "ae2405f2_8c9f959b",
       "revId": "e85e61d54598ccda91bf1bdbbba3e5733069c72a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
