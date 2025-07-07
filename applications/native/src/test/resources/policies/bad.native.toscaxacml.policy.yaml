@@ -1,0 +1,35 @@
+tosca_definitions_version: tosca_simple_yaml_1_1_0
+topology_template:
+  inputs: {}
+  policies:
+    - example.policy.test:
+        type: onap.policies.native.ToscaXacml
+        type_version: 1.0.0
+        properties:
+          policies:
+            - properties:
+                description: Policy that checks if a parameter is a specific value
+                rules:
+                  - condition:
+                      apply:
+                        operator: string-equal
+                        compareWith:
+                          value: '448903300002'
+                    decision: Permit
+                    advice:
+                      value: Cell ID is valid
+                default: Deny
+              metadata:
+                policy-id: 1
+                policy-version: 1.0.0
+        name: example.policy.test
+        version: 1.0.0
+        metadata:
+          action: policy-test
+          description: Policy that checks if a parameter is a specific value
+          policy-id: example.policy.test
+          policy-version: 1.0.0
+name: ToscaServiceTemplateSimple
+version: 1.0.0
+
+
