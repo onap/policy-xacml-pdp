@@ -1,0 +1,32 @@
+tosca_definitions_version: tosca_simple_yaml_1_1_0
+topology_template:
+  inputs: {}
+  policies:
+    - default.policy.set:
+        type: onap.policies.native.ToscaXacml
+        type_version: 1.0.0
+        properties:
+          policies:
+            - properties:
+                description: Default rule if no other rule applies
+                rules:
+                  - condition:
+                      apply:
+                        operator: double-greater-than-or-equal
+                        keys:
+                          - parameter1
+                        compareWith:
+                          value: 50
+                    decision: Permit
+                default: Deny
+              metadata:
+                policy-id: default.example.policy
+                policy-version: 1.0.0
+        name: default.policy.set
+        version: 1.0.0
+        metadata:
+          description: policy set with default rule
+          policy-id: default.policy.set
+          policy-version: 1.0.0
+name: ToscaServiceTemplateSimple
+version: 1.0.0

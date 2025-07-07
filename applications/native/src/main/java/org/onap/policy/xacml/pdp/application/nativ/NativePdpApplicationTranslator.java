@@ -4,7 +4,7 @@
  * ================================================================================
  * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2020, 2024 Nordix Foundation.
- * Modifications Copyright (C) 2024 Deutsche Telekom AG.
+ * Modifications Copyright (C) 2025 Deutsche Telekom AG.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,10 +31,14 @@ import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.util.XACMLPolicyScanner;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StreamTokenizer;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +56,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ConditionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.DefaultsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.FunctionType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.IdReferenceType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
@@ -73,7 +78,10 @@ import org.slf4j.LoggerFactory;
  * This class implements one translator that interprets TOSCA policy and decision API request/response payload.
  *
  * @author Chenfei Gao (cgao@research.att.com)
+ *
  */
+
+
 @NoArgsConstructor
 public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
 
@@ -87,18 +95,60 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
 
     private static final String VALUE = "value";
 
+    private static final String ACTION = "action";
+
+    private static final String VERSION = "version";
+
     private static final String APPLY = "apply";
+
+    private static final String EXPRESSION = "expr";
 
     private static final String ONE_AND_ONLY = "-one-and-only";
 
     private static final String DOUBLE = "double";
 
+    private static final String CONVERSION_INTEGER = "integer(";
+
+    private static final String CONVERSION_DOUBLE = "double(";
+
+    private static final String CONVERSION_DOUBLE_ABS = "double-abs(";
+
+    private static final String CONVERSION_INTEGER_ABS = "integer-abs(";
+
+    private static final String CONVERSION_FLOOR = "floor(";
+
+    private static final String CONVERSION_ROUND = "round(";
+
+    private static final String POLICY_ID = "policy-id";
+
+    private static final String POLICY_VERSION = "policy-version";
+
+    private static final String DECISION = "decision";
+
+    private static final String OPERATOR = "operator";
+
+    private static final String FUNCTION = "function";
+
+    private static final String INTEGER = "integer";
+
+    private static final String BOOLEAN = "boolean";
+
+    private static final String POPPED = "Popped {}";
+
+    private static final String ERROR_TARGET = "POLICY-500: Invalid target format";
+
+    private static final String ERROR_TOKEN = "POLICY-500: Error parsing expr, could not get next token";
+
     private Map<String, Identifier> identifierMap;
+
+    private HashMap<String, Integer> operatorPrecedenceMap;
 
     @Override
     public Object convertPolicy(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
+
         if (TOSCA_XACML_POLICY_TYPE.equals(toscaPolicy.getType())) {
             setIdentifierMap();
+            setOperatorPrecedenceMap();
             return setPolicySetType(toscaPolicy);
         } else {
             //
@@ -109,7 +159,8 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
             try {
                 decodedXacmlPolicy = new String(Base64.getDecoder().decode(encodedXacmlPolicy), StandardCharsets.UTF_8);
             } catch (IllegalArgumentException exc) {
-                throw new ToscaPolicyConversionException("error on Base64 decoding the native policy", exc);
+                LOGGER.error("POLICY-500: error on Base64 decoding the native policy");
+                throw new ToscaPolicyConversionException("POLICY-500: error on Base64 decoding the native policy", exc);
             }
             LOGGER.debug("Decoded xacml policy {}", decodedXacmlPolicy);
             //
@@ -121,11 +172,13 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
                 //
                 Object policy = XACMLPolicyScanner.readPolicy(is);
                 if (policy == null) {
-                    throw new ToscaPolicyConversionException("Invalid XACML Policy");
+                    LOGGER.error("POLICY-500: Invalid XACML Policy");
+                    throw new ToscaPolicyConversionException("POLICY-500: Invalid XACML Policy");
                 }
                 return policy;
-            } catch (IOException exc) {
-                throw new ToscaPolicyConversionException("Failed to read policy", exc);
+            } catch (Exception exc) {
+                LOGGER.error("POLICY-500: Failed to read policy");
+                throw new ToscaPolicyConversionException("POLICY-500: Failed to read policy", exc);
             }
         }
     }
@@ -141,7 +194,7 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
 
     @Override
     public Request convertRequest(DecisionRequest request) throws ToscaPolicyConversionException {
-        throw new ToscaPolicyConversionException("Do not call native convertRequest");
+        throw new ToscaPolicyConversionException("POLICY-500: Do not call native convertRequest");
     }
 
     @Override
@@ -152,27 +205,52 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         return null;
     }
 
-    @Getter
-    public static class NativeDefinition {
-        @NotNull
-        @NotBlank
-        private String policy;
-    }
-
     private PolicySetType setPolicySetType(ToscaPolicy toscaPolicy) throws ToscaPolicyConversionException {
         PolicySetType policySetType = new PolicySetType();
-        policySetType.setPolicySetId(String.valueOf(toscaPolicy.getMetadata().get("policy-id")));
-        policySetType.setPolicyCombiningAlgId(XACML3.ID_POLICY_FIRST_APPLICABLE.stringValue());
-        policySetType.setVersion(String.valueOf(toscaPolicy.getMetadata().get("policy-version")));
-        policySetType.setDescription(String.valueOf(toscaPolicy.getMetadata().get(DESCRIPTION)));
-        policySetType.setTarget(setPolicySetTarget(toscaPolicy.getMetadata().get("action")));
-        for (Map<String, Object> type : (List<Map<String, Object>>) toscaPolicy.getProperties().get("policies")) {
-            ToscaPolicy policy = new ToscaPolicy();
-            policy.setMetadata((Map<String, Object>) type.get("metadata"));
-            policy.setProperties((Map<String, Object>) type.get("properties"));
-            ObjectFactory objectFactory = new ObjectFactory();
-            policySetType.getPolicySetOrPolicyOrPolicySetIdReference()
-                .add(objectFactory.createPolicy(convertPolicyXacml(policy)));
+        try {
+            final ObjectFactory objectFactory = new ObjectFactory();
+            if (toscaPolicy.getMetadata().get(POLICY_ID) != null) {
+                policySetType.setPolicySetId(String.valueOf(toscaPolicy.getMetadata().get(POLICY_ID)));
+            }
+            policySetType.setPolicyCombiningAlgId(XACML3.ID_POLICY_FIRST_APPLICABLE.stringValue());
+            if (toscaPolicy.getMetadata().get(POLICY_VERSION) != null) {
+                policySetType.setVersion(String.valueOf(toscaPolicy.getMetadata().get(POLICY_VERSION)));
+            }
+            if (toscaPolicy.getMetadata().get(DESCRIPTION) != null) {
+                policySetType.setDescription(String.valueOf(toscaPolicy.getMetadata().get(DESCRIPTION)));
+            }
+            if ((toscaPolicy.getMetadata().get(ACTION) != null)) {
+                policySetType.setTarget(setPolicySetTarget(toscaPolicy.getMetadata().get(ACTION)));
+            }
+            if (toscaPolicy.getProperties().get("policySetIdRefs") != null) {
+                for (Map<String, String> type : (List<Map<String, String>>) toscaPolicy.getProperties()
+                    .get("policySetIdRefs")) {
+                    IdReferenceType ref = objectFactory.createIdReferenceType();
+                    if (type.get("id") == null || type.get(VERSION) == null
+                        || type.get("id").isEmpty() || type.get(VERSION).isEmpty()) {
+                        LOGGER.error("POLICY-500: Invalid policy set reference , missing ID or version");
+                        throw new ToscaPolicyConversionException(
+                            "POLICY-500: Invalid policy set reference , missing ID or version");
+                    }
+                    ref.setValue(type.get("id"));
+                    ref.setVersion(type.get(VERSION));
+                    policySetType.getPolicySetOrPolicyOrPolicySetIdReference()
+                        .add(objectFactory.createPolicySetIdReference(ref));
+                }
+            }
+            if (toscaPolicy.getProperties().get("policies") != null) {
+                for (Map<String, Object> type : (List<Map<String, Object>>) toscaPolicy.getProperties()
+                    .get("policies")) {
+                    ToscaPolicy policy = new ToscaPolicy();
+                    policy.setMetadata((Map<String, Object>) type.get("metadata"));
+                    policy.setProperties((Map<String, Object>) type.get("properties"));
+                    policySetType.getPolicySetOrPolicyOrPolicySetIdReference()
+                        .add(objectFactory.createPolicy(convertPolicyXacml(policy)));
+                }
+            }
+        } catch (ToscaPolicyConversionException ex) {
+            LOGGER.error("POLICY-500: Invalid PolicySet structure");
+            throw new ToscaPolicyConversionException("POLICY-500: Invalid PolicySet structure");
         }
         return policySetType;
     }
@@ -202,14 +280,16 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
                 if (rule.get("condition") != null) {
                     ruleType.setCondition(setConditionType((Map<String, Object>) rule.get("condition")));
                 }
-                if (rule.get("decision") == null) {
-                    throw new ToscaPolicyConversionException("decision is mandatory in a rule");
+                if (rule.get(DECISION) == null) {
+                    LOGGER.error("POLICY-500: decision is mandatory in a rule");
+                    throw new ToscaPolicyConversionException("POLICY-500: decision is mandatory in a rule");
                 }
                 setAdviceExpression(ruleType, rule);
                 policyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(ruleType);
             }
         } catch (ToscaPolicyConversionException ex) {
-            throw new ToscaPolicyConversionException("Invalid rule format");
+            LOGGER.error("POLICY-500:  Invalid rule structure");
+            throw new ToscaPolicyConversionException("POLICY-500: Invalid rule structure");
         }
         if (properties.get("default") != null) {
             setDefaultRule((String) properties.get("default"), policyType);
@@ -218,36 +298,48 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
     }
 
     private void setPolicyType(ToscaPolicy toscaPolicy, PolicyType policyType) throws ToscaPolicyConversionException {
-        policyType.setPolicyId(String.valueOf(toscaPolicy.getMetadata().get("policy-id")));
-        policyType.setVersion(String.valueOf(toscaPolicy.getMetadata().get("policy-version")));
-        policyType.setDescription(String.valueOf(toscaPolicy.getMetadata().get(DESCRIPTION)));
-        DefaultsType defaultsType = new DefaultsType();
-        defaultsType.setXPathVersion("http://www.w3.org/TR/2007/REC-xpath20-20070123");
-        policyType.setPolicyDefaults(defaultsType);
-        Map<String, Object> properties = toscaPolicy.getProperties();
-        if (properties.get("combiningAlgo") != null) {
-            policyType.setRuleCombiningAlgId(validateFilterPropertyFunction((String)
-                properties.get("combiningAlgo")).stringValue());
-        } else {
-            policyType.setRuleCombiningAlgId(XACML3.ID_RULE_FIRST_APPLICABLE.stringValue());
-        }
-        if (properties.get(TARGET) != null) {
-            policyType.setTarget(setTargetType((Map<String, Object>) properties.get(TARGET)));
-        } else {
-            policyType.setTarget(new TargetType());
+        try {
+            policyType.setPolicyId(String.valueOf(toscaPolicy.getMetadata().get(POLICY_ID)));
+            policyType.setVersion(String.valueOf(toscaPolicy.getMetadata().get(POLICY_VERSION)));
+            policyType.setDescription(String.valueOf(toscaPolicy.getMetadata().get(DESCRIPTION)));
+            DefaultsType defaultsType = new DefaultsType();
+            policyType.setPolicyDefaults(defaultsType);
+            Map<String, Object> properties = toscaPolicy.getProperties();
+            if (properties.get("combiningAlgo") != null) {
+                policyType.setRuleCombiningAlgId(validateFilterPropertyFunction((String)
+                    properties.get("combiningAlgo")).stringValue());
+            } else {
+                policyType.setRuleCombiningAlgId(XACML3.ID_RULE_FIRST_APPLICABLE.stringValue());
+            }
+            if (properties.get(TARGET) != null) {
+                policyType.setTarget(setTargetType((Map<String, Object>) properties.get(TARGET)));
+            } else {
+                policyType.setTarget(new TargetType());
+            }
+        } catch (Exception ex) {
+            LOGGER.error("POLICY-500: Invalid Policy structure");
+            throw new ToscaPolicyConversionException("POLICY-500: Invalid Policy structure");
         }
     }
 
     private void setAdviceExpression(RuleType ruleType, Map<String, Object> rule)
         throws ToscaPolicyConversionException {
-        String decision = (String) rule.get("decision");
-        if ("Deny".equalsIgnoreCase(decision)) {
-            ruleType.setEffect(EffectType.DENY);
-        } else {
-            ruleType.setEffect(EffectType.PERMIT);
-        }
-        if (rule.get("advice") != null) {
-            ruleType.setAdviceExpressions(setAdvice((Map<String, Object>) rule.get("advice"), decision));
+        try {
+            String decision = "Deny";
+            if (rule.get(DECISION) != null) {
+                decision = (String) rule.get(DECISION);
+            }
+            if ("Deny".equalsIgnoreCase(decision)) {
+                ruleType.setEffect(EffectType.DENY);
+            } else {
+                ruleType.setEffect(EffectType.PERMIT);
+            }
+            if (rule.get("advice") != null) {
+                ruleType.setAdviceExpressions(setAdvice((Map<String, Object>) rule.get("advice"), decision));
+            }
+        } catch (Exception ex) {
+            LOGGER.error("POLICY-500: Invalid advice structure");
+            throw new ToscaPolicyConversionException("POLICY-500: Invalid advice structure");
         }
     }
 
@@ -266,34 +358,13 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
     private TargetType setTargetType(Map<String, Object> appliesTo) throws ToscaPolicyConversionException {
         List<MatchType> listMatch = new ArrayList<>();
         try {
-            List<Map<String, Object>> allOffList = (List<Map<String, Object>>) appliesTo.get("anyOne");
-            for (Map<String, Object> allOff : allOffList) {
-                for (Map<String, Object> match : (List<Map<String, Object>>) allOff.get("allOf")) {
-                    var matchType = new MatchType();
-                    String operator = (String) match.get("operator");
-                    String datatype = getDatatype(operator);
-                    matchType.setMatchId(validateFilterPropertyFunction(operator).stringValue());
-                    var valueType = setAttributeValueType(match.get(VALUE),
-                        validateFilterPropertyFunction(datatype).stringValue());
-                    matchType.setAttributeValue(valueType);
-                    String attribute = "";
-                    String category = "";
-                    if (((String) match.get("key")).contains("action")) {
-                        attribute = validateFilterPropertyFunction((String) match
-                            .get("key")).stringValue();
-                        category = XACML3.ID_ATTRIBUTE_CATEGORY_ACTION.stringValue();
-                    } else {
-                        attribute = (String) match.get("key");
-                        category = XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue();
-                    }
-                    var designator = setAttributeDesignatorType(attribute, category,
-                        validateFilterPropertyFunction(datatype).stringValue(), false);
-                    matchType.setAttributeDesignator(designator);
-                    listMatch.add(matchType);
-                }
+            if (appliesTo.get("anyOne") != null) {
+                List<Map<String, Object>> allOffList = (List<Map<String, Object>>) appliesTo.get("anyOne");
+                processAllOfList(allOffList, listMatch);
             }
-        } catch (NullPointerException ex) {
-            throw new ToscaPolicyConversionException("Invalid target format");
+        } catch (Exception ex) {
+            LOGGER.error(ERROR_TARGET);
+            throw new ToscaPolicyConversionException(ERROR_TARGET);
         }
         var anyOfType = new AnyOfType();
         MatchType[] matchTypes = new MatchType[listMatch.size()];
@@ -301,6 +372,57 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         var target = new TargetType();
         target.getAnyOf().add(anyOfType);
         return target;
+    }
+
+    private void processAllOfList(List<Map<String, Object>> allOffList, List<MatchType> listMatch)
+        throws ToscaPolicyConversionException  {
+        try {
+            for (Map<String, Object> allOff : allOffList) {
+                if (allOff.get("allOf") != null) {
+                    for (Map<String, Object> match : (List<Map<String, Object>>) allOff.get("allOf")) {
+                        processMatchObject(match, listMatch);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            LOGGER.error(ERROR_TARGET);
+            throw new ToscaPolicyConversionException(ERROR_TARGET);
+        }
+    }
+
+    private void processMatchObject(Map<String, Object> match, List<MatchType> listMatch)
+        throws ToscaPolicyConversionException  {
+        try {
+            var matchType = new MatchType();
+            String operator = "";
+            if (match.get(OPERATOR) != null) {
+                operator = (String) match.get(OPERATOR);
+            }
+            String datatype = getDatatype(operator);
+            matchType.setMatchId(validateFilterPropertyFunction(operator).stringValue());
+            var valueType = setAttributeValueType(match.get(VALUE),
+                validateFilterPropertyFunction(datatype).stringValue());
+            matchType.setAttributeValue(valueType);
+            String attribute = "";
+            String category = "";
+            if (match.get("key") != null) {
+                if (((String) match.get("key")).contains(ACTION)) {
+                    attribute = validateFilterPropertyFunction((String) match
+                        .get("key")).stringValue();
+                    category = XACML3.ID_ATTRIBUTE_CATEGORY_ACTION.stringValue();
+                } else {
+                    attribute = (String) match.get("key");
+                    category = XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue();
+                }
+            }
+            var designator = setAttributeDesignatorType(attribute, category,
+                validateFilterPropertyFunction(datatype).stringValue(), false);
+            matchType.setAttributeDesignator(designator);
+            listMatch.add(matchType);
+        } catch (Exception ex) {
+            LOGGER.error(ERROR_TARGET);
+            throw new ToscaPolicyConversionException(ERROR_TARGET);
+        }
     }
 
     private TargetType setPolicySetTarget(Object value) {
@@ -321,81 +443,137 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
 
     private ConditionType setConditionType(Map<String, Object> conditionMap) throws ToscaPolicyConversionException {
         var condition = new ConditionType();
+        var factory = new ObjectFactory();
         try {
-            Map<String, Object> applyMap = (Map<String, Object>) conditionMap.get(APPLY);
-            ApplyType parentApply = setApply(applyMap);
-            condition.setExpression(new ObjectFactory().createApply(parentApply));
-        } catch (NullPointerException ex) {
-            throw new ToscaPolicyConversionException("Invalid condition format");
+            if (conditionMap.get(APPLY) != null) {
+                Map<String, Object> applyMap = (Map<String, Object>) conditionMap.get(APPLY);
+                ApplyType parentApply = setApply(applyMap);
+                condition.setExpression(factory.createApply(parentApply));
+            } else if (conditionMap.get(EXPRESSION) != null) {
+                String expr = conditionMap.get(EXPRESSION).toString();
+                ApplyType parentApply = convertToPrefixXacmlApply(expr, factory);
+                condition.setExpression(factory.createApply(parentApply));
+            } else {
+                LOGGER.error("POLICY-500: Invalid condition structure");
+                throw new ToscaPolicyConversionException("POLICY-500: Invalid condition structure");
+            }
+        } catch (Exception ex) {
+            LOGGER.error("POLICY-500: Invalid condition structure");
+            throw new ToscaPolicyConversionException("POLICY-500: Invalid condition structure");
         }
         return condition;
     }
 
     private ApplyType setApply(Map<String, Object> applies) throws ToscaPolicyConversionException {
         var apply = new ApplyType();
-        try {
-            List<Object> keys = (List<Object>) applies.get("keys");
-            String operator = (String) applies.get("operator");
-            String datatype = getDatatype(operator);
-            apply.setFunctionId(validateFilterPropertyFunction(operator).stringValue());
-            var factory = new ObjectFactory();
-            List<Object> keyList = new ArrayList<>();
-            setApplyKeys(keyList, keys, datatype, factory, apply);
-            setAttributeAndDesignator(keyList, apply, factory);
-            boolean data = switch (operator) {
-                case "or", "and", "n-of", "not", "all-of", "any-of", "any-of-any", "all-of-any", "all-of-all",
-                     "any-of-all" -> false;
-                default -> true;
-            };
-            if (data && applies.get("compareWith") != null) {
-                setCompareWith(applies, apply, factory, getDatatype(operator));
+        var factory = new ObjectFactory();
+        if ((applies.get("keys") != null) && (applies.get(OPERATOR) != null)) {
+            try {
+                List<Object> keys = (List<Object>) applies.get("keys");
+                String operator = (String) applies.get(OPERATOR);
+                String datatype = "";
+                boolean isHigherOrder = switch (operator) {
+                    case "all-of", "any-of", "any-of-any", "all-of-any", "all-of-all",
+                         "any-of-all", "map" -> true;
+                    default -> false;
+                };
+                if (!(isHigherOrder)) {
+                    datatype = getDatatype(operator);
+                }
+                apply.setFunctionId(validateFilterPropertyFunction(operator).stringValue());
+                List<Object> keyList = new ArrayList<>();
+                getApplyKeys(keyList, keys, datatype, factory);
+                setApplyKeys(keyList, apply, factory);
+
+                if (applies.get("compareWith") != null) {
+                    setCompareWith(applies, apply, factory, getDatatype(operator));
+                }
+            } catch (Exception ex) {
+                LOGGER.error("POLICY-500: Invalid apply structure");
+                throw new ToscaPolicyConversionException("POLICY-500: Invalid apply structure");
             }
-        } catch (NullPointerException ex) {
-            throw new ToscaPolicyConversionException("Invalid apply format");
+        } else {
+            LOGGER.error("POLICY-500: Keys or operator missing in apply");
+            throw new ToscaPolicyConversionException("POLICY-500: Keys or operator missing in apply");
         }
         return apply;
     }
 
-    private void setApplyKeys(List<Object> keyList, List<Object> keys, String datatype,
-                              ObjectFactory factory, ApplyType apply) throws ToscaPolicyConversionException {
-        for (Object keyObject : keys) {
-            if (keyObject instanceof Map<?, ?>) {
-                if (((Map<?, ?>) keyObject).get("list") != null) {
-                    setBagApply(apply, (List<Object>) ((Map<?, ?>) keyObject).get("list"), datatype, factory);
-                } else if (((Map<?, ?>) keyObject).get("function") != null) {
-                    setFunctionType(apply, ((Map<String, String>) keyObject).get("function"), factory);
-                } else if (((Map<?, ?>) keyObject).get(APPLY) != null) {
-                    keyList.add(setApply((Map<String, Object>) ((Map<?, ?>) keyObject).get(APPLY)));
-                } else {
-                    throw new ToscaPolicyConversionException(
-                        "Invalid key entry, object does not contain list, function or apply");
+    private void getApplyKeys(List<Object> keyList, List<Object> keys, String datatype,
+                              ObjectFactory factory) throws ToscaPolicyConversionException {
+        try {
+            for (Object keyObject : keys) {
+                if (keyObject instanceof Map<?, ?> && ((Map<?, ?>) keyObject).get(FUNCTION) != null) {
+                    String fun = ((Map<String, String>) keyObject).get(FUNCTION);
+                    datatype = getDatatype(fun);
                 }
-            } else {
-                setAttributes(keyObject, keyList, datatype, factory);
             }
+            String originalDatatype = datatype;
+            for (int i = 0; i < keys.size(); i++) {
+                if (originalDatatype.equals("n-of")) {
+                    if (i == 0) {
+                        datatype = INTEGER;
+                    } else {
+                        datatype = BOOLEAN;
+                    }
+                }
+                Object keyObject = keys.get(i);
+                if (keyObject instanceof Map<?, ?>) {
+                    keyList = processKeyObject(keyObject, keyList, factory, datatype);
+                } else {
+                    setAttributes(keyObject, keyList, datatype, factory);
+                }
+            }
+        } catch (Exception ex) {
+            LOGGER.error("POLICY-500: Invalid keys in apply");
+            throw new ToscaPolicyConversionException("POLICY-500: Invalid keys in apply");
         }
     }
 
-    private void setAttributeAndDesignator(List<Object> keyList, ApplyType apply, ObjectFactory factory) {
-        keyList.stream()
-            .sorted((firstKey, secondKey) -> {
-                if (firstKey instanceof AttributeValueType) {
-                    return -1;
-                } else if (firstKey instanceof ApplyType) {
-                    return 1;
-                }
-                return 0;
-            })
-            .forEach(key -> {
-                if (key instanceof AttributeValueType) {
-                    apply.getExpression().add(factory.createAttributeValue((AttributeValueType) key));
-                }
-                if (key instanceof ApplyType) {
-                    apply.getExpression().add(factory.createApply((ApplyType) key));
-                }
-            });
+    private List<Object> processKeyObject(Object keyObject, List<Object> keyList,
+                           ObjectFactory factory, String datatype)
+        throws ToscaPolicyConversionException {
+        if (((Map<?, ?>) keyObject).get("list") != null) {
+            keyList.add(setBagApply((List<Object>) ((Map<?, ?>) keyObject).get("list"), datatype, factory));
+        } else if (((Map<?, ?>) keyObject).get(FUNCTION) != null) {
+            keyList.add(setFunctionType(((Map<String, String>) keyObject).get(FUNCTION)));
+        } else if (((Map<?, ?>) keyObject).get(APPLY) != null) {
+            keyList.add(setApply((Map<String, Object>) ((Map<?, ?>) keyObject).get(APPLY)));
+        } else if (((Map<?, ?>) keyObject).get(EXPRESSION) != null) {
+            String expr = ((Map<String, String>) keyObject).get(EXPRESSION);
+            ApplyType apply = convertToPrefixXacmlApply(expr, factory);
+            keyList.add(apply);
+        } else {
+            LOGGER.error("POLICY-500: Invalid key entry, object does not contain list, function, expr or apply");
+            throw new ToscaPolicyConversionException(
+                "POLICY-500: Invalid key entry, object does not contain list, function, expr or apply");
+        }
+        return keyList;
     }
 
+    private void setApplyKeys(List<Object> keyList, ApplyType apply, ObjectFactory factory) {
+        if (keyList != null) {
+            keyList.stream()
+                .forEach(key -> {
+                    if (key instanceof AttributeValueType) {
+                        apply.getExpression().add(factory.createAttributeValue((AttributeValueType) key));
+                    }
+                    if (key instanceof ApplyType) {
+                        apply.getExpression().add(factory.createApply((ApplyType) key));
+                    }
+                    if (key instanceof FunctionType) {
+                        apply.getExpression().add(factory.createFunction((FunctionType) key));
+                    }
+                });
+        }
+    }
+
+    /**
+     * Create AttributeValue if it is simple value.
+     * Create AttributeDesignator if it is an input parameter name.
+     * Differentiate between a simple string value and a parameter name by checking
+     * if the string is enclosed by single quote , which means it is a simple value
+     */
     private void setAttributes(Object key, List<Object> keyList, String datatype, ObjectFactory factory)
         throws ToscaPolicyConversionException {
         try {
@@ -418,12 +596,13 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
                     validateFilterPropertyFunction(datatype).stringValue());
                 keyList.add(attributeValue);
             }
-        } catch (NullPointerException ex) {
-            throw new ToscaPolicyConversionException("Invalid string value format in keys");
+        }  catch (Exception ex) {
+            LOGGER.error("POLICY-500: Invalid string value format in keys");
+            throw new ToscaPolicyConversionException("POLICY-500: Invalid string value format in keys");
         }
     }
 
-    private void setBagApply(ApplyType apply, List<Object> list, String datatype, ObjectFactory factory)
+    private ApplyType setBagApply(List<Object> list, String datatype, ObjectFactory factory)
         throws ToscaPolicyConversionException {
         try {
             var bagApply = new ApplyType();
@@ -454,20 +633,22 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
                     bagApply.getExpression().add(factory.createAttributeValue(attributeValue));
                 }
             }
-            apply.getExpression().add(factory.createApply(bagApply));
-        } catch (NullPointerException ex) {
-            throw new ToscaPolicyConversionException("Invalid list format in keys");
+            return bagApply;
+        } catch (Exception ex) {
+            LOGGER.error("POLICY-500: Invalid list format in keys");
+            throw new ToscaPolicyConversionException("POLICY-500: Invalid list format in keys");
         }
     }
 
-    private void setFunctionType(ApplyType apply, String function, ObjectFactory factory)
+    private FunctionType setFunctionType(String function)
         throws ToscaPolicyConversionException {
         try {
             var functionType = new FunctionType();
             functionType.setFunctionId(validateFilterPropertyFunction(function).stringValue());
-            apply.getExpression().add(factory.createFunction(functionType));
-        } catch (NullPointerException ex) {
-            throw new ToscaPolicyConversionException("Invalid function format in keys");
+            return functionType;
+        } catch (Exception ex) {
+            LOGGER.error("POLICY-500: Invalid function format in keys {}", function);
+            throw new ToscaPolicyConversionException("POLICY-500: Invalid function format in keys " + function);
         }
     }
 
@@ -491,34 +672,31 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
                 keyApply.getExpression().add(factory.createAttributeDesignator(keyDesignator));
                 apply.getExpression().add(factory.createApply(keyApply));
             } else {
-                throw new ToscaPolicyConversionException("compareWith does not contain apply, value or key");
+                throw new ToscaPolicyConversionException("POLICY-500: compareWith does not "
+                    + "contain apply, value or key");
             }
-        } catch (NullPointerException ex) {
-            throw new ToscaPolicyConversionException("Invalid compareWith format");
+        } catch (Exception ex) {
+            LOGGER.error("POLICY-500: Invalid compareWith format");
+            throw new ToscaPolicyConversionException("POLICY-500: Invalid compareWith format");
         }
     }
 
-    private AdviceExpressionsType setAdvice(Map<String, Object> advice, String decision)
-        throws ToscaPolicyConversionException {
-        var adviceExpressions = new AdviceExpressionsType();
-        try {
-            var adviceExpression = new AdviceExpressionType();
-            adviceExpression.setAdviceId(UUID.randomUUID().toString());
-            var value = setAttributeValueType(advice.get(VALUE), XACML3.ID_DATATYPE_STRING.stringValue());
-            var assignment = new AttributeAssignmentExpressionType();
-            assignment.setAttributeId("urn:oasis:names:tc:xacml:2.0:example:attribute:text");
-            assignment.setCategory(XACML3.ID_SUBJECT_CATEGORY_ACCESS_SUBJECT.stringValue());
-            assignment.setExpression(new ObjectFactory().createAttributeValue(value));
-            adviceExpression.getAttributeAssignmentExpression().add(assignment);
-            if ("Deny".equalsIgnoreCase(decision)) {
-                adviceExpression.setAppliesTo(EffectType.DENY);
-            } else {
-                adviceExpression.setAppliesTo(EffectType.PERMIT);
-            }
-            adviceExpressions.getAdviceExpression().add(adviceExpression);
-        } catch (NullPointerException ex) {
-            throw new ToscaPolicyConversionException("Invalid advice format");
+    private AdviceExpressionsType setAdvice(Map<String, Object> advice, String decision) {
+        var adviceExpression = new AdviceExpressionType();
+        adviceExpression.setAdviceId(UUID.randomUUID().toString());
+        var value = setAttributeValueType(advice.get(VALUE), XACML3.ID_DATATYPE_STRING.stringValue());
+        var assignment = new AttributeAssignmentExpressionType();
+        assignment.setAttributeId("urn:oasis:names:tc:xacml:2.0:example:attribute:text");
+        assignment.setCategory(XACML3.ID_SUBJECT_CATEGORY_ACCESS_SUBJECT.stringValue());
+        assignment.setExpression(new ObjectFactory().createAttributeValue(value));
+        adviceExpression.getAttributeAssignmentExpression().add(assignment);
+        if ("Deny".equalsIgnoreCase(decision)) {
+            adviceExpression.setAppliesTo(EffectType.DENY);
+        } else {
+            adviceExpression.setAppliesTo(EffectType.PERMIT);
         }
+        var adviceExpressions = new AdviceExpressionsType();
+        adviceExpressions.getAdviceExpression().add(adviceExpression);
         return adviceExpressions;
     }
 
@@ -539,6 +717,9 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         return attributeValue;
     }
 
+    //
+    // datatype of an attribute is derived from the operator
+    //
     private String getDatatype(String operator) throws ToscaPolicyConversionException {
         try {
             if (operator.contains("-to-")) {
@@ -550,14 +731,15 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
             if (operator.equals("round") || operator.equals("floor")) {
                 return DOUBLE;
             }
-            List<String> datatypes = Arrays.asList("string", "boolean", "integer", DOUBLE, "time", "date", "dateTime",
+            List<String> datatypes = Arrays.asList("string", BOOLEAN, INTEGER, DOUBLE, "time", "date", "dateTime",
                 "dayTimeDuration", "yearMonthDuration", "anyURI", "hexBinary", "rfc822Name", "base64Binary",
                 "x500Name", "ipAddress", "dnsName");
             if (datatypes.stream().anyMatch(operator::contains)) {
                 return operator.split("-")[0];
             }
-        } catch (NullPointerException ex) {
-            throw new ToscaPolicyConversionException("Invalid operator");
+        } catch (Exception ex) {
+            LOGGER.error("POLICY-500: Unexpected operator {}", operator);
+            throw new ToscaPolicyConversionException("POLICY-500: Invalid operator " + operator);
         }
         return operator;
     }
@@ -583,21 +765,14 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         identifierMap.put("double-greater-than-or-equal", XACML3.ID_FUNCTION_DOUBLE_GREATER_THAN_OR_EQUAL);
         identifierMap.put("double-less-than", XACML3.ID_FUNCTION_DOUBLE_LESS_THAN);
         identifierMap.put("double-less-than-or-equal", XACML3.ID_FUNCTION_DOUBLE_LESS_THAN_OR_EQUAL);
-        identifierMap.put("datetime-add-daytimeduration", XACML3.ID_FUNCTION_DATETIME_ADD_DAYTIMEDURATION);
-        identifierMap.put("datetime-add-yearmonthduration", XACML3.ID_FUNCTION_DATETIME_ADD_YEARMONTHDURATION);
-        identifierMap.put("datetime-subtract-daytimeturation", XACML3.ID_FUNCTION_DATETIME_SUBTRACT_DAYTIMEDURATION);
-        identifierMap.put("datetime-subtract-yearmonthduration",
-            XACML3.ID_FUNCTION_DATETIME_SUBTRACT_YEARMONTHDURATION);
-        identifierMap.put("date-add-yearmonthduration", XACML3.ID_FUNCTION_DATE_ADD_YEARMONTHDURATION);
-        identifierMap.put("date-subtract-yearmonthduration", XACML3.ID_FUNCTION_DATE_SUBTRACT_YEARMONTHDURATION);
         identifierMap.put("time-greater-than", XACML3.ID_FUNCTION_TIME_GREATER_THAN);
         identifierMap.put("time-greater-than-or-equal", XACML3.ID_FUNCTION_TIME_GREATER_THAN_OR_EQUAL);
         identifierMap.put("time-less-than", XACML3.ID_FUNCTION_TIME_LESS_THAN);
         identifierMap.put("time-less-than-or-equal", XACML3.ID_FUNCTION_TIME_LESS_THAN_OR_EQUAL);
-        identifierMap.put("datetime-greater-than", XACML3.ID_FUNCTION_DATETIME_GREATER_THAN);
-        identifierMap.put("datetime-greater-than-or-equal", XACML3.ID_FUNCTION_DATETIME_GREATER_THAN_OR_EQUAL);
-        identifierMap.put("datetime-less-than", XACML3.ID_FUNCTION_DATETIME_LESS_THAN);
-        identifierMap.put("datetime-less-than-or-equal", XACML3.ID_FUNCTION_DATETIME_LESS_THAN_OR_EQUAL);
+        identifierMap.put("dateTime-greater-than", XACML3.ID_FUNCTION_DATETIME_GREATER_THAN);
+        identifierMap.put("dateTime-greater-than-or-equal", XACML3.ID_FUNCTION_DATETIME_GREATER_THAN_OR_EQUAL);
+        identifierMap.put("dateTime-less-than", XACML3.ID_FUNCTION_DATETIME_LESS_THAN);
+        identifierMap.put("dateTime-less-than-or-equal", XACML3.ID_FUNCTION_DATETIME_LESS_THAN_OR_EQUAL);
         identifierMap.put("date-greater-than", XACML3.ID_FUNCTION_DATE_GREATER_THAN);
         identifierMap.put("date-greater-than-or-equal", XACML3.ID_FUNCTION_DATE_GREATER_THAN_OR_EQUAL);
         identifierMap.put("date-less-than", XACML3.ID_FUNCTION_DATE_LESS_THAN);
@@ -619,21 +794,19 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         identifierMap.put("integer-abs", XACML3.ID_FUNCTION_INTEGER_ABS);
         identifierMap.put("double-abs", XACML3.ID_FUNCTION_DOUBLE_ABS);
         identifierMap.put("integer-to-double", XACML3.ID_FUNCTION_INTEGER_TO_DOUBLE);
-        identifierMap.put("yearmonthduration-equal", XACML3.ID_FUNCTION_YEARMONTHDURATION_EQUAL);
-        identifierMap.put("anyuri-equal", XACML3.ID_FUNCTION_ANYURI_EQUAL);
-        identifierMap.put("hexbinary-equal", XACML3.ID_FUNCTION_HEXBINARY_EQUAL);
-        identifierMap.put("rfc822name-equal", XACML3.ID_FUNCTION_RFC822NAME_EQUAL);
-        identifierMap.put("x500name-equal", XACML3.ID_FUNCTION_X500NAME_EQUAL);
-        identifierMap.put("string-from-ipaddress", XACML3.ID_FUNCTION_STRING_FROM_IPADDRESS);
-        identifierMap.put("string-from-dnsname", XACML3.ID_FUNCTION_STRING_FROM_DNSNAME);
-
+        identifierMap.put("yearMonthDuration-equal", XACML3.ID_FUNCTION_YEARMONTHDURATION_EQUAL);
+        identifierMap.put("anyURI-equal", XACML3.ID_FUNCTION_ANYURI_EQUAL);
+        identifierMap.put("hexBinary-equal", XACML3.ID_FUNCTION_HEXBINARY_EQUAL);
+        identifierMap.put("rfc822Name-equal", XACML3.ID_FUNCTION_RFC822NAME_EQUAL);
+        identifierMap.put("x500Name-equal", XACML3.ID_FUNCTION_X500NAME_EQUAL);
+        identifierMap.put("string-from-dnsName", XACML3.ID_FUNCTION_STRING_FROM_DNSNAME);
         identifierMap.put("boolean-equal", XACML3.ID_FUNCTION_BOOLEAN_EQUAL);
         identifierMap.put("double-equal", XACML3.ID_FUNCTION_DOUBLE_EQUAL);
         identifierMap.put("date-equal", XACML3.ID_FUNCTION_DATE_EQUAL);
         identifierMap.put("time-equal", XACML3.ID_FUNCTION_TIME_EQUAL);
-        identifierMap.put("datetime-equal", XACML3.ID_FUNCTION_DATETIME_EQUAL);
-        identifierMap.put("daytimeduration-equal", XACML3.ID_FUNCTION_DAYTIMEDURATION_EQUAL);
-        identifierMap.put("base64binary-equal", XACML3.ID_FUNCTION_BASE64BINARY_EQUAL);
+        identifierMap.put("dateTime-equal", XACML3.ID_FUNCTION_DATETIME_EQUAL);
+        identifierMap.put("dayTimeDuration-equal", XACML3.ID_FUNCTION_DAYTIMEDURATION_EQUAL);
+        identifierMap.put("base64Binary-equal", XACML3.ID_FUNCTION_BASE64BINARY_EQUAL);
         identifierMap.put("round", XACML3.ID_FUNCTION_ROUND);
         identifierMap.put("floor", XACML3.ID_FUNCTION_FLOOR);
         identifierMap.put("string-normalize-space", XACML3.ID_FUNCTION_STRING_NORMALIZE_SPACE);
@@ -651,40 +824,40 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         identifierMap.put("date-bag-size", XACML3.ID_FUNCTION_DATE_BAG_SIZE);
         identifierMap.put("date-is-in", XACML3.ID_FUNCTION_DATE_IS_IN);
         identifierMap.put("date-bag", XACML3.ID_FUNCTION_DATE_BAG);
-        identifierMap.put("datetime-bag-size", XACML3.ID_FUNCTION_DATETIME_BAG_SIZE);
-        identifierMap.put("datetime-is-in", XACML3.ID_FUNCTION_DATETIME_IS_IN);
-        identifierMap.put("datetime-bag", XACML3.ID_FUNCTION_DATETIME_BAG);
-        identifierMap.put("anyuri-bag-size", XACML3.ID_FUNCTION_ANYURI_BAG_SIZE);
-        identifierMap.put("anyuri-is-in", XACML3.ID_FUNCTION_ANYURI_IS_IN);
-        identifierMap.put("anyuri-bag", XACML3.ID_FUNCTION_ANYURI_BAG);
-        identifierMap.put("hexbinary-bag-size", XACML3.ID_FUNCTION_HEXBINARY_BAG_SIZE);
-        identifierMap.put("hexbinary-is-in", XACML3.ID_FUNCTION_HEXBINARY_IS_IN);
-        identifierMap.put("hexbinary-bag", XACML3.ID_FUNCTION_HEXBINARY_BAG);
-        identifierMap.put("base64binary-bag-size", XACML3.ID_FUNCTION_BASE64BINARY_BAG_SIZE);
-        identifierMap.put("base64binary-is-in", XACML3.ID_FUNCTION_BASE64BINARY_IS_IN);
-        identifierMap.put("base64binary-bag", XACML3.ID_FUNCTION_BASE64BINARY_BAG);
-        identifierMap.put("daytimeduration-bag-size", XACML3.ID_FUNCTION_DAYTIMEDURATION_BAG_SIZE);
-        identifierMap.put("daytimeduration-is-in", XACML3.ID_FUNCTION_DAYTIMEDURATION_IS_IN);
-        identifierMap.put("daytimeduration-bag", XACML3.ID_FUNCTION_DAYTIMEDURATION_BAG);
-        identifierMap.put("yearmonthduration-bag-size", XACML3.ID_FUNCTION_YEARMONTHDURATION_BAG_SIZE);
-        identifierMap.put("yearmonthduration-is-in", XACML3.ID_FUNCTION_YEARMONTHDURATION_IS_IN);
-        identifierMap.put("yearmonthduration-bag", XACML3.ID_FUNCTION_YEARMONTHDURATION_BAG);
-        identifierMap.put("x500name-one-and-only", XACML3.ID_FUNCTION_X500NAME_ONE_AND_ONLY);
-        identifierMap.put("x500name-bag-size", XACML3.ID_FUNCTION_X500NAME_BAG_SIZE);
-        identifierMap.put("x500name-is-in", XACML3.ID_FUNCTION_X500NAME_IS_IN);
-        identifierMap.put("x500name-bag", XACML3.ID_FUNCTION_X500NAME_BAG);
-        identifierMap.put("rfc822name-one-and-only", XACML3.ID_FUNCTION_RFC822NAME_ONE_AND_ONLY);
-        identifierMap.put("rfc822name-bag-size", XACML3.ID_FUNCTION_RFC822NAME_BAG_SIZE);
-        identifierMap.put("rfc822name-is-in", XACML3.ID_FUNCTION_RFC822NAME_IS_IN);
-        identifierMap.put("rfc822name-bag", XACML3.ID_FUNCTION_RFC822NAME_BAG);
-        identifierMap.put("ipaddress-one-and-only", XACML3.ID_FUNCTION_IPADDRESS_ONE_AND_ONLY);
-        identifierMap.put("ipaddress-bag-size", XACML3.ID_FUNCTION_IPADDRESS_BAG_SIZE);
-        identifierMap.put("ipaddress-is-in", XACML3.ID_FUNCTION_IPADDRESS_IS_IN);
-        identifierMap.put("ipaddress-bag", XACML3.ID_FUNCTION_IPADDRESS_BAG);
-        identifierMap.put("dnsname-one-and-only", XACML3.ID_FUNCTION_DNSNAME_ONE_AND_ONLY);
-        identifierMap.put("dnsname-bag-size", XACML3.ID_FUNCTION_DNSNAME_BAG_SIZE);
-        identifierMap.put("dnsname-is-in", XACML3.ID_FUNCTION_DNSNAME_IS_IN);
-        identifierMap.put("dnsname-bag", XACML3.ID_FUNCTION_DNSNAME_BAG);
+        identifierMap.put("dateTime-bag-size", XACML3.ID_FUNCTION_DATETIME_BAG_SIZE);
+        identifierMap.put("dateTime-is-in", XACML3.ID_FUNCTION_DATETIME_IS_IN);
+        identifierMap.put("dateTime-bag", XACML3.ID_FUNCTION_DATETIME_BAG);
+        identifierMap.put("anyURI-bag-size", XACML3.ID_FUNCTION_ANYURI_BAG_SIZE);
+        identifierMap.put("anyURI-is-in", XACML3.ID_FUNCTION_ANYURI_IS_IN);
+        identifierMap.put("anyURI-bag", XACML3.ID_FUNCTION_ANYURI_BAG);
+        identifierMap.put("hexBinary-bag-size", XACML3.ID_FUNCTION_HEXBINARY_BAG_SIZE);
+        identifierMap.put("hexBinary-is-in", XACML3.ID_FUNCTION_HEXBINARY_IS_IN);
+        identifierMap.put("hexBinary-bag", XACML3.ID_FUNCTION_HEXBINARY_BAG);
+        identifierMap.put("base64Binary-bag-size", XACML3.ID_FUNCTION_BASE64BINARY_BAG_SIZE);
+        identifierMap.put("base64Binary-is-in", XACML3.ID_FUNCTION_BASE64BINARY_IS_IN);
+        identifierMap.put("base64Binary-bag", XACML3.ID_FUNCTION_BASE64BINARY_BAG);
+        identifierMap.put("dayTimeDuration-bag-size", XACML3.ID_FUNCTION_DAYTIMEDURATION_BAG_SIZE);
+        identifierMap.put("dayTimeDuration-is-in", XACML3.ID_FUNCTION_DAYTIMEDURATION_IS_IN);
+        identifierMap.put("dayTimeDuration-bag", XACML3.ID_FUNCTION_DAYTIMEDURATION_BAG);
+        identifierMap.put("yearMonthDuration-bag-size", XACML3.ID_FUNCTION_YEARMONTHDURATION_BAG_SIZE);
+        identifierMap.put("yearMonthDuration-is-in", XACML3.ID_FUNCTION_YEARMONTHDURATION_IS_IN);
+        identifierMap.put("yearMonthDuration-bag", XACML3.ID_FUNCTION_YEARMONTHDURATION_BAG);
+        identifierMap.put("x500Name-one-and-only", XACML3.ID_FUNCTION_X500NAME_ONE_AND_ONLY);
+        identifierMap.put("x500Name-bag-size", XACML3.ID_FUNCTION_X500NAME_BAG_SIZE);
+        identifierMap.put("x500Name-is-in", XACML3.ID_FUNCTION_X500NAME_IS_IN);
+        identifierMap.put("x500Name-bag", XACML3.ID_FUNCTION_X500NAME_BAG);
+        identifierMap.put("rfc822Name-one-and-only", XACML3.ID_FUNCTION_RFC822NAME_ONE_AND_ONLY);
+        identifierMap.put("rfc822Name-bag-size", XACML3.ID_FUNCTION_RFC822NAME_BAG_SIZE);
+        identifierMap.put("rfc822Name-is-in", XACML3.ID_FUNCTION_RFC822NAME_IS_IN);
+        identifierMap.put("rfc822Name-bag", XACML3.ID_FUNCTION_RFC822NAME_BAG);
+        identifierMap.put("ipAddress-one-and-only", XACML3.ID_FUNCTION_IPADDRESS_ONE_AND_ONLY);
+        identifierMap.put("ipAddress-bag-size", XACML3.ID_FUNCTION_IPADDRESS_BAG_SIZE);
+        identifierMap.put("ipAddress-is-in", XACML3.ID_FUNCTION_IPADDRESS_IS_IN);
+        identifierMap.put("ipAddress-bag", XACML3.ID_FUNCTION_IPADDRESS_BAG);
+        identifierMap.put("dnsName-one-and-only", XACML3.ID_FUNCTION_DNSNAME_ONE_AND_ONLY);
+        identifierMap.put("dnsName-bag-size", XACML3.ID_FUNCTION_DNSNAME_BAG_SIZE);
+        identifierMap.put("dnsName-is-in", XACML3.ID_FUNCTION_DNSNAME_IS_IN);
+        identifierMap.put("dnsName-bag", XACML3.ID_FUNCTION_DNSNAME_BAG);
         identifierMap.put("string-concatenate", XACML3.ID_FUNCTION_STRING_CONCATENATE);
         identifierMap.put("boolean-from-string", XACML3.ID_FUNCTION_BOOLEAN_FROM_STRING);
         identifierMap.put("string-from-boolean", XACML3.ID_FUNCTION_STRING_FROM_BOOLEAN);
@@ -696,33 +869,34 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         identifierMap.put("string-from-time", XACML3.ID_FUNCTION_STRING_FROM_TIME);
         identifierMap.put("date-from-string", XACML3.ID_FUNCTION_DATE_FROM_STRING);
         identifierMap.put("string-from-date", XACML3.ID_FUNCTION_STRING_FROM_DATE);
-        identifierMap.put("datetime-from-string", XACML3.ID_FUNCTION_DATETIME_FROM_STRING);
-        identifierMap.put("string-from-datetime", XACML3.ID_FUNCTION_STRING_FROM_DATETIME);
-        identifierMap.put("anyuri-from-string", XACML3.ID_FUNCTION_ANYURI_FROM_STRING);
-        identifierMap.put("string-from-anyuri", XACML3.ID_FUNCTION_STRING_FROM_ANYURI);
-        identifierMap.put("daytimeduration-from-string", XACML3.ID_FUNCTION_DAYTIMEDURATION_FROM_STRING);
-        identifierMap.put("string-from-daytimeturation", XACML3.ID_FUNCTION_STRING_FROM_DAYTIMEDURATION);
-        identifierMap.put("yearmonthduration-from-string", XACML3.ID_FUNCTION_YEARMONTHDURATION_FROM_STRING);
-        identifierMap.put("string-from-yearmonthduration", XACML3.ID_FUNCTION_STRING_FROM_YEARMONTHDURATION);
-        identifierMap.put("x500name-from-string", XACML3.ID_FUNCTION_X500NAME_FROM_STRING);
-        identifierMap.put("string-from-x500name", XACML3.ID_FUNCTION_STRING_FROM_X500NAME);
-        identifierMap.put("rfc822name-from-string", XACML3.ID_FUNCTION_RFC822NAME_FROM_STRING);
-        identifierMap.put("string-from-rfc822name", XACML3.ID_FUNCTION_STRING_FROM_RFC822NAME);
-        identifierMap.put("ipaddress-from-string", XACML3.ID_FUNCTION_IPADDRESS_FROM_STRING);
-        identifierMap.put("dnsname-from-string", XACML3.ID_FUNCTION_DNSNAME_FROM_STRING);
-        identifierMap.put("anyuri-starts-with", XACML3.ID_FUNCTION_ANYURI_STARTS_WITH);
-        identifierMap.put("anyuri-ends-with", XACML3.ID_FUNCTION_ANYURI_ENDS_WITH);
-        identifierMap.put("anyuri-contains", XACML3.ID_FUNCTION_ANYURI_CONTAINS);
+        identifierMap.put("dateTime-from-string", XACML3.ID_FUNCTION_DATETIME_FROM_STRING);
+        identifierMap.put("string-from-dateTime", XACML3.ID_FUNCTION_STRING_FROM_DATETIME);
+        identifierMap.put("anyURI-from-string", XACML3.ID_FUNCTION_ANYURI_FROM_STRING);
+        identifierMap.put("string-from-anyURI", XACML3.ID_FUNCTION_STRING_FROM_ANYURI);
+        identifierMap.put("dayTimeDuration-from-string", XACML3.ID_FUNCTION_DAYTIMEDURATION_FROM_STRING);
+        identifierMap.put("string-from-daytimeDuration", XACML3.ID_FUNCTION_STRING_FROM_DAYTIMEDURATION);
+        identifierMap.put("yearMonthDuration-from-string", XACML3.ID_FUNCTION_YEARMONTHDURATION_FROM_STRING);
+        identifierMap.put("string-from-yearMonthDuration", XACML3.ID_FUNCTION_STRING_FROM_YEARMONTHDURATION);
+        identifierMap.put("x500Name-from-string", XACML3.ID_FUNCTION_X500NAME_FROM_STRING);
+        identifierMap.put("string-from-x500Name", XACML3.ID_FUNCTION_STRING_FROM_X500NAME);
+        identifierMap.put("rfc822Name-from-string", XACML3.ID_FUNCTION_RFC822NAME_FROM_STRING);
+        identifierMap.put("string-from-rfc822Name", XACML3.ID_FUNCTION_STRING_FROM_RFC822NAME);
+        identifierMap.put("ipAddress-from-string", XACML3.ID_FUNCTION_IPADDRESS_FROM_STRING);
+        identifierMap.put("dnsName-from-string", XACML3.ID_FUNCTION_DNSNAME_FROM_STRING);
+        identifierMap.put("anyURI-starts-with", XACML3.ID_FUNCTION_ANYURI_STARTS_WITH);
+        identifierMap.put("anyURI-ends-with", XACML3.ID_FUNCTION_ANYURI_ENDS_WITH);
+        identifierMap.put("anyURI-contains", XACML3.ID_FUNCTION_ANYURI_CONTAINS);
         identifierMap.put("string-substring", XACML3.ID_FUNCTION_STRING_SUBSTRING);
-        identifierMap.put("anyuri-substring", XACML3.ID_FUNCTION_ANYURI_SUBSTRING);
+        identifierMap.put("anyURI-substring", XACML3.ID_FUNCTION_ANYURI_SUBSTRING);
         identifierMap.put("map", XACML3.ID_FUNCTION_MAP);
-        identifierMap.put("x500name-match", XACML3.ID_FUNCTION_X500NAME_MATCH);
-        identifierMap.put("rfc822name-match", XACML3.ID_FUNCTION_RFC822NAME_MATCH);
-        identifierMap.put("anyuri-regexp-match", XACML3.ID_FUNCTION_ANYURI_REGEXP_MATCH);
-        identifierMap.put("ipaddress-regexp-match", XACML3.ID_FUNCTION_IPADDRESS_REGEXP_MATCH);
-        identifierMap.put("dnsname-regexp-match", XACML3.ID_FUNCTION_DNSNAME_REGEXP_MATCH);
-        identifierMap.put("rfc822name-regexp-match", XACML3.ID_FUNCTION_RFC822NAME_REGEXP_MATCH);
-        identifierMap.put("x500name-regexp-match", XACML3.ID_FUNCTION_X500NAME_REGEXP_MATCH);
+        identifierMap.put("n-of", XACML3.ID_FUNCTION_N_OF);
+        identifierMap.put("x500Name-match", XACML3.ID_FUNCTION_X500NAME_MATCH);
+        identifierMap.put("rfc822Name-match", XACML3.ID_FUNCTION_RFC822NAME_MATCH);
+        identifierMap.put("anyURI-regexp-match", XACML3.ID_FUNCTION_ANYURI_REGEXP_MATCH);
+        identifierMap.put("ipAddress-regexp-match", XACML3.ID_FUNCTION_IPADDRESS_REGEXP_MATCH);
+        identifierMap.put("dnsName-regexp-match", XACML3.ID_FUNCTION_DNSNAME_REGEXP_MATCH);
+        identifierMap.put("rfc822Name-regexp-match", XACML3.ID_FUNCTION_RFC822NAME_REGEXP_MATCH);
+        identifierMap.put("x500Name-regexp-match", XACML3.ID_FUNCTION_X500NAME_REGEXP_MATCH);
         identifierMap.put("xpath-node-count", XACML3.ID_FUNCTION_XPATH_NODE_COUNT);
         identifierMap.put("xpath-node-equal", XACML3.ID_FUNCTION_XPATH_NODE_EQUAL);
         identifierMap.put("xpath-node-match", XACML3.ID_FUNCTION_XPATH_NODE_MATCH);
@@ -756,66 +930,75 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         identifierMap.put("date-union", XACML3.ID_FUNCTION_DATE_UNION);
         identifierMap.put("date-subset", XACML3.ID_FUNCTION_DATE_SUBSET);
         identifierMap.put("date-set-equals", XACML3.ID_FUNCTION_DATE_SET_EQUALS);
-        identifierMap.put("datetime-intersection", XACML3.ID_FUNCTION_DATETIME_INTERSECTION);
-        identifierMap.put("datetime-at-least-one-member-of", XACML3.ID_FUNCTION_DATETIME_AT_LEAST_ONE_MEMBER_OF);
-        identifierMap.put("datetime-union", XACML3.ID_FUNCTION_DATETIME_UNION);
-        identifierMap.put("datetime-subset", XACML3.ID_FUNCTION_DATETIME_SUBSET);
-        identifierMap.put("datetime-set-equals", XACML3.ID_FUNCTION_DATETIME_SET_EQUALS);
-
-        identifierMap.put("anyuri-intersection", XACML3.ID_FUNCTION_ANYURI_INTERSECTION);
-        identifierMap.put("anyuri-at-least-one-member-of", XACML3.ID_FUNCTION_ANYURI_AT_LEAST_ONE_MEMBER_OF);
-        identifierMap.put("anyuri-union", XACML3.ID_FUNCTION_ANYURI_UNION);
-        identifierMap.put("anyuri-subset", XACML3.ID_FUNCTION_ANYURI_SUBSET);
-        identifierMap.put("anyuri-set-equals", XACML3.ID_FUNCTION_ANYURI_SET_EQUALS);
-        identifierMap.put("hexbinary-intersection", XACML3.ID_FUNCTION_HEXBINARY_INTERSECTION);
-        identifierMap.put("hexbinary-at-least-one-member-of", XACML3.ID_FUNCTION_HEXBINARY_AT_LEAST_ONE_MEMBER_OF);
-        identifierMap.put("hexbinary-union", XACML3.ID_FUNCTION_HEXBINARY_UNION);
-        identifierMap.put("hexbinary-subset", XACML3.ID_FUNCTION_HEXBINARY_SUBSET);
-        identifierMap.put("hexbinary-set-equals", XACML3.ID_FUNCTION_HEXBINARY_SET_EQUALS);
-        identifierMap.put("base64binary-intersection", XACML3.ID_FUNCTION_BASE64BINARY_INTERSECTION);
-        identifierMap.put("base64binary-at-least-one-member-of",
+        identifierMap.put("dateTime-intersection", XACML3.ID_FUNCTION_DATETIME_INTERSECTION);
+        identifierMap.put("dateTime-at-least-one-member-of", XACML3.ID_FUNCTION_DATETIME_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("dateTime-union", XACML3.ID_FUNCTION_DATETIME_UNION);
+        identifierMap.put("dateTime-subset", XACML3.ID_FUNCTION_DATETIME_SUBSET);
+        identifierMap.put("dateTime-set-equals", XACML3.ID_FUNCTION_DATETIME_SET_EQUALS);
+        identifierMap.put("anyURI-intersection", XACML3.ID_FUNCTION_ANYURI_INTERSECTION);
+        identifierMap.put("anyURI-at-least-one-member-of", XACML3.ID_FUNCTION_ANYURI_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("anyURI-union", XACML3.ID_FUNCTION_ANYURI_UNION);
+        identifierMap.put("anyURI-subset", XACML3.ID_FUNCTION_ANYURI_SUBSET);
+        identifierMap.put("anyURI-set-equals", XACML3.ID_FUNCTION_ANYURI_SET_EQUALS);
+        identifierMap.put("hexBinary-intersection", XACML3.ID_FUNCTION_HEXBINARY_INTERSECTION);
+        identifierMap.put("hexBinary-at-least-one-member-of", XACML3.ID_FUNCTION_HEXBINARY_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("hexBinary-union", XACML3.ID_FUNCTION_HEXBINARY_UNION);
+        identifierMap.put("hexBinary-subset", XACML3.ID_FUNCTION_HEXBINARY_SUBSET);
+        identifierMap.put("hexBinary-set-equals", XACML3.ID_FUNCTION_HEXBINARY_SET_EQUALS);
+        identifierMap.put("base64Binary-intersection", XACML3.ID_FUNCTION_BASE64BINARY_INTERSECTION);
+        identifierMap.put("string-from-dayTimeDuration", XACML3.ID_FUNCTION_STRING_FROM_DAYTIMEDURATION);
+        identifierMap.put("string-from-ipAddress", XACML3.ID_FUNCTION_STRING_FROM_IPADDRESS);
+        identifierMap.put("base64Binary-at-least-one-member-of",
             XACML3.ID_FUNCTION_BASE64BINARY_AT_LEAST_ONE_MEMBER_OF);
-        identifierMap.put("base64binary-union", XACML3.ID_FUNCTION_BASE64BINARY_UNION);
-        identifierMap.put("base64binary-subset", XACML3.ID_FUNCTION_BASE64BINARY_SUBSET);
-        identifierMap.put("base64binary-set-equals", XACML3.ID_FUNCTION_BASE64BINARY_SET_EQUALS);
-        identifierMap.put("daytimeduration-intersection", XACML3.ID_FUNCTION_DAYTIMEDURATION_INTERSECTION);
-        identifierMap.put("daytimeduration-at-least-one-member-of",
+        identifierMap.put("base64Binary-union", XACML3.ID_FUNCTION_BASE64BINARY_UNION);
+        identifierMap.put("base64Binary-subset", XACML3.ID_FUNCTION_BASE64BINARY_SUBSET);
+        identifierMap.put("base64Binary-set-equals", XACML3.ID_FUNCTION_BASE64BINARY_SET_EQUALS);
+        identifierMap.put("dayTimeDuration-intersection", XACML3.ID_FUNCTION_DAYTIMEDURATION_INTERSECTION);
+        identifierMap.put("dayTimeDuration-at-least-one-member-of",
             XACML3.ID_FUNCTION_DAYTIMEDURATION_AT_LEAST_ONE_MEMBER_OF);
-        identifierMap.put("daytimeduration-union", XACML3.ID_FUNCTION_DAYTIMEDURATION_UNION);
-        identifierMap.put("daytimeduration-subset", XACML3.ID_FUNCTION_DAYTIMEDURATION_SUBSET);
-        identifierMap.put("daytimeduration-set-equals", XACML3.ID_FUNCTION_DAYTIMEDURATION_SET_EQUALS);
-        identifierMap.put("yearmonthduration-intersection", XACML3.ID_FUNCTION_YEARMONTHDURATION_INTERSECTION);
-        identifierMap.put("yearmonthduration-at-least-one-member-of",
+        identifierMap.put("dayTimeDuration-union", XACML3.ID_FUNCTION_DAYTIMEDURATION_UNION);
+        identifierMap.put("dayTimeDuration-subset", XACML3.ID_FUNCTION_DAYTIMEDURATION_SUBSET);
+        identifierMap.put("dayTimeDuration-set-equals", XACML3.ID_FUNCTION_DAYTIMEDURATION_SET_EQUALS);
+        identifierMap.put("yearMonthDuration-intersection", XACML3.ID_FUNCTION_YEARMONTHDURATION_INTERSECTION);
+        identifierMap.put("yearMonthDuration-at-least-one-member-of",
             XACML3.ID_FUNCTION_YEARMONTHDURATION_AT_LEAST_ONE_MEMBER_OF);
-        identifierMap.put("yearmonthduration-union", XACML3.ID_FUNCTION_YEARMONTHDURATION_UNION);
-        identifierMap.put("yearmonthduration-subset", XACML3.ID_FUNCTION_YEARMONTHDURATION_SUBSET);
-        identifierMap.put("yearmonthduration-set-equals", XACML3.ID_FUNCTION_YEARMONTHDURATION_SET_EQUALS);
-        identifierMap.put("x500name-intersection", XACML3.ID_FUNCTION_X500NAME_INTERSECTION);
-        identifierMap.put("x500name-at-least-one-member-of", XACML3.ID_FUNCTION_X500NAME_AT_LEAST_ONE_MEMBER_OF);
-        identifierMap.put("x500name-union", XACML3.ID_FUNCTION_X500NAME_UNION);
-        identifierMap.put("x500name-subset", XACML3.ID_FUNCTION_X500NAME_SUBSET);
-        identifierMap.put("x500name-set-equals", XACML3.ID_FUNCTION_X500NAME_SET_EQUALS);
-        identifierMap.put("rfc822name-intersection", XACML3.ID_FUNCTION_RFC822NAME_INTERSECTION);
-        identifierMap.put("rfc822name-at-least-one-member-of", XACML3.ID_FUNCTION_RFC822NAME_AT_LEAST_ONE_MEMBER_OF);
-        identifierMap.put("rfc822name-union", XACML3.ID_FUNCTION_RFC822NAME_UNION);
-        identifierMap.put("rfc822name-subset", XACML3.ID_FUNCTION_RFC822NAME_SUBSET);
-        identifierMap.put("rfc822name-set-equals", XACML3.ID_FUNCTION_RFC822NAME_SET_EQUALS);
-        identifierMap.put("ipaddress-intersection", XACML3.ID_FUNCTION_IPADDRESS_INTERSECTION);
-        identifierMap.put("ipaddress-at-least-one-member-of", XACML3.ID_FUNCTION_IPADDRESS_AT_LEAST_ONE_MEMBER_OF);
-        identifierMap.put("ipaddress-union", XACML3.ID_FUNCTION_IPADDRESS_UNION);
-        identifierMap.put("ipaddress-subset", XACML3.ID_FUNCTION_IPADDRESS_SUBSET);
-        identifierMap.put("ipaddress-set-equals", XACML3.ID_FUNCTION_IPADDRESS_SET_EQUALS);
-        identifierMap.put("dnsname-intersection", XACML3.ID_FUNCTION_DNSNAME_INTERSECTION);
-        identifierMap.put("dnsname-at-least-one-member-of", XACML3.ID_FUNCTION_DNSNAME_AT_LEAST_ONE_MEMBER_OF);
-        identifierMap.put("dnsname-union", XACML3.ID_FUNCTION_DNSNAME_UNION);
-        identifierMap.put("dnsname-subset", XACML3.ID_FUNCTION_DNSNAME_SUBSET);
-        identifierMap.put("dnsname-set-equals", XACML3.ID_FUNCTION_DNSNAME_SET_EQUALS);
+        identifierMap.put("yearMonthDuration-union", XACML3.ID_FUNCTION_YEARMONTHDURATION_UNION);
+        identifierMap.put("yearMonthDuration-subset", XACML3.ID_FUNCTION_YEARMONTHDURATION_SUBSET);
+        identifierMap.put("yearMonthDuration-set-equals", XACML3.ID_FUNCTION_YEARMONTHDURATION_SET_EQUALS);
+        identifierMap.put("x500Name-intersection", XACML3.ID_FUNCTION_X500NAME_INTERSECTION);
+        identifierMap.put("x500Name-at-least-one-member-of", XACML3.ID_FUNCTION_X500NAME_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("x500Name-union", XACML3.ID_FUNCTION_X500NAME_UNION);
+        identifierMap.put("x500Name-subset", XACML3.ID_FUNCTION_X500NAME_SUBSET);
+        identifierMap.put("x500Name-set-equals", XACML3.ID_FUNCTION_X500NAME_SET_EQUALS);
+        identifierMap.put("rfc822Name-intersection", XACML3.ID_FUNCTION_RFC822NAME_INTERSECTION);
+        identifierMap.put("rfc822Name-at-least-one-member-of", XACML3.ID_FUNCTION_RFC822NAME_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("rfc822Name-union", XACML3.ID_FUNCTION_RFC822NAME_UNION);
+        identifierMap.put("rfc822Name-subset", XACML3.ID_FUNCTION_RFC822NAME_SUBSET);
+        identifierMap.put("rfc822Name-set-equals", XACML3.ID_FUNCTION_RFC822NAME_SET_EQUALS);
+        identifierMap.put("ipAddress-intersection", XACML3.ID_FUNCTION_IPADDRESS_INTERSECTION);
+        identifierMap.put("ipAddress-at-least-one-member-of", XACML3.ID_FUNCTION_IPADDRESS_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("ipAddress-union", XACML3.ID_FUNCTION_IPADDRESS_UNION);
+        identifierMap.put("ipAddress-subset", XACML3.ID_FUNCTION_IPADDRESS_SUBSET);
+        identifierMap.put("ipAddress-set-equals", XACML3.ID_FUNCTION_IPADDRESS_SET_EQUALS);
+        identifierMap.put("dnsName-intersection", XACML3.ID_FUNCTION_DNSNAME_INTERSECTION);
+        identifierMap.put("dnsName-at-least-one-member-of", XACML3.ID_FUNCTION_DNSNAME_AT_LEAST_ONE_MEMBER_OF);
+        identifierMap.put("dnsName-union", XACML3.ID_FUNCTION_DNSNAME_UNION);
+        identifierMap.put("dnsName-subset", XACML3.ID_FUNCTION_DNSNAME_SUBSET);
+        identifierMap.put("dnsName-set-equals", XACML3.ID_FUNCTION_DNSNAME_SET_EQUALS);
         identifierMap.put("access-permitted", XACML3.ID_FUNCTION_ACCESS_PERMITTED);
-
-        // function condition
+        identifierMap.put("string-one-and-only", XACML3.ID_FUNCTION_STRING_ONE_AND_ONLY);
+        identifierMap.put("integer-one-and-only", XACML3.ID_FUNCTION_INTEGER_ONE_AND_ONLY);
+        identifierMap.put("double-one-and-only", XACML3.ID_FUNCTION_DOUBLE_ONE_AND_ONLY);
+        identifierMap.put("time-one-and-only", XACML3.ID_FUNCTION_TIME_ONE_AND_ONLY);
+        identifierMap.put("date-one-and-only", XACML3.ID_FUNCTION_DATE_ONE_AND_ONLY);
+        identifierMap.put("dateTime-one-and-only", XACML3.ID_FUNCTION_DATETIME_ONE_AND_ONLY);
+        identifierMap.put("anyURI-one-and-only", XACML3.ID_FUNCTION_ANYURI_ONE_AND_ONLY);
+        identifierMap.put("hexBinary-one-and-only", XACML3.ID_FUNCTION_HEXBINARY_ONE_AND_ONLY);
+        identifierMap.put("base64Binary-one-and-only", XACML3.ID_FUNCTION_BASE64BINARY_ONE_AND_ONLY);
+        identifierMap.put("dayTimeDuration-one-and-only", XACML3.ID_FUNCTION_DAYTIMEDURATION_ONE_AND_ONLY);
+        identifierMap.put("yearMonthDuration-one-and-only", XACML3.ID_FUNCTION_YEARMONTHDURATION_ONE_AND_ONLY);
         identifierMap.put("or", XACML3.ID_FUNCTION_OR);
         identifierMap.put("and", XACML3.ID_FUNCTION_AND);
-        identifierMap.put("n-of", XACML3.ID_FUNCTION_N_OF);
         identifierMap.put("not", XACML3.ID_FUNCTION_NOT);
         identifierMap.put("any-of", XACML3.ID_FUNCTION_ANY_OF);
         identifierMap.put("all-of", XACML3.ID_FUNCTION_ALL_OF);
@@ -823,19 +1006,14 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
         identifierMap.put("all-of-any", XACML3.ID_FUNCTION_ALL_OF_ANY);
         identifierMap.put("any-of-all", XACML3.ID_FUNCTION_ANY_OF_ALL);
         identifierMap.put("all-of-all", XACML3.ID_FUNCTION_ALL_OF_ALL);
-
-        // function ids
-        identifierMap.put("string-one-and-only", XACML3.ID_FUNCTION_STRING_ONE_AND_ONLY);
-        identifierMap.put("integer-one-and-only", XACML3.ID_FUNCTION_INTEGER_ONE_AND_ONLY);
-        identifierMap.put("double-one-and-only", XACML3.ID_FUNCTION_DOUBLE_ONE_AND_ONLY);
-        identifierMap.put("time-one-and-only", XACML3.ID_FUNCTION_TIME_ONE_AND_ONLY);
-        identifierMap.put("date-one-and-only", XACML3.ID_FUNCTION_DATE_ONE_AND_ONLY);
-        identifierMap.put("datetime-one-and-only", XACML3.ID_FUNCTION_DATETIME_ONE_AND_ONLY);
-        identifierMap.put("anyuri-one-and-only", XACML3.ID_FUNCTION_ANYURI_ONE_AND_ONLY);
-        identifierMap.put("hexbinary-one-and-only", XACML3.ID_FUNCTION_HEXBINARY_ONE_AND_ONLY);
-        identifierMap.put("base64binary-one-and-only", XACML3.ID_FUNCTION_BASE64BINARY_ONE_AND_ONLY);
-        identifierMap.put("daytimeduration-one-and-only", XACML3.ID_FUNCTION_DAYTIMEDURATION_ONE_AND_ONLY);
-        identifierMap.put("yearmonthduration-one-and-only", XACML3.ID_FUNCTION_YEARMONTHDURATION_ONE_AND_ONLY);
+        identifierMap.put("dateTime-add-dayTimeDuration", XACML3.ID_FUNCTION_DATETIME_ADD_DAYTIMEDURATION);
+        identifierMap.put("dateTime-add-yearMonthDuration", XACML3.ID_FUNCTION_DATETIME_ADD_YEARMONTHDURATION);
+        identifierMap.put("dateTime-subtract-yearMonthDuration",
+            XACML3.ID_FUNCTION_DATETIME_SUBTRACT_YEARMONTHDURATION);
+        identifierMap.put("dateTime-subtract-dayTimeDuration",
+            XACML3.ID_FUNCTION_DATETIME_SUBTRACT_DAYTIMEDURATION);
+        identifierMap.put("date-add-yearMonthDuration", XACML3.ID_FUNCTION_DATE_ADD_YEARMONTHDURATION);
+        identifierMap.put("date-subtract-yearMonthDuration", XACML3.ID_FUNCTION_DATE_SUBTRACT_YEARMONTHDURATION);
 
         //attribute ids
         identifierMap.put("action-id", XACML3.ID_ACTION_ACTION_ID);
@@ -848,22 +1026,21 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
 
         // data types
         identifierMap.put("string", XACML3.ID_DATATYPE_STRING);
-        identifierMap.put("boolean", XACML3.ID_DATATYPE_BOOLEAN);
-        identifierMap.put("integer", XACML3.ID_DATATYPE_INTEGER);
+        identifierMap.put(BOOLEAN, XACML3.ID_DATATYPE_BOOLEAN);
+        identifierMap.put(INTEGER, XACML3.ID_DATATYPE_INTEGER);
         identifierMap.put(DOUBLE, XACML3.ID_DATATYPE_DOUBLE);
         identifierMap.put("time", XACML3.ID_DATATYPE_TIME);
         identifierMap.put("date", XACML3.ID_DATATYPE_DATE);
-        identifierMap.put("datetime", XACML3.ID_DATATYPE_DATETIME);
-        identifierMap.put("daytimeduration", XACML3.ID_DATATYPE_DAYTIMEDURATION);
-        identifierMap.put("yearmonthduration", XACML3.ID_DATATYPE_YEARMONTHDURATION);
-        identifierMap.put("anyuri", XACML3.ID_DATATYPE_ANYURI);
-        identifierMap.put("hexbinary", XACML3.ID_DATATYPE_HEXBINARY);
-        identifierMap.put("base64binary", XACML3.ID_DATATYPE_BASE64BINARY);
-        identifierMap.put("rfc822name", XACML3.ID_DATATYPE_RFC822NAME);
-        identifierMap.put("x500name", XACML3.ID_DATATYPE_X500NAME);
-        identifierMap.put("ipaddress", XACML3.ID_DATATYPE_IPADDRESS);
-        identifierMap.put("dnsname", XACML3.ID_DATATYPE_DNSNAME);
-
+        identifierMap.put("dateTime", XACML3.ID_DATATYPE_DATETIME);
+        identifierMap.put("dayTimeDuration", XACML3.ID_DATATYPE_DAYTIMEDURATION);
+        identifierMap.put("yearMonthDuration", XACML3.ID_DATATYPE_YEARMONTHDURATION);
+        identifierMap.put("anyURI", XACML3.ID_DATATYPE_ANYURI);
+        identifierMap.put("hexBinary", XACML3.ID_DATATYPE_HEXBINARY);
+        identifierMap.put("base64Binary", XACML3.ID_DATATYPE_BASE64BINARY);
+        identifierMap.put("rfc822Name", XACML3.ID_DATATYPE_RFC822NAME);
+        identifierMap.put("x500Name", XACML3.ID_DATATYPE_X500NAME);
+        identifierMap.put("ipAddress", XACML3.ID_DATATYPE_IPADDRESS);
+        identifierMap.put("dnsName", XACML3.ID_DATATYPE_DNSNAME);
         identifierMap.put("string-bag", XACML3.ID_FUNCTION_STRING_BAG);
         identifierMap.put("boolean-bag", XACML3.ID_FUNCTION_BOOLEAN_BAG);
         identifierMap.put("integer-bag", XACML3.ID_FUNCTION_INTEGER_BAG);
@@ -871,10 +1048,478 @@ public class NativePdpApplicationTranslator implements ToscaPolicyTranslator {
     }
 
     private Identifier validateFilterPropertyFunction(String operator) throws ToscaPolicyConversionException {
-        if (identifierMap.containsKey(operator.toLowerCase())) {
-            return identifierMap.get(operator.toLowerCase());
+        if (identifierMap.containsKey(operator)) {
+            return identifierMap.get(operator);
         } else {
-            throw new ToscaPolicyConversionException("Unexpected value " + operator);
+            LOGGER.error("POLICY-500: Unsupported operator {}", operator);
+            throw new ToscaPolicyConversionException("POLICY-500: Unexpected operator " + operator);
         }
     }
+
+    private void setOperatorPrecedenceMap() {
+        operatorPrecedenceMap = new HashMap<>();
+        operatorPrecedenceMap.put("*", 4);  // Multiplication
+        operatorPrecedenceMap.put("/", 4);  // Division same as multiplication
+        operatorPrecedenceMap.put("+", 3);  // Addition
+        operatorPrecedenceMap.put("-", 3);  // Subtraction same as addition
+        operatorPrecedenceMap.put("(", 1);  // Parentheses
+        operatorPrecedenceMap.put(")", 2);  // Closing parentheses same level
+        operatorPrecedenceMap.put("<", 1);   // Less than
+        operatorPrecedenceMap.put("<=", 1);  // Less than or equal
+        operatorPrecedenceMap.put(">", 1);   // Greater than
+        operatorPrecedenceMap.put(">=", 1);  // Greater than or equal
+        operatorPrecedenceMap.put("==", 1);  // Equal to
+        operatorPrecedenceMap.put("!=", 1);  // Not equal to
+        operatorPrecedenceMap.put(CONVERSION_DOUBLE, 1);  // Conversion low precedence
+        operatorPrecedenceMap.put(CONVERSION_INTEGER, 1);  // Conversion low precedence
+        operatorPrecedenceMap.put(CONVERSION_DOUBLE_ABS, 1);  // Absolute low precedence
+        operatorPrecedenceMap.put(CONVERSION_INTEGER_ABS, 1);  // Absolute low precedence
+        operatorPrecedenceMap.put(CONVERSION_FLOOR, 1);  // Floor low precedence
+        operatorPrecedenceMap.put(CONVERSION_ROUND, 1);  // Round low precedence
+    }
+
+    private Identifier getOperatorXacmlMap(String operator) throws ToscaPolicyConversionException {
+        if (operator.equals("*")) {
+            return XACML3.ID_FUNCTION_DOUBLE_MULTIPLY;
+        } else if (operator.equals("/")) {
+            return XACML3.ID_FUNCTION_DOUBLE_DIVIDE;
+        } else if (operator.equals("+")) {
+            return XACML3.ID_FUNCTION_DOUBLE_ADD;
+        } else if (operator.equals("-")) {
+            return XACML3.ID_FUNCTION_DOUBLE_SUBTRACT;
+        } else if (operator.equals("<")) {
+            return XACML3.ID_FUNCTION_DOUBLE_LESS_THAN;
+        } else if (operator.equals("<=")) {
+            return XACML3.ID_FUNCTION_DOUBLE_LESS_THAN_OR_EQUAL;
+        } else if (operator.equals(">")) {
+            return XACML3.ID_FUNCTION_DOUBLE_GREATER_THAN;
+        } else if (operator.equals(">=")) {
+            return XACML3.ID_FUNCTION_DOUBLE_GREATER_THAN_OR_EQUAL;
+        } else if (operator.equals("==")) {
+            return XACML3.ID_FUNCTION_DOUBLE_EQUAL;
+        } else if (operator.equals(CONVERSION_DOUBLE)) {
+            return XACML3.ID_FUNCTION_INTEGER_TO_DOUBLE;
+        } else if (operator.equals(CONVERSION_INTEGER)) {
+            return XACML3.ID_FUNCTION_DOUBLE_TO_INTEGER;
+        } else {
+            LOGGER.error("POLICY-500: Unsupported operator {}", operator);
+            throw new ToscaPolicyConversionException("POLICY-500: Unsupported operator " + operator);
+        }
+    }
+
+    private Boolean singleOperandExpression(String expression) {
+        return expression.equals(CONVERSION_INTEGER)
+            || expression.equals(CONVERSION_DOUBLE)
+            || expression.equals(CONVERSION_INTEGER_ABS)
+            || expression.equals(CONVERSION_DOUBLE_ABS)
+            || expression.equals(CONVERSION_FLOOR)
+            || expression.equals(CONVERSION_ROUND);
+    }
+
+    private ApplyType convertToPrefixXacmlApply(String expression, ObjectFactory factory)
+        throws ToscaPolicyConversionException {
+        LOGGER.debug("Got expression to parse : {}", expression);
+        StreamTokenizer tokenizer = new StreamTokenizer(new StringReader(expression));
+        tokenizer.eolIsSignificant(true);
+        tokenizer.wordChars('.', '_');
+        tokenizer.ordinaryChar('(');
+        tokenizer.ordinaryChar(')');
+        tokenizer.ordinaryChar('+');
+        tokenizer.ordinaryChar('-');
+        tokenizer.ordinaryChar('*');
+        tokenizer.ordinaryChar('/');
+        tokenizer.ordinaryChar('=');
+        tokenizer.ordinaryChar('<');
+        tokenizer.ordinaryChar('>');
+
+        Deque<Object> operators = new ArrayDeque<>();
+        Deque<Object> operands = new ArrayDeque<>();
+
+        try {
+            int tokenType = tokenizer.nextToken();
+            parseTokens(tokenType, tokenizer, operators, operands, factory);
+
+        } catch (java.io.IOException ex) {
+            LOGGER.error("POLICY-500: convertToPrefixXACMLApply: Error while parsing expr");
+            throw new ToscaPolicyConversionException("POLICY-500: Error while parsing expr ");
+        }
+        return getFinalApply(operands);
+    }
+
+    private ApplyType getFinalApply(Deque<Object> operands) throws ToscaPolicyConversionException  {
+        Object operand = null;
+        if (!(operands.isEmpty())) {
+            operand = operands.pop();
+            if (operand instanceof String) {
+                LOGGER.error("POLICY-500: convertToPrefixXACMLApply: Extra operands. {}", operand);
+                throw new ToscaPolicyConversionException("POLICY-500: convertToPrefixXACMLApply: Extra operands.");
+            } else {
+                LOGGER.debug("Popped operand {} ", ((ApplyType) operand).getFunctionId());
+            }
+        }
+        return (ApplyType) operand;
+    }
+
+    private void parseTokens(int tokenType, StreamTokenizer tokenizer,
+                             Deque<Object> operators, Deque<Object> operands,
+                             ObjectFactory factory)
+        throws ToscaPolicyConversionException {
+        try {
+            while (tokenType != StreamTokenizer.TT_EOF) {
+                LOGGER.debug("Current token {}", tokenType);
+                Boolean isWordOperator = false;
+                Boolean isOperand = false;
+                Object token = null;
+                if (tokenType == StreamTokenizer.TT_WORD) {
+                    token = tokenizer.sval;
+                    LOGGER.debug("String token {}", token);
+                    if (token.toString().equals(DOUBLE) || token.toString().equals(INTEGER)) {
+                        isWordOperator = checkIfWordOperator(token, tokenizer);
+                    } else {
+                        isOperand = checkIfOperand(token, operands);
+                    }
+                } else if (tokenType == StreamTokenizer.TT_NUMBER) {
+                    token = Double.valueOf(tokenizer.nval);
+                    LOGGER.debug("Pushing Number token {}", token);
+                    operands.push(token);
+                    isOperand = true;
+                }
+                if (Boolean.FALSE.equals(isOperand)) {
+                    checkOperatorToken(tokenType, token, isWordOperator, tokenizer,
+                        operators, operands, factory);
+                }
+                LOGGER.debug("Finished processing current token, going to next");
+                tokenType = tokenizer.nextToken();
+            }
+            LOGGER.debug("Last token {}", tokenType);
+            while (Boolean.FALSE.equals(operators.isEmpty())) {
+                LOGGER.debug(
+                    //when TT_EOF, process remaining tokens in stack
+                    "Tokens are processed, now processing remaining operators");
+                processOperator(operators, operands, factory);
+            }
+        } catch (Exception e) {
+            LOGGER.error(ERROR_TOKEN);
+            throw new ToscaPolicyConversionException(ERROR_TOKEN);
+        }
+    }
+
+    private Boolean checkIfWordOperator(Object token, StreamTokenizer tokenizer)
+        throws ToscaPolicyConversionException {
+        Boolean isWordOperator = false;
+        try {
+            if (tokenizer.nextToken() == '(') {
+                //token = token.toString().equals(DOUBLE) ? CONVERSION_DOUBLE : CONVERSION_INTEGER;
+                isWordOperator = true;
+            } else {
+                tokenizer.pushBack();
+                LOGGER.error(ERROR_TOKEN);
+                throw new
+                    ToscaPolicyConversionException("POLICY-500: ( should follow double or integer.");
+            }
+        } catch (Exception e) {
+            LOGGER.error(ERROR_TOKEN);
+            throw new
+                ToscaPolicyConversionException(ERROR_TOKEN);
+        }
+        return isWordOperator;
+    }
+
+    private Boolean checkIfOperand(Object token,  Deque<Object> operands) {
+        Boolean isOperand = false;
+        if (Boolean.FALSE.equals(token.toString().equals("/"))) {
+            LOGGER.debug("Pushing String token into operand stack {}", token);
+            operands.push(token);
+            isOperand = true;
+        }
+        return isOperand;
+    }
+
+    private void checkOperatorToken(int tokenType, Object token, Boolean isWordOperator,
+                                    StreamTokenizer tokenizer, Deque<Object> operators,
+                                    Deque<Object> operands, ObjectFactory factory)
+        throws ToscaPolicyConversionException {
+        try {
+            Boolean isProcessed = false;
+            if (Boolean.FALSE.equals(isWordOperator)) {
+                token = Character.valueOf((char) tokenType);
+                LOGGER.debug("Char token {}", token);
+                char value = ((Character) token).charValue();
+                if (Boolean.TRUE.equals(isComparisonOperator(value))) {
+                    token = addEqualIfPresent(tokenizer, token);
+                } else {
+                    isProcessed = checkBracketToken(token, value, operators, operands, factory);
+                }
+            }
+            if (Boolean.FALSE.equals(isProcessed)
+                && Boolean.TRUE.equals(isValidToken(token))) {
+                while (Boolean.FALSE.equals(operators.isEmpty())
+                    && Boolean.FALSE.equals(isPreviousOpLeftPar(operators))
+                    && (getPrecedence(operators.peek()) >= getPrecedence(token))) {
+                    processOperator(operators, operands, factory);
+                }
+                operators.push(token);
+                LOGGER.debug("Pushing Character token into operator stack {}", token);
+            }
+        } catch (Exception e) {
+            LOGGER.error(ERROR_TOKEN);
+            throw new ToscaPolicyConversionException(ERROR_TOKEN);
+        }
+    }
+
+    private Boolean checkBracketToken(Object token,
+                                   char value,
+                                   Deque<Object> operators,
+                                   Deque<Object> operands,
+                                   ObjectFactory factory) throws ToscaPolicyConversionException {
+        Boolean isProcessed = false;
+        try {
+            if (value == '(') {
+                operators.push(token);
+                LOGGER.debug("Pushing Character token into operator stack {}", token);
+                isProcessed = true;
+            } else if (value == ')') {
+                processExpression(operators, operands, factory);
+                isProcessed = true;
+            }
+        } catch (Exception e) {
+            LOGGER.error("POLICY-500: Error parsing expr, no operator.");
+            throw new
+                ToscaPolicyConversionException("POLICY-500: Error parsing expr, no operator.");
+        }
+        return isProcessed;
+    }
+
+    private Boolean isComparisonOperator(char value) {
+        return (value == '<' || value == '>' || value == '=' || value == '!');
+    }
+
+    private Object addEqualIfPresent(StreamTokenizer tokenizer, Object token)
+        throws ToscaPolicyConversionException {
+        try {
+            Boolean doubleOp = false;
+            int checkNextToken = tokenizer.nextToken();
+            if (checkNextToken != StreamTokenizer.TT_NUMBER
+                && checkNextToken != StreamTokenizer.TT_WORD) {
+                if ((char) checkNextToken == '=') {
+                    token = token + "=";
+                }
+                doubleOp = true;
+            }
+            if (Boolean.FALSE.equals(doubleOp)) {
+                tokenizer.pushBack();
+            }
+        } catch (Exception e) {
+            LOGGER.error(ERROR_TOKEN);
+            throw new
+                ToscaPolicyConversionException(ERROR_TOKEN);
+        }
+        return token;
+    }
+
+    private void processExpression(Deque<Object> operators,
+                                            Deque<Object> operands,
+                                            ObjectFactory factory) throws ToscaPolicyConversionException {
+        try {
+            Boolean single = Boolean.TRUE.equals(singleOperandExpression(operators.peek().toString()));
+            while (Boolean.FALSE.equals(operators.isEmpty())
+                && Boolean.FALSE.equals((isPreviousOpLeftPar(operators)))) {
+                processOperator(operators, operands, factory);
+            }
+            if (Boolean.FALSE.equals(operators.isEmpty())
+                && Boolean.FALSE.equals(single)) {
+                LOGGER.debug("Popping (");
+                operators.pop(); // Remove "("
+            }
+        } catch (Exception e) {
+            LOGGER.error(ERROR_TOKEN);
+            throw new ToscaPolicyConversionException(ERROR_TOKEN);
+        }
+    }
+
+    private Boolean isPreviousOpLeftPar(Deque<Object> operators) {
+        Object nextOp = operators.peek();
+        if (nextOp instanceof Character && ((Character) nextOp).charValue() == '(') {
+            LOGGER.debug("Previous operator is (");
+            return true;
+        }
+        return false;
+    }
+
+    private Boolean isValidToken(Object token) {
+        String key = "";
+        if (token instanceof Character) {
+            key = ((Character) token).toString();
+        } else if (token instanceof String) {
+            key = token.toString();
+        }
+        return (operatorPrecedenceMap.containsKey(key));
+    }
+
+    private Integer getPrecedence(Object token)  {
+        String key = "";
+        if (token instanceof Character) {
+            key = ((Character) token).toString();
+        } else if (token instanceof String) {
+            key = token.toString();
+        }
+        Integer precedence = operatorPrecedenceMap.get(key);
+        LOGGER.debug("Precedence of operator {} is {}", key, precedence);
+        return (precedence);
+    }
+
+    private void processOperator(Deque<Object> operators, Deque<Object> operands, ObjectFactory factory)
+        throws ToscaPolicyConversionException {
+        try {
+            String op = "";
+            Object opObj = operators.pop();
+            if (opObj instanceof Character) {
+                op = ((Character) opObj).toString();
+            } else if (opObj instanceof String) {
+                op = opObj.toString();
+            }
+            LOGGER.debug("Process Operator {}", op);
+            if (Boolean.TRUE.equals(singleOperandExpression(op))) {
+                processSingleOperandExpr(operands, op, factory);
+            } else {
+                processDoubleOperandExpr(operands, op, factory);
+            }
+        } catch (Exception ex) {
+            LOGGER.error("POLICY-500: Error while processing operator and operands in expr");
+            throw new ToscaPolicyConversionException("POLICY-500: Error while "
+                + "processing operator and operands in expr");
+        }
+    }
+
+    private void processSingleOperandExpr(Deque<Object> operands, String op, ObjectFactory factory)
+        throws ToscaPolicyConversionException {
+        try {
+            LOGGER.debug("processOperator: singleOperandExpression operator {}", op);
+            Object val = operands.pop();
+            if (val instanceof ApplyType) {
+                LOGGER.debug(POPPED, ((ApplyType) val).getFunctionId());
+            }
+            var opApply = new ApplyType();
+            if (val instanceof String) {
+                LOGGER.debug("processOperator: singleOperandExpression operand {}", val);
+                if (op.equals(CONVERSION_DOUBLE)) {
+                    opApply =
+                        createIntegerPropertyToDoubleConversionExpression(val.toString(), opApply, op, factory);
+                } else if (op.equals(CONVERSION_INTEGER)) {
+                    opApply =
+                        createDoublePropertyToIntegerConversionExpression(val.toString(), opApply, op, factory);
+                }
+            } else {
+                opApply = createApplyExpression(val, opApply, op, factory);
+            }
+            opApply.setFunctionId(getOperatorXacmlMap(op).stringValue());
+            operands.push(opApply);
+            LOGGER.debug("Pushing operand {}", opApply.getFunctionId());
+        } catch (Exception ex) {
+            LOGGER.error("POLICY-500: Error while processing single operand expr");
+            throw new ToscaPolicyConversionException("POLICY-500: Error while processing single operand expr");
+        }
+    }
+
+    private void processDoubleOperandExpr(Deque<Object> operands, String op, ObjectFactory factory)
+        throws ToscaPolicyConversionException {
+        try {
+            LOGGER.debug("processOperator: twoOperandExpression operator {}", op);
+            Object val2 = operands.pop();
+            if (val2 instanceof ApplyType) {
+                LOGGER.debug(POPPED, ((ApplyType) val2).getFunctionId());
+            }
+            Object val1 = operands.pop();
+            if (val1 instanceof ApplyType) {
+                LOGGER.debug(POPPED, ((ApplyType) val1).getFunctionId());
+            }
+            var opApply = new ApplyType();
+            opApply = createApplyExpression(val1, opApply, op, factory);
+            opApply = createApplyExpression(val2, opApply, op, factory);
+            opApply.setFunctionId(getOperatorXacmlMap(op).stringValue());
+            operands.push(opApply);
+            LOGGER.debug("Pushing operand {}", opApply.getFunctionId());
+        } catch (Exception ex) {
+            LOGGER.error("POLICY-500: Error while processing double operand expr");
+            throw new ToscaPolicyConversionException("POLICY-500: Error while processing double operand expr");
+        }
+    }
+
+    private ApplyType createIntegerPropertyToDoubleConversionExpression(String val, ApplyType opApply, String op,
+                                                                        ObjectFactory factory)
+        throws ToscaPolicyConversionException {
+        try {
+            var oneAndOnlyApply = new ApplyType();
+            var designator = setAttributeDesignatorType(val, XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue(),
+                XACML3.ID_DATATYPE_INTEGER.stringValue(), false);
+            oneAndOnlyApply.getExpression().add(factory.createAttributeDesignator(designator));
+            oneAndOnlyApply.setFunctionId(validateFilterPropertyFunction(INTEGER + ONE_AND_ONLY).stringValue());
+            opApply.getExpression().add(factory.createApply(oneAndOnlyApply));
+            opApply.setFunctionId(getOperatorXacmlMap(op).stringValue());
+        } catch (ToscaPolicyConversionException ex) {
+            LOGGER.error("POLICY-500: Invalid integer property to double conversion, operator {} , value {}", op, val);
+            throw new ToscaPolicyConversionException(
+                "POLICY-500: Error while parsing expr: invalid integer property to double conversion, operator "
+                    + op
+                    + ", value "
+                    + val);
+        }
+        return opApply;
+    }
+
+    private ApplyType createDoublePropertyToIntegerConversionExpression(String val, ApplyType opApply, String op,
+                                                                        ObjectFactory factory)
+        throws ToscaPolicyConversionException {
+        try {
+            var oneAndOnlyApply = new ApplyType();
+            var designator = setAttributeDesignatorType(val, XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue(),
+                XACML3.ID_DATATYPE_DOUBLE.stringValue(), false);
+            oneAndOnlyApply.getExpression().add(factory.createAttributeDesignator(designator));
+            oneAndOnlyApply.setFunctionId(validateFilterPropertyFunction(DOUBLE + ONE_AND_ONLY).stringValue());
+            opApply.getExpression().add(factory.createApply(oneAndOnlyApply));
+            opApply.setFunctionId(getOperatorXacmlMap(op).stringValue());
+        } catch (ToscaPolicyConversionException ex) {
+            LOGGER.error("POLICY-500: Invalid integer property to double conversion, operator {} , value {}", op, val);
+            throw new ToscaPolicyConversionException(
+                "POLICY-500: Error while parsing expr: invalid double property to integer conversion, operator "
+                    + op
+                    + ", value "
+                    + val);
+        }
+        return opApply;
+    }
+
+    private ApplyType createApplyExpression(Object val, ApplyType opApply, String op, ObjectFactory factory)
+        throws ToscaPolicyConversionException {
+        try {
+            if (val instanceof String) {
+                var designator =
+                    setAttributeDesignatorType((String) val, XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE.stringValue(),
+                        XACML3.ID_DATATYPE_DOUBLE.stringValue(), false);
+                var oneAndOnlyApply = new ApplyType();
+                oneAndOnlyApply.setFunctionId(validateFilterPropertyFunction(DOUBLE + ONE_AND_ONLY).stringValue());
+                oneAndOnlyApply.getExpression().add(factory.createAttributeDesignator(designator));
+                opApply.getExpression().add(factory.createApply(oneAndOnlyApply));
+            } else if (val instanceof Double) {
+                var attributeValue = setAttributeValueType(val, XACML3.ID_DATATYPE_DOUBLE.stringValue());
+                opApply.getExpression().add(factory.createAttributeValue(attributeValue));
+            } else {
+                opApply.getExpression().add(factory.createApply((ApplyType) val));
+            }
+            opApply.setFunctionId(getOperatorXacmlMap(op).stringValue());
+        } catch (ToscaPolicyConversionException ex) {
+            LOGGER.error("POLICY-500: Error while parsing expr: creation of apply type in expr, operator {}", op);
+            throw new ToscaPolicyConversionException(
+                "POLICY-500: Error while parsing expr: creation of apply type in expr, operator " + op);
+        }
+        return opApply;
+    }
+
+    @Getter
+    public static class NativeDefinition {
+        @NotNull
+        @NotBlank
+        private String policy;
+    }
+
 }
