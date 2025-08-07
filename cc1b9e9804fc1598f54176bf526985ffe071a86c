@@ -16,6 +16,23 @@
       "message": "https://sonarcloud.io/project/issues?issueStatuses\u003dOPEN%2CCONFIRMED\u0026sinceLeakPeriod\u003dtrue\u0026branch\u003d141304-9\u0026id\u003donap_policy-xacml-pdp also try to fix these issues as they are high level",
       "revId": "cc1b9e9804fc1598f54176bf526985ffe071a86c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "498be18f_b900d33f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-08-07T14:56:49Z",
+      "side": 1,
+      "message": "hi, this review has been up for weeks, waiting on the fixes for the last comments. please let us know if this is still alive.",
+      "revId": "cc1b9e9804fc1598f54176bf526985ffe071a86c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
