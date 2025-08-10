@@ -130,6 +130,24 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4279bb3d_bdfe43d0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8143
+      },
+      "writtenOn": "2025-08-10T16:59:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79337546_16c9b801",
+      "revId": "e85e61d54598ccda91bf1bdbbba3e5733069c72a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fbe11efa_0a16d611",
@@ -167,6 +185,30 @@
       "side": 1,
       "message": "please fix this comment",
       "parentUuid": "fbe11efa_0a16d611",
+      "range": {
+        "startLine": 102,
+        "startChar": 21,
+        "endLine": 102,
+        "endChar": 27
+      },
+      "revId": "e85e61d54598ccda91bf1bdbbba3e5733069c72a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2d8cb78_b7faaec0",
+        "filename": "applications/native/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 8143
+      },
+      "writtenOn": "2025-08-10T16:59:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "38508d90_a321b3d0",
       "range": {
         "startLine": 102,
         "startChar": 21,
