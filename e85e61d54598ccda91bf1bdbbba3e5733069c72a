@@ -217,6 +217,30 @@
       },
       "revId": "e85e61d54598ccda91bf1bdbbba3e5733069c72a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2cfbe50f_0866316e",
+        "filename": "applications/native/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-08-11T07:35:37Z",
+      "side": 1,
+      "message": "this should be:\n       \u003cdependency\u003e\n            \u003cgroupId\u003eorg.junit.jupiter\u003c/groupId\u003e\n            \u003cartifactId\u003ejunit-jupiter-params\u003c/artifactId\u003e\n            \u003cversion\u003e${version.jupiter}\u003c/version\u003e\n            \u003cscope\u003etest\u003c/scope\u003e\n        \u003c/dependency\u003e",
+      "parentUuid": "b2d8cb78_b7faaec0",
+      "range": {
+        "startLine": 102,
+        "startChar": 21,
+        "endLine": 102,
+        "endChar": 27
+      },
+      "revId": "e85e61d54598ccda91bf1bdbbba3e5733069c72a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
