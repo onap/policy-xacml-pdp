@@ -1,0 +1,5 @@
+distribution_type: 'maven'
+version: '4.2.1'
+project: 'policy-xacml-pdp'
+tag_release: false
+log_dir: 'policy-xacml-pdp-maven-stage-master/1420/'
