@@ -25,7 +25,7 @@ RUN mkdir /packages /extracted
 COPY /maven/lib/policy-xacmlpdp.tar.gz /packages/
 RUN tar xvzf /packages/policy-xacmlpdp.tar.gz --directory /extracted/
 
-FROM onap/policy-jre-alpine:4.2.3-SNAPSHOT
+FROM onap/policy-jre-alpine:5.0.0-SNAPSHOT
 
 LABEL maintainer="Policy Team"
 LABEL org.opencontainers.image.title="Policy XACML PDP"
