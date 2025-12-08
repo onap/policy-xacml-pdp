@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019, 2023-2024 Nordix Foundation.
+ * Modifications Copyright (C) 2019, 2023-2025 OpenInfra Foundation Europe.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 /**
  * Class to perform unit test of XacmlPdpActivator.
  */
-public class TestXacmlPdpActivator extends CommonRest {
+class TestXacmlPdpActivator extends CommonRest {
     private static final String PROBE_FIELD_NAME = "probeHeartbeatTopicSec";
 
     private static XacmlPdpParameterGroup parGroup;
@@ -52,7 +52,7 @@ public class TestXacmlPdpActivator extends CommonRest {
      * Loads properties.
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() throws Exception { // NOSONAR - class is extended
         ParameterService.clear();
         CommonRest.setUpBeforeClass();
 
@@ -67,9 +67,8 @@ public class TestXacmlPdpActivator extends CommonRest {
     /**
      * Creates the activator.
      */
-    @Override
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         ReflectionTestUtils.setField(parGroup, PROBE_FIELD_NAME, 4);
         activator = new XacmlPdpActivator(parGroup);
     }
@@ -119,7 +118,7 @@ public class TestXacmlPdpActivator extends CommonRest {
      * Teardown tests.
      */
     @AfterEach
-    public void teardown() {
+    void teardown() {
         if (activator != null && activator.isAlive()) {
             activator.stop();
         }

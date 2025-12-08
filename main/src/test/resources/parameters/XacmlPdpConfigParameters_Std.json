@@ -7,7 +7,7 @@
         "port":${port},
         "userName":"healthcheck",
         "password":"zb!XztG34",
-        "https":true
+        "https":false
     },
     "policyApiParameters": {
         "hostname": "0.0.0.0",

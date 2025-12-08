@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019, 2023-2024 Nordix Foundation.
+ * Modifications Copyright (C) 2019, 2023-2025 OpenInfra Foundation Europe.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,10 +32,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.SecureRandom;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.net.ssl.SSLContext;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -43,7 +41,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.common.utils.resources.ResourceUtils;
-import org.onap.policy.common.utils.security.SelfSignedKeyStore;
 import org.onap.policy.pdpx.main.rest.XacmlPdpStatisticsManager;
 import org.onap.policy.pdpx.main.startstop.Main;
 import org.onap.policy.pdpx.main.startstop.XacmlPdpActivator;
@@ -109,9 +106,7 @@ public class CommonRest {
      * @throws Exception if an error occurs
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
-        System.setProperty("javax.net.ssl.keyStore", new SelfSignedKeyStore().getKeystoreName());
-        System.setProperty("javax.net.ssl.keyStorePassword", SelfSignedKeyStore.KEYSTORE_PASSWORD);
+    public static void setUpBeforeClass() throws Exception { // NOSONAR - class is extended
 
         System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StdErrLog");
         System.setProperty("org.eclipse.jetty.LEVEL", "OFF");
@@ -133,7 +128,7 @@ public class CommonRest {
      * Stops the "Main".
      */
     @AfterAll
-    public static void tearDownAfterClass() {
+    static void tearDownAfterClass() {
         stopMain();
     }
 
@@ -141,7 +136,7 @@ public class CommonRest {
      * Resets the statistics.
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         activatorWasAlive = XacmlPdpActivator.getCurrent().isAlive();
         XacmlPdpStatisticsManager.getCurrent().resetAllStatistics();
     }
@@ -150,7 +145,7 @@ public class CommonRest {
      * Restores the "alive" status of the activator.
      */
     @AfterEach
-    public void tearDown() {
+    public void tearDown() { // NOSONAR - class is extended
         markActivator(activatorWasAlive);
     }
 
@@ -176,32 +171,23 @@ public class CommonRest {
     }
 
     /**
-     * Sends an HTTPS request to an endpoint of the PDP's REST API.
+     * Sends an HTTP request to an endpoint of the PDP's REST API.
      *
      * @param endpoint target endpoint
      * @return a request builder
-     * @throws Exception if an error occurs
      */
-    protected Invocation.Builder sendHttpsRequest(final String endpoint) throws Exception {
-        // always trust the certificate
-        final SSLContext sc = SSLContext.getInstance("TLSv1.2");
-        sc.init(null, NetworkUtil.getAlwaysTrustingManager(), new SecureRandom());
-
-        // always trust the host name
-        final ClientBuilder clientBuilder =
-            ClientBuilder.newBuilder().sslContext(sc).hostnameVerifier((host, session) -> true);
-
-        final Client client = clientBuilder.build();
+    protected Invocation.Builder sendHttpsRequest(final String endpoint) {
+        final Client client = ClientBuilder.newBuilder().build();
         final HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("healthcheck", "zb!XztG34");
         client.register(feature);
 
-        final WebTarget webTarget = client.target("https://localhost:" + port + "/policy/pdpx/v1/" + endpoint);
+        final WebTarget webTarget = client.target("http://localhost:" + port + "/policy/pdpx/v1/" + endpoint);
 
         return webTarget.request(MediaType.APPLICATION_JSON);
     }
 
     /**
-     * Mark the activator as dead, but leave its REST server running.
+     * Mark the activator as dead but leave its REST server running.
      */
     protected void markActivatorDead() {
         markActivator(false);

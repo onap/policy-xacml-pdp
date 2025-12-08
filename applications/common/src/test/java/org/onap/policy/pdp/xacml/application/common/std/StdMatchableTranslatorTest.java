@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2023-2024 Nordix Foundation.
+ * Modifications Copyright (C) 2023-2025 OpenInfra Foundation Europe.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,12 +81,11 @@ import org.onap.policy.pdp.xacml.application.common.XacmlPolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class StdMatchableTranslatorTest {
+class StdMatchableTranslatorTest {
 
     private static final Logger logger = LoggerFactory.getLogger(StdMatchableTranslatorTest.class);
     private static final String CLIENT_NAME = "policy-api";
     private static final StandardYamlCoder yamlCoder = new StandardYamlCoder();
-    private static int port;
     private static RestClientParameters clientParams;
     private static ToscaServiceTemplate testTemplate;
     private static HttpClient apiClient;
@@ -107,12 +106,11 @@ public class StdMatchableTranslatorTest {
         //
         // Setup our api server simulator
         //
-        port = NetworkUtil.allocPort();
 
         clientParams = mock(RestClientParameters.class);
         when(clientParams.getClientName()).thenReturn("apiClient");
         when(clientParams.getHostname()).thenReturn("localhost");
-        when(clientParams.getPort()).thenReturn(port);
+        when(clientParams.getPort()).thenReturn(NetworkUtil.allocPort());
 
         Properties props = getProperties();
 
@@ -164,7 +162,7 @@ public class StdMatchableTranslatorTest {
     }
 
     @AfterAll
-    public static void tearDownAfterClass() {
+    static void tearDownAfterClass() {
         HttpServletServerFactoryInstance.getServerFactory().destroy();
     }
 
@@ -213,13 +211,13 @@ public class StdMatchableTranslatorTest {
                 //
                 List<AttributeAssignment> listAttributes = new ArrayList<>();
                 ObligationExpressionType xacmlObligation = translatedPolicy.getObligationExpressions()
-                    .getObligationExpression().get(0);
+                    .getObligationExpression().getFirst();
                 assertThat(xacmlObligation.getAttributeAssignmentExpression()).hasSize(4);
                 //
                 // Copy into the list
                 //
                 xacmlObligation.getAttributeAssignmentExpression().forEach(assignment -> {
-                    Object value = ((AttributeValueType) assignment.getExpression().getValue()).getContent().get(0);
+                    Object value = ((AttributeValueType) assignment.getExpression().getValue()).getContent().getFirst();
                     listAttributes.add(TestUtilsCommon.createAttributeAssignment(assignment.getAttributeId(),
                         assignment.getCategory(), value));
                 });
