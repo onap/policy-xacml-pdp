@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.onap.policy.xacml-pdp</groupId>
         <artifactId>xacml-packages</artifactId>
-        <version>5.0.0-SNAPSHOT</version>
+        <version>5.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>policy-xacmlpdp-tarball</artifactId>
