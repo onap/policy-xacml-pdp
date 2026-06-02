@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,18 +28,17 @@ import com.att.research.xacml.api.pip.PIPRequest;
 import com.att.research.xacml.api.pip.PIPResponse;
 import com.att.research.xacml.std.pip.StdMutablePIPResponse;
 import com.att.research.xacml.std.pip.StdPIPResponse;
-import com.google.common.base.Strings;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.std.StdOnapPip;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 public class CountRecentOperationsPip extends StdOnapPip {
     public static final String ISSUER_NAME = "count-recent-operations";
@@ -72,7 +71,7 @@ public class CountRecentOperationsPip extends StdOnapPip {
         //
         // Determine if the issuer is correct
         //
-        if (Strings.isNullOrEmpty(pipRequest.getIssuer())) {
+        if (StringUtils.isEmpty(pipRequest.getIssuer())) {
             logger.debug("issuer is null - returning empty response");
             //
             // We only respond to ourselves as the issuer

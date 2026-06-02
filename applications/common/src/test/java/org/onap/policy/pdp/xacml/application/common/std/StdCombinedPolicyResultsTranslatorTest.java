@@ -122,6 +122,32 @@ class StdCombinedPolicyResultsTranslatorTest {
     }
 
     @Test
+    void testMissingPolicyId() throws ParseException {
+        StdCombinedPolicyResultsTranslator translator = new StdCombinedPolicyResultsTranslator();
+
+        Map<String, String> ids = new HashMap<>();
+        ids.put("onap.policies.Test", "1.0.0");
+        Collection<IdReference> policyIds = TestUtilsCommon.createPolicyIdList(ids);
+
+        var assignmentEmptyPolicyId = TestUtilsCommon.createAttributeAssignment(
+                ToscaDictionary.ID_OBLIGATION_POLICY_ID.stringValue(),
+                ToscaDictionary.ID_OBLIGATION_POLICY_ID_CATEGORY.stringValue(),
+                ""
+        );
+        var obligationMissingId = TestUtilsCommon.createXacmlObligation(
+                ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue(),
+                Arrays.asList(assignmentEmptyPolicyId, assignmentPolicy));
+
+        Response xacmlResponse = TestUtilsCommon.createXacmlResponse(StdStatusCode.STATUS_CODE_OK, null,
+                Decision.PERMIT, Collections.singletonList(obligationMissingId), policyIds);
+
+        DecisionResponse decision = translator.convertResponse(xacmlResponse);
+
+        assertNotNull(decision);
+        assertThat(decision.getPolicies()).isEmpty();
+    }
+
+    @Test
     void testConvert() throws ToscaPolicyConversionException, CoderException {
         StdCombinedPolicyResultsTranslator translator = new StdCombinedPolicyResultsTranslator();
 
