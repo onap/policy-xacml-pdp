@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019-2021, 2024 Nordix Foundation.
+ * Modifications Copyright (C) 2019-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.att.research.xacml.api.Response;
-import com.google.common.collect.Lists;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -234,7 +234,7 @@ class OptimizationPdpApplicationTest {
         //
         // Add in policy type
         //
-        List<String> policyTypes = Lists.newArrayList("onap.policies.optimization.resource.HpaPolicy");
+        List<String> policyTypes = new ArrayList<>(List.of("onap.policies.optimization.resource.HpaPolicy"));
         baseRequest.getResource().put("policy-type", policyTypes);
         //
         // Ask for a decision for default HPA policy
@@ -352,7 +352,7 @@ class OptimizationPdpApplicationTest {
         //
         // Add in policy type
         //
-        List<String> policyTypes = Lists.newArrayList("onap.policies.optimization.resource.AffinityPolicy");
+        List<String> policyTypes = new ArrayList<>(List.of("onap.policies.optimization.resource.AffinityPolicy"));
         baseRequest.getResource().put("policy-type", policyTypes);
 
         validateDecisionCount(1);

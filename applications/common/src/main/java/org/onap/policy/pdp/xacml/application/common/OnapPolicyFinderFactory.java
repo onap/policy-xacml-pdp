@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,14 +39,14 @@ import com.att.research.xacmlatt.pdp.policy.Target;
 import com.att.research.xacmlatt.pdp.policy.dom.DOMPolicyDef;
 import com.att.research.xacmlatt.pdp.std.StdPolicyFinder;
 import com.att.research.xacmlatt.pdp.util.ATTPDPProperties;
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -142,12 +143,13 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
      */
     protected List<PolicyDef> getPolicyDefs(String propertyName) {
         String policyIds = this.properties.getProperty(propertyName);
-        if (Strings.isNullOrEmpty(policyIds)) {
+        if (StringUtils.isEmpty(policyIds)) {
             return Collections.emptyList();
         }
 
-        Iterable<String> policyIdArray  = Splitter.on(',').trimResults().omitEmptyStrings().split(policyIds);
-        if (policyIdArray == null) {
+        List<String> policyIdArray = Arrays.stream(policyIds.split(",")).map(String::trim).filter(s -> !s.isEmpty())
+                .toList();
+        if (policyIdArray.isEmpty()) {
             return Collections.emptyList();
         }
 

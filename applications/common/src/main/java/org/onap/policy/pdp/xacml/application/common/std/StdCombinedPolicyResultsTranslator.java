@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +30,6 @@ import com.att.research.xacml.api.Obligation;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.std.annotations.RequestParser;
-import com.google.common.base.Strings;
 import java.util.Collection;
 import java.util.Map;
 import lombok.NoArgsConstructor;
@@ -38,6 +38,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.decisions.concepts.DecisionRequest;
@@ -186,7 +187,7 @@ public class StdCombinedPolicyResultsTranslator extends StdBaseTranslator {
         // Sanity check that we got the attributes we care about. NOTE: This translator
         // ensures that these are set when convertPolicy is called.
         //
-        if (! Strings.isNullOrEmpty(policyId) && !policyContent.isEmpty()) {
+        if (StringUtils.isNotEmpty(policyId) && !policyContent.isEmpty()) {
             decisionResponse.getPolicies().put(policyId, policyContent);
         } else {
             LOGGER.error("Missing obligation policyId {} or policyContent {}", policyId,
