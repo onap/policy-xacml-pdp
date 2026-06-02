@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2023-2024 Nordix Foundation.
+ * Modifications Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ import com.att.research.xacml.api.pip.PIPRequest;
 import com.att.research.xacml.api.pip.PIPResponse;
 import com.att.research.xacml.std.pip.StdMutablePIPResponse;
 import com.att.research.xacml.std.pip.StdPIPResponse;
-import com.google.common.base.Strings;
 import jakarta.persistence.NoResultException;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.pdp.xacml.application.common.ToscaDictionary;
 import org.onap.policy.pdp.xacml.application.common.std.StdOnapPip;
 import org.slf4j.Logger;
@@ -46,7 +46,7 @@ public class GetOperationOutcomePip extends StdOnapPip {
 
     @Override
     public Collection<PIPRequest> attributesRequired() {
-        return Arrays.asList(PIP_REQUEST_TARGET);
+        return List.of(PIP_REQUEST_TARGET);
     }
 
     /**
@@ -67,7 +67,7 @@ public class GetOperationOutcomePip extends StdOnapPip {
         //
         // Determine if the issuer is correct
         //
-        if (Strings.isNullOrEmpty(pipRequest.getIssuer())) {
+        if (StringUtils.isEmpty(pipRequest.getIssuer())) {
             logger.error("issuer is null - returning empty response");
             //
             // We only respond to ourself as the issuer

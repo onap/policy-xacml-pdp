@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021-2022 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2023-2024 Nordix Foundation.
+ * Modifications Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ class TestXacmlPdpRestServer extends CommonRest {
     private int nupdates = 0;
 
     @Test
-    void testHealthCheckSuccess() throws Exception {
+    void testHealthCheckSuccess() {
         LOGGER.info("***************************** Running testHealthCheckSuccess *****************************");
         final Invocation.Builder invocationBuilder = sendHttpsRequest(HEALTHCHECK_ENDPOINT);
         final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
@@ -59,7 +59,7 @@ class TestXacmlPdpRestServer extends CommonRest {
     }
 
     @Test
-    void testHealthCheckFailure() throws Exception {
+    void testHealthCheckFailure() {
         LOGGER.info("***************************** Running testHealthCheckFailure *****************************");
 
         markActivatorDead();
@@ -71,7 +71,7 @@ class TestXacmlPdpRestServer extends CommonRest {
     }
 
     @Test
-    void testHttpsHealthCheckSuccess() throws Exception {
+    void testHttpsHealthCheckSuccess() {
         LOGGER.info("***************************** Running testHttpsHealthCheckSuccess *****************************");
         final Invocation.Builder invocationBuilder = sendHttpsRequest(HEALTHCHECK_ENDPOINT);
         final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
@@ -80,7 +80,7 @@ class TestXacmlPdpRestServer extends CommonRest {
     }
 
     @Test
-    void testStatistics_200() throws Exception {
+    void testStatistics_200() {
         LOGGER.info("***************************** Running testStatistics_200 *****************************");
         Invocation.Builder invocationBuilder = sendHttpsRequest(STATISTICS_ENDPOINT);
         StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
@@ -94,7 +94,7 @@ class TestXacmlPdpRestServer extends CommonRest {
     }
 
     @Test
-    void testStatistics_500() throws Exception {
+    void testStatistics_500() {
         LOGGER.info("***************************** Running testStatistics_500 *****************************");
 
         markActivatorDead();
@@ -106,7 +106,7 @@ class TestXacmlPdpRestServer extends CommonRest {
     }
 
     @Test
-    void testHttpsStatistic() throws Exception {
+    void testHttpsStatistic() {
         LOGGER.info("***************************** Running testHttpsStatistic *****************************");
         final Invocation.Builder invocationBuilder = sendHttpsRequest(STATISTICS_ENDPOINT);
         final StatisticsReport report = invocationBuilder.get(StatisticsReport.class);

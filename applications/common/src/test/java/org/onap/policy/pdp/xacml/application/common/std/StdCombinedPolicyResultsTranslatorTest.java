@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2024 Nordix Foundation.
+ * Modifications Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,10 +34,9 @@ import com.att.research.xacml.api.Obligation;
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.std.StdStatusCode;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -93,7 +92,7 @@ class StdCombinedPolicyResultsTranslatorTest {
 
         obligation = TestUtilsCommon.createXacmlObligation(
             ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue(),
-            Arrays.asList(assignmentPolicyId, assignmentPolicy));
+            List.of(assignmentPolicyId, assignmentPolicy));
 
     }
 
@@ -106,12 +105,10 @@ class StdCombinedPolicyResultsTranslatorTest {
 
         assertThat(translator.generateTargetType("policy.id", "onap.policy.type", "1.0.0")).isNotNull();
 
-        Map<String, String> ids = new HashMap<>();
-        ids.put("onap.policies.Test", "1.0.0");
-        Collection<IdReference> policyIds = TestUtilsCommon.createPolicyIdList(ids);
+        Collection<IdReference> policyIds = TestUtilsCommon.createPolicyIdList(Map.of("onap.policies.Test", "1.0.0"));
 
         Response xacmlResponse = TestUtilsCommon.createXacmlResponse(StdStatusCode.STATUS_CODE_OK, null,
-            Decision.PERMIT, Collections.singletonList(obligation), policyIds);
+            Decision.PERMIT, List.of(obligation), policyIds);
 
         DecisionResponse decision = translator.convertResponse(xacmlResponse);
 
@@ -119,6 +116,30 @@ class StdCombinedPolicyResultsTranslatorTest {
 
         assertThat(decision.getPolicies()).isNotNull();
         assertThat(decision.getPolicies()).hasSize(1);
+    }
+
+    @Test
+    void testMissingPolicyId() throws ParseException {
+        StdCombinedPolicyResultsTranslator translator = new StdCombinedPolicyResultsTranslator();
+
+        Collection<IdReference> policyIds = TestUtilsCommon.createPolicyIdList(Map.of("onap.policies.Test", "1.0.0"));
+
+        var assignmentEmptyPolicyId = TestUtilsCommon.createAttributeAssignment(
+                ToscaDictionary.ID_OBLIGATION_POLICY_ID.stringValue(),
+                ToscaDictionary.ID_OBLIGATION_POLICY_ID_CATEGORY.stringValue(),
+                ""
+        );
+        var obligationMissingId = TestUtilsCommon.createXacmlObligation(
+                ToscaDictionary.ID_OBLIGATION_REST_BODY.stringValue(),
+                List.of(assignmentEmptyPolicyId, assignmentPolicy));
+
+        Response xacmlResponse = TestUtilsCommon.createXacmlResponse(StdStatusCode.STATUS_CODE_OK, null,
+                Decision.PERMIT, List.of(obligationMissingId), policyIds);
+
+        DecisionResponse decision = translator.convertResponse(xacmlResponse);
+
+        assertNotNull(decision);
+        assertThat(decision.getPolicies()).isEmpty();
     }
 
     @Test
@@ -154,8 +175,7 @@ class StdCombinedPolicyResultsTranslatorTest {
         StdCombinedPolicyResultsTranslator translator = new StdCombinedPolicyResultsTranslator();
 
         DecisionRequest decision = new DecisionRequest();
-        Map<String, Object> resource = new HashMap<>();
-        decision.setResource(resource);
+        decision.setResource(new HashMap<>());
         assertNotNull(translator.convertRequest(decision));
     }
 }

@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.NoArgsConstructor;
-import org.apache.commons.io.IOUtils;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
@@ -115,7 +115,7 @@ public class CoordinationGuardTranslator implements ToscaPolicyTranslator {
             return null;
         }
         try (InputStream is = new FileInputStream(new File(directiveFilename))) {
-            var contents = IOUtils.toString(is, StandardCharsets.UTF_8);
+            var contents = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             //
             // Read the yaml into our Java Object
             //

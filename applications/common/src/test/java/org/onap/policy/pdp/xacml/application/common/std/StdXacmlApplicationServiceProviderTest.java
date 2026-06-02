@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2024 Nordix Foundation.
+ * Modifications Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,9 +42,10 @@ import com.att.research.xacml.api.pdp.PDPEngineFactory;
 import com.att.research.xacml.api.pdp.PDPException;
 import com.att.research.xacml.util.FactoryException;
 import com.att.research.xacml.util.XACMLProperties;
-import com.google.common.io.Files;
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Properties;
@@ -153,7 +154,7 @@ class StdXacmlApplicationServiceProviderTest {
 
         prov = new MyProv();
 
-        Files.copy(SOURCE_PROP_FILE, PROP_FILE);
+        Files.copy(SOURCE_PROP_FILE.toPath(), PROP_FILE.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
 
     @Test
