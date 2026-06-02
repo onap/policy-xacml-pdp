@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2022 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2024 Nordix Foundation.
+ * Modifications Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ class TestXacmlPdpStatistics extends CommonRest {
     private int nupdates = 0;
 
     @Test
-    void testXacmlPdpStatistics_200() throws Exception {
+    void testXacmlPdpStatistics_200() {
         LOGGER.info("*************************** Running testXacmlPdpStatistics_200 ***************************");
         StatisticsReport report = getXacmlPdpStatistics();
         validateReport(report, 0, 200, new HashMap<>());
@@ -52,7 +52,7 @@ class TestXacmlPdpStatistics extends CommonRest {
     }
 
     @Test
-    void testXacmlPdpStatistics_500() throws Exception {
+    void testXacmlPdpStatistics_500() {
         LOGGER.info("***************************** Running testXacmlPdpStatistics_500 *****************************");
         markActivatorDead();
         final StatisticsReport report = getXacmlPdpStatistics();
@@ -72,7 +72,7 @@ class TestXacmlPdpStatistics extends CommonRest {
         return statisticsMap;
     }
 
-    private StatisticsReport getXacmlPdpStatistics() throws Exception {
+    private StatisticsReport getXacmlPdpStatistics() {
         return sendHttpsRequest("statistics").get(StatisticsReport.class);
     }
 

@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +25,6 @@ import com.att.research.xacml.std.IdentifierImpl;
 import com.att.research.xacml.std.StdStatusCode;
 import com.att.research.xacml.std.StdVersion;
 import com.att.research.xacml.std.dom.DOMStructureException;
-import com.att.research.xacml.util.FactoryException;
 import com.att.research.xacml.util.XACMLProperties;
 import com.att.research.xacmlatt.pdp.policy.CombiningAlgorithm;
 import com.att.research.xacmlatt.pdp.policy.CombiningAlgorithmFactory;
@@ -38,12 +38,11 @@ import com.att.research.xacmlatt.pdp.policy.Target;
 import com.att.research.xacmlatt.pdp.policy.dom.DOMPolicyDef;
 import com.att.research.xacmlatt.pdp.std.StdPolicyFinder;
 import com.att.research.xacmlatt.pdp.util.ATTPDPProperties;
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -58,14 +57,13 @@ import org.slf4j.LoggerFactory;
 public class OnapPolicyFinderFactory extends PolicyFinderFactory {
 
     public static final String  PROP_FILE       = ".file";
-    public static final String  PROP_URL        = ".url";
 
-    private static Logger logger                           = LoggerFactory.getLogger(OnapPolicyFinderFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(OnapPolicyFinderFactory.class);
     private List<PolicyDef> rootPolicies;
     private List<PolicyDef> referencedPolicies;
     private boolean needsInit                   = true;
 
-    private Properties properties;
+    private final Properties properties;
 
     /**
      * Constructor with properties passed. This will be preferred.
@@ -141,15 +139,9 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
      * @return a <code>List</code> of <code>PolicyDef</code>s loaded from the given property name
      */
     protected List<PolicyDef> getPolicyDefs(String propertyName) {
-        String policyIds = this.properties.getProperty(propertyName);
-        if (Strings.isNullOrEmpty(policyIds)) {
-            return Collections.emptyList();
-        }
-
-        Iterable<String> policyIdArray  = Splitter.on(',').trimResults().omitEmptyStrings().split(policyIds);
-        if (policyIdArray == null) {
-            return Collections.emptyList();
-        }
+        String policyIds = Objects.toString(this.properties.getProperty(propertyName), "");
+        List<String> policyIdArray = Arrays.stream(policyIds.split(",")).map(String::trim).filter(s -> !s.isEmpty())
+                .toList();
 
         List<PolicyDef> listPolicyDefs  = new ArrayList<>();
         for (String policyId : policyIdArray) {
@@ -220,7 +212,7 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
     }
 
     @Override
-    public PolicyFinder getPolicyFinder() throws FactoryException {
+    public PolicyFinder getPolicyFinder() {
         //
         // Force using any properties that were passed upon construction
         //
@@ -228,7 +220,7 @@ public class OnapPolicyFinderFactory extends PolicyFinderFactory {
     }
 
     @Override
-    public PolicyFinder getPolicyFinder(Properties properties) throws FactoryException {
+    public PolicyFinder getPolicyFinder(Properties properties) {
         return new StdPolicyFinder(this.rootPolicies, this.referencedPolicies, properties);
     }
 

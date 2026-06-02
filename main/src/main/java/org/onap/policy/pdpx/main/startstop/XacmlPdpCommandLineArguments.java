@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,14 +66,12 @@ public class XacmlPdpCommandLineArguments {
                 .longOpt("help")
                 .desc("outputs the usage of this command")
                 .required(false)
-                .type(Boolean.class)
-                .build());
+                .type(Boolean.class).get());
         options.addOption(Option.builder("v")
                 .longOpt("version")
                 .desc("outputs the version of policy xacml pdp")
                 .required(false)
-                .type(Boolean.class)
-                .build());
+                .type(Boolean.class).get());
         options.addOption(Option.builder("c")
                 .longOpt("config-file")
                 .desc("the full path to the configuration file to use, "
@@ -80,8 +79,7 @@ public class XacmlPdpCommandLineArguments {
                 .hasArg()
                 .argName("CONFIG_FILE")
                 .required(false)
-                .type(String.class)
-                .build());
+                .type(String.class).get());
         options.addOption(Option.builder("p")
                 .longOpt("property-file")
                 .desc("the full path to the topic property file to use, "
@@ -89,8 +87,7 @@ public class XacmlPdpCommandLineArguments {
                 .hasArg()
                 .argName("PROP_FILE")
                 .required(false)
-                .type(String.class)
-                .build());
+                .type(String.class).get());
         //@formatter:on
     }
 
@@ -123,7 +120,7 @@ public class XacmlPdpCommandLineArguments {
         setConfigurationFilePath(null);
         setPropertyFilePath(null);
 
-        CommandLine commandLine = null;
+        CommandLine commandLine;
         try {
             commandLine = new DefaultParser().parse(options, args);
         } catch (final ParseException e) {
@@ -211,15 +208,6 @@ public class XacmlPdpCommandLineArguments {
      */
     public boolean checkSetConfigurationFilePath() {
         return configurationFilePath != null && !configurationFilePath.isEmpty();
-    }
-
-    /**
-     * Gets the full expanded property file path.
-     *
-     * @return the property file path
-     */
-    public String getFullPropertyFilePath() {
-        return ResourceUtils.getFilePath4Resource(getPropertyFilePath());
     }
 
     /**
