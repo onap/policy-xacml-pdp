@@ -16,6 +16,24 @@
       "message": "This extra comma was added to increase sonar branch coverage in OnapPolicyFinderFactory - to ensure the empty property branch is executed:\n\n    policyIdArray \u003d Arrays.stream(policyIds.split(\",\")).map(String::trim)\n            .filter(s -\u003e !s.isEmpty()).toList();",
       "revId": "d25a831710a6b011f295fa02f7bce81bd549c309",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "034afef1_7e57cb16",
+        "filename": "applications/common/src/test/resources/finder.test.properties",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-06-09T22:15:28Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b902dda8_dcba21ab",
+      "revId": "d25a831710a6b011f295fa02f7bce81bd549c309",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
