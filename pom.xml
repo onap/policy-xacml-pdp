@@ -46,7 +46,6 @@
         <policy.common.version>4.0.1-SNAPSHOT</policy.common.version>
         <policy.models.version>5.0.1-SNAPSHOT</policy.models.version>
         <jacoco.dataFile>${project.basedir}/target/code-coverage/jacoco-ut.exec</jacoco.dataFile>
-        <xacml.version>4.0.0</xacml.version>
     </properties>
 
     <modules>
@@ -57,21 +56,6 @@
         <module>xacml-test</module>
         <module>tutorials</module>
     </modules>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.att.research.xacml</groupId>
-                <artifactId>xacml-pdp</artifactId>
-                <version>${xacml.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.att.research.xacml</groupId>
-                <artifactId>xacml</artifactId>
-                <version>${xacml.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
         <dependency>
