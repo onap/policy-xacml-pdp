@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2024 Nordix Foundation.
+ * Modifications Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
@@ -470,7 +471,7 @@ public final class XacmlPolicyUtils {
                 //
                 // Copy the policy file to the temporary folder
                 //
-                com.google.common.io.Files.copy(rootPath.toFile(), newRootPath);
+                Files.copy(rootPath, newRootPath.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 //
                 // Change the properties object to point to where the new policy is
                 // in the temporary folder
@@ -493,7 +494,7 @@ public final class XacmlPolicyUtils {
                 //
                 // Copy the policy file to the temporary folder
                 //
-                com.google.common.io.Files.copy(refPath.toFile(), newReferencedPath);
+                Files.copy(refPath, newReferencedPath.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 //
                 // Change the properties object to point to where the new policy is
                 // in the temporary folder
