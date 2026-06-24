@@ -69,10 +69,4 @@
         </dependency>
     </dependencies>
 
-    <distributionManagement>
-        <site>
-            <id>ecomp-site</id>
-            <url>dav:${nexusproxy}${sitePath}</url>
-        </site>
-    </distributionManagement>
 </project>
