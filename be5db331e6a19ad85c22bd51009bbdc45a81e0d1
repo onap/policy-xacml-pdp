@@ -22,6 +22,30 @@
       },
       "revId": "be5db331e6a19ad85c22bd51009bbdc45a81e0d1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "76e3fb29_d51b8b80",
+        "filename": "packages/policy-xacmlpdp-docker/pom.xml.versionsBackup",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-07-13T13:43:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ae7bb1d_d3027cb1",
+      "range": {
+        "startLine": 23,
+        "startChar": 1,
+        "endLine": 23,
+        "endChar": 9
+      },
+      "revId": "be5db331e6a19ad85c22bd51009bbdc45a81e0d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
